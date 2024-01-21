@@ -1,0 +1,17 @@
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.EntityFramework.deps.json
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.EntityFramework.runtimeconfig.json
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.EntityFramework.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.EntityFramework.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.Data.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.Data.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\obj\Debug\net6.0\GraduationProject.EntityFramework.csproj.AssemblyReference.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\obj\Debug\net6.0\GraduationProject.EntityFramework.GeneratedMSBuildEditorConfig.editorconfig
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\obj\Debug\net6.0\GraduationProject.EntityFramework.AssemblyInfoInputs.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\obj\Debug\net6.0\GraduationProject.EntityFramework.AssemblyInfo.cs
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\obj\Debug\net6.0\GraduationProject.EntityFramework.csproj.CoreCompileInputs.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\obj\Debug\net6.0\GraduationProject.EntityFramework.csproj.CopyComplete
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\obj\Debug\net6.0\GraduationProject.EntityFramework.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\obj\Debug\net6.0\refint\GraduationProject.EntityFramework.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\obj\Debug\net6.0\GraduationProject.EntityFramework.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\obj\Debug\net6.0\GraduationProject.EntityFramework.genruntimeconfig.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\obj\Debug\net6.0\ref\GraduationProject.EntityFramework.dll

@@ -1,0 +1,17 @@
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\bin\Debug\net6.0\GraduationProject.Repository.deps.json
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\bin\Debug\net6.0\GraduationProject.Repository.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\bin\Debug\net6.0\GraduationProject.Repository.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\obj\Debug\net6.0\GraduationProject.Repository.csproj.AssemblyReference.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\obj\Debug\net6.0\GraduationProject.Repository.GeneratedMSBuildEditorConfig.editorconfig
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\obj\Debug\net6.0\GraduationProject.Repository.AssemblyInfoInputs.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\obj\Debug\net6.0\GraduationProject.Repository.AssemblyInfo.cs
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\obj\Debug\net6.0\GraduationProject.Repository.csproj.CoreCompileInputs.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\obj\Debug\net6.0\GraduationProject.Repository.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\obj\Debug\net6.0\refint\GraduationProject.Repository.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\obj\Debug\net6.0\GraduationProject.Repository.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\obj\Debug\net6.0\ref\GraduationProject.Repository.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\bin\Debug\net6.0\GraduationProject.Data.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\bin\Debug\net6.0\GraduationProject.EntityFramework.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\bin\Debug\net6.0\GraduationProject.EntityFramework.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\bin\Debug\net6.0\GraduationProject.Data.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Repository\obj\Debug\net6.0\GraduationProject.Repository.csproj.CopyComplete

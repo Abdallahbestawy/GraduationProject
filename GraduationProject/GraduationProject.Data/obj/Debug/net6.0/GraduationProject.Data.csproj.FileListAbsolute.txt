@@ -1,0 +1,12 @@
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Data.deps.json
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Data.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Data.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.csproj.AssemblyReference.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.GeneratedMSBuildEditorConfig.editorconfig
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.AssemblyInfoInputs.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.AssemblyInfo.cs
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.csproj.CoreCompileInputs.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\refint\GraduationProject.Data.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\ref\GraduationProject.Data.dll
