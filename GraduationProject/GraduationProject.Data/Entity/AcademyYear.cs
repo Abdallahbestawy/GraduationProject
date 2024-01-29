@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace GraduationProject.Data.Entity
 {
@@ -17,6 +12,7 @@ namespace GraduationProject.Data.Entity
         public DateTime? End { get; set; }
 
         public string? Description { get; set; }
+        public int AcademyYearOrder { get; set; }
 
         public bool IsCurrent { get; set; }
     }
