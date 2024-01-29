@@ -10,3 +10,15 @@ E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\refint\GraduationProject.Data.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.pdb
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\ref\GraduationProject.Data.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Data.deps.json
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Data.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Data.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.AssemblyInfoInputs.cache
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.AssemblyInfo.cs
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.csproj.CoreCompileInputs.cache
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.sourcelink.json
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\refint\GraduationProject.Data.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\ref\GraduationProject.Data.dll
