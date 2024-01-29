@@ -20,9 +20,7 @@ namespace GraduationProject.Data.Entity
 
         public Gender Gender { get; set; }
 
-        //[ForeignKey("Nationality")]
-        public int NationalityId { get; set; }
-        //public Nationality Nationality { get; set; }
+        public Nationality Nationality { get; set; }
 
         public Religion Religion { get; set; }
 

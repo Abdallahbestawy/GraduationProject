@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj": {}
+    "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj": {}
   },
   "projects": {
-    "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj": {
+    "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj",
+        "projectUniqueName": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj",
         "projectName": "GraduationProject.Data",
-        "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj",
-        "packagesPath": "C:\\Users\\ABDAL\\.nuget\\packages\\",
-        "outputPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Data\\obj\\",
+        "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj",
+        "packagesPath": "C:\\Users\\Mohamed\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Data\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\ABDAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\Mohamed\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -59,25 +55,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj": {
+    "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj",
+        "projectUniqueName": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj",
         "projectName": "GraduationProject.EntityFramework",
-        "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj",
-        "packagesPath": "C:\\Users\\ABDAL\\.nuget\\packages\\",
-        "outputPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.EntityFramework\\obj\\",
+        "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj",
+        "packagesPath": "C:\\Users\\Mohamed\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.EntityFramework\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\ABDAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\Mohamed\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -91,8 +83,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj": {
-                "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj"
+              "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj": {
+                "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj"
               }
             }
           }
@@ -138,25 +130,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Repository\\GraduationProject.Repository.csproj": {
+    "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Repository\\GraduationProject.Repository.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Repository\\GraduationProject.Repository.csproj",
+        "projectUniqueName": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Repository\\GraduationProject.Repository.csproj",
         "projectName": "GraduationProject.Repository",
-        "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Repository\\GraduationProject.Repository.csproj",
-        "packagesPath": "C:\\Users\\ABDAL\\.nuget\\packages\\",
-        "outputPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Repository\\obj\\",
+        "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Repository\\GraduationProject.Repository.csproj",
+        "packagesPath": "C:\\Users\\Mohamed\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Repository\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\ABDAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\Mohamed\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -170,8 +158,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj": {
-                "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj"
+              "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj": {
+                "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj"
               }
             }
           }
@@ -201,25 +189,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj": {
+    "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj",
+        "projectUniqueName": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj",
         "projectName": "GraduationProject.Service",
-        "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj",
-        "packagesPath": "C:\\Users\\ABDAL\\.nuget\\packages\\",
-        "outputPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Service\\obj\\",
+        "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj",
+        "packagesPath": "C:\\Users\\Mohamed\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Service\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\ABDAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\Mohamed\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -233,11 +217,11 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj": {
-                "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj"
+              "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj": {
+                "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj"
               },
-              "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Repository\\GraduationProject.Repository.csproj": {
-                "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Repository\\GraduationProject.Repository.csproj"
+              "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Repository\\GraduationProject.Repository.csproj": {
+                "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Repository\\GraduationProject.Repository.csproj"
               }
             }
           }
@@ -267,7 +251,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }
