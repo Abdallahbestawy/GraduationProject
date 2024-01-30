@@ -1,27 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GraduationProject.Data.Entity
 {
     public class Semester
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
-        //[ForeignKey("Faculty")]
-        public int FacultyId { get; set; }
-        //public Faculty Faculty { get; set; }
-
+        [Required, MaxLength(500)]
         public string Name { get; set; }
-
+        [Required, MaxLength(250)]
         public string Code { get; set; }
-
-        public string Order { get; set; }
+        public int Order { get; set; }
+        [ForeignKey("Faculty")]
+        public int FacultyId { get; set; }
+        public Faculty Faculty { get; set; }
+        public ICollection<ScientificDegree> scientificDegrees { get; set; } = new List<ScientificDegree>();
 
         //public List<ScientificDegree> scientificDegrees { get; set; }
     }

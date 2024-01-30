@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GraduationProject.Data.Enum
+﻿namespace GraduationProject.Data.Enum
 {
     public enum ScientificDegreeType
     {
-        Faculty = 1,
-        Bylaw,
+        Bylaw = 1,
         Band,
         Phase,
         Semester,
         ExamRole,
-        Parent
     }
 }

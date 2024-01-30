@@ -1,29 +1,17 @@
 ﻿using GraduationProject.Data.Enum;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GraduationProject.Data.Entity
 {
     public class Course
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
-        //[ForeignKey("ScientificDegree")]
-        public int? ScientificDegreeId { get; set; }
-        //public ScientificDegree? ScientificDegree { get; set; }
-
-        //[ForeignKey("Department")]
-        public int? DepartmentId { get; set; }
-        //public Department Department { get; set; }
-
+        [Required, MaxLength(500)]
         public string Name { get; set; }
-
+        [Required, MaxLength(250)]
         public string Code { get; set; }
 
         public string? Description { get; set; }
@@ -39,7 +27,16 @@ namespace GraduationProject.Data.Entity
         public int? NumberOfCreditHours { get; set; }
 
         public bool Prerequisite { get; set; }
+        [ForeignKey("ScientificDegree")]
+        public int ScientificDegreeId { get; set; }
+        public ScientificDegree ScientificDegree { get; set; }
+        [ForeignKey("Department")]
+        public int DepartmentId { get; set; }
+        public Department Department { get; set; }
 
-        //public List<CoursePrerequisite> coursePrerequisites { get; set; }
+        public virtual ICollection<CoursePrerequisite> DependentCourses { get; set; } = new List<CoursePrerequisite>();
+        public virtual ICollection<CourseAssessMethod> CourseAssessMethods { get; set; } = new List<CourseAssessMethod>();
+        public virtual ICollection<StudentSemesterCourse> StudentSemesterCourse { get; set; } = new List<StudentSemesterCourse>();
+
     }
 }

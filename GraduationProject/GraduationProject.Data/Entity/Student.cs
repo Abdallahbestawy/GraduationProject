@@ -1,11 +1,5 @@
 ﻿using GraduationProject.Data.Enum;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GraduationProject.Data.Entity
 {
@@ -45,5 +39,7 @@ namespace GraduationProject.Data.Entity
         public string? PostalCode { get; set; }
 
         //public List<Phone> phones { get; set; }
+        public ICollection<StudentSemester> StudentSemesters { get; set; } = new List<StudentSemester>();
+        public ICollection<Result> Results { get; set; } = new List<Result>();
     }
 }

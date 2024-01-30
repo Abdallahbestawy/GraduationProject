@@ -1,29 +1,28 @@
 ﻿using GraduationProject.Data.Enum;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GraduationProject.Data.Entity
 {
     public class Bylaw
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
-        //[ForeignKey("Faculty")]
-        public int FacultyId { get; set; }
-        //public Faculty Faculty { get; set; }
-
+        [Required, MaxLength(1000)]
         public string Name { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public BylawType Type { get; set; }
 
-        //public List<ScientificDegree> scientificDegrees { get; set; }
+        [ForeignKey("Faculty")]
+        public int FacultyId { get; set; }
+        public virtual Faculty Faculty { get; set; }
+        public virtual ICollection<Estimates> Estimatess { get; set; } = new List<Estimates>();
+        public virtual ICollection<EstimatesCourse> EstimatesCourses { get; set; } = new List<EstimatesCourse>();
+        public virtual ICollection<ScientificDegree> ScientificDegrees { get; set; } = new List<ScientificDegree>();
+
+
     }
 }
