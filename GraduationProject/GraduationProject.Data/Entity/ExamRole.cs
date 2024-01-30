@@ -13,10 +13,11 @@ namespace GraduationProject.Data.Entity
         [Required, MaxLength(250)]
         public string Code { get; set; }
         public int Order { get; set; }
+
         [ForeignKey("Faculty")]
         public int FacultyId { get; set; }
-        public Faculty Faculty { get; set; }
-        public virtual ICollection<ScientificDegree> ScientificDegrees { get; set; } = new List<ScientificDegree>();
+        public virtual Faculty Faculty { get; set; }
 
+        public virtual ICollection<ScientificDegree> ScientificDegrees { get; set; } = new List<ScientificDegree>();
     }
 }

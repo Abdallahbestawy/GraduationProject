@@ -12,11 +12,13 @@ namespace GraduationProject.Data.Entity
         public string Name { get; set; }
         public string? Code { get; set; }
         public string? Description { get; set; }
+
         [ForeignKey("Faculty")]
         public int FacultyId { get; set; }
         public virtual Faculty Faculty { get; set; }
+
         public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
-        public ICollection<StudentSemester> StudentSemesters { get; set; } = new List<StudentSemester>();
-        public ICollection<Result> Results { get; set; } = new List<Result>();
+        public virtual ICollection<StudentSemester> StudentSemesters { get; set; } = new List<StudentSemester>();
+        public virtual ICollection<Result> Results { get; set; } = new List<Result>();
     }
 }

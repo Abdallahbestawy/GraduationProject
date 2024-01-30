@@ -18,9 +18,5 @@ namespace GraduationProject.Data.Entity
         public virtual ICollection<Semester> Semesters { get; set; } = new List<Semester>();
         public virtual ICollection<ExamRole> ExamRoles { get; set; } = new List<ExamRole>();
         public virtual ICollection<AssessMethod> AssessMethods { get; set; } = new List<AssessMethod>();
-
-
-        //public List<ScientificDegree> scientificDegrees { get; set; }
-
     }
 }

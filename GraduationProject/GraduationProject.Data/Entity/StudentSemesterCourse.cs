@@ -8,12 +8,14 @@ namespace GraduationProject.Data.Entity
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
         [ForeignKey("StudentSemester")]
         public int StudentSemesterId { get; set; }
-        public StudentSemester StudentSemester { get; set; }
+        public virtual StudentSemester StudentSemester { get; set; }
+
         [ForeignKey("Course")]
         public int CourseId { get; set; }
-        public Course Course { get; set; }
+        public virtual Course Course { get; set; }
 
         public decimal CourseDegree { get; set; }
     }

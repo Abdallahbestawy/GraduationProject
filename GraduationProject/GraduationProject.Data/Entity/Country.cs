@@ -14,9 +14,9 @@ namespace GraduationProject.Data.Entity
 
         public string Name { get; set; }
 
-        //public List<Governorate> Governorates { get; set; }
-        //public List<Staff> Staff { get; set; }
-        //public List<Student> Students { get; set; }
-        //public List<FamilyData> FamilyDatas { get; set; }
+        public virtual ICollection<Governorate> governorates { get; set; } = new List<Governorate>();
+        public virtual ICollection<Staff> staff { get; set; } = new List<Staff>();
+        public virtual ICollection<Student> students { get; set; } = new List<Student>();
+        public virtual ICollection<FamilyData> familyDatas { get; set; } = new List<FamilyData>();
     }
 }

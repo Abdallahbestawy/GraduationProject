@@ -11,11 +11,12 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("Course")]
         public int CourseId { get; set; }
-        public Course Course { get; set; }
+        public virtual Course Course { get; set; }
 
         [ForeignKey("AssessMethod")]
         public int AssessMethodId { get; set; }
-        public AssessMethod AssessMethod { get; set; }
+        public virtual AssessMethod AssessMethod { get; set; }
+
         public virtual ICollection<StudentSemesterAssessMethod> StudentSemesterAssessMethods { get; set; } = new List<StudentSemesterAssessMethod>();
     }
 }

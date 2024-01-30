@@ -17,8 +17,8 @@ namespace GraduationProject.Data.Entity
         public int AcademyYearOrder { get; set; }
 
         public bool IsCurrent { get; set; }
-        public ICollection<StudentSemester> StudentSemesters { get; set; } = new List<StudentSemester>();
+        public virtual ICollection<StudentSemester> StudentSemesters { get; set; } = new List<StudentSemester>();
         public virtual ICollection<StaffSemester> StaffSemesters { get; set; } = new List<StaffSemester>();
-        public ICollection<Result> Results { get; set; } = new List<Result>();
+        public virtual ICollection<Result> Results { get; set; } = new List<Result>();
     }
 }

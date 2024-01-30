@@ -1,5 +1,6 @@
 ﻿using GraduationProject.Data.Enum;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GraduationProject.Data.Entity
 {
@@ -22,23 +23,24 @@ namespace GraduationProject.Data.Entity
 
         public DateTime? DateOfBirth { get; set; }
 
-        //[ForeignKey("Country")]
+        [ForeignKey("Country")]
         public int CountryId { get; set; }
-        //public Country Country { get; set; }
+        public virtual Country Country { get; set; }
 
-        //[ForeignKey("Governorate")]
+        [ForeignKey("Governorate")]
         public int GovernorateId { get; set; }
-        //public Governorate Governorate { get; set; }
+        public virtual Governorate Governorate { get; set; }
 
-        //[ForeignKey("City")]
+        [ForeignKey("City")]
         public int CityId { get; set; }
-        //public City City { get; set; }
+        public virtual City City { get; set; }
 
         public string? Street { get; set; }
 
         public string? PostalCode { get; set; }
 
-        //public List<Phone> phones { get; set; }
+        public virtual ICollection<Phone> phones { get; set; } = new List<Phone>();
         public virtual ICollection<StaffSemester> StaffSemesters { get; set; } = new List<StaffSemester>();
+        public virtual ICollection<QualificationData> qualificationDatas { get; set; } = new List<QualificationData>();
     }
 }

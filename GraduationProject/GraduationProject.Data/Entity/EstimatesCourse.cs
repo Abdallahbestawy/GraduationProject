@@ -14,6 +14,7 @@ namespace GraduationProject.Data.Entity
         public char Char { get; set; }
         public decimal MaxPercentage { get; set; }
         public decimal MinPercentage { get; set; }
+
         [ForeignKey("Bylaw")]
         public int BylawId { get; set; }
         public virtual Bylaw Bylaw { get; set; }

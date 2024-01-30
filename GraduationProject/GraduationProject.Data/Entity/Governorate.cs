@@ -15,13 +15,13 @@ namespace GraduationProject.Data.Entity
 
         public string Name { get; set; }
 
-        //[ForeignKey("Country")]
+        [ForeignKey("Country")]
         public int CountryId { get; set; }
-        //public Country Country { get; set; }
+        public virtual Country Country { get; set; }
 
-        //public List<City> cities { get; set; }
-        //public List<Staff> Staff { get; set; }
-        //public List<Student> Students { get; set; }
-        //public List<FamilyData> FamilyDatas { get; set; }
+        public virtual ICollection<City> cities { get; set; } = new List<City>();
+        public virtual ICollection<Staff> staff { get; set; } = new List<Staff>();
+        public virtual ICollection<Student> students { get; set; } = new List<Student>();
+        public virtual ICollection<FamilyData> familyDatas { get; set; } = new List<FamilyData>();
     }
 }

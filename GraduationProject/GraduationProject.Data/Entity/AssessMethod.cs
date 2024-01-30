@@ -16,11 +16,11 @@ namespace GraduationProject.Data.Entity
         public decimal MinDegree { get; set; }
 
         public decimal MaxDegree { get; set; }
+
         [ForeignKey("Faculty")]
         public int FacultyId { get; set; }
-        public Faculty Faculty { get; set; }
+        public virtual Faculty Faculty { get; set; }
+
         public virtual ICollection<CourseAssessMethod> CourseAssessMethods { get; set; } = new List<CourseAssessMethod>();
-
-
     }
 }

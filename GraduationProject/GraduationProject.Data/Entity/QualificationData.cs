@@ -13,13 +13,13 @@ namespace GraduationProject.Data.Entity
         [Key]
         public int Id { get; set; }
 
-        //[ForeignKey("Student")]
+        [ForeignKey("Student")]
         public int StudentId { get; set; }
-        //public Student Student { get; set; }
+        public virtual Student Student { get; set; }
 
-        //[ForeignKey("Staff")]
+        [ForeignKey("Staff")]
         public int StaffId { get; set; }
-        //public Staff Staff { get; set; }
+        public virtual Staff Staff { get; set; }
 
         public string? PreQualification { get; set; }
 
