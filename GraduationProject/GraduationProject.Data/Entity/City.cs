@@ -17,7 +17,7 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("Governorate")]
         public int GovernorateId { get; set; }
-        public virtual Governorate Governorate { get; set; }
+        public Governorate Governorate { get; set; }
 
         public virtual ICollection<Staff> staff { get; set; } = new List<Staff>();
         public virtual ICollection<Student> students { get; set; } = new List<Student>();

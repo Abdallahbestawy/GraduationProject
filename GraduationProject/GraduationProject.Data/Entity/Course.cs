@@ -30,7 +30,7 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("ScientificDegree")]
         public int ScientificDegreeId { get; set; }
-        public virtual ScientificDegree ScientificDegree { get; set; }
+        public ScientificDegree ScientificDegree { get; set; }
 
         [ForeignKey("Department")]
         public int DepartmentId { get; set; }
