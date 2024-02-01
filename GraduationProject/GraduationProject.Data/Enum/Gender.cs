@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GraduationProject.Data.Enum
+﻿namespace GraduationProject.Data.Enum
 {
-    public enum Gender
+    public enum Gender : short
     {
-        Male =1,
+        Male = 1,
         Female,
         Other
     }

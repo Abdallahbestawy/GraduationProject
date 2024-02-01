@@ -1,6 +1,6 @@
 ﻿namespace GraduationProject.Data.Enum
 {
-    public enum ScientificDegreeType
+    public enum ScientificDegreeType : short
     {
         Bylaw = 1,
         Band,

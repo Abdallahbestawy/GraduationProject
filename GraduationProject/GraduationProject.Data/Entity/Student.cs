@@ -7,9 +7,10 @@ namespace GraduationProject.Data.Entity
     public class Student
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         int Id { get; set; }
 
-        public string ApplicationUserId { get; set; }
+        //public string ApplicationUserId { get; set; }
 
         public string PlaceOfBirth { get; set; }
 
@@ -41,8 +42,8 @@ namespace GraduationProject.Data.Entity
 
         public virtual ICollection<StudentSemester> StudentSemesters { get; set; } = new List<StudentSemester>();
         public virtual ICollection<Result> Results { get; set; } = new List<Result>();
-        public virtual ICollection<FamilyData> familyDatas { get; set; } = new List<FamilyData>();
-        public virtual ICollection<Phone> phones { get; set; } = new List<Phone>();
-        public virtual ICollection<QualificationData> qualificationDatas { get; set; } = new List<QualificationData>();
+        public virtual FamilyData FamilyDatas { get; set; }
+        public virtual ICollection<Phone> Phones { get; set; } = new List<Phone>();
+        public virtual QualificationData QualificationDatas { get; set; }
     }
 }

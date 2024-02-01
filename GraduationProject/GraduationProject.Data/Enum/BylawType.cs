@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GraduationProject.Data.Enum
+﻿namespace GraduationProject.Data.Enum
 {
-    public enum BylawType
+    public enum BylawType : short
     {
-        CreditHours =1 ,
+        CreditHours = 1,
         CreditPoints,
     }
 }

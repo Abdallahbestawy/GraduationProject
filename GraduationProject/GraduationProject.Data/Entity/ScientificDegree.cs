@@ -28,27 +28,27 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("Bylaw")]
         public int? BylawId { get; set; }
-        public virtual Bylaw Bylaw { get; set; }
+        public Bylaw Bylaw { get; set; }
 
         [ForeignKey("Band")]
         public int? BandId { get; set; }
-        public virtual Band Band { get; set; }
+        public Band Band { get; set; }
 
         [ForeignKey("Phase")]
         public int? PhaseId { get; set; }
-        public virtual Phase Phase { get; set; }
+        public Phase Phase { get; set; }
 
         [ForeignKey("Semester")]
         public int? SemesterId { get; set; }
-        public virtual Semester Semester { get; set; }
+        public Semester Semester { get; set; }
 
         [ForeignKey("ExamRole")]
         public int? ExamRoleId { get; set; }
-        public virtual ExamRole ExamRole { get; set; }
+        public ExamRole ExamRole { get; set; }
 
         [ForeignKey("Parent")]
         public int? ParentId { get; set; }
-        public virtual ScientificDegree Parent { get; set; }
+        public ScientificDegree Parent { get; set; }
 
         public virtual ICollection<ScientificDegree> ParentScientificDegree { get; set; } = new List<ScientificDegree>();
         public virtual ICollection<Course> Courses { get; set; } = new List<Course>();

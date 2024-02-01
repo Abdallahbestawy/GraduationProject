@@ -17,7 +17,7 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("Faculty")]
         public int FacultyId { get; set; }
-        public virtual Faculty Faculty { get; set; }
+        public Faculty Faculty { get; set; }
 
         public virtual ICollection<ScientificDegree> ScientificDegrees { get; set; } = new List<ScientificDegree>();
     }

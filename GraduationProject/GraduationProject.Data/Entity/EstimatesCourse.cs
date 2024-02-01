@@ -17,6 +17,6 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("Bylaw")]
         public int BylawId { get; set; }
-        public virtual Bylaw Bylaw { get; set; }
+        public Bylaw Bylaw { get; set; }
     }
 }

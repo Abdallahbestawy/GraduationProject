@@ -11,10 +11,10 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("Course")]
         public int CourseId { get; set; }
-        public virtual Course Course { get; set; }
+        public Course Course { get; set; }
 
         [ForeignKey("Prerequisite")]
         public int PrerequisiteId { get; set; }
-        public virtual Course Prerequisite { get; set; }
+        public Course Prerequisite { get; set; }
     }
 }

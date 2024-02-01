@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GraduationProject.Data.Entity
 {
@@ -15,7 +10,7 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("Student")]
         public int StudentId { get; set; }
-        public virtual Student Student { get; set; }
+        public Student Student { get; set; }
 
         public string Name { get; set; }
 
@@ -23,15 +18,15 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("Country")]
         public int CountryId { get; set; }
-        public virtual Country Country { get; set; }
+        public Country Country { get; set; }
 
         [ForeignKey("Governorate")]
         public int GovernorateId { get; set; }
-        public virtual Governorate Governorate { get; set; }
+        public Governorate Governorate { get; set; }
 
         [ForeignKey("City")]
         public int CityId { get; set; }
-        public virtual City City { get; set; }
+        public City City { get; set; }
 
         public string? Street { get; set; }
 

@@ -11,10 +11,10 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("Staff")]
         public int StaffId { get; set; }
-        public virtual Staff Staff { get; set; }
+        public Staff Staff { get; set; }
 
         [ForeignKey("AcademyYear")]
         public int AcademyYearId { get; set; }
-        public virtual AcademyYear AcademyYear { get; set; }
+        public AcademyYear AcademyYear { get; set; }
     }
 }

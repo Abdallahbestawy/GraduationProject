@@ -11,11 +11,11 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("StudentSemester")]
         public int StudentSemesterId { get; set; }
-        public virtual StudentSemester StudentSemester { get; set; }
+        public StudentSemester StudentSemester { get; set; }
 
         [ForeignKey("Course")]
         public int CourseId { get; set; }
-        public virtual Course Course { get; set; }
+        public Course Course { get; set; }
 
         public decimal CourseDegree { get; set; }
     }

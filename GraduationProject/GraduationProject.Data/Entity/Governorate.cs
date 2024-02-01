@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GraduationProject.Data.Entity
 {
@@ -17,7 +12,7 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("Country")]
         public int CountryId { get; set; }
-        public virtual Country Country { get; set; }
+        public Country Country { get; set; }
 
         public virtual ICollection<City> cities { get; set; } = new List<City>();
         public virtual ICollection<Staff> staff { get; set; } = new List<Staff>();
