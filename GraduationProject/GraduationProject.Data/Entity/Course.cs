@@ -1,4 +1,5 @@
-﻿using GraduationProject.Data.Enum;
+﻿
+using GraduationProject.Data.Enum;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,7 +19,7 @@ namespace GraduationProject.Data.Entity
 
         public CourseType Type { get; set; }
 
-        public BylawType Category { get; set; }
+        public CourseCategory Category { get; set; }
 
         public decimal MaxDegree { get; set; }
 

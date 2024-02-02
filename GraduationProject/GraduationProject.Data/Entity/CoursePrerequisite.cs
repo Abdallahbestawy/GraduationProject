@@ -15,6 +15,7 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("Prerequisite")]
         public int PrerequisiteId { get; set; }
+        [InverseProperty("DependentCourses")]
         public Course Prerequisite { get; set; }
     }
 }

@@ -14,7 +14,11 @@ namespace GraduationProject.Data.Entity
 
         public string? Description { get; set; }
 
-        public BylawType Type { get; set; }
+        public CourseCategory Type { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime Start { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime End { get; set; }
 
         [ForeignKey("Faculty")]
         public int FacultyId { get; set; }

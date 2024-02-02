@@ -1,6 +1,6 @@
 ﻿namespace GraduationProject.Data.Enum
 {
-    public enum BylawType : short
+    public enum CourseCategory : short
     {
         CreditHours = 1,
         CreditPoints,

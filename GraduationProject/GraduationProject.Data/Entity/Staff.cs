@@ -7,9 +7,8 @@ namespace GraduationProject.Data.Entity
     public class Staff
     {
         [Key]
-        int Id { get; set; }
-
-        public string ApplicationUserId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         public string PlaceOfBirth { get; set; }
 
@@ -20,6 +19,7 @@ namespace GraduationProject.Data.Entity
         public Religion Religion { get; set; }
 
         public string? ReleasePlace { get; set; }
+        [DataType(DataType.Date)]
 
         public DateTime? DateOfBirth { get; set; }
 

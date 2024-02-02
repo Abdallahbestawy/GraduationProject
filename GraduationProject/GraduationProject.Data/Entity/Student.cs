@@ -7,10 +7,7 @@ namespace GraduationProject.Data.Entity
     public class Student
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        int Id { get; set; }
-
-        //public string ApplicationUserId { get; set; }
+        public int Id { get; set; }
 
         public string PlaceOfBirth { get; set; }
 
@@ -21,7 +18,7 @@ namespace GraduationProject.Data.Entity
         public Religion Religion { get; set; }
 
         public string? ReleasePlace { get; set; }
-
+        [DataType(DataType.Date)]
         public DateTime? DateOfBirth { get; set; }
 
         [ForeignKey("Country")]

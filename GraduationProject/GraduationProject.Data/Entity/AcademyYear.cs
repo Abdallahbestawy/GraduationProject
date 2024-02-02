@@ -8,10 +8,10 @@ namespace GraduationProject.Data.Entity
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
-        public DateTime? Start { get; set; }
-
-        public DateTime? End { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime Start { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime End { get; set; }
 
         public string? Description { get; set; }
         public int AcademyYearOrder { get; set; }
