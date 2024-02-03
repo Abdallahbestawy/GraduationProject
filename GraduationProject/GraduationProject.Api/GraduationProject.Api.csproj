@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GraduationProject.EntityFramework\GraduationProject.EntityFramework.csproj" />
+    <ProjectReference Include="..\GraduationProject.Identity\GraduationProject.Identity.csproj" />
     <ProjectReference Include="..\GraduationProject.Service\GraduationProject.Service.csproj" />
   </ItemGroup>
 
