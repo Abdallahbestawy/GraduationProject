@@ -4,7 +4,7 @@
 
 namespace GraduationProject.EntityFramework.Migrations
 {
-    public partial class InitialCreateEntity : Migration
+    public partial class InitialCreateDataBase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

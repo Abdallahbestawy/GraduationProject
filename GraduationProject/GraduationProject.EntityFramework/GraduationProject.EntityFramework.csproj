@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GraduationProject.Data\GraduationProject.Data.csproj" />
+    <ProjectReference Include="..\GraduationProject.Identity\GraduationProject.Identity.csproj" />
   </ItemGroup>
 
 </Project>

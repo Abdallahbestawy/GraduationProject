@@ -22,3 +22,6 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\refint\GraduationProject.Data.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.pdb
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\ref\GraduationProject.Data.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Identity.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Identity.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.csproj.CopyComplete

@@ -10,8 +10,3 @@ E:\GraduationProjectImplement\GraduationProject\GraduationProject.Identity\obj\D
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Identity\obj\Debug\net6.0\refint\GraduationProject.Identity.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Identity\obj\Debug\net6.0\GraduationProject.Identity.pdb
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Identity\obj\Debug\net6.0\ref\GraduationProject.Identity.dll
-E:\GraduationProjectImplement\GraduationProject\GraduationProject.Identity\bin\Debug\net6.0\GraduationProject.Data.dll
-E:\GraduationProjectImplement\GraduationProject\GraduationProject.Identity\bin\Debug\net6.0\GraduationProject.EntityFramework.dll
-E:\GraduationProjectImplement\GraduationProject\GraduationProject.Identity\bin\Debug\net6.0\GraduationProject.EntityFramework.pdb
-E:\GraduationProjectImplement\GraduationProject\GraduationProject.Identity\bin\Debug\net6.0\GraduationProject.Data.pdb
-E:\GraduationProjectImplement\GraduationProject\GraduationProject.Identity\obj\Debug\net6.0\GraduationProject.Identity.csproj.CopyComplete

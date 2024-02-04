@@ -552,6 +552,9 @@
         }
       },
       "GraduationProject.Data/1.0.0": {
+        "dependencies": {
+          "GraduationProject.Identity": "1.0.0"
+        },
         "runtime": {
           "GraduationProject.Data.dll": {}
         }
@@ -559,6 +562,7 @@
       "GraduationProject.EntityFramework/1.0.0": {
         "dependencies": {
           "GraduationProject.Data": "1.0.0",
+          "GraduationProject.Identity": "1.0.0",
           "Microsoft.EntityFrameworkCore": "6.0.26",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.26"
         },
@@ -568,8 +572,9 @@
       },
       "GraduationProject.Identity/1.0.0": {
         "dependencies": {
-          "GraduationProject.EntityFramework": "1.0.0",
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.26"
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.26",
+          "Microsoft.EntityFrameworkCore": "6.0.26",
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.26"
         },
         "runtime": {
           "GraduationProject.Identity.dll": {}

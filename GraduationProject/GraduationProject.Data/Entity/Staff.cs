@@ -1,7 +1,7 @@
 ﻿using GraduationProject.Data.Enum;
+using GraduationProject.Identity.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
 
 
 namespace GraduationProject.Data.Entity
@@ -11,8 +11,9 @@ namespace GraduationProject.Data.Entity
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        [ForeignKey("User")]
         public string UserId { get; set; }
-
+        public ApplicationUser User { get; set; }
 
         public string PlaceOfBirth { get; set; }
 

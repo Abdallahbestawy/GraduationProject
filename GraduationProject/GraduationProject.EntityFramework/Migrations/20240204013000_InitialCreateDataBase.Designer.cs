@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GraduationProject.EntityFramework.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240202005530_InitialCreateEntity")]
-    partial class InitialCreateEntity
+    [Migration("20240204013000_InitialCreateDataBase")]
+    partial class InitialCreateDataBase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

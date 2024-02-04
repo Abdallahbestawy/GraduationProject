@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GraduationProject.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20240202194523_CreateIdentity")]
+    [Migration("20240204014009_CreateIdentity")]
     partial class CreateIdentity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

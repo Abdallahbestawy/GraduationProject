@@ -820,27 +820,13 @@
           }
         }
       },
-      "GraduationProject.EntityFramework/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
-        "dependencies": {
-          "GraduationProject.Data": "1.0.0",
-          "Microsoft.EntityFrameworkCore": "6.0.26",
-          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.26"
-        },
-        "compile": {
-          "bin/placeholder/GraduationProject.EntityFramework.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/GraduationProject.EntityFramework.dll": {}
-        }
-      },
       "GraduationProject.Identity/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
-          "GraduationProject.EntityFramework": "1.0.0",
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.26"
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.26",
+          "Microsoft.EntityFrameworkCore": "6.0.26",
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.26"
         },
         "compile": {
           "bin/placeholder/GraduationProject.Identity.dll": {}
@@ -2105,11 +2091,6 @@
         "version.txt"
       ]
     },
-    "GraduationProject.EntityFramework/1.0.0": {
-      "type": "project",
-      "path": "../GraduationProject.EntityFramework/GraduationProject.EntityFramework.csproj",
-      "msbuildProject": "../GraduationProject.EntityFramework/GraduationProject.EntityFramework.csproj"
-    },
     "GraduationProject.Identity/1.0.0": {
       "type": "project",
       "path": "../GraduationProject.Identity/GraduationProject.Identity.csproj",
@@ -2122,19 +2103,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Mohamed\\.nuget\\packages\\": {}
+    "C:\\Users\\ABDAL\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj",
+      "projectUniqueName": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj",
       "projectName": "GraduationProject.Data",
-      "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj",
-      "packagesPath": "C:\\Users\\Mohamed\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Data\\obj\\",
+      "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj",
+      "packagesPath": "C:\\Users\\ABDAL\\.nuget\\packages\\",
+      "outputPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Data\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Mohamed\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ABDAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -2148,8 +2134,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj": {
-              "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj"
+            "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj": {
+              "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj"
             }
           }
         }
@@ -2179,19 +2165,8 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1108",
-      "level": "Error",
-      "message": "Cycle detected. \r\n  GraduationProject.Data -> GraduationProject.Identity -> GraduationProject.EntityFramework -> GraduationProject.Data.",
-      "libraryId": "GraduationProject.Data",
-      "targetGraphs": [
-        "net6.0"
-      ]
-    }
-  ]
+  }
 }
