@@ -10,8 +10,6 @@ namespace GraduationProject.Service.DataTransferObject.DepartmentDto
         public string Name { get; set; }
         public string? Code { get; set; }
         public string? Description { get; set; }
-
-        [ForeignKey("Faculty")]
         public int FacultyId { get; set; }
     }
 }

@@ -2,6 +2,22 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "AutoMapper/13.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Options": "6.0.0"
+        },
+        "compile": {
+          "lib/net6.0/AutoMapper.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/AutoMapper.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.AspNetCore.Cryptography.Internal/6.0.26": {
         "type": "package",
         "compile": {
@@ -880,6 +896,21 @@
     }
   },
   "libraries": {
+    "AutoMapper/13.0.1": {
+      "sha512": "/Fx1SbJ16qS7dU4i604Sle+U9VLX+WSNVJggk6MupKVkYvvBm4XqYaeFuf67diHefHKHs50uQIS2YEDFhPCakQ==",
+      "type": "package",
+      "path": "automapper/13.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "automapper.13.0.1.nupkg.sha512",
+        "automapper.nuspec",
+        "icon.png",
+        "lib/net6.0/AutoMapper.dll",
+        "lib/net6.0/AutoMapper.xml"
+      ]
+    },
     "Microsoft.AspNetCore.Cryptography.Internal/6.0.26": {
       "sha512": "+D2bhCplByJBtAuutU8rYTM+98fWlX83ORZRuv6lX6ABwGTLJyVPA0N13wDooMmR4yNYoFDQ8RgkXzttJ80gRA==",
       "type": "package",
@@ -2156,29 +2187,25 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "AutoMapper >= 13.0.1",
       "GraduationProject.Data >= 1.0.0",
       "GraduationProject.Repository >= 1.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ABDAL\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Mohamed\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj",
+      "projectUniqueName": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj",
       "projectName": "GraduationProject.Service",
-      "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj",
-      "packagesPath": "C:\\Users\\ABDAL\\.nuget\\packages\\",
-      "outputPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Service\\obj\\",
+      "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj",
+      "packagesPath": "C:\\Users\\Mohamed\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Service\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\ABDAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\Mohamed\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -2192,11 +2219,11 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj": {
-              "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj"
+            "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj": {
+              "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Data\\GraduationProject.Data.csproj"
             },
-            "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Repository\\GraduationProject.Repository.csproj": {
-              "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Repository\\GraduationProject.Repository.csproj"
+            "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Repository\\GraduationProject.Repository.csproj": {
+              "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Repository\\GraduationProject.Repository.csproj"
             }
           }
         }
@@ -2210,6 +2237,12 @@
     "frameworks": {
       "net6.0": {
         "targetAlias": "net6.0",
+        "dependencies": {
+          "AutoMapper": {
+            "target": "Package",
+            "version": "[13.0.1, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",
@@ -2226,7 +2259,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }
