@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GraduationProject.Identity.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GraduationProject.Data.Entity
@@ -10,6 +11,10 @@ namespace GraduationProject.Data.Entity
         public int Id { get; set; }
         [Required, MaxLength(500)]
         public string Name { get; set; }
+        public string? Description { get; set; }
+        [ForeignKey("User")]
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
 
         public virtual ICollection<Bylaw> Bylaws { get; set; } = new List<Bylaw>();
         public virtual ICollection<Band> Bands { get; set; } = new List<Band>();

@@ -427,12 +427,21 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Facultys");
                 });
@@ -445,22 +454,27 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CityId")
+                    b.Property<int?>("CityId")
+                        .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int>("CountryId")
+                    b.Property<int?>("CountryId")
+                        .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int>("GovernorateId")
+                    b.Property<int?>("GovernorateId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Job")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("ParentName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("PostalCode")
                         .HasColumnType("nvarchar(max)");
@@ -591,11 +605,9 @@ namespace GraduationProject.EntityFramework.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("StaffId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("StudentId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -603,7 +615,8 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.HasIndex("StaffId");
 
                     b.HasIndex("StudentId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[StudentId] IS NOT NULL");
 
                     b.ToTable("QualificationDatas");
                 });
@@ -653,18 +666,15 @@ namespace GraduationProject.EntityFramework.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int?>("BandId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("BylawId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ExamRoleId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -679,11 +689,9 @@ namespace GraduationProject.EntityFramework.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("PhaseId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("SemesterId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<decimal?>("SuccessPercentageBand")
@@ -998,6 +1006,21 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("NameArabic")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("NameEnglish")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("NationalID")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
+
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("nvarchar(max)");
 
@@ -1172,6 +1195,17 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Navigation("Faculty");
                 });
 
+            modelBuilder.Entity("GraduationProject.Data.Entity.Faculty", b =>
+                {
+                    b.HasOne("GraduationProject.Identity.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("GraduationProject.Data.Entity.FamilyData", b =>
                 {
                     b.HasOne("GraduationProject.Data.Entity.City", "City")
@@ -1252,15 +1286,11 @@ namespace GraduationProject.EntityFramework.Migrations
                 {
                     b.HasOne("GraduationProject.Data.Entity.Staff", "Staff")
                         .WithMany("qualificationDatas")
-                        .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StaffId");
 
                     b.HasOne("GraduationProject.Data.Entity.Student", "Student")
                         .WithOne("QualificationDatas")
-                        .HasForeignKey("GraduationProject.Data.Entity.QualificationData", "StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GraduationProject.Data.Entity.QualificationData", "StudentId");
 
                     b.Navigation("Staff");
 
@@ -1306,21 +1336,15 @@ namespace GraduationProject.EntityFramework.Migrations
                 {
                     b.HasOne("GraduationProject.Data.Entity.Band", "Band")
                         .WithMany("ScientificDegrees")
-                        .HasForeignKey("BandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BandId");
 
                     b.HasOne("GraduationProject.Data.Entity.Bylaw", "Bylaw")
                         .WithMany("ScientificDegrees")
-                        .HasForeignKey("BylawId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BylawId");
 
                     b.HasOne("GraduationProject.Data.Entity.ExamRole", "ExamRole")
                         .WithMany("ScientificDegrees")
-                        .HasForeignKey("ExamRoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ExamRoleId");
 
                     b.HasOne("GraduationProject.Data.Entity.ScientificDegree", "Parent")
                         .WithMany("ParentScientificDegree")
@@ -1328,15 +1352,11 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     b.HasOne("GraduationProject.Data.Entity.Phase", "Phase")
                         .WithMany("scientificDegrees")
-                        .HasForeignKey("PhaseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PhaseId");
 
                     b.HasOne("GraduationProject.Data.Entity.Semester", "Semester")
                         .WithMany("scientificDegrees")
-                        .HasForeignKey("SemesterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SemesterId");
 
                     b.Navigation("Band");
 

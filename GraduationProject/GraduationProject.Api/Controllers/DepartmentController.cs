@@ -1,4 +1,5 @@
-﻿using GraduationProject.Service.IService;
+﻿using GraduationProject.Service.DataTransferObject.DepartmentDto;
+using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
@@ -7,15 +8,16 @@ namespace GraduationProject.Api.Controllers
     [ApiController]
     public class DepartmentController : ControllerBase
     {
-        private IDepartment _service;
-        public DepartmentController(IDepartment service)
+        private IDepartmentService _service;
+        public DepartmentController(IDepartmentService service)
         {
             _service = service;
         }
         [HttpPost]
-        public IActionResult AddDept(Data.Entity.Department entity)
+        public async Task<IActionResult> AddDepartment(DepartmentDto departmentDto)
         {
-            return Ok(_service.AddDepartmentAsync(entity));
+            await _service.AddDepartmentAsync(departmentDto);
+            return Ok("Add Department Success");
         }
     }
 }
