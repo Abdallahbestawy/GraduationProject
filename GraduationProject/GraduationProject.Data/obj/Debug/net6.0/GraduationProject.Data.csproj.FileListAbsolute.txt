@@ -25,3 +25,7 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Identity.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Identity.pdb
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.csproj.CopyComplete
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Identity.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Identity.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.csproj.AssemblyReference.cache
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\obj\Debug\net6.0\GraduationProject.Data.csproj.CopyComplete

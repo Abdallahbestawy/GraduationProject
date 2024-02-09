@@ -35,3 +35,5 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.EntityFramework\obj\Debug\net6.0\ref\GraduationProject.EntityFramework.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.Identity.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.Identity.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.Identity.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.Identity.pdb
