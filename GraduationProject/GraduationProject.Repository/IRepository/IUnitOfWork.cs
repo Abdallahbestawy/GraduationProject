@@ -10,6 +10,12 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<QualificationData> QualificationDatas { get; }
         IGeneralRepository<FamilyData> FamilyDatas { get; }
         IGeneralRepository<Faculty> Facultys { get; }
+        IGeneralRepository<Band> Bands { get; }
+        IGeneralRepository<Bylaw> Bylaws { get; }
+        IGeneralRepository<Semester> Semesters { get; }
+        IGeneralRepository<Phase> Phases { get; }
+        IGeneralRepository<ExamRole> ExamRoles { get; }
+        IGeneralRepository<ScientificDegree> ScientificDegrees { get; }
 
         int Save();
     }

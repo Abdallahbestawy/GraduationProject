@@ -1,5 +1,6 @@
 ﻿using GraduationProject.EntityFramework.DataBaseContext;
 using GraduationProject.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace GraduationProject.Repository.Repository
 {
@@ -26,14 +27,21 @@ namespace GraduationProject.Repository.Repository
             _context.Set<T>().Remove(entity);
         }
 
+        public async Task<IQueryable<T>> GetAll()
+        {
+            var entities = await _context.Set<T>().ToListAsync();
+            return entities.AsQueryable();
+        }
+
         public async Task<T> GetByIdAsync(int id)
         {
             return await _context.Set<T>().FindAsync(id);
         }
 
-        public Task<T> Update(T entity)
+        public async Task<T> Update(T entity)
         {
-            throw new NotImplementedException();
+            var entry = _context.Set<T>().Update(entity);
+            return entry.Entity;
         }
     }
 }

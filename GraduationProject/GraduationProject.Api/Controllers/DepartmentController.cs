@@ -8,15 +8,15 @@ namespace GraduationProject.Api.Controllers
     [ApiController]
     public class DepartmentController : ControllerBase
     {
-        private IDepartmentService _service;
-        public DepartmentController(IDepartmentService service)
+        private IDepartmentService _departmentService;
+        public DepartmentController(IDepartmentService departmentService)
         {
-            _service = service;
+            _departmentService = departmentService;
         }
         [HttpPost]
         public async Task<IActionResult> AddDepartment(DepartmentDto departmentDto)
         {
-            await _service.AddDepartmentAsync(departmentDto);
+            await _departmentService.AddDepartmentAsync(departmentDto);
             return Ok("Add Department Success");
         }
     }

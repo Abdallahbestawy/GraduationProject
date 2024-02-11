@@ -21,7 +21,7 @@ namespace GraduationProject.Service.Service
         addStudentDto.NationalID, addStudentDto.Email, addStudentDto.Password);
             if (!string.IsNullOrEmpty(userId))
             {
-                Student student = new Student
+                Student newStudent = new Student
                 {
                     UserId = userId,
                     PlaceOfBirth = addStudentDto.PlaceOfBirth,
@@ -35,19 +35,18 @@ namespace GraduationProject.Service.Service
                     Street = addStudentDto.Street,
                     PostalCode = addStudentDto.PostalCode
                 };
-                _unitOfWork.Students.AddAsync(student);
+                _unitOfWork.Students.AddAsync(newStudent);
                 _unitOfWork.Save();
-                int studentId = student.Id;
-                QualificationData qualificationDataStudent = new QualificationData
+                int studentId = newStudent.Id;
+                QualificationData newQualificationDataStudent = new QualificationData
                 {
                     StudentId = studentId,
-                    //StaffId = 0,
                     PreQualification = addStudentDto.PreQualification,
                     SeatNumber = addStudentDto.SeatNumber,
                     QualificationYear = addStudentDto.QualificationYear,
                     Degree = addStudentDto.Degree
                 };
-                _unitOfWork.QualificationDatas.AddAsync(qualificationDataStudent);
+                _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
                 FamilyData FamilyDataStudent = new FamilyData
                 {
                     StudentId = studentId,

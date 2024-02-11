@@ -161,3 +161,4 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.Identity.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.Identity.pdb
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\AutoMapper.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\AutoMapper.dll

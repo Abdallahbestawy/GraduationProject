@@ -21,7 +21,7 @@ namespace GraduationProject.Service.Service
                    addSaffDto.NationalID, addSaffDto.Email, addSaffDto.Password);
             if (!string.IsNullOrEmpty(userId))
             {
-                Staff staff = new Staff
+                Staff newAdministration = new Staff
                 {
                     UserId = userId,
                     PlaceOfBirth = addSaffDto.PlaceOfBirth,
@@ -35,18 +35,18 @@ namespace GraduationProject.Service.Service
                     Street = addSaffDto.Street,
                     PostalCode = addSaffDto.PostalCode
                 };
-                _unitOfWork.Staffs.AddAsync(staff);
+                _unitOfWork.Staffs.AddAsync(newAdministration);
                 _unitOfWork.Save();
-                int staffId = staff.Id;
-                QualificationData qualificationDataStudent = new QualificationData
+                int AdministrationId = newAdministration.Id;
+                QualificationData newQualificationDataStudent = new QualificationData
                 {
-                    StaffId = staffId,
+                    StaffId = AdministrationId,
                     PreQualification = addSaffDto.PreQualification,
                     SeatNumber = addSaffDto.SeatNumber,
                     QualificationYear = addSaffDto.QualificationYear,
                     Degree = addSaffDto.Degree
                 };
-                _unitOfWork.QualificationDatas.AddAsync(qualificationDataStudent);
+                _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
                 _unitOfWork.Save();
                 return 1;
 

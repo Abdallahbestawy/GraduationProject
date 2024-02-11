@@ -17,6 +17,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+// AutoMapper
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -38,6 +39,12 @@ builder.Services.AddTransient<ITeacherService, TeacherService>();
 builder.Services.AddTransient<ITeacherAssistantService, TeacherAssistantService>();
 builder.Services.AddTransient<IAccountService, AccountService>();
 builder.Services.AddTransient<IFacultService, FacultService>();
+builder.Services.AddTransient<IBandService, BandService>();
+builder.Services.AddTransient<IBylawService, BylawService>();
+builder.Services.AddTransient<IExamRoleService, ExamRoleService>();
+builder.Services.AddTransient<IPhaseService, PhaseService>();
+builder.Services.AddTransient<ISemesterService, SemesterService>();
+builder.Services.AddTransient<IScientificDegreeService, ScientificDegreeService>();
 builder.Services.AddTransient<UnitOfWork>();
 builder.Services.AddTransient<IRoleService, RoleService>();
 //builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => { })
