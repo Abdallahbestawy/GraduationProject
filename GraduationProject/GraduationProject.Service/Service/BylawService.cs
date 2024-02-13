@@ -23,11 +23,43 @@ namespace GraduationProject.Service.Service
                 Type = addBylawDto.Type,
                 Start = addBylawDto.Start,
                 End = addBylawDto.End,
-                FacultyId = addBylawDto.FacultyId
+                FacultyId = addBylawDto.FacultyId,
             };
+
             await _unitOfWork.Bylaws.AddAsync(newBylaw);
             _unitOfWork.Save();
+
+            int bylawyId = newBylaw.Id;
+
+            List<Estimates> estimates = addBylawDto.Estimates.Select(est =>
+                new Estimates
+                {
+                    BylawId = bylawyId,
+                    Name = est.NameEstimates,
+                    Char = est.CharEstimates,
+                    MaxGpa = est.MaxGpaEstimates,
+                    MinGpa = est.MinGpaEstimates,
+                    MaxPercentage = est.MaxPercentageEstimates,
+                    MinPercentage = est.MinPercentageEstimates,
+                }).ToList();
+
+            await _unitOfWork.Estimates.AddRangeAsync(estimates);
+            _unitOfWork.Save();
+
+            List<EstimatesCourse> estimatesCourses = addBylawDto.EstimatesCourses.Select(estCourse =>
+                new EstimatesCourse
+                {
+                    BylawId = bylawyId,
+                    Name = estCourse.NameEstimatesCourse,
+                    Char = estCourse.CharEstimatesCourse,
+                    MaxPercentage = estCourse.MaxPercentageEstimatesCourse,
+                    MinPercentage = estCourse.MinPercentageEstimatesCourse
+                }).ToList();
+
+            await _unitOfWork.EstimatesCourses.AddRangeAsync(estimatesCourses);
+            _unitOfWork.Save();
         }
+
 
 
 

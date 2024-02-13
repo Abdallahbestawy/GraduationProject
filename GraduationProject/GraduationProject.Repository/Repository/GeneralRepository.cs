@@ -17,9 +17,10 @@ namespace GraduationProject.Repository.Repository
             return entity;
         }
 
-        public Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities)
+        public async Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities)
         {
-            throw new NotImplementedException();
+            await _context.Set<T>().AddRangeAsync(entities);
+            return entities;
         }
 
         public async Task Delete(T entity)

@@ -16,6 +16,9 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<Phase> Phases { get; }
         IGeneralRepository<ExamRole> ExamRoles { get; }
         IGeneralRepository<ScientificDegree> ScientificDegrees { get; }
+        IGeneralRepository<Estimates> Estimates { get; }
+        IGeneralRepository<EstimatesCourse> EstimatesCourses { get; }
+
 
         int Save();
     }

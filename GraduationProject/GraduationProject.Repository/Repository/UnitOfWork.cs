@@ -19,6 +19,8 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<Phase> Phases { get; private set; }
         public IGeneralRepository<ExamRole> ExamRoles { get; private set; }
         public IGeneralRepository<ScientificDegree> ScientificDegrees { get; private set; }
+        public IGeneralRepository<Estimates> Estimates { get; private set; }
+        public IGeneralRepository<EstimatesCourse> EstimatesCourses { get; private set; }
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
@@ -34,6 +36,8 @@ namespace GraduationProject.Repository.Repository
             Phases = new GeneralRepository<Phase>(_context);
             ExamRoles = new GeneralRepository<ExamRole>(_context);
             ScientificDegrees = new GeneralRepository<ScientificDegree>(_context);
+            Estimates = new GeneralRepository<Estimates>(_context);
+            EstimatesCourses = new GeneralRepository<EstimatesCourse>(_context);
         }
 
         public int Save()

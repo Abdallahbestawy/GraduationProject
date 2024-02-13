@@ -12,10 +12,10 @@ namespace GraduationProject.Data.Entity
         public string Name { get; set; }
         [Required]
         public char Char { get; set; }
-        public decimal MaxPercentage { get; set; }
-        public decimal MinPercentage { get; set; }
-        public decimal MaxGpa { get; set; }
-        public decimal MinGpa { get; set; }
+        public decimal? MaxPercentage { get; set; }
+        public decimal? MinPercentage { get; set; }
+        public decimal? MaxGpa { get; set; }
+        public decimal? MinGpa { get; set; }
 
         [ForeignKey("Bylaw")]
         public int BylawId { get; set; }
