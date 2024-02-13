@@ -21,6 +21,7 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<ScientificDegree> ScientificDegrees { get; private set; }
         public IGeneralRepository<Estimates> Estimates { get; private set; }
         public IGeneralRepository<EstimatesCourse> EstimatesCourses { get; private set; }
+        public IGeneralRepository<Course> Courses { get; private set; }
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
@@ -38,6 +39,7 @@ namespace GraduationProject.Repository.Repository
             ScientificDegrees = new GeneralRepository<ScientificDegree>(_context);
             Estimates = new GeneralRepository<Estimates>(_context);
             EstimatesCourses = new GeneralRepository<EstimatesCourse>(_context);
+            Courses = new GeneralRepository<Course>(_context);
         }
 
         public int Save()

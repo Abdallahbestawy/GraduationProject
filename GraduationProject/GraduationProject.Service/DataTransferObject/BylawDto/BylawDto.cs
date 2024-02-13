@@ -18,20 +18,6 @@ namespace GraduationProject.Service.DataTransferObject.BylawDto
         public DateTime End { get; set; }
 
         public int FacultyId { get; set; }
-        //[Required, MaxLength(500)]
-        //public string NameEstimates { get; set; }
-        //[Required]
-        //public char CharEstimates { get; set; }
-        //public decimal? MaxPercentageEstimates { get; set; }
-        //public decimal? MinPercentageEstimates { get; set; }
-        //public decimal? MaxGpaEstimates { get; set; }
-        //public decimal? MinGpaEstimates { get; set; }
-        //[Required, MaxLength(500)]
-        //public string NameEstimatesCourse { get; set; }
-        //[Required]
-        //public char CharEstimatesCourse { get; set; }
-        //public decimal MaxPercentageEstimatesCourse { get; set; }
-        //public decimal MinPercentageEstimatesCourse { get; set; }
         public List<EstimateDto> Estimates { get; set; }
         public List<EstimateCourseDto> EstimatesCourses { get; set; }
     }

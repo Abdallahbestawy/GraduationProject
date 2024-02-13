@@ -32,7 +32,7 @@ namespace GraduationProject.Service.Service
         {
             var bandEntities = await _unitOfWork.Bands.GetAll();
 
-            var bandDtos = bandEntities.Select(entity => new BandDto
+            var bandDto = bandEntities.Select(entity => new BandDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
@@ -41,7 +41,7 @@ namespace GraduationProject.Service.Service
                 FacultyId = entity.FacultyId
             });
 
-            return bandDtos.AsQueryable();
+            return bandDto.AsQueryable();
         }
 
         public async Task<BandDto> GetBandByIdAsync(int bandId)
