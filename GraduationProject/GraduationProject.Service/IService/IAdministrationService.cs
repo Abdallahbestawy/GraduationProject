@@ -4,6 +4,6 @@ namespace GraduationProject.Service.IService
 {
     public interface IAdministrationService
     {
-        Task<int> AddAdministrationAsync(AddStaffDto addSaffDto);
+        Task<int> AddAdministrationAsync(AddStaffDto addStaffDto);
     }
 }
