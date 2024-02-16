@@ -18,11 +18,11 @@ namespace GraduationProject.Service.DataTransferObject.StaffDto
         public string Email { get; set; }
         [Required]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string Password { get; set; }    
         [Required]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Password and ConfirmPassword not mated")]
-        public string ConfirmPasswor { get; set; }
+        [Compare("Password", ErrorMessage = "Password and ConfirmPassword Not matched")]
+        public string ConfirmPassword { get; set; }
         public string PlaceOfBirth { get; set; }
 
         public Gender Gender { get; set; }
