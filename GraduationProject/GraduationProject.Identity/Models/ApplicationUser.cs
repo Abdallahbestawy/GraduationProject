@@ -13,6 +13,7 @@ namespace GraduationProject.Identity.Models
         [Required, MaxLength(14)]
         [RegularExpression(@"^\d+$")]
         public string NationalID { get; set; }
+        public List<RefreshToken>? RefreshTokens { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GraduationProject.Data.Enum;
+using GraduationProject.Service.DataTransferObject.PhoneDto;
 using System.ComponentModel.DataAnnotations;
 
 namespace GraduationProject.Service.DataTransferObject.StudentDto
@@ -64,5 +65,7 @@ namespace GraduationProject.Service.DataTransferObject.StudentDto
 
 
         public string? ParentStreet { get; set; }
+        public List<PhoneNumberDto>? PhoneNumbers { get; set; }
     }
+
 }

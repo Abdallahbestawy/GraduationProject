@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\youssef\\Documents\\GitHub\\GraduationProject\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj": {}
+    "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj": {}
   },
   "projects": {
-    "C:\\Users\\youssef\\Documents\\GitHub\\GraduationProject\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj": {
+    "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\youssef\\Documents\\GitHub\\GraduationProject\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj",
+        "projectUniqueName": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj",
         "projectName": "GraduationProject.Identity",
-        "projectPath": "C:\\Users\\youssef\\Documents\\GitHub\\GraduationProject\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj",
-        "packagesPath": "C:\\Users\\youssef\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\youssef\\Documents\\GitHub\\GraduationProject\\GraduationProject\\GraduationProject.Identity\\obj\\",
+        "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj",
+        "packagesPath": "C:\\Users\\ABDAL\\.nuget\\packages\\",
+        "outputPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Identity\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\youssef\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ABDAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -40,6 +44,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[6.0.27, )"
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[6.0.26, )"
@@ -51,6 +59,10 @@
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[6.0.26, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[6.35.0, )"
             }
           },
           "imports": [
@@ -69,7 +81,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }

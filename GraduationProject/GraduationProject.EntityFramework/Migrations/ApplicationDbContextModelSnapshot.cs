@@ -562,14 +562,13 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<int?>("StaffId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("StudentId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<short>("Type")
@@ -1267,15 +1266,11 @@ namespace GraduationProject.EntityFramework.Migrations
                 {
                     b.HasOne("GraduationProject.Data.Entity.Staff", "Staff")
                         .WithMany("phones")
-                        .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StaffId");
 
                     b.HasOne("GraduationProject.Data.Entity.Student", "Student")
                         .WithMany("Phones")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StudentId");
 
                     b.Navigation("Staff");
 
@@ -1542,6 +1537,43 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("StudentSemester");
+                });
+
+            modelBuilder.Entity("GraduationProject.Identity.Models.ApplicationUser", b =>
+                {
+                    b.OwnsMany("GraduationProject.Identity.Models.RefreshToken", "RefreshTokens", b1 =>
+                        {
+                            b1.Property<string>("ApplicationUserId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"), 1L, 1);
+
+                            b1.Property<DateTime>("CreatedOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<DateTime>("ExpiresOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<DateTime?>("RevokedOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("Token")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("ApplicationUserId", "Id");
+
+                            b1.ToTable("RefreshToken");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ApplicationUserId");
+                        });
+
+                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("GraduationProject.Data.Entity.AcademyYear", b =>

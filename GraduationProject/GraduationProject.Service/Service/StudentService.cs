@@ -60,6 +60,19 @@ namespace GraduationProject.Service.Service
                 };
                 _unitOfWork.FamilyDatas.AddAsync(FamilyDataStudent);
                 _unitOfWork.Save();
+                if (addStudentDto.PhoneNumbers != null)
+                {
+                    List<Phone> phones = addStudentDto.PhoneNumbers.Select(ph =>
+                        new Phone
+                        {
+                            StudentId = studentId,
+                            PhoneNumber = ph.PhoneNumber,
+                            Type = ph.Type,
+                        }).ToList();
+
+                    _unitOfWork.Phones.AddRangeAsync(phones);
+                    _unitOfWork.Save();
+                }
                 return 1;
 
             }

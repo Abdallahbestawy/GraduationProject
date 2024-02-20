@@ -12,12 +12,13 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("Student")]
         public int? StudentId { get; set; }
-        public Student Student { get; set; }
+        public Student? Student { get; set; }
 
         [ForeignKey("Staff")]
         public int? StaffId { get; set; }
-        public Staff Staff { get; set; }
-
+        public Staff? Staff { get; set; }
+        [Required, MaxLength(11)]
+        [RegularExpression(@"^\d+$")]
         public string PhoneNumber { get; set; }
 
         public PhoneType Type { get; set; }
