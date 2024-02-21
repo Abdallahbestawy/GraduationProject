@@ -28,5 +28,10 @@ namespace GraduationProject.Service.DataTransferObject.CourseDto
         public int ScientificDegreeId { get; set; }
 
         public int DepartmentId { get; set; }
+        public List<CoursePrerequisiteDto>? CoursePrerequisites { get; set; }
+    }
+    public class CoursePrerequisiteDto
+    {
+        public int CoursePrerequisiteId { get; set; }
     }
 }

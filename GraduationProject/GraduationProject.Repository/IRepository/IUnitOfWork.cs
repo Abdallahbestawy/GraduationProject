@@ -20,6 +20,7 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<EstimatesCourse> EstimatesCourses { get; }
         IGeneralRepository<Course> Courses { get; }
         IGeneralRepository<Phone> Phones { get; }
+        IGeneralRepository<CoursePrerequisite> CoursePrerequisites { get; }
 
 
         int Save();

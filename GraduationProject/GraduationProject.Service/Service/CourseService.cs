@@ -32,6 +32,19 @@ namespace GraduationProject.Service.Service
             };
             await _unitOfWork.Courses.AddAsync(newCourse);
             _unitOfWork.Save();
+            if (addCourseDto.Prerequisite && addCourseDto.CoursePrerequisites != null)
+            {
+                int courseId = newCourse.Id;
+                List<CoursePrerequisite> coursePrerequisites = addCourseDto.CoursePrerequisites.Select(p =>
+                new CoursePrerequisite
+                {
+                    CourseId = courseId,
+                    PrerequisiteId = p.CoursePrerequisiteId
+                }).ToList();
+                _unitOfWork.CoursePrerequisites.AddRangeAsync(coursePrerequisites);
+                _unitOfWork.Save();
+            }
+
         }
 
         public async Task<CourseDto> GetCourseByIdAsync(int CourseId)
