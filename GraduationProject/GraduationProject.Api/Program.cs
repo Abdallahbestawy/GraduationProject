@@ -36,6 +36,7 @@ builder.Services.AddDbContext<IdentityDbContext>(options =>
     b => b.MigrationsAssembly(typeof(IdentityDbContext).Assembly.FullName)));
 // injection
 builder.Services.AddTransient<IDepartmentService, DepartmentService>();
+builder.Services.AddTransient<IAssessMethodService, AssessMethodService>();
 builder.Services.AddTransient<IStudentService, StudentService>();
 builder.Services.AddTransient<IStaffService, StaffService>();
 builder.Services.AddTransient<IAdministrationService, AdministrationService>();

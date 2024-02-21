@@ -24,6 +24,7 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<Course> Courses { get; private set; }
         public IGeneralRepository<Phone> Phones { get; private set; }
         public IGeneralRepository<CoursePrerequisite> CoursePrerequisites { get; private set; }
+        public IGeneralRepository<AssessMethod> AssessMethods { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -45,6 +46,7 @@ namespace GraduationProject.Repository.Repository
             Courses = new GeneralRepository<Course>(_context);
             Phones = new GeneralRepository<Phone>(_context);
             CoursePrerequisites = new GeneralRepository<CoursePrerequisite>(_context);
+            AssessMethods = new GeneralRepository<AssessMethod>(_context);
         }
 
         public int Save()
