@@ -22,6 +22,7 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<Phone> Phones { get; }
         IGeneralRepository<CoursePrerequisite> CoursePrerequisites { get; }
         IGeneralRepository<AssessMethod> AssessMethods { get; }
+        IGeneralRepository<AcademyYear> AcademyYears { get; }
 
         int Save();
     }
