@@ -1,7 +1,9 @@
 ﻿using GraduationProject.Data.Entity;
 using GraduationProject.Identity.IService;
 using GraduationProject.Repository.Repository;
+using GraduationProject.Service.DataTransferObject.CourseDto;
 using GraduationProject.Service.DataTransferObject.StudentDto;
+using GraduationProject.Service.DataTransferObject.StudentSemester;
 using GraduationProject.Service.IService;
 
 namespace GraduationProject.Service.Service
@@ -10,10 +12,12 @@ namespace GraduationProject.Service.Service
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly IAccountService _accountService;
-        public StudentService(UnitOfWork unitOfWork, IAccountService accountService)
+        private readonly ICourseService _courseService;
+        public StudentService(UnitOfWork unitOfWork, IAccountService accountService, ICourseService courseService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _accountService = accountService ?? throw new ArgumentNullException(nameof(accountService));
+            _courseService = courseService ?? throw new ArgumentNullException(nameof(courseService));
         }
         public async Task<int> AddStudentAsync(AddStudentDto addStudentDto)
         {
@@ -35,7 +39,7 @@ namespace GraduationProject.Service.Service
                     Street = addStudentDto.Street,
                     PostalCode = addStudentDto.PostalCode
                 };
-                _unitOfWork.Students.AddAsync(newStudent);
+                await _unitOfWork.Students.AddAsync(newStudent);
                 _unitOfWork.Save();
                 int studentId = newStudent.Id;
                 QualificationData newQualificationDataStudent = new QualificationData
@@ -46,7 +50,8 @@ namespace GraduationProject.Service.Service
                     QualificationYear = addStudentDto.QualificationYear,
                     Degree = addStudentDto.Degree
                 };
-                _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
+                await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
+                _unitOfWork.Save();
                 FamilyData FamilyDataStudent = new FamilyData
                 {
                     StudentId = studentId,
@@ -58,7 +63,7 @@ namespace GraduationProject.Service.Service
                     CityId = addStudentDto.ParentCityId,
                     Street = addStudentDto.ParentStreet
                 };
-                _unitOfWork.FamilyDatas.AddAsync(FamilyDataStudent);
+                await _unitOfWork.FamilyDatas.AddAsync(FamilyDataStudent);
                 _unitOfWork.Save();
                 if (addStudentDto.PhoneNumbers != null)
                 {
@@ -70,8 +75,8 @@ namespace GraduationProject.Service.Service
                             Type = ph.Type,
                         }).ToList();
 
-                    _unitOfWork.Phones.AddRangeAsync(phones);
-                    _unitOfWork.Save();
+                    await _unitOfWork.Phones.AddRangeAsync(phones);
+                    await _unitOfWork.SaveAsync();
                 }
                 return 1;
 
@@ -80,6 +85,39 @@ namespace GraduationProject.Service.Service
             {
                 return -1;
             }
+        }
+
+        public async Task<int> AddStudentSemesterAsync(AddStudentSemesterDto addStudentSemesterDto)
+        {
+            StudentSemester newStudentSemester = new StudentSemester
+            {
+                StudentId = addStudentSemesterDto.StudentId,
+                DepartmentId = addStudentSemesterDto.DepartmentId,
+                ScientificDegreeId = addStudentSemesterDto.ScientificDegreeId,
+                AcademyYearId = addStudentSemesterDto.AcademyYearId
+            };
+            await _unitOfWork.StudentSemesters.AddAsync(newStudentSemester);
+            await _unitOfWork.SaveAsync();
+            bool flag = await AddCourseStudent(newStudentSemester.Id, newStudentSemester.ScientificDegreeId);
+            if (flag)
+            {
+                return 1;
+            }
+            return -1;
+        }
+        private async Task<bool> AddCourseStudent(int studentId, int scientificDegreeId)
+        {
+            IQueryable<CourseDto> coursesQuery = await _courseService.GetCoursesByScientificDegreeIdAsync(scientificDegreeId);
+            List<CourseDto> courses = coursesQuery.ToList();
+
+            List<StudentSemesterCourse> studentSemesterCourses = courses.Select(course => new StudentSemesterCourse
+            {
+                StudentSemesterId = studentId,
+                CourseId = course.Id
+            }).ToList();
+            await _unitOfWork.StudentSemesterCourses.AddRangeAsync(studentSemesterCourses);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
     }
 }

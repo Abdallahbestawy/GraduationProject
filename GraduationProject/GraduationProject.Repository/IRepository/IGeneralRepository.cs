@@ -1,4 +1,6 @@
-﻿namespace GraduationProject.Repository.IRepository
+﻿using System.Linq.Expressions;
+
+namespace GraduationProject.Repository.IRepository
 {
     public interface IGeneralRepository<T> where T : class
     {
@@ -8,5 +10,6 @@
         Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities);
         Task<T> Update(T entity);
         Task Delete(T entity);
+        Task<IQueryable<T>> FindAllByForeignKeyAsync<TProperty>(Expression<Func<T, TProperty>> foreignKeySelector, TProperty foreignKey);
     }
 }

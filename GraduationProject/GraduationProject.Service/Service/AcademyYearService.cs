@@ -22,6 +22,7 @@ namespace GraduationProject.Service.Service
                 End = addAcademyYearDto.End,
                 Description = addAcademyYearDto.Description,
                 AcademyYearOrder = addAcademyYearDto.AcademyYearOrder,
+                FacultyId = addAcademyYearDto.FacultyId,
                 IsCurrent = addAcademyYearDto.IsCurrent
             };
             await _unitOfWork.AcademyYears.AddAsync(newAcademyYear);
@@ -41,6 +42,7 @@ namespace GraduationProject.Service.Service
                 End = entity.End,
                 Description = entity.Description,
                 AcademyYearOrder = entity.AcademyYearOrder,
+                FacultyId = entity.FacultyId,
                 IsCurrent = entity.IsCurrent
             });
 
@@ -57,6 +59,7 @@ namespace GraduationProject.Service.Service
                 End = academyYearEntity.End,
                 Description = academyYearEntity.Description,
                 AcademyYearOrder = academyYearEntity.AcademyYearOrder,
+                FacultyId = academyYearEntity.FacultyId,
                 IsCurrent = academyYearEntity.IsCurrent
             };
             return (academyYearDto);
@@ -73,6 +76,7 @@ namespace GraduationProject.Service.Service
             existingAcademyYear.End = updateAcademyYearDto.End;
             existingAcademyYear.Description = updateAcademyYearDto.Description;
             existingAcademyYear.AcademyYearOrder = updateAcademyYearDto.AcademyYearOrder;
+            existingAcademyYear.FacultyId = updateAcademyYearDto.FacultyId;
             existingAcademyYear.IsCurrent = updateAcademyYearDto.IsCurrent;
 
             await _unitOfWork.AcademyYears.Update(existingAcademyYear);

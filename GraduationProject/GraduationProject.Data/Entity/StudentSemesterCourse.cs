@@ -17,6 +17,7 @@ namespace GraduationProject.Data.Entity
         public int CourseId { get; set; }
         public Course Course { get; set; }
 
-        public decimal CourseDegree { get; set; }
+        public decimal? CourseDegree { get; set; }
+        public bool Passing { get; set; } = false;
     }
 }

@@ -117,5 +117,28 @@ namespace GraduationProject.Service.Service
             await _unitOfWork.Courses.Delete(existingCourse);
             _unitOfWork.Save();
         }
+
+        public async Task<IQueryable<CourseDto>> GetCoursesByScientificDegreeIdAsync(int scientificDegreeId)
+        {
+            var courses = await _unitOfWork.Courses.FindAllByForeignKeyAsync(c => c.ScientificDegreeId, scientificDegreeId);
+            var courseDto = courses.Select(entity => new CourseDto
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Code = entity.Code,
+                Description = entity.Description,
+                Type = entity.Type,
+                Category = entity.Category,
+                MaxDegree = entity.MaxDegree,
+                NumberOfCreditHours = entity.NumberOfCreditHours,
+                NumberOfPoints = entity.NumberOfPoints,
+                Prerequisite = entity.Prerequisite,
+                ScientificDegreeId = entity.ScientificDegreeId,
+                DepartmentId = entity.DepartmentId
+            });
+
+            return courseDto.AsQueryable();
+        }
+
     }
 }
