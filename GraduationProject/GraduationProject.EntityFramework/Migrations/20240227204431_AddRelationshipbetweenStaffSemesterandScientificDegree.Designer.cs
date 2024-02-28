@@ -4,6 +4,7 @@ using GraduationProject.EntityFramework.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GraduationProject.EntityFramework.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240227204431_AddRelationshipbetweenStaffSemesterandScientificDegree")]
+    partial class AddRelationshipbetweenStaffSemesterandScientificDegree
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -831,7 +833,7 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Property<int>("AcademyYearId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CourseId")
+                    b.Property<int>("ScientificDegreeId")
                         .HasColumnType("int");
 
                     b.Property<int>("StaffId")
@@ -841,7 +843,7 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     b.HasIndex("AcademyYearId");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("ScientificDegreeId");
 
                     b.HasIndex("StaffId");
 
@@ -1444,9 +1446,9 @@ namespace GraduationProject.EntityFramework.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GraduationProject.Data.Entity.Course", "Course")
+                    b.HasOne("GraduationProject.Data.Entity.ScientificDegree", "ScientificDegree")
                         .WithMany()
-                        .HasForeignKey("CourseId")
+                        .HasForeignKey("ScientificDegreeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1458,7 +1460,7 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     b.Navigation("AcademyYear");
 
-                    b.Navigation("Course");
+                    b.Navigation("ScientificDegree");
 
                     b.Navigation("Staff");
                 });
