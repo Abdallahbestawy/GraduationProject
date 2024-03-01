@@ -140,5 +140,38 @@ namespace GraduationProject.Service.Service
             return courseDto.AsQueryable();
         }
 
+        public async Task AddCourseAssessMethodAsync(CourseAssessMethodDto addCourseAssessMethodDto)
+        {
+            List<CourseAssessMethod> newCourseAssessMethods = addCourseAssessMethodDto.CourseAssessMethods.Select(ca =>
+            new CourseAssessMethod
+            {
+                CourseId = ca.CourseId,
+                AssessMethodId = ca.AssessMethodsId
+            }).ToList();
+            await _unitOfWork.CourseAssessMethods.AddRangeAsync(newCourseAssessMethods);
+            await _unitOfWork.SaveAsync();
+        }
+
+        public async Task<CourseAssessMethodDto> GetAssessMethodsByCoursesIdAsync(int courseId)
+        {
+            var courseAssessMethodsTask = _unitOfWork.CourseAssessMethods
+                 .FindAllByForeignKeyAsync(c => c.CourseId, courseId);
+
+            var courseAssessMethods = await courseAssessMethodsTask;
+
+            var assessMethodDtos = courseAssessMethods
+                .Select(assessMethod => new CourseAssessMethodDtos
+                {
+                    Id = assessMethod.Id,
+                    CourseId = assessMethod.CourseId,
+                    AssessMethodsId = assessMethod.AssessMethodId
+                }).ToList();
+
+            return new CourseAssessMethodDto
+            {
+                CourseAssessMethods = assessMethodDtos
+            };
+
+        }
     }
 }

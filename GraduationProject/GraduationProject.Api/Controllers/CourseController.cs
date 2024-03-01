@@ -29,7 +29,7 @@ namespace GraduationProject.Api.Controllers
             var courses = await _courseService.GetCoursesAsync();
             return Ok(courses);
         }
-        [HttpPost]
+        [HttpPost("AddCourse")]
         public async Task<IActionResult> AddCourse(CourseDto addCourseDto)
         {
             await _courseService.AddCourseAsync(addCourseDto);
@@ -51,5 +51,17 @@ namespace GraduationProject.Api.Controllers
             await _courseService.DeleteCourseAsync(Id);
             return Ok("Delete Course Success");
         }
+        [HttpPost("AddCourseAssessMethod")]
+        public async Task<IActionResult> AddCourseAssessMethod(CourseAssessMethodDto addCourseAssessMethodDto)
+        {
+            await _courseService.AddCourseAssessMethodAsync(addCourseAssessMethodDto);
+            return Ok("Add Success");
+        }
+        //[HttpGet("testCourseAssessMethod")]
+        //public async Task<IActionResult> testCourseAssessMethod(int id)
+        //{
+        //    var entity = await _courseService.GetAssessMethodsByCoursesIdAsync(id);
+        //    return Ok(entity);
+        //}
     }
 }

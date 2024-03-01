@@ -99,16 +99,35 @@ namespace GraduationProject.Service.Service
             await _unitOfWork.StudentSemesters.AddAsync(newStudentSemester);
             await _unitOfWork.SaveAsync();
             bool flag = await AddCourseStudent(newStudentSemester.Id, newStudentSemester.ScientificDegreeId);
-            if (flag)
+            bool flag1 = await AddCourseAssessMethodStudent(newStudentSemester.Id, newStudentSemester.ScientificDegreeId);
+            if (flag && flag1)
             {
                 return 1;
             }
             return -1;
         }
-        private async Task<bool> AddCourseStudent(int studentId, int scientificDegreeId)
+        public async Task<List<CourseDto>> GetCourseByScientificDegree(int scientificDegreeId)
         {
             IQueryable<CourseDto> coursesQuery = await _courseService.GetCoursesByScientificDegreeIdAsync(scientificDegreeId);
             List<CourseDto> courses = coursesQuery.ToList();
+            return courses;
+        }
+        public async Task<CourseAssessMethodDto> GetAssessMethodsCourse(int courseId)
+        {
+            CourseAssessMethodDto courseAssessMethodDto = await _courseService.GetAssessMethodsByCoursesIdAsync(courseId);
+
+            var assessMethodDtos = new CourseAssessMethodDto
+            {
+                CourseAssessMethods = courseAssessMethodDto.CourseAssessMethods
+            };
+
+            return assessMethodDtos;
+        }
+
+        private async Task<bool> AddCourseStudent(int studentId, int scientificDegreeId)
+        {
+            //IQueryable<CourseDto> coursesQuery = await _courseService.GetCoursesByScientificDegreeIdAsync(scientificDegreeId);
+            List<CourseDto> courses = await GetCourseByScientificDegree(scientificDegreeId);
 
             List<StudentSemesterCourse> studentSemesterCourses = courses.Select(course => new StudentSemesterCourse
             {
@@ -117,6 +136,23 @@ namespace GraduationProject.Service.Service
             }).ToList();
             await _unitOfWork.StudentSemesterCourses.AddRangeAsync(studentSemesterCourses);
             await _unitOfWork.SaveAsync();
+            return true;
+        }
+        private async Task<bool> AddCourseAssessMethodStudent(int studentId, int scientificDegreeId)
+        {
+            List<CourseDto> courses = await GetCourseByScientificDegree(scientificDegreeId);
+            foreach (var course in courses)
+            {
+                CourseAssessMethodDto courseAssessMethodDto = await GetAssessMethodsCourse(course.Id);
+                List<StudentSemesterAssessMethod> newStudentSemesterAssessMethod = courseAssessMethodDto.CourseAssessMethods.Select(ac =>
+                new StudentSemesterAssessMethod
+                {
+                    StudentSemesterId = studentId,
+                    CourseAssessMethodId = ac.Id
+                }).ToList();
+                await _unitOfWork.StudentSemesterAssessMethods.AddRangeAsync(newStudentSemesterAssessMethod);
+                await _unitOfWork.SaveAsync();
+            }
             return true;
         }
     }
