@@ -34,6 +34,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDbContext<IdentityDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
     b => b.MigrationsAssembly(typeof(IdentityDbContext).Assembly.FullName)));
+builder.Services.AddCors(corsOptions =>
+{
+    corsOptions.AddPolicy("Policy", CorsPolicyBuilder =>
+    {
+        CorsPolicyBuilder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
 // injection
 builder.Services.AddTransient<IDepartmentService, DepartmentService>();
 builder.Services.AddTransient<IAcademyYearService, AcademyYearService>();
