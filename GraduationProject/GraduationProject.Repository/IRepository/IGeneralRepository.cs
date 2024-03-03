@@ -10,6 +10,7 @@ namespace GraduationProject.Repository.IRepository
         Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities);
         Task<T> Update(T entity);
         Task Delete(T entity);
+        Task<IQueryable<T>> FindWithIncludeAsync(params Expression<Func<T, object>>[] includes);
         Task<IQueryable<T>> FindAllByForeignKeyAsync<TProperty>(Expression<Func<T, TProperty>> foreignKeySelector, TProperty foreignKey);
     }
 }

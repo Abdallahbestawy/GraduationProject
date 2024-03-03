@@ -12,5 +12,6 @@ namespace GraduationProject.Service.IService
         Task AddCourseAssessMethodAsync(CourseAssessMethodDto addCourseAssessMethodDto);
         Task<IQueryable<CourseDto>> GetCoursesByScientificDegreeIdAsync(int scientificDegreeId);
         Task<CourseAssessMethodDto> GetAssessMethodsByCoursesIdAsync(int courseId);
+        Task GetTest();
     }
 }

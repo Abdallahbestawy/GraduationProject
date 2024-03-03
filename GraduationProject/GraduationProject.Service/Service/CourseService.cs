@@ -173,5 +173,10 @@ namespace GraduationProject.Service.Service
             };
 
         }
+
+        public async Task GetTest()
+        {
+            await _unitOfWork.StudentSemesterAssessMethod.GetStudentSemesterAssessMethods(1);
+        }
     }
 }

@@ -150,7 +150,7 @@ namespace GraduationProject.Service.Service
                     StudentSemesterId = studentId,
                     CourseAssessMethodId = ac.Id
                 }).ToList();
-                await _unitOfWork.StudentSemesterAssessMethods.AddRangeAsync(newStudentSemesterAssessMethod);
+                await _unitOfWork.StudentSemesterAssessMethod.AddRangeAsync(newStudentSemesterAssessMethod);
                 await _unitOfWork.SaveAsync();
             }
             return true;

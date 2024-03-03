@@ -56,6 +56,14 @@ namespace GraduationProject.Repository.Repository
             return entities.AsQueryable();
         }
 
-
+        public async Task<IQueryable<T>> FindWithIncludeAsync(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> entitie = _context.Set<T>();
+            if (includes != null)
+            {
+                includes.Aggregate(entitie, (current, include) => current.Include(include));
+            }
+            return entitie.AsQueryable();
+        }
     }
 }
