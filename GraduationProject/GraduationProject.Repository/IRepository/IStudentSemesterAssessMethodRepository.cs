@@ -4,6 +4,6 @@ namespace GraduationProject.Repository.IRepository
 {
     public interface IStudentSemesterAssessMethodRepository : IGeneralRepository<StudentSemesterAssessMethod>
     {
-        Task<IQueryable<StudentSemesterAssessMethod>> GetStudentSemesterAssessMethods(int courseId);
+        Task<IQueryable<AssessMethod>> GetStudentSemesterAssessMethods(int courseId);
     }
 }

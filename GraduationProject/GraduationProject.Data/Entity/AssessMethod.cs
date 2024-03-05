@@ -16,6 +16,7 @@ namespace GraduationProject.Data.Entity
         public decimal MinDegree { get; set; }
 
         public decimal MaxDegree { get; set; }
+        public bool IsControlStatus { get; set; } = false;
 
         [ForeignKey("Faculty")]
         public int FacultyId { get; set; }

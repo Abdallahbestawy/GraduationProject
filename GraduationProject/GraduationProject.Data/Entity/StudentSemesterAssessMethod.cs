@@ -17,6 +17,6 @@ namespace GraduationProject.Data.Entity
         public int CourseAssessMethodId { get; set; }
         public CourseAssessMethod CourseAssessMethod { get; set; }
 
-        public decimal Degree { get; set; }
+        public decimal? Degree { get; set; } = null;
     }
 }

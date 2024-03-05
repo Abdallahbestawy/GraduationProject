@@ -69,6 +69,9 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Property<int>("FacultyId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsControlStatus")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("MaxDegree")
                         .HasColumnType("decimal(18,2)");
 
@@ -951,7 +954,7 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Property<int>("CourseAssessMethodId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Degree")
+                    b.Property<decimal?>("Degree")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("StudentSemesterId")

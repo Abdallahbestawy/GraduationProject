@@ -27,27 +27,27 @@ namespace GraduationProject.Data.Entity
         public decimal? SuccessPercentagePhase { get; set; }
 
         [ForeignKey("Bylaw")]
-        public int? BylawId { get; set; }
+        public int? BylawId { get; set; } = null;
         public Bylaw? Bylaw { get; set; }
 
         [ForeignKey("Band")]
-        public int? BandId { get; set; }
+        public int? BandId { get; set; } = null;
         public Band? Band { get; set; }
 
         [ForeignKey("Phase")]
-        public int? PhaseId { get; set; }
+        public int? PhaseId { get; set; } = null;
         public Phase? Phase { get; set; }
 
         [ForeignKey("Semester")]
-        public int? SemesterId { get; set; }
+        public int? SemesterId { get; set; } = null;
         public Semester? Semester { get; set; }
 
         [ForeignKey("ExamRole")]
-        public int? ExamRoleId { get; set; }
+        public int? ExamRoleId { get; set; } = null;
         public ExamRole? ExamRole { get; set; }
 
         [ForeignKey("Parent")]
-        public int? ParentId { get; set; }
+        public int? ParentId { get; set; } = null;
         public ScientificDegree? Parent { get; set; }
 
         public virtual ICollection<ScientificDegree> ParentScientificDegree { get; set; } = new List<ScientificDegree>();
