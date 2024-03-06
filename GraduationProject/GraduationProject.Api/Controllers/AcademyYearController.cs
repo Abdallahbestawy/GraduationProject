@@ -13,7 +13,7 @@ namespace GraduationProject.Api.Controllers
         {
             _academyYearService = academyYearService;
         }
-        [HttpGet("{Id:int}")]
+        [HttpGet("GetAcademyYearById{Id:int}")]
         public async Task<IActionResult> GetAcademyYearById([FromRoute] int Id)
         {
             if (Id.Equals(null))
@@ -29,13 +29,13 @@ namespace GraduationProject.Api.Controllers
             var academyYears = await _academyYearService.GetAcademyYearAsync();
             return Ok(academyYears);
         }
-        [HttpPost]
+        [HttpPost("AddAcademyYear")]
         public async Task<IActionResult> AddAcademyYear(AcademyYearDto addAcademyYearDto)
         {
             await _academyYearService.AddAcademyYearAsync(addAcademyYearDto);
             return Ok("Add AcademyYear Success");
         }
-        [HttpPut("{Id:int}")]
+        [HttpPut("UpdateAcademyYear{Id:int}")]
         public async Task<IActionResult> UpdateAcademyYear([FromRoute] int Id, [FromBody] AcademyYearDto updateAcademyYearDto)
         {
             if (Id != updateAcademyYearDto.Id)
@@ -45,7 +45,7 @@ namespace GraduationProject.Api.Controllers
             await _academyYearService.UpdateAcademyYearAsync(updateAcademyYearDto);
             return Ok("the update Success");
         }
-        [HttpDelete]
+        [HttpDelete("DeleteAcademyYear")]
         public async Task<IActionResult> DeleteAcademyYear([FromRoute] int Id)
         {
             await _academyYearService.DeleteAcademyYearAsync(Id);

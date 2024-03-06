@@ -1,4 +1,4 @@
-﻿namespace GraduationProject.Service.DataTransferObject.StudentSemester
+﻿namespace GraduationProject.Service.DataTransferObject.StudentDto
 {
     public class AddStudentSemesterDto
     {

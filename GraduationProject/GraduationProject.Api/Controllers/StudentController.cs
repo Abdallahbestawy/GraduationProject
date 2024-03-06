@@ -1,5 +1,4 @@
 ﻿using GraduationProject.Service.DataTransferObject.StudentDto;
-using GraduationProject.Service.DataTransferObject.StudentSemester;
 using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +13,7 @@ namespace GraduationProject.Api.Controllers
         {
             _studentService = studentService;
         }
-        [HttpPost]
+        [HttpPost("AddStudent")]
         public async Task<IActionResult> AddStudent(AddStudentDto addStudentDto)
         {
             if (ModelState.IsValid)
@@ -34,13 +33,9 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter valid Model");
             }
         }
-        [HttpPost("{studentId:int}")]
-        public async Task<IActionResult> AddStudentSemester([FromRoute] int studentId, [FromBody] AddStudentSemesterDto addStudentSemesterDto)
+        [HttpPost("AddStudentSemester")]
+        public async Task<IActionResult> AddStudentSemester([FromBody] AddStudentSemesterDto addStudentSemesterDto)
         {
-            if (studentId != addStudentSemesterDto.StudentId)
-            {
-                return BadRequest("Please Enter Vaild StudentId");
-            }
             if (ModelState.IsValid)
             {
                 await _studentService.AddStudentSemesterAsync(addStudentSemesterDto);

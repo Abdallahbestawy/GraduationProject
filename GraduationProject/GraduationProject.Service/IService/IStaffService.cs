@@ -1,9 +1,12 @@
-﻿using GraduationProject.Service.DataTransferObject.StaffDto;
+﻿using GraduationProject.Service.DataTransferObject.CourseDto;
+using GraduationProject.Service.DataTransferObject.StaffDto;
 
 namespace GraduationProject.Service.IService
 {
     public interface IStaffService
     {
         Task<int> AddStAffAsync(AddStaffDto addSaffDto);
+        Task<int> AddStaffSemesterAsync(AddStaffSemesterDto addStaffSemesterDto);
+        Task<List<CourseStudentsAssessMethodDto>> Test(int satffId);
     }
 }

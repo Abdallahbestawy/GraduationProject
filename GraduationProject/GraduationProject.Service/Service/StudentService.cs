@@ -3,7 +3,6 @@ using GraduationProject.Identity.IService;
 using GraduationProject.Repository.Repository;
 using GraduationProject.Service.DataTransferObject.CourseDto;
 using GraduationProject.Service.DataTransferObject.StudentDto;
-using GraduationProject.Service.DataTransferObject.StudentSemester;
 using GraduationProject.Service.IService;
 
 namespace GraduationProject.Service.Service

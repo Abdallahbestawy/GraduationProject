@@ -57,11 +57,11 @@ namespace GraduationProject.Api.Controllers
             await _courseService.AddCourseAssessMethodAsync(addCourseAssessMethodDto);
             return Ok("Add Success");
         }
-        [HttpGet("testCourseAssessMethod")]
-        public async Task<IActionResult> testCourseAssessMethod()
-        {
-            await _courseService.GetTest();
-            return Ok();
-        }
+        //[HttpPost("GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus")]
+        //public async Task<IActionResult> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(int courseId)
+        //{
+        //    var courseStudentsAssessMethods = await _courseService.GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(courseId, false);
+        //    return Ok(courseStudentsAssessMethods);
+        //}
     }
 }

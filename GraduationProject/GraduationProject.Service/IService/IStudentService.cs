@@ -1,5 +1,4 @@
 ﻿using GraduationProject.Service.DataTransferObject.StudentDto;
-using GraduationProject.Service.DataTransferObject.StudentSemester;
 
 namespace GraduationProject.Service.IService
 {

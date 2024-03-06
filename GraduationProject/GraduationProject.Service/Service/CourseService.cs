@@ -174,9 +174,39 @@ namespace GraduationProject.Service.Service
 
         }
 
-        public async Task GetTest()
+        public async Task<List<CourseStudentsAssessMethodDto>> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(int courseId, bool isControlStatus)
         {
-            await _unitOfWork.StudentSemesterAssessMethod.GetStudentSemesterAssessMethods(1);
+            var courseStudentAssessMethods = await _unitOfWork.StudentSemesterAssessMethod.GetStudentSemesterAssessMethods(courseId, isControlStatus);
+
+            var courseStudentAssessMethodDto = new CourseStudentsAssessMethodDto
+            {
+                CourseName = courseStudentAssessMethods.FirstOrDefault()?.CourseName,
+                CourseCode = courseStudentAssessMethods.FirstOrDefault()?.CourseCode,
+                StudentDtos = courseStudentAssessMethods
+                    .AsEnumerable()
+                    .GroupBy(s => new { s.StudentName })
+                    .Select(group => new StudentDto
+                    {
+                        StudentName = group.Key.StudentName,
+                        AssesstMethodDtos = group.Select(s => new AssesstMethodDto
+                        {
+                            StudentSemesterAssessMethodId = s.StudentSemesterAssessMethodsId,
+                            AssessName = s.AssessmentMethodName,
+                            AssessDegree = s.Degree
+                        }).ToList()
+                    }).ToList()
+            };
+
+            return new List<CourseStudentsAssessMethodDto> { courseStudentAssessMethodDto };
         }
+
+
+
+
+
+        //public async Task GetTest()
+        //{
+        //    await _unitOfWork.StudentSemesterAssessMethod.GetStudentSemesterAssessMethods(1, false);
+        //}
     }
 }

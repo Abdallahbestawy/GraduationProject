@@ -61,9 +61,10 @@ namespace GraduationProject.Repository.Repository
             IQueryable<T> entitie = _context.Set<T>();
             if (includes != null)
             {
-                includes.Aggregate(entitie, (current, include) => current.Include(include));
+                entitie = includes.Aggregate(entitie, (current, include) => current.Include(include));
             }
             return entitie.AsQueryable();
         }
+
     }
 }

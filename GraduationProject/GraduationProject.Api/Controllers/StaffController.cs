@@ -13,7 +13,7 @@ namespace GraduationProject.Api.Controllers
         {
             _StaffService = StaffService;
         }
-        [HttpPost]
+        [HttpPost("AddStaff")]
         public async Task<IActionResult> AddStaff(AddStaffDto addStaffDto)
         {
             if (ModelState.IsValid)
@@ -31,6 +31,32 @@ namespace GraduationProject.Api.Controllers
             else
             {
                 return BadRequest("please enter valid Model");
+            }
+        }
+        [HttpPost("AddStaffSemester")]
+        public async Task<IActionResult> AddStaffSemester(AddStaffSemesterDto addStaffSemesterDto)
+        {
+            if (ModelState.IsValid)
+            {
+                await _StaffService.AddStaffSemesterAsync(addStaffSemesterDto);
+                return Ok("Add Staff Semester Succes");
+            }
+            else
+            {
+                return BadRequest("please enter Vaild Model");
+            }
+        }
+        [HttpPost("GetCourseStaffSemester{staffId:int}")]
+        public async Task<IActionResult> GetCourseStaffSemester(int staffId)
+        {
+            var entity = await _StaffService.Test(staffId);
+            if (entity != null)
+            {
+                return Ok(entity);
+            }
+            else
+            {
+                return BadRequest("not course have doctor");
             }
         }
     }

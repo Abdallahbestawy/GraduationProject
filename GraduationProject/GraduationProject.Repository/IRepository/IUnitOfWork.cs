@@ -26,6 +26,7 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<StudentSemester> StudentSemesters { get; }
         IGeneralRepository<StudentSemesterCourse> StudentSemesterCourses { get; }
         IGeneralRepository<CourseAssessMethod> CourseAssessMethods { get; }
+        IGeneralRepository<StaffSemester> StaffSemesters { get; }
         IStudentSemesterAssessMethodRepository StudentSemesterAssessMethod { get; }
         int Save();
         Task SaveAsync();

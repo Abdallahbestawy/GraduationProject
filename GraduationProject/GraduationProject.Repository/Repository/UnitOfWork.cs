@@ -30,6 +30,7 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<StudentSemesterCourse> StudentSemesterCourses { get; private set; }
         public IGeneralRepository<CourseAssessMethod> CourseAssessMethods { get; private set; }
         public IStudentSemesterAssessMethodRepository StudentSemesterAssessMethod { get; private set; }
+        public IGeneralRepository<StaffSemester> StaffSemesters { get; private set; }
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
@@ -56,7 +57,9 @@ namespace GraduationProject.Repository.Repository
             StudentSemesterCourses = new GeneralRepository<StudentSemesterCourse>(_context);
             CourseAssessMethods = new GeneralRepository<CourseAssessMethod>(_context);
             StudentSemesterAssessMethod = new StudentSemesterAssessMethodRepository(_context);
+            StaffSemesters = new GeneralRepository<StaffSemester>(_context);
         }
+
 
         public int Save()
         {

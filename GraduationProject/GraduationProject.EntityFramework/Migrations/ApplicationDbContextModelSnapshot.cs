@@ -998,6 +998,36 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.ToTable("StudentSemesterCourses");
                 });
 
+            modelBuilder.Entity("GraduationProject.Data.Models.SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus", b =>
+                {
+                    b.Property<string>("AssessmentMethodName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CourseCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CourseName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Degree")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("IsControlStatus")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("StudentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StudentSemesterAssessMethodsId")
+                        .HasColumnType("int");
+
+                    b.ToTable("SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus");
+                });
+
             modelBuilder.Entity("GraduationProject.Identity.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
