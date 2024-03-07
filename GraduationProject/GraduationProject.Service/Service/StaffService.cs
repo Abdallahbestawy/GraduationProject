@@ -1,7 +1,6 @@
 ﻿using GraduationProject.Data.Entity;
 using GraduationProject.Identity.IService;
 using GraduationProject.Repository.Repository;
-using GraduationProject.Service.DataTransferObject.CourseDto;
 using GraduationProject.Service.DataTransferObject.StaffDto;
 using GraduationProject.Service.IService;
 
@@ -74,13 +73,13 @@ namespace GraduationProject.Service.Service
             return 1;
         }
 
-        public async Task<List<CourseStudentsAssessMethodDto>> Test(int staffId)
+        public async Task<GetCourseStaffSemester> Test(int satffId)
         {
             var staffSemesters = await _unitOfWork.StaffSemesters
-                .FindWithIncludeAsync(d => d.AcademyYear);
+               .FindWithIncludeAsync(d => d.AcademyYear, c => c.Course);
 
             var results = staffSemesters
-                .Where(dc => dc.AcademyYear.IsCurrent && dc.StaffId == staffId)
+                .Where(dc => dc.AcademyYear.IsCurrent && dc.StaffId == satffId)
                 .ToList();
 
             if (!results.Any())
@@ -88,41 +87,32 @@ namespace GraduationProject.Service.Service
                 return null;
             }
 
-            List<CourseStudentsAssessMethodDto> courseStudentsAssessMethodDto = new List<CourseStudentsAssessMethodDto>();
-
-            foreach (var result in results)
+            var staffSemesterDto = new GetCourseStaffSemester
             {
-                var v = await _courseService.GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(result.CourseId, false);
-                courseStudentsAssessMethodDto.AddRange(v);
+                StaffId = results.First().StaffId,
+                AcademyYearId = results.First().AcademyYearId,
+                CourseDoctorDtos = results.Select(result => new CourseDoctorDto
+                {
+                    CourseId = result.Course.Id,
+                    CourseName = result.Course.Name
+                }).ToList()
             };
 
-            return courseStudentsAssessMethodDto;
+            return staffSemesterDto;
         }
 
+        //public async Task<GetCourseStaffSemester> Test(int staffId)
+        //{
 
-
+        //}
 
     }
-    //public async Task<GetCourseStaffSemester> Test(int satffId)
-    //{
-    //    var query = await _unitOfWork.StaffSemesters.FindWithIncludeAsync(d => d.AcademyYear);
 
-    //    var results = query.Where(dc => dc.AcademyYear.IsCurrent && dc.StaffId == satffId).ToList();
 
-    //    if (results.Any())
-    //    {
-    //        var staffSemesterDto = new GetCourseStaffSemester
-    //        {
-    //            StaffId = results.First().StaffId,
-    //            AcademyYearId = results.First().AcademyYearId,
-    //            CourseIds = results.Select(result => result.CourseId).ToList()
-    //        };
 
-    //        return staffSemesterDto;
-    //    }
-
-    //    return null;
-    //}
 
 }
+
+
+
 

@@ -4,6 +4,11 @@
     {
         public int? StaffId { get; set; }
         public int AcademyYearId { get; set; }
-        public List<int>? CourseIds { get; set; } = new List<int>();
+        public List<CourseDoctorDto>? CourseDoctorDtos { get; set; } = new List<CourseDoctorDto>();
+    }
+    public class CourseDoctorDto
+    {
+        public int CourseId { get; set; }
+        public string CourseName { get; set; }
     }
 }
