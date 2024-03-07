@@ -1,30 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GraduationProject.ResponseHandler.Model
+﻿namespace GraduationProject.ResponseHandler.Model
 {
-    public class Response
+    public class Response<T>
     {
-        public int statusCode { get; set; }
-        //public object meta { get; set; }
-        public bool succeeded { get; set; }
-        public string? message { get; set; }
-        public object? errors { get; set; }
-        public object? data { get; set; }
+        public int StatusCode { get; set; }
+        public bool Succeeded { get; set; }
+        public string? Message { get; set; }
+        public object? Errors { get; set; }
+        public int Count { get; set; }
+        public T? Data { get; set; }
 
-        public Response CreateResponse(int statusCode, bool succeeded, string? message, object? errors, object? data)
+        public static Response<T> CreateResponse(ResponseType responseType, string? message, object? errors, T? data)
         {
-            return new Response
+            var statusCode = (int)responseType;
+
+            return new Response<T>
             {
-                statusCode = statusCode,
-                succeeded = succeeded,
-                message = message,
-                errors = errors,
-                data = data
+                StatusCode = statusCode,
+                Succeeded = responseType == ResponseType.Success,
+                Message = message,
+                Errors = errors,
+                Count = 0,
+                Data = data
             };
+        }
+
+        public static Response<T> Success(T data, string? message = null)
+        {
+            return CreateResponse(ResponseType.Success, message, null, data);
+        }
+
+        public static Response<T> NoContent(string? message = null)
+        {
+            return CreateResponse(ResponseType.NoContent, message, null, default(T));
+        }
+
+        public static Response<T> ServerError(string? message = null, object? errors = null)
+        {
+            return CreateResponse(ResponseType.InternalServerError, message, errors, default(T));
+        }
+
+        public Response<T> WithCount()
+        {
+            if (Data is ICollection<object> collection)
+            {
+                Count = collection.Count;
+            }
+            else if (Data is IEnumerable<object> enumerable)
+            {
+                Count = enumerable.Count();
+            }
+            else
+            {
+                Count = 0;
+            }
+
+            return this;
         }
     }
 }

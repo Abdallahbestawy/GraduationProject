@@ -24,17 +24,14 @@ namespace GraduationProject.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                int raw = await _roleService.AddRole(model);
-                if (raw > 0)
-                {
-                    return Ok("Role Add");
-                }
+                var response = await _roleService.AddRole(model);
+                if (response.StatusCode ==200)
+                    return Ok(response);
                 else
-                {
-                    return BadRequest("Not Role Add");
-                }
+                    return StatusCode(response.StatusCode,response);
             }
-            else { return BadRequest("please enter Valid Model"); }
+            else 
+                return BadRequest("please enter Valid Model");
         }
     }
 }
