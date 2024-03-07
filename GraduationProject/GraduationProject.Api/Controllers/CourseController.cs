@@ -57,7 +57,7 @@ namespace GraduationProject.Api.Controllers
             await _courseService.AddCourseAssessMethodAsync(addCourseAssessMethodDto);
             return Ok("Add Success");
         }
-        [HttpPost("GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus")]
+        [HttpGet("GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus{courseId:int}")]
         public async Task<IActionResult> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(int courseId)
         {
             var courseStudentsAssessMethods = await _courseService.GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(courseId, false);

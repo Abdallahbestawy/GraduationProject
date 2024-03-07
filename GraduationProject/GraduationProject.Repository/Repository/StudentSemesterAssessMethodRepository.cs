@@ -14,7 +14,7 @@ namespace GraduationProject.Repository.Repository
         {
             _context = context;
         }
-        public async Task<IEnumerable<SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus>> GetStudentSemesterAssessMethods(int courseId, bool isControlStatus)
+        public async Task<IEnumerable<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel>> GetStudentSemesterAssessMethods(int courseId, bool isControlStatus)
         {
             var query =
                 _context.GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(courseId, isControlStatus);

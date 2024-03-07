@@ -1,4 +1,5 @@
-﻿using GraduationProject.EntityFramework.DataBaseContext;
+﻿using GraduationProject.Data.Models;
+using GraduationProject.EntityFramework.DataBaseContext;
 using GraduationProject.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -65,6 +66,25 @@ namespace GraduationProject.Repository.Repository
             }
             return entitie.AsQueryable();
         }
+
+        public async Task<IEnumerable<GetStudentDetailsByUserIdModel>> GetStudentDetailsByUserIdModels(string userId)
+        {
+            var query = _context.GetStudentDetailsByUserId(userId);
+
+            // Execute the query and retrieve the results before using await
+            var result = await query.ToListAsync();
+
+            return result;
+        }
+
+        //public async Task<IQueryable<TProperty>> CallStoredProcedureAsync<TProperty>(string storedProcedureName, params SqlParameter[] parameters)
+        //{
+        //    var result = await _context.Set<TProperty>()
+        //        .FromSqlRaw($"EXECUTE {storedProcedureName} {string.Join(", ", parameters.Select(p => $"@{p.ParameterName}"))}", parameters)
+        //        .ToListAsync();
+
+        //    return result.AsQueryable();
+        //}
 
     }
 }

@@ -5,6 +5,6 @@ namespace GraduationProject.Repository.IRepository
 {
     public interface IStudentSemesterAssessMethodRepository : IGeneralRepository<StudentSemesterAssessMethod>
     {
-        Task<IEnumerable<SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus>> GetStudentSemesterAssessMethods(int courseId, bool isControlStatus);
+        Task<IEnumerable<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel>> GetStudentSemesterAssessMethods(int courseId, bool isControlStatus);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace GraduationProject.Data.Models
 {
-    public class SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus
+    public class GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel
     {
         public int StudentSemesterAssessMethodsId { get; set; }
         public string StudentName { get; set; }

@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using GraduationProject.Data.Models;
+using System.Linq.Expressions;
 
 namespace GraduationProject.Repository.IRepository
 {
@@ -12,5 +13,8 @@ namespace GraduationProject.Repository.IRepository
         Task Delete(T entity);
         Task<IQueryable<T>> FindWithIncludeAsync(params Expression<Func<T, object>>[] includes);
         Task<IQueryable<T>> FindAllByForeignKeyAsync<TProperty>(Expression<Func<T, TProperty>> foreignKeySelector, TProperty foreignKey);
+        Task<IEnumerable<GetStudentDetailsByUserIdModel>> GetStudentDetailsByUserIdModels(string userId);
+
+
     }
 }

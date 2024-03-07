@@ -6,5 +6,6 @@ namespace GraduationProject.Service.IService
     {
         Task<int> AddStudentAsync(AddStudentDto addStudentDto);
         Task<int> AddStudentSemesterAsync(AddStudentSemesterDto addStudentSemesterDto);
+        Task<GetStudentDetailsByUserIdDto> GetStudentByUserId(string userId);
     }
 }

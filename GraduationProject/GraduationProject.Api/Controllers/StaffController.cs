@@ -46,7 +46,7 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter Vaild Model");
             }
         }
-        [HttpPost("GetCourseStaffSemester{staffId:int}")]
+        [HttpGet("GetCourseStaffSemester{staffId:int}")]
         public async Task<IActionResult> GetCourseStaffSemester(int staffId)
         {
             var entity = await _StaffService.Test(staffId);

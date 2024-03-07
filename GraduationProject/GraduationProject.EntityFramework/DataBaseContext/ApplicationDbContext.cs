@@ -14,9 +14,10 @@ namespace GraduationProject.EntityFramework.DataBaseContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus>()
+            modelBuilder.Entity<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel>()
             .HasNoKey();
-
+            modelBuilder.Entity<GetStudentDetailsByUserIdModel>()
+            .HasNoKey();
         }
 
         public DbSet<AcademyYear> AcademyYears { get; set; }
@@ -47,9 +48,9 @@ namespace GraduationProject.EntityFramework.DataBaseContext
         public DbSet<StudentSemester> StudentSemesters { get; set; }
         public DbSet<StudentSemesterAssessMethod> StudentSemesterAssessMethods { get; set; }
         public DbSet<StudentSemesterCourse> StudentSemesterCourses { get; set; }
-        public DbSet<SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus> SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus { get; set; }
+        public DbSet<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel> SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus { get; set; }
 
-        public IQueryable<SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(int courseId, bool isControlStatus)
+        public IQueryable<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(int courseId, bool isControlStatus)
         {
             SqlParameter pCourseId = new SqlParameter("@CourseId", courseId);
             SqlParameter pIsControlStatus = new SqlParameter("@IsControlStatus", isControlStatus);
@@ -57,6 +58,16 @@ namespace GraduationProject.EntityFramework.DataBaseContext
             return this.SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus
                 .FromSqlRaw("EXECUTE SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus @CourseId, @IsControlStatus", pCourseId, pIsControlStatus);
         }
+        public DbSet<GetStudentDetailsByUserIdModel> SpGetStudentDetailsByUserId { get; set; }
+
+        public IQueryable<GetStudentDetailsByUserIdModel> GetStudentDetailsByUserId(string userId)
+        {
+            SqlParameter pUserId = new SqlParameter("@UserId", userId);
+
+            return this.SpGetStudentDetailsByUserId
+                .FromSqlRaw("EXECUTE SpGetStudentDetailsByUserId @UserId", pUserId);
+        }
+
 
 
     }
