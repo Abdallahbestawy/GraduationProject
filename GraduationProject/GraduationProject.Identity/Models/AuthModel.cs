@@ -14,7 +14,7 @@ namespace GraduationProject.Identity.Models
 
         [JsonIgnore]
         public string? RefreshToken { get; set; }
-
+        [JsonIgnore]
         public DateTime RefreshTokenExpiration { get; set; }
     }
 }

@@ -23,3 +23,6 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Identity\obj\Debug\net6.0\refint\GraduationProject.Identity.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Identity\obj\Debug\net6.0\GraduationProject.Identity.pdb
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Identity\obj\Debug\net6.0\ref\GraduationProject.Identity.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Identity\bin\Debug\net6.0\GraduationProject.ResponseHandler.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Identity\bin\Debug\net6.0\GraduationProject.ResponseHandler.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Identity\obj\Debug\net6.0\GraduationProject.Identity.csproj.CopyComplete

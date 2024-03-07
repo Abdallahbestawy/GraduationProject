@@ -13,4 +13,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.26" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.35.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GraduationProject.ResponseHandler\GraduationProject.ResponseHandler.csproj" />
+  </ItemGroup>
 </Project>

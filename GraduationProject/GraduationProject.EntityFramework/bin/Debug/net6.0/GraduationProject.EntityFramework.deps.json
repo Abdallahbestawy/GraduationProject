@@ -555,6 +555,7 @@
       },
       "GraduationProject.Identity/1.0.0": {
         "dependencies": {
+          "GraduationProject.ResponseHandler": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.27",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.26",
           "Microsoft.EntityFrameworkCore": "6.0.26",
@@ -563,6 +564,11 @@
         },
         "runtime": {
           "GraduationProject.Identity.dll": {}
+        }
+      },
+      "GraduationProject.ResponseHandler/1.0.0": {
+        "runtime": {
+          "GraduationProject.ResponseHandler.dll": {}
         }
       }
     }
@@ -964,6 +970,11 @@
       "sha512": ""
     },
     "GraduationProject.Identity/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "GraduationProject.ResponseHandler/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

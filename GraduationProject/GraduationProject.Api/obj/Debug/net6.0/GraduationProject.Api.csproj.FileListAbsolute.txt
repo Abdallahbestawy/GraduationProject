@@ -166,3 +166,5 @@ E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Debug\
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.ResponseHandler.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.ResponseHandler.pdb
