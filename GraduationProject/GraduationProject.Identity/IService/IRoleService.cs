@@ -5,7 +5,7 @@ namespace GraduationProject.Identity.IService
 {
     public interface IRoleService
     {
-        Task<int> AddRole(RoleModel model);
+        Task<Response<int>> AddRole(RoleModel model);
         Task<Response<ICollection<RoleModel>>> GetAllRoles();
     }
 }

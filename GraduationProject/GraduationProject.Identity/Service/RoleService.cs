@@ -14,18 +14,22 @@ namespace GraduationProject.Identity.Service
             _roleManager = roleManager;
         }
 
-        public async Task<int> AddRole(RoleModel model)
+        public async Task<Response<int>> AddRole(RoleModel model)
         {
-            IdentityRole role = new IdentityRole();
-            role.Name = model.RoleName;
-            IdentityResult result = await _roleManager.CreateAsync(role);
-            if (result.Succeeded)
+            try
             {
-                return 1;
+                IdentityRole role = new IdentityRole();
+                role.Name = model.RoleName;
+                IdentityResult result = await _roleManager.CreateAsync(role);
+                if (result.Succeeded)
+                    return Response<int>.Success(1, "Role added successfully");
+                else
+                    return Response<int>.ServerError("Error occured while adding role", result.Errors);
             }
-            else
+            catch (Exception ex)
             {
-                return 0;
+                return Response<int>.ServerError("Error occured while adding role",
+                    "An unexpected error occurred while adding role. Please try again later.");
             }
         }
 
@@ -46,7 +50,8 @@ namespace GraduationProject.Identity.Service
 
                 return Response<ICollection<RoleModel>>
                     .Success(roleModels, "Roles retrieved successfully");
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return Response<ICollection<RoleModel>>
                     .ServerError("Error occured while feching roles", 
