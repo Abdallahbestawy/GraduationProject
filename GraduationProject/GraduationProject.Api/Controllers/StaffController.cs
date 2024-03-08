@@ -64,8 +64,11 @@ namespace GraduationProject.Api.Controllers
         {
             string userId = "3ed1410b-286c-4064-9193-35b792b8aebf";
 
-            var en = await _StaffService.GetStaffByUserId(userId);
-            return Ok(en);
+            var response = await _StaffService.GetStaffByUserId(userId);
+            if(response.StatusCode == 500)
+                return StatusCode(response.StatusCode, response);
+
+            return Ok(response);
         }
     }
 }

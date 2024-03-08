@@ -212,10 +212,10 @@ namespace GraduationProject.Service.Service
                 }
                 else
                 {
-                    return Response<GetStudentDetailsByUserIdDto>.NoContent("This Students doesn't exists");
+                    return Response<GetStudentDetailsByUserIdDto>.NoContent("This Student doesn't exists");
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 return Response<GetStudentDetailsByUserIdDto>.ServerError("Error occured while retrieving student's data",
                     "An unexpected error occurred while retrieving student's data. Please try again later.");
