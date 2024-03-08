@@ -1,4 +1,5 @@
 ﻿using GraduationProject.Data.Entity;
+using GraduationProject.Data.Models;
 
 namespace GraduationProject.Repository.IRepository
 {
@@ -27,7 +28,13 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<StudentSemesterCourse> StudentSemesterCourses { get; }
         IGeneralRepository<CourseAssessMethod> CourseAssessMethods { get; }
         IGeneralRepository<StaffSemester> StaffSemesters { get; }
-        IStudentSemesterAssessMethodRepository StudentSemesterAssessMethod { get; }
+        IGeneralRepository<GetStudentDetailsByUserIdModel> GetStudentDetailsByUserIdModels { get; }
+        IGeneralRepository<GetStaffDetailsByUserIdModel> GetStaffDetailsByUserIdModels { get; }
+        IGeneralRepository<StudentSemesterAssessMethod> StudentSemesterAssessMethods { get; }
+        IGeneralRepository<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels { get; }
+
+
+        //IStudentSemesterAssessMethodRepository StudentSemesterAssessMethod { get; }
         int Save();
         Task SaveAsync();
     }

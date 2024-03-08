@@ -1,4 +1,4 @@
-﻿using GraduationProject.Data.Models;
+﻿using Microsoft.Data.SqlClient;
 using System.Linq.Expressions;
 
 namespace GraduationProject.Repository.IRepository
@@ -13,7 +13,9 @@ namespace GraduationProject.Repository.IRepository
         Task Delete(T entity);
         Task<IQueryable<T>> FindWithIncludeAsync(params Expression<Func<T, object>>[] includes);
         Task<IQueryable<T>> FindAllByForeignKeyAsync<TProperty>(Expression<Func<T, TProperty>> foreignKeySelector, TProperty foreignKey);
-        Task<IEnumerable<GetStudentDetailsByUserIdModel>> GetStudentDetailsByUserIdModels(string userId);
+        //Task<IEnumerable<GetStudentDetailsByUserIdModel>> GetStudentDetailsByUserIdModels(string userId);
+        //Task<IEnumerable<GetStaffDetailsByUserIdModel>> GetStaffDetailsByUserIdModel(string userId);
+        Task<IEnumerable<T>> CallStoredProcedureAsync(string storedProcedureName, params SqlParameter[] parameters);
 
 
     }

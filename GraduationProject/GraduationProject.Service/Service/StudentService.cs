@@ -5,6 +5,8 @@ using GraduationProject.Repository.Repository;
 using GraduationProject.Service.DataTransferObject.CourseDto;
 using GraduationProject.Service.DataTransferObject.StudentDto;
 using GraduationProject.Service.IService;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace GraduationProject.Service.Service
 {
@@ -150,7 +152,7 @@ namespace GraduationProject.Service.Service
                     StudentSemesterId = studentId,
                     CourseAssessMethodId = ac.Id
                 }).ToList();
-                await _unitOfWork.StudentSemesterAssessMethod.AddRangeAsync(newStudentSemesterAssessMethod);
+                await _unitOfWork.StudentSemesterAssessMethods.AddRangeAsync(newStudentSemesterAssessMethod);
                 await _unitOfWork.SaveAsync();
             }
             return true;
@@ -158,7 +160,12 @@ namespace GraduationProject.Service.Service
 
         public async Task<GetStudentDetailsByUserIdDto> GetStudentByUserId(string userId)
         {
-            var getStudent = await _unitOfWork.Students.GetStudentDetailsByUserIdModels(userId);
+            //SqlParameter pUserId = new SqlParameter("@UserId", SqlDbType.NVarChar, 450);
+            //pUserId.Value = userId;
+            SqlParameter pUserId = new SqlParameter("@UserId", userId);
+
+            var getStudent = await _unitOfWork.GetStudentDetailsByUserIdModels.CallStoredProcedureAsync(
+                "EXECUTE SpGetStudentDetailsByUserId", pUserId);
             if (getStudent.Any())
             {
                 GetStudentDetailsByUserIdDto getStudentDetailsByUserIdDto = new GetStudentDetailsByUserIdDto

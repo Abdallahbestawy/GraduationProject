@@ -51,8 +51,8 @@ namespace GraduationProject.Api.Controllers
         {
             string userId = "af88e91d-7241-4149-bbd4-ebb2a30dd247";
 
-            var en = await _studentService.GetStudentByUserId(userId);
-            return Ok(en);
+            var result = await _studentService.GetStudentByUserId(userId);
+            return Ok(result);
         }
     }
 }

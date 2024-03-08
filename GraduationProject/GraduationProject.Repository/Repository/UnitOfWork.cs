@@ -1,4 +1,5 @@
 ﻿using GraduationProject.Data.Entity;
+using GraduationProject.Data.Models;
 using GraduationProject.EntityFramework.DataBaseContext;
 using GraduationProject.Repository.IRepository;
 
@@ -29,8 +30,14 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<StudentSemester> StudentSemesters { get; private set; }
         public IGeneralRepository<StudentSemesterCourse> StudentSemesterCourses { get; private set; }
         public IGeneralRepository<CourseAssessMethod> CourseAssessMethods { get; private set; }
-        public IStudentSemesterAssessMethodRepository StudentSemesterAssessMethod { get; private set; }
+        public IGeneralRepository<StudentSemesterAssessMethod> StudentSemesterAssessMethods { get; private set; }
+
         public IGeneralRepository<StaffSemester> StaffSemesters { get; private set; }
+        public IGeneralRepository<GetStudentDetailsByUserIdModel> GetStudentDetailsByUserIdModels { get; private set; }
+        public IGeneralRepository<GetStaffDetailsByUserIdModel> GetStaffDetailsByUserIdModels { get; private set; }
+        public IGeneralRepository<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels { get; private set; }
+
+
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
@@ -56,8 +63,11 @@ namespace GraduationProject.Repository.Repository
             StudentSemesters = new GeneralRepository<StudentSemester>(_context);
             StudentSemesterCourses = new GeneralRepository<StudentSemesterCourse>(_context);
             CourseAssessMethods = new GeneralRepository<CourseAssessMethod>(_context);
-            StudentSemesterAssessMethod = new StudentSemesterAssessMethodRepository(_context);
+            StudentSemesterAssessMethods = new GeneralRepository<StudentSemesterAssessMethod>(_context);
             StaffSemesters = new GeneralRepository<StaffSemester>(_context);
+            GetStudentDetailsByUserIdModels = new GeneralRepository<GetStudentDetailsByUserIdModel>(_context);
+            GetStaffDetailsByUserIdModels = new GeneralRepository<GetStaffDetailsByUserIdModel>(_context);
+            GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels = new GeneralRepository<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel>(_context);
         }
 
 

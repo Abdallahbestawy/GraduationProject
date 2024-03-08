@@ -39,3 +39,5 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.Identity.pdb
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.ResponseHandler.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.ResponseHandler.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.ResponseHandler.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.EntityFramework\bin\Debug\net6.0\GraduationProject.ResponseHandler.pdb
