@@ -41,7 +41,11 @@
 
         public Response<T> WithCount()
         {
-            if (Data is ICollection<object> collection)
+            if (Data == null)
+            {
+                Count = 0;
+            }
+            else if (Data is ICollection<object> collection)
             {
                 Count = collection.Count;
             }
@@ -51,7 +55,7 @@
             }
             else
             {
-                Count = 0;
+                Count = 1;
             }
 
             return this;

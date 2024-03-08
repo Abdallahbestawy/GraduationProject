@@ -1,4 +1,5 @@
-﻿using GraduationProject.Service.DataTransferObject.StudentDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.StudentDto;
 
 namespace GraduationProject.Service.IService
 {
@@ -6,6 +7,6 @@ namespace GraduationProject.Service.IService
     {
         Task<int> AddStudentAsync(AddStudentDto addStudentDto);
         Task<int> AddStudentSemesterAsync(AddStudentSemesterDto addStudentSemesterDto);
-        Task<GetStudentDetailsByUserIdDto> GetStudentByUserId(string userId);
+        Task<Response<GetStudentDetailsByUserIdDto>> GetStudentByUserId(string userId);
     }
 }

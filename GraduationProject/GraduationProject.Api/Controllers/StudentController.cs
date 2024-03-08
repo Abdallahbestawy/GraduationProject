@@ -1,4 +1,5 @@
-﻿using GraduationProject.Service.DataTransferObject.StudentDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.StudentDto;
 using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,8 +52,12 @@ namespace GraduationProject.Api.Controllers
         {
             string userId = "af88e91d-7241-4149-bbd4-ebb2a30dd247";
 
-            var result = await _studentService.GetStudentByUserId(userId);
-            return Ok(result);
+            var response = await _studentService.GetStudentByUserId(userId);
+
+            if (response.StatusCode == 500)
+                return StatusCode(response.StatusCode, response);
+
+            return Ok(response);
         }
     }
 }
