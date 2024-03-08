@@ -12,9 +12,9 @@ namespace GraduationProject.Identity.Models
         public string? Token { get; set; }
         public DateTime? ExpiresOn { get; set; }
 
-        [JsonIgnore]
+        //[JsonIgnore]
         public string? RefreshToken { get; set; }
-        [JsonIgnore]
+        //[JsonIgnore]
         public DateTime RefreshTokenExpiration { get; set; }
     }
 }

@@ -60,13 +60,16 @@ namespace GraduationProject.Api.Controllers
         {
             var cookieOptions = new CookieOptions
             {
-                HttpOnly = true,
+                //Domain = "gladly-in-quagga.ngrok-free.app",
+                Domain = "localhost",
+                Path = "/",
+                HttpOnly = false,
                 Expires = expires.ToLocalTime(),
                 Secure = true,
                 IsEssential = true,
                 SameSite = SameSiteMode.None
             };
-
+            Response.Headers.Add("Access-Control-Allow-Credentials", "true");
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
         }
 

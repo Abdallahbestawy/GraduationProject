@@ -38,7 +38,12 @@ builder.Services.AddCors(corsOptions =>
 {
     corsOptions.AddPolicy("Policy", CorsPolicyBuilder =>
     {
-        CorsPolicyBuilder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        CorsPolicyBuilder
+        //.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .SetIsOriginAllowed(origin => true) // allow any origin
+        .AllowAnyMethod()
+        .AllowCredentials();
     });
 });
 // injection
