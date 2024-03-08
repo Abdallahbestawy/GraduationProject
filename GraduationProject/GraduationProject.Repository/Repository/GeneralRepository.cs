@@ -1,6 +1,6 @@
-﻿using GraduationProject.Data.Models;
-using GraduationProject.EntityFramework.DataBaseContext;
+﻿using GraduationProject.EntityFramework.DataBaseContext;
 using GraduationProject.Repository.IRepository;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -67,31 +67,36 @@ namespace GraduationProject.Repository.Repository
             return entitie.AsQueryable();
         }
 
-        public async Task<IEnumerable<GetStudentDetailsByUserIdModel>> GetStudentDetailsByUserIdModels(string userId)
-        {
-            var query = _context.GetStudentDetailsByUserId(userId);
-
-            var result = await query.ToListAsync();
-
-            return result;
-        }
-        public async Task<IEnumerable<GetStaffDetailsByUserIdModel>> GetStaffDetailsByUserIdModel(string userId)
-        {
-            var query = _context.GetStaffDetailsByUserId(userId);
-
-            var result = await query.ToListAsync();
-
-            return result;
-        }
-
-        //public async Task<IQueryable<TProperty>> CallStoredProcedureAsync<TProperty>(string storedProcedureName, params SqlParameter[] parameters)
+        //public async Task<IEnumerable<GetStudentDetailsByUserIdModel>> GetStudentDetailsByUserIdModels(string userId)
         //{
-        //    var result = await _context.Set<TProperty>()
-        //        .FromSqlRaw($"EXECUTE {storedProcedureName} {string.Join(", ", parameters.Select(p => $"@{p.ParameterName}"))}", parameters)
-        //        .ToListAsync();
+        //    var query = _context.GetStudentDetailsByUserId(userId);
 
-        //    return result.AsQueryable();
+        //    var result = await query.ToListAsync();
+
+        //    return result;
+        //}
+        //public async Task<IEnumerable<GetStaffDetailsByUserIdModel>> GetStaffDetailsByUserIdModel(string userId)
+        //{
+        //    var query = _context.GetStaffDetailsByUserId(userId);
+
+        //    var result = await query.ToListAsync();
+
+        //    return result;
         //}
 
+        public async Task<IEnumerable<T>> CallStoredProcedureAsync(string storedProcedureName, params SqlParameter[] parameters)
+        {
+            var parameterNames = parameters.Select(p => p.ParameterName);
+            var parameterString = string.Join(", ", parameterNames);
+
+            var sqlCommand = $"{storedProcedureName} {parameterString}";
+
+            var query = await _context.Set<T>()
+                .FromSqlRaw(sqlCommand, parameters)
+                .ToListAsync();
+
+            return query;
+
+        }
     }
 }

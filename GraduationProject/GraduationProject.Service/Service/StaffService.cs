@@ -4,6 +4,7 @@ using GraduationProject.Identity.IService;
 using GraduationProject.Repository.Repository;
 using GraduationProject.Service.DataTransferObject.StaffDto;
 using GraduationProject.Service.IService;
+using Microsoft.Data.SqlClient;
 
 namespace GraduationProject.Service.Service
 {
@@ -104,7 +105,10 @@ namespace GraduationProject.Service.Service
         }
         public async Task<GetStaffDetailsByUserIdDto> GetStaffByUserId(string userId)
         {
-            var getStaff = await _unitOfWork.Staffs.GetStaffDetailsByUserIdModel(userId);
+            SqlParameter pUserId = new SqlParameter("@UserId", userId);
+            var getStaff = await _unitOfWork.GetStaffDetailsByUserIdModels.CallStoredProcedureAsync(
+                "EXECUTE SpGetStaffDetailsByUserId", pUserId);
+
             if (getStaff.Any())
             {
                 GetStaffDetailsByUserIdDto getStaffDetailsByUserIdDto = new GetStaffDetailsByUserIdDto

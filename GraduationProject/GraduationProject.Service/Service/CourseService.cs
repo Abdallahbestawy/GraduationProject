@@ -3,6 +3,7 @@ using GraduationProject.Repository.IRepository;
 using GraduationProject.Repository.Repository;
 using GraduationProject.Service.DataTransferObject.CourseDto;
 using GraduationProject.Service.IService;
+using Microsoft.Data.SqlClient;
 
 namespace GraduationProject.Service.Service
 {
@@ -176,8 +177,10 @@ namespace GraduationProject.Service.Service
 
         public async Task<List<CourseStudentsAssessMethodDto>> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(int courseId, bool isControlStatus)
         {
-            var courseStudentAssessMethods = await _unitOfWork.StudentSemesterAssessMethod.GetStudentSemesterAssessMethods(courseId, isControlStatus);
-
+            SqlParameter pCourseId = new SqlParameter("@CourseId", courseId);
+            SqlParameter pIsControlStatus = new SqlParameter("@IsControlStatus", isControlStatus);
+            var courseStudentAssessMethods = await _unitOfWork.GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels.CallStoredProcedureAsync(
+                "EXECUTE SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus", pCourseId, pIsControlStatus);
             var courseStudentAssessMethodDto = new CourseStudentsAssessMethodDto
             {
                 CourseName = courseStudentAssessMethods.FirstOrDefault()?.CourseName,
