@@ -1,4 +1,5 @@
 ﻿using GraduationProject.Data.Entity;
+using GraduationProject.Data.Enum;
 using GraduationProject.Identity.IService;
 using GraduationProject.Repository.Repository;
 using GraduationProject.Service.DataTransferObject.StaffDto;
@@ -73,6 +74,7 @@ namespace GraduationProject.Service.Service
             return 1;
         }
 
+
         public async Task<GetCourseStaffSemester> Test(int satffId)
         {
             var staffSemesters = await _unitOfWork.StaffSemesters
@@ -99,6 +101,49 @@ namespace GraduationProject.Service.Service
             };
 
             return staffSemesterDto;
+        }
+        public async Task<GetStaffDetailsByUserIdDto> GetStaffByUserId(string userId)
+        {
+            var getStaff = await _unitOfWork.Staffs.GetStaffDetailsByUserIdModel(userId);
+            if (getStaff.Any())
+            {
+                GetStaffDetailsByUserIdDto getStaffDetailsByUserIdDto = new GetStaffDetailsByUserIdDto
+                {
+                    NameArabic = getStaff.FirstOrDefault()?.NameArabic,
+                    NameEnglish = getStaff.FirstOrDefault()?.NameEnglish,
+                    NationalID = getStaff.FirstOrDefault()?.NationalID,
+                    Email = getStaff.FirstOrDefault()?.Email,
+                    StaffId = getStaff.FirstOrDefault()?.Id ?? 0,
+                    StaffAddress = getStaff.FirstOrDefault()?.StaffAddress,
+                    DateOfBirth = getStaff.FirstOrDefault()?.DateOfBirth,
+                    Gender = Enum.GetName(typeof(Gender), getStaff.FirstOrDefault()?.Gender),
+                    Nationality = Enum.GetName(typeof(Nationality), getStaff.FirstOrDefault()?.Nationality),
+                    PlaceOfBirth = getStaff.FirstOrDefault()?.PlaceOfBirth,
+                    PostalCode = getStaff.FirstOrDefault()?.PostalCode,
+                    ReleasePlace = getStaff.FirstOrDefault()?.ReleasePlace,
+                    Religion = Enum.GetName(typeof(Religion), getStaff.FirstOrDefault()?.Religion),
+                    PreQualification = getStaff.FirstOrDefault()?.PreQualification,
+                    QualificationYear = getStaff.FirstOrDefault()?.QualificationYear,
+                    SeatNumber = getStaff.FirstOrDefault()?.SeatNumber ?? 0,
+                    Degree = getStaff.FirstOrDefault()?.Degree ?? 0.0m,
+                };
+                if (getStaff.Any(s => !string.IsNullOrEmpty(s.StaffPhoneNumber)))
+                {
+                    getStaffDetailsByUserIdDto.GetPhoneStaffDtos = getStaff
+                        .Where(s => !string.IsNullOrEmpty(s.StaffPhoneNumber))
+                        .Select(s => new GetPhoneSafftDto
+                        {
+                            StaffPhoneNumber = s.StaffPhoneNumber,
+                            PhoneType = Enum.GetName(typeof(PhoneType), s.PhoneType)
+                        })
+                        .ToList();
+                }
+                return getStaffDetailsByUserIdDto;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         //public async Task<GetCourseStaffSemester> Test(int staffId)

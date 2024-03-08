@@ -18,6 +18,8 @@ namespace GraduationProject.EntityFramework.DataBaseContext
             .HasNoKey();
             modelBuilder.Entity<GetStudentDetailsByUserIdModel>()
             .HasNoKey();
+            modelBuilder.Entity<GetStaffDetailsByUserIdModel>()
+                .HasNoKey();
         }
 
         public DbSet<AcademyYear> AcademyYears { get; set; }
@@ -66,6 +68,15 @@ namespace GraduationProject.EntityFramework.DataBaseContext
 
             return this.SpGetStudentDetailsByUserId
                 .FromSqlRaw("EXECUTE SpGetStudentDetailsByUserId @UserId", pUserId);
+        }
+        public DbSet<GetStaffDetailsByUserIdModel> SpGetStaffDetailsByUserId { get; set; }
+
+        public IQueryable<GetStaffDetailsByUserIdModel> GetStaffDetailsByUserId(string userId)
+        {
+            SqlParameter pUserId = new SqlParameter("@UserId", userId);
+
+            return this.SpGetStaffDetailsByUserId
+                .FromSqlRaw("EXECUTE SpGetStaffDetailsByUserId @UserId", pUserId);
         }
 
 

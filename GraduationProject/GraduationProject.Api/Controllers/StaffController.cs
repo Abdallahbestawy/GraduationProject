@@ -59,5 +59,13 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("not course have doctor");
             }
         }
+        [HttpGet("GetStaff")]
+        public async Task<IActionResult> GetStaff()
+        {
+            string userId = "3ed1410b-286c-4064-9193-35b792b8aebf";
+
+            var en = await _StaffService.GetStaffByUserId(userId);
+            return Ok(en);
+        }
     }
 }

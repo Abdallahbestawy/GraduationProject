@@ -71,7 +71,14 @@ namespace GraduationProject.Repository.Repository
         {
             var query = _context.GetStudentDetailsByUserId(userId);
 
-            // Execute the query and retrieve the results before using await
+            var result = await query.ToListAsync();
+
+            return result;
+        }
+        public async Task<IEnumerable<GetStaffDetailsByUserIdModel>> GetStaffDetailsByUserIdModel(string userId)
+        {
+            var query = _context.GetStaffDetailsByUserId(userId);
+
             var result = await query.ToListAsync();
 
             return result;

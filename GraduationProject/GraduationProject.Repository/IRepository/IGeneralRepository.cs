@@ -14,6 +14,7 @@ namespace GraduationProject.Repository.IRepository
         Task<IQueryable<T>> FindWithIncludeAsync(params Expression<Func<T, object>>[] includes);
         Task<IQueryable<T>> FindAllByForeignKeyAsync<TProperty>(Expression<Func<T, TProperty>> foreignKeySelector, TProperty foreignKey);
         Task<IEnumerable<GetStudentDetailsByUserIdModel>> GetStudentDetailsByUserIdModels(string userId);
+        Task<IEnumerable<GetStaffDetailsByUserIdModel>> GetStaffDetailsByUserIdModel(string userId);
 
 
     }
