@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GraduationProject.Mails\GraduationProject.Mails.csproj" />
     <ProjectReference Include="..\GraduationProject.ResponseHandler\GraduationProject.ResponseHandler.csproj" />
   </ItemGroup>
 </Project>

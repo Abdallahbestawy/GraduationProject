@@ -1,5 +1,7 @@
 ﻿using GraduationProject.Identity.IService;
 using GraduationProject.Identity.Models;
+using GraduationProject.Mails.IService;
+using GraduationProject.Mails.Models;
 using GraduationProject.ResponseHandler.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,9 +11,11 @@ namespace GraduationProject.Identity.Service
     public class RoleService : IRoleService
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-        public RoleService(RoleManager<IdentityRole> roleManager)
+        private readonly IMailService _mailService;
+        public RoleService(RoleManager<IdentityRole> roleManager, IMailService mailService)
         {
             _roleManager = roleManager;
+            _mailService = mailService;
         }
 
         public async Task<Response<int>> AddRole(RoleModel model)
@@ -53,6 +57,18 @@ namespace GraduationProject.Identity.Service
             }
             catch (Exception ex)
             {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "RoleService",
+                    MethodName = "GetAllRoles",
+                    Email = "mohamed.abdalla.f185@gmail.com",
+                    //Email = "abdallahbesstawy2000@gmail.com",
+                    //Email = "dev.mohamedsaadphp@gmail.com",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+
                 return Response<ICollection<RoleModel>>
                     .ServerError("Error occured while feching roles", 
                     "An unexpected error occurred while fetching roles. Please try again later.");

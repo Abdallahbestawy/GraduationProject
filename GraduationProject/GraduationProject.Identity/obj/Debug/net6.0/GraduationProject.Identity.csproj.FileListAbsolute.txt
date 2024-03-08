@@ -29,3 +29,5 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Identity\bin\Debug\net6.0\GraduationProject.ResponseHandler.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Identity\bin\Debug\net6.0\GraduationProject.ResponseHandler.pdb
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Identity\obj\Debug\net6.0\GraduationProject.Identity.csproj.CopyComplete
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Identity\bin\Debug\net6.0\GraduationProject.Mails.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Identity\bin\Debug\net6.0\GraduationProject.Mails.pdb

@@ -4,12 +4,16 @@ using GraduationProject.Identity.IService;
 using GraduationProject.Identity.Models;
 using GraduationProject.Identity.Service;
 using GraduationProject.Identity.Settings;
+using GraduationProject.Mails.IService;
+using GraduationProject.Mails.Models;
+using GraduationProject.Mails.Service;
 using GraduationProject.Repository.Repository;
 using GraduationProject.Service.IService;
 using GraduationProject.Service.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -34,6 +38,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDbContext<IdentityDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
     b => b.MigrationsAssembly(typeof(IdentityDbContext).Assembly.FullName)));
+
 builder.Services.AddCors(corsOptions =>
 {
     corsOptions.AddPolicy("Policy", CorsPolicyBuilder =>
@@ -67,7 +72,9 @@ builder.Services.AddTransient<ICourseService, CourseService>();
 builder.Services.AddTransient<UnitOfWork>();
 builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
 //builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => { })
 //    .AddEntityFrameworkStores<IdentityDbContext>();

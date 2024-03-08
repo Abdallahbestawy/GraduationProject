@@ -1,0 +1,13 @@
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\obj\Debug\net6.0\GraduationProject.Mails.csproj.AssemblyReference.cache
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\obj\Debug\net6.0\GraduationProject.Mails.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\obj\Debug\net6.0\GraduationProject.Mails.AssemblyInfoInputs.cache
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\obj\Debug\net6.0\GraduationProject.Mails.AssemblyInfo.cs
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\obj\Debug\net6.0\GraduationProject.Mails.csproj.CoreCompileInputs.cache
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\obj\Debug\net6.0\GraduationProject.Mails.sourcelink.json
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\bin\Debug\net6.0\GraduationProject.Mails.deps.json
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\bin\Debug\net6.0\GraduationProject.Mails.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\bin\Debug\net6.0\GraduationProject.Mails.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\obj\Debug\net6.0\GraduationProject.Mails.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\obj\Debug\net6.0\refint\GraduationProject.Mails.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\obj\Debug\net6.0\GraduationProject.Mails.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\obj\Debug\net6.0\ref\GraduationProject.Mails.dll
