@@ -25,7 +25,7 @@ namespace GraduationProject.Service.Service
                 FacultyId = addAssessMethodDto.FacultyId
             };
             await _unitOfWork.AssessMethods.AddAsync(newAssessMethod);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
         public async Task<IQueryable<AssessMethodDto>> GetAssessMethodAsync()
         {
@@ -73,13 +73,13 @@ namespace GraduationProject.Service.Service
             existingAssessMethod.FacultyId = updateAssessMethodDto.FacultyId;
 
             await _unitOfWork.AssessMethods.Update(existingAssessMethod);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
         public async Task DeleteAssessMethodAsync(int assessMethodId)
         {
             var existingAssessMethod = await _unitOfWork.AssessMethods.GetByIdAsync(assessMethodId);
             await _unitOfWork.AssessMethods.Delete(existingAssessMethod);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
     }
 }

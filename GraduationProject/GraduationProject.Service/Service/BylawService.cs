@@ -27,7 +27,7 @@ namespace GraduationProject.Service.Service
             };
 
             await _unitOfWork.Bylaws.AddAsync(newBylaw);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
 
             int bylawyId = newBylaw.Id;
 
@@ -44,7 +44,7 @@ namespace GraduationProject.Service.Service
                 }).ToList();
 
             await _unitOfWork.Estimates.AddRangeAsync(estimates);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
 
             List<EstimatesCourse> estimatesCourses = addBylawDto.EstimatesCourses.Select(estCourse =>
                 new EstimatesCourse
@@ -57,7 +57,7 @@ namespace GraduationProject.Service.Service
                 }).ToList();
 
             await _unitOfWork.EstimatesCourses.AddRangeAsync(estimatesCourses);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
 
 
@@ -111,13 +111,13 @@ namespace GraduationProject.Service.Service
             existingBylaw.FacultyId = updateBylawDto.FacultyId;
 
             await _unitOfWork.Bylaws.Update(existingBylaw);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
         public async Task DeleteBylawAsync(int BylawId)
         {
             var existingBlaw = await _unitOfWork.Bylaws.GetByIdAsync(BylawId);
             await _unitOfWork.Bylaws.Delete(existingBlaw);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
     }
 }

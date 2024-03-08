@@ -24,7 +24,7 @@ namespace GraduationProject.Service.Service
                 FacultyId = addExamRoleDto.FacultyId
             };
             await _unitOfWork.ExamRoles.AddAsync(newExamRole);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
 
         public async Task<IQueryable<ExamRolesDto>> GetExamRoleAsync()
@@ -70,13 +70,13 @@ namespace GraduationProject.Service.Service
             existingExamRole.FacultyId = updateExamRoleDto.FacultyId;
 
             await _unitOfWork.ExamRoles.Update(existingExamRole);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
         public async Task DeleteExamRoleAsync(int ExamRoleId)
         {
             var existingExamRole = await _unitOfWork.ExamRoles.GetByIdAsync(ExamRoleId);
             await _unitOfWork.ExamRoles.Delete(existingExamRole);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
     }
 }

@@ -33,7 +33,7 @@ namespace GraduationProject.Service.Service
                 ParentId = addScientificDegreeDto.ParentId
             };
             await _unitOfWork.ScientificDegrees.AddAsync(newScientificDegree);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
 
 
@@ -105,13 +105,13 @@ namespace GraduationProject.Service.Service
             existingScientificDegree.ParentId = updateScientificDegreeDto.ParentId;
 
             await _unitOfWork.ScientificDegrees.Update(existingScientificDegree);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
         public async Task DeleteScientificDegreeAsync(int ScientificDegreeId)
         {
             var existingScientificDegree = await _unitOfWork.ScientificDegrees.GetByIdAsync(ScientificDegreeId);
             await _unitOfWork.ScientificDegrees.Delete(existingScientificDegree);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
     }
 }

@@ -24,7 +24,7 @@ namespace GraduationProject.Service.Service
                 FacultyId = addBandDto.FacultyId
             };
             await _unitOfWork.Bands.AddAsync(newBand);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
 
 
@@ -71,13 +71,13 @@ namespace GraduationProject.Service.Service
             existingBand.FacultyId = updateBandDto.FacultyId;
 
             await _unitOfWork.Bands.Update(existingBand);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
         public async Task DeleteBandAsync(int bandId)
         {
             var existingBand = await _unitOfWork.Bands.GetByIdAsync(bandId);
             await _unitOfWork.Bands.Delete(existingBand);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
     }
 }

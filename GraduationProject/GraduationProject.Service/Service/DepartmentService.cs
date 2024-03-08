@@ -26,7 +26,7 @@ namespace GraduationProject.Service.Service
             //};
             var newDepartment = _DepartmentMapper.Map<Department>(departmentDto);
             await _unitOfWork.Departments.AddAsync(newDepartment);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
     }
 }

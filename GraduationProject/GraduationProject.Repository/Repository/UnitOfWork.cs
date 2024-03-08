@@ -76,9 +76,9 @@ namespace GraduationProject.Repository.Repository
             return _context.SaveChanges();
         }
 
-        public async Task SaveAsync()
+        public async Task<int> SaveAsync()
         {
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
     }
 }

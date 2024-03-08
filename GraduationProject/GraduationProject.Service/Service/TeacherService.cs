@@ -36,8 +36,8 @@ namespace GraduationProject.Service.Service
                     Street = addSaffDto.Street,
                     PostalCode = addSaffDto.PostalCode
                 };
-                _unitOfWork.Staffs.AddAsync(newTeacher);
-                _unitOfWork.Save();
+                await _unitOfWork.Staffs.AddAsync(newTeacher);
+                await _unitOfWork.SaveAsync();
                 int teacherId = newTeacher.Id;
                 QualificationData newQualificationDataStudent = new QualificationData
                 {
@@ -47,8 +47,8 @@ namespace GraduationProject.Service.Service
                     QualificationYear = addSaffDto.QualificationYear,
                     Degree = addSaffDto.Degree
                 };
-                _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
-                _unitOfWork.Save();
+                await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
+                await _unitOfWork.SaveAsync();
                 return 1;
 
             }

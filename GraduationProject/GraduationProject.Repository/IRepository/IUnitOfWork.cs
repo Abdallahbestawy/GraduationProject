@@ -36,6 +36,6 @@ namespace GraduationProject.Repository.IRepository
 
         //IStudentSemesterAssessMethodRepository StudentSemesterAssessMethod { get; }
         int Save();
-        Task SaveAsync();
+        Task<int> SaveAsync();
     }
 }

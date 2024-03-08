@@ -24,7 +24,7 @@ namespace GraduationProject.Service.Service
                 FacultyId = addPhaseDto.FacultyId
             };
             await _unitOfWork.Phases.AddAsync(newPhase);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
 
 
@@ -72,13 +72,13 @@ namespace GraduationProject.Service.Service
             existingPhase.FacultyId = updatePhaseDto.FacultyId;
 
             await _unitOfWork.Phases.Update(existingPhase);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
         public async Task DeletePhaseAsync(int PhaseId)
         {
             var existingPhase = await _unitOfWork.Phases.GetByIdAsync(PhaseId);
             await _unitOfWork.Phases.Delete(existingPhase);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
     }
 }

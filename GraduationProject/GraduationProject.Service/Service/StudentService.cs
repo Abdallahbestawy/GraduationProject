@@ -43,7 +43,7 @@ namespace GraduationProject.Service.Service
                     PostalCode = addStudentDto.PostalCode
                 };
                 await _unitOfWork.Students.AddAsync(newStudent);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 int studentId = newStudent.Id;
                 QualificationData newQualificationDataStudent = new QualificationData
                 {
@@ -54,7 +54,7 @@ namespace GraduationProject.Service.Service
                     Degree = addStudentDto.Degree
                 };
                 await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 FamilyData FamilyDataStudent = new FamilyData
                 {
                     StudentId = studentId,
@@ -67,7 +67,7 @@ namespace GraduationProject.Service.Service
                     Street = addStudentDto.ParentStreet
                 };
                 await _unitOfWork.FamilyDatas.AddAsync(FamilyDataStudent);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 if (addStudentDto.PhoneNumbers != null)
                 {
                     List<Phone> phones = addStudentDto.PhoneNumbers.Select(ph =>

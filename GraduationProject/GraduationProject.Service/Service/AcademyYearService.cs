@@ -26,7 +26,7 @@ namespace GraduationProject.Service.Service
                 IsCurrent = addAcademyYearDto.IsCurrent
             };
             await _unitOfWork.AcademyYears.AddAsync(newAcademyYear);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
 
 
@@ -80,13 +80,13 @@ namespace GraduationProject.Service.Service
             existingAcademyYear.IsCurrent = updateAcademyYearDto.IsCurrent;
 
             await _unitOfWork.AcademyYears.Update(existingAcademyYear);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
         public async Task DeleteAcademyYearAsync(int academyYearId)
         {
             var existingAcademyYear = await _unitOfWork.AcademyYears.GetByIdAsync(academyYearId);
             await _unitOfWork.AcademyYears.Delete(existingAcademyYear);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
     }
 }

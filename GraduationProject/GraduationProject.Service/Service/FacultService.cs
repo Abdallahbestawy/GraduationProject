@@ -21,9 +21,7 @@ namespace GraduationProject.Service.Service
                 UserId = "3ed1410b-286c-4064-9193-35b792b8aebf"
             };
             await _unitOfWork.Facultys.AddAsync(newFaculty);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
-
-
     }
 }

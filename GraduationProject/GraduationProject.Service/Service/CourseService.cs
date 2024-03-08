@@ -32,7 +32,7 @@ namespace GraduationProject.Service.Service
                 DepartmentId = addCourseDto.DepartmentId
             };
             await _unitOfWork.Courses.AddAsync(newCourse);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
             if (addCourseDto.Prerequisite && addCourseDto.CoursePrerequisites != null)
             {
                 int courseId = newCourse.Id;
@@ -42,8 +42,8 @@ namespace GraduationProject.Service.Service
                     CourseId = courseId,
                     PrerequisiteId = p.CoursePrerequisiteId
                 }).ToList();
-                _unitOfWork.CoursePrerequisites.AddRangeAsync(coursePrerequisites);
-                _unitOfWork.Save();
+                await _unitOfWork.CoursePrerequisites.AddRangeAsync(coursePrerequisites);
+                await _unitOfWork.SaveAsync();
             }
 
         }
@@ -110,13 +110,13 @@ namespace GraduationProject.Service.Service
             existingCourse.DepartmentId = updateCourseDto.DepartmentId;
 
             await _unitOfWork.Courses.Update(existingCourse);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
         public async Task DeleteCourseAsync(int CourseId)
         {
             var existingCourse = await _unitOfWork.Courses.GetByIdAsync(CourseId);
             await _unitOfWork.Courses.Delete(existingCourse);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
 
         public async Task<IQueryable<CourseDto>> GetCoursesByScientificDegreeIdAsync(int scientificDegreeId)

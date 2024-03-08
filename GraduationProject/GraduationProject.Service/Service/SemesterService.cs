@@ -24,7 +24,7 @@ namespace GraduationProject.Service.Service
                 FacultyId = addSemesterDto.FacultyId
             };
             await _unitOfWork.Semesters.AddAsync(newSemester);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
 
 
@@ -71,13 +71,13 @@ namespace GraduationProject.Service.Service
             existingSemester.FacultyId = updateSemesterDto.FacultyId;
 
             await _unitOfWork.Semesters.Update(existingSemester);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
         public async Task DeleteSemesterAsync(int SemesterId)
         {
             var existingSemester = await _unitOfWork.Semesters.GetByIdAsync(SemesterId);
             await _unitOfWork.Semesters.Delete(existingSemester);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
     }
 }
