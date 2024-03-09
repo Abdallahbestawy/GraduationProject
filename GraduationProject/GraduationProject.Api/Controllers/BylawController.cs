@@ -13,6 +13,7 @@ namespace GraduationProject.Api.Controllers
         {
             _bylawService = bylawService;
         }
+
         [HttpGet("{Id:int}")]
         public async Task<IActionResult> GetBylawById([FromRoute] int Id)
         {
@@ -20,21 +21,26 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("Please Enter Id Valid");
             }
-            var bylaw = await _bylawService.GetBylawByIdAsync(Id);
-            return Ok(bylaw);
+            var response = await _bylawService.GetBylawByIdAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetBylaws()
         {
-            var bylaws = await _bylawService.GetBylawAsync();
-            return Ok(bylaws);
+            var response = await _bylawService.GetBylawAsync();
+            
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddBylaw(BylawDto addBylawDto)
         {
             await _bylawService.AddBylawAsync(addBylawDto);
             return Ok("Add Bylaw Success");
         }
+
         [HttpPut("{Id:int}")]
         public async Task<IActionResult> UpdateBylaw([FromRoute] int Id, [FromBody] BylawDto updateBylawDto)
         {
@@ -42,14 +48,17 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("the Id not Valid");
             }
-            await _bylawService.UpdateBylawAsync(updateBylawDto);
-            return Ok("the update Success");
+            var response = await _bylawService.UpdateBylawAsync(updateBylawDto);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpDelete]
         public async Task<IActionResult> DeleteBylaw([FromRoute] int Id)
         {
-            await _bylawService.DeleteBylawAsync(Id);
-            return Ok("Delete Bylaw Success");
+            var response = await _bylawService.DeleteBylawAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
