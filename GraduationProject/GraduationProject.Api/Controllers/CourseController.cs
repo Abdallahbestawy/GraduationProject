@@ -20,14 +20,16 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("Please Enter Id Valid");
             }
-            var course = await _courseService.GetCourseByIdAsync(Id);
-            return Ok(course);
+            var response = await _courseService.GetCourseByIdAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
         }
         [HttpGet]
         public async Task<IActionResult> GetCourses()
         {
-            var courses = await _courseService.GetCoursesAsync();
-            return Ok(courses);
+            var response = await _courseService.GetCoursesAsync();
+
+            return StatusCode(response.StatusCode, response);
         }
         [HttpPost("AddCourse")]
         public async Task<IActionResult> AddCourse(CourseDto addCourseDto)
@@ -42,32 +44,37 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("the Id not Valid");
             }
-            await _courseService.UpdateCourseAsync(updateCourseDto);
-            return Ok("the update Success");
+            var response = await _courseService.UpdateCourseAsync(updateCourseDto);
+
+            return StatusCode(response.StatusCode, response);
         }
         [HttpDelete]
         public async Task<IActionResult> DeleteCourse([FromRoute] int Id)
         {
-            await _courseService.DeleteCourseAsync(Id);
-            return Ok("Delete Course Success");
+            var response = await _courseService.DeleteCourseAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
         }
         [HttpPost("AddCourseAssessMethod")]
         public async Task<IActionResult> AddCourseAssessMethod(CourseAssessMethodDto addCourseAssessMethodDto)
         {
-            await _courseService.AddCourseAssessMethodAsync(addCourseAssessMethodDto);
-            return Ok("Add Success");
+            var response = await _courseService.AddCourseAssessMethodAsync(addCourseAssessMethodDto);
+
+            return StatusCode(response.StatusCode, response);
         }
         [HttpGet("GetStudentSemesterAssessMethodsBySpecificCourse{courseId:int}")]
         public async Task<IActionResult> GetStudentSemesterAssessMethodsBySpecificCourse(int courseId)
         {
-            var courseStudentsAssessMethods = await _courseService.GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(courseId, false);
-            return Ok(courseStudentsAssessMethods);
+            var response = await _courseService.GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(courseId, false);
+
+            return StatusCode(response.StatusCode, response);
         }
         [HttpGet("GetStudentSemesterAssessMethodsBySpecificCourseControlMembers{courseId:int}")]
         public async Task<IActionResult> GetStudentSemesterAssessMethodsBySpecificCourseControlMembers(int courseId)
         {
-            var courseStudentsAssessMethods = await _courseService.GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(courseId, true);
-            return Ok(courseStudentsAssessMethods);
+            var response = await _courseService.GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(courseId, true);
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

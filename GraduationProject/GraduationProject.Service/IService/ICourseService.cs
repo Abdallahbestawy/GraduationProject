@@ -1,17 +1,18 @@
-﻿using GraduationProject.Service.DataTransferObject.CourseDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.CourseDto;
 
 namespace GraduationProject.Service.IService
 {
     public interface ICourseService
     {
         Task AddCourseAsync(CourseDto addCourseDto);
-        Task UpdateCourseAsync(CourseDto updateCourseDto);
-        Task DeleteCourseAsync(int CourseId);
-        Task<CourseDto> GetCourseByIdAsync(int CourseId);
-        Task<IQueryable<CourseDto>> GetCoursesAsync();
-        Task AddCourseAssessMethodAsync(CourseAssessMethodDto addCourseAssessMethodDto);
+        Task<Response<int>> UpdateCourseAsync(CourseDto updateCourseDto);
+        Task<Response<int>> DeleteCourseAsync(int CourseId);
+        Task<Response<CourseDto>> GetCourseByIdAsync(int CourseId);
+        Task<Response<IQueryable<CourseDto>>> GetCoursesAsync();
+        Task<Response<int>> AddCourseAssessMethodAsync(CourseAssessMethodDto addCourseAssessMethodDto);
         Task<IQueryable<CourseDto>> GetCoursesByScientificDegreeIdAsync(int scientificDegreeId);
         Task<CourseAssessMethodDto> GetAssessMethodsByCoursesIdAsync(int courseId);
-        Task<List<CourseStudentsAssessMethodDto>> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(int courseId, bool isControlStatus);
+        Task<Response<CourseStudentsAssessMethodDto>> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(int courseId, bool isControlStatus);
     }
 }
