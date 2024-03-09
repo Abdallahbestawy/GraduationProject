@@ -35,3 +35,5 @@ E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\bin\Debug
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.ResponseHandler.pdb
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Mails.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Mails.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Mails.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Data\bin\Debug\net6.0\GraduationProject.Mails.pdb

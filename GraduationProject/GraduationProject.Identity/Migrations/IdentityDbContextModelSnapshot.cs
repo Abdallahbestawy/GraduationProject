@@ -89,6 +89,9 @@ namespace GraduationProject.Identity.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<short?>("UserType")
+                        .HasColumnType("smallint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")

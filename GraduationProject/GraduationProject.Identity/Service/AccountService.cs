@@ -19,6 +19,7 @@ namespace GraduationProject.Identity.Service
             user.NationalID = NationalID;
             user.Email = Email;
             user.UserName = NationalID;
+            user.UserType = Enum.UserType.Student;
 
             IdentityResult result = await _userManager.CreateAsync(user, Password);
 
@@ -40,6 +41,7 @@ namespace GraduationProject.Identity.Service
             user.NationalID = NationalID;
             user.Email = Email;
             user.UserName = NationalID;
+            user.UserType = Enum.UserType.Staff;
 
             IdentityResult result = await _userManager.CreateAsync(user, Password);
 
@@ -62,6 +64,7 @@ namespace GraduationProject.Identity.Service
             user.NationalID = NationalID;
             user.Email = Email;
             user.UserName = NationalID;
+            user.UserType = Enum.UserType.Administration;
 
             IdentityResult result = await _userManager.CreateAsync(user, Password);
 
@@ -84,6 +87,7 @@ namespace GraduationProject.Identity.Service
             user.NationalID = NationalID;
             user.Email = Email;
             user.UserName = NationalID;
+            user.UserType = Enum.UserType.Teacher;
 
             IdentityResult result = await _userManager.CreateAsync(user, Password);
 
@@ -106,6 +110,7 @@ namespace GraduationProject.Identity.Service
             user.NationalID = NationalID;
             user.Email = Email;
             user.UserName = NationalID;
+            user.UserType = Enum.UserType.TeacherAssistant;
 
             IdentityResult result = await _userManager.CreateAsync(user, Password);
 
