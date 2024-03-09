@@ -76,7 +76,8 @@ namespace GraduationProject.Service.Service
                     IsCurrent = entity.IsCurrent
                 });
 
-                return Response<IQueryable<AcademyYearDto>>.Success(academyYearDto, "Academic years retrieved successfully").WithCount();
+                return Response<IQueryable<AcademyYearDto>>.Success(academyYearDto.AsQueryable(), "Academic years retrieved successfully")
+                    .WithCount();
             }
             catch (Exception ex)
             {
@@ -100,7 +101,7 @@ namespace GraduationProject.Service.Service
             {
                 var academyYearEntity = await _unitOfWork.AcademyYears.GetByIdAsync(academyYearId);
                 if (academyYearEntity == null)
-                    return Response<AcademyYearDto>.NoContent("This Academic year doesn't exists");
+                    return Response<AcademyYearDto>.BadRequest("This Academic year doesn't exists");
                 AcademyYearDto academyYearDto = new AcademyYearDto
                 {
                     Id = academyYearEntity.Id,
@@ -147,7 +148,7 @@ namespace GraduationProject.Service.Service
                 int result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
-                    return Response<int>.Created("Academic year updated successfully");
+                    return Response<int>.Updated("Academic year updated successfully");
 
                 return Response<int>
                     .ServerError("Error occured while updating Academic year",
@@ -174,11 +175,13 @@ namespace GraduationProject.Service.Service
             try
             {
                 var existingAcademyYear = await _unitOfWork.AcademyYears.GetByIdAsync(academyYearId);
+                if (existingAcademyYear == null)
+                    return Response<int>.BadRequest("This Academic year doesn't exists");
                 await _unitOfWork.AcademyYears.Delete(existingAcademyYear);
                 var result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
-                    return Response<int>.Created("Academic year deleted successfully");
+                    return Response<int>.Deleted("Academic year deleted successfully");
 
                 return Response<int>
                     .ServerError("Error occured while deleting Academic year",

@@ -1,13 +1,14 @@
-﻿using GraduationProject.Service.DataTransferObject.AssessMethodDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.AssessMethodDto;
 
 namespace GraduationProject.Service.IService
 {
     public interface IAssessMethodService
     {
-        Task AddAssessMethodAsync(AssessMethodDto addAssessMethodDto);
-        Task UpdateAssessMethodAsync(AssessMethodDto updateAssessMethodDto);
-        Task DeleteAssessMethodAsync(int assessMethodId);
-        Task<AssessMethodDto> GetAssessMethodByIdAsync(int assessMethodId);
-        Task<IQueryable<AssessMethodDto>> GetAssessMethodAsync();
+        Task<Response<int>> AddAssessMethodAsync(AssessMethodDto addAssessMethodDto);
+        Task<Response<int>> UpdateAssessMethodAsync(AssessMethodDto updateAssessMethodDto);
+        Task<Response<int>> DeleteAssessMethodAsync(int assessMethodId);
+        Task<Response<AssessMethodDto>> GetAssessMethodByIdAsync(int assessMethodId);
+        Task<Response<IQueryable<AssessMethodDto>>> GetAssessMethodAsync();
     }
 }

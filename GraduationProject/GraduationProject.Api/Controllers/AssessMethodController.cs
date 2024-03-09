@@ -1,4 +1,5 @@
-﻿using GraduationProject.Service.DataTransferObject.AssessMethodDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.AssessMethodDto;
 using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,28 +14,35 @@ namespace GraduationProject.Api.Controllers
         {
             _assessMethodService = assessMethodService;
         }
+
         [HttpGet("{Id:int}")]
         public async Task<IActionResult> GetAssessMethodById([FromRoute] int Id)
         {
             if (Id.Equals(null))
             {
-                return BadRequest("Please Enter Id Valid");
+                return BadRequest("Please Enter Valid Id");
             }
-            var assessMethod = await _assessMethodService.GetAssessMethodByIdAsync(Id);
-            return Ok(assessMethod);
+            var response = await _assessMethodService.GetAssessMethodByIdAsync(Id);
+            
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAssessMethods()
         {
-            var assessMethods = await _assessMethodService.GetAssessMethodAsync();
-            return Ok(assessMethods);
+            var response = await _assessMethodService.GetAssessMethodAsync();
+
+            return StatusCode(response.StatusCode,response);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddBand(AssessMethodDto addAssessMethodDto)
         {
-            await _assessMethodService.AddAssessMethodAsync(addAssessMethodDto);
-            return Ok("Add AssessMethod Success");
+            var response = await _assessMethodService.AddAssessMethodAsync(addAssessMethodDto);
+            
+            return StatusCode(response.StatusCode,response);
         }
+
         [HttpPut("{Id:int}")]
         public async Task<IActionResult> UpdateAssessMethod([FromRoute] int Id, [FromBody] AssessMethodDto updateAssessMethodDto)
         {
@@ -42,14 +50,17 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("the Id not Valid");
             }
-            await _assessMethodService.UpdateAssessMethodAsync(updateAssessMethodDto);
-            return Ok("the update Success");
+            var response = await _assessMethodService.UpdateAssessMethodAsync(updateAssessMethodDto);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpDelete]
         public async Task<IActionResult> DeleteAssessMethod([FromRoute] int Id)
         {
-            await _assessMethodService.DeleteAssessMethodAsync(Id);
-            return Ok("Delete AssessMethod Success");
+            var response = await _assessMethodService.DeleteAssessMethodAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
