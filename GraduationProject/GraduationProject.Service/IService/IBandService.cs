@@ -1,13 +1,14 @@
-﻿using GraduationProject.Service.DataTransferObject.BandDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.BandDto;
 
 namespace GraduationProject.Service.IService
 {
     public interface IBandService
     {
-        Task AddBandAsync(BandDto addBandDto);
-        Task UpdateBandAsync(BandDto updateBandDto);
-        Task DeleteBandAsync(int bandId);
-        Task<BandDto> GetBandByIdAsync(int bandId);
-        Task<IQueryable<BandDto>> GetBandAsync();
+        Task<Response<int>> AddBandAsync(BandDto addBandDto);
+        Task<Response<int>> UpdateBandAsync(BandDto updateBandDto);
+        Task<Response<int>> DeleteBandAsync(int bandId);
+        Task<Response<BandDto>> GetBandByIdAsync(int bandId);
+        Task<Response<IQueryable<BandDto>>> GetBandAsync();
     }
 }

@@ -101,7 +101,7 @@ namespace GraduationProject.Service.Service
             {
                 var academyYearEntity = await _unitOfWork.AcademyYears.GetByIdAsync(academyYearId);
                 if (academyYearEntity == null)
-                    return Response<AcademyYearDto>.BadRequest("This Academic year doesn't exists");
+                    return Response<AcademyYearDto>.BadRequest("This Academic year doesn't exist");
                 AcademyYearDto academyYearDto = new AcademyYearDto
                 {
                     Id = academyYearEntity.Id,
@@ -136,7 +136,7 @@ namespace GraduationProject.Service.Service
             {
                 AcademyYear existingAcademyYear = await _unitOfWork.AcademyYears.GetByIdAsync(updateAcademyYearDto.Id);
                 if (existingAcademyYear == null)
-                    return Response<int>.BadRequest("This Academic year doesn't exists");
+                    return Response<int>.BadRequest("This Academic year doesn't exist");
                 existingAcademyYear.Start = updateAcademyYearDto.Start;
                 existingAcademyYear.End = updateAcademyYearDto.End;
                 existingAcademyYear.Description = updateAcademyYearDto.Description;
@@ -176,7 +176,7 @@ namespace GraduationProject.Service.Service
             {
                 var existingAcademyYear = await _unitOfWork.AcademyYears.GetByIdAsync(academyYearId);
                 if (existingAcademyYear == null)
-                    return Response<int>.BadRequest("This Academic year doesn't exists");
+                    return Response<int>.BadRequest("This Academic year doesn't exist");
                 await _unitOfWork.AcademyYears.Delete(existingAcademyYear);
                 var result = await _unitOfWork.SaveAsync();
 

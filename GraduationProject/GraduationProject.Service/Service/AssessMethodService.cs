@@ -98,7 +98,7 @@ namespace GraduationProject.Service.Service
             {
                 var assessMethodEntities = await _unitOfWork.AssessMethods.GetByIdAsync(assessMethodId);
                 if (assessMethodEntities == null)
-                    return Response<AssessMethodDto>.BadRequest("This Assess Method doesn't exists");
+                    return Response<AssessMethodDto>.BadRequest("This Assess Method doesn't exist");
                 AssessMethodDto assessMethodDto = new AssessMethodDto
                 {
                     Id = assessMethodEntities.Id,
@@ -132,7 +132,7 @@ namespace GraduationProject.Service.Service
             {
                 AssessMethod existingAssessMethod = await _unitOfWork.AssessMethods.GetByIdAsync(updateAssessMethodDto.Id);
                 if (existingAssessMethod == null)
-                    return Response<int>.BadRequest("This Assess Method doesn't exists");
+                    return Response<int>.BadRequest("This Assess Method doesn't exist");
                 existingAssessMethod.Name = updateAssessMethodDto.Name;
                 existingAssessMethod.Description = updateAssessMethodDto.Description;
                 existingAssessMethod.MinDegree = updateAssessMethodDto.MinDegree;
@@ -169,7 +169,7 @@ namespace GraduationProject.Service.Service
             {
                 var existingAssessMethod = await _unitOfWork.AssessMethods.GetByIdAsync(assessMethodId);
                 if (existingAssessMethod == null)
-                    return Response<int>.BadRequest("This Assess Method doesn't exists");
+                    return Response<int>.BadRequest("This Assess Method doesn't exist");
                 await _unitOfWork.AssessMethods.Delete(existingAssessMethod);
                 var result = await _unitOfWork.SaveAsync();
                 if (result > 0)

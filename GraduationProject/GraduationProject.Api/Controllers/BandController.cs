@@ -13,6 +13,7 @@ namespace GraduationProject.Api.Controllers
         {
             _bandService = bandService;
         }
+
         [HttpGet("{Id:int}")]
         public async Task<IActionResult> GetBandById([FromRoute] int Id)
         {
@@ -20,21 +21,27 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("Please Enter Id Valid");
             }
-            var band = await _bandService.GetBandByIdAsync(Id);
-            return Ok(band);
+            var response = await _bandService.GetBandByIdAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetBands()
         {
-            var bands = await _bandService.GetBandAsync();
-            return Ok(bands);
+            var response = await _bandService.GetBandAsync();
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddBand(BandDto addBandDto)
         {
-            await _bandService.AddBandAsync(addBandDto);
-            return Ok("Add Band Success");
+            var response = await _bandService.AddBandAsync(addBandDto);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpPut("{Id:int}")]
         public async Task<IActionResult> UpdateBand([FromRoute] int Id, [FromBody] BandDto updateBandDto)
         {
@@ -42,14 +49,16 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("the Id not Valid");
             }
-            await _bandService.UpdateBandAsync(updateBandDto);
-            return Ok("the update Success");
+            var response = await _bandService.UpdateBandAsync(updateBandDto);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpDelete]
         public async Task<IActionResult> DeleteBand([FromRoute] int Id)
         {
-            await _bandService.DeleteBandAsync(Id);
-            return Ok("Delete Band Success");
+            var response = await _bandService.DeleteBandAsync(Id);
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
