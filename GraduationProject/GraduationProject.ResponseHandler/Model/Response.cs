@@ -16,7 +16,7 @@
             return new Response<T>
             {
                 StatusCode = statusCode,
-                Succeeded = responseType == ResponseType.Success,
+                Succeeded = responseType == ResponseType.Success || responseType == ResponseType.Created,
                 Message = message,
                 Errors = errors,
                 Count = 0,
@@ -29,9 +29,19 @@
             return CreateResponse(ResponseType.Success, message, null, data);
         }
 
+        public static Response<T> Created(string? message = null)
+        {
+            return CreateResponse(ResponseType.Created, message, null, default(T));
+        }
+
         public static Response<T> NoContent(string? message = null)
         {
             return CreateResponse(ResponseType.NoContent, message, null, default(T));
+        }
+
+        public static Response<T> BadRequest(string? message = null)
+        {
+            return CreateResponse(ResponseType.BadRequest, message, null, default(T));
         }
 
         public static Response<T> ServerError(string? message = null, object? errors = null)

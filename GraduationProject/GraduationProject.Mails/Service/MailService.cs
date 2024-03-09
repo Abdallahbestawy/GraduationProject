@@ -22,7 +22,10 @@ namespace GraduationProject.Mails.Service
                 Subject = "Exception Notifications"
             };
 
-            email.To.Add(MailboxAddress.Parse(model.Email));
+            foreach (var emailTo in model.Emails)
+            {
+                email.To.Add(MailboxAddress.Parse(emailTo));
+            }
 
             var builder = new BodyBuilder();
 

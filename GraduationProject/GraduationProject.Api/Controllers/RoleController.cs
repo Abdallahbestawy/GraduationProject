@@ -16,8 +16,9 @@ namespace GraduationProject.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRole()
         {
-            var roles = await _roleService.GetAllRoles();
-            return Ok(roles);
+            var response = await _roleService.GetAllRoles();
+
+            return StatusCode(response.StatusCode, response);
         }
         [HttpPost]
         public async Task<IActionResult> AddRole(RoleModel model)
@@ -25,10 +26,8 @@ namespace GraduationProject.Api.Controllers
             if (ModelState.IsValid)
             {
                 var response = await _roleService.AddRole(model);
-                if (response.StatusCode ==200)
-                    return Ok(response);
-                else
-                    return StatusCode(response.StatusCode,response);
+
+                return StatusCode(response.StatusCode,response);
             }
             else 
                 return BadRequest("please enter Valid Model");

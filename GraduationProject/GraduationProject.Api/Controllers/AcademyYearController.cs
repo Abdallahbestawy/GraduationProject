@@ -1,4 +1,5 @@
-﻿using GraduationProject.Service.DataTransferObject.AcademyYearDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.AcademyYearDto;
 using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,7 @@ namespace GraduationProject.Api.Controllers
         {
             _academyYearService = academyYearService;
         }
+
         [HttpGet("GetAcademyYearById{Id:int}")]
         public async Task<IActionResult> GetAcademyYearById([FromRoute] int Id)
         {
@@ -20,21 +22,27 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("Please Enter Id Valid");
             }
-            var academyYear = await _academyYearService.GetAcademyYearByIdAsync(Id);
-            return Ok(academyYear);
+            var response = await _academyYearService.GetAcademyYearByIdAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAcademyYears()
         {
-            var academyYears = await _academyYearService.GetAcademyYearAsync();
-            return Ok(academyYears);
+            var response = await _academyYearService.GetAcademyYearAsync();
+            
+            return StatusCode(response.StatusCode,response);
         }
+
         [HttpPost("AddAcademyYear")]
         public async Task<IActionResult> AddAcademyYear(AcademyYearDto addAcademyYearDto)
         {
-            await _academyYearService.AddAcademyYearAsync(addAcademyYearDto);
-            return Ok("Add AcademyYear Success");
+            var response = await _academyYearService.AddAcademyYearAsync(addAcademyYearDto);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpPut("UpdateAcademyYear{Id:int}")]
         public async Task<IActionResult> UpdateAcademyYear([FromRoute] int Id, [FromBody] AcademyYearDto updateAcademyYearDto)
         {
@@ -42,14 +50,17 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("the Id not Valid");
             }
-            await _academyYearService.UpdateAcademyYearAsync(updateAcademyYearDto);
-            return Ok("the update Success");
+            var response = await _academyYearService.UpdateAcademyYearAsync(updateAcademyYearDto);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpDelete("DeleteAcademyYear")]
         public async Task<IActionResult> DeleteAcademyYear([FromRoute] int Id)
         {
-            await _academyYearService.DeleteAcademyYearAsync(Id);
-            return Ok("Delete AcademyYear Success");
+            var response = await _academyYearService.DeleteAcademyYearAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

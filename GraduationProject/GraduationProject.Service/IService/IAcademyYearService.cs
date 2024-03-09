@@ -1,13 +1,14 @@
-﻿using GraduationProject.Service.DataTransferObject.AcademyYearDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.AcademyYearDto;
 
 namespace GraduationProject.Service.IService
 {
     public interface IAcademyYearService
     {
-        Task AddAcademyYearAsync(AcademyYearDto addAcademyYearDto);
-        Task UpdateAcademyYearAsync(AcademyYearDto updateAcademyYearDto);
-        Task DeleteAcademyYearAsync(int academyYearId);
-        Task<AcademyYearDto> GetAcademyYearByIdAsync(int academyYearId);
-        Task<IQueryable<AcademyYearDto>> GetAcademyYearAsync();
+        Task<Response<int>> AddAcademyYearAsync(AcademyYearDto addAcademyYearDto);
+        Task<Response<int>> UpdateAcademyYearAsync(AcademyYearDto updateAcademyYearDto);
+        Task<Response<int>> DeleteAcademyYearAsync(int academyYearId);
+        Task<Response<AcademyYearDto>> GetAcademyYearByIdAsync(int academyYearId);
+        Task<Response<IQueryable<AcademyYearDto>>> GetAcademyYearAsync();
     }
 }

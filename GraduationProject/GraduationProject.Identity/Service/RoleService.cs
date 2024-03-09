@@ -61,9 +61,6 @@ namespace GraduationProject.Identity.Service
                 {
                     ClassName = "RoleService",
                     MethodName = "GetAllRoles",
-                    Email = "mohamed.abdalla.f185@gmail.com",
-                    //Email = "abdallahbesstawy2000@gmail.com",
-                    //Email = "dev.mohamedsaadphp@gmail.com",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
