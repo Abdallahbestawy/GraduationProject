@@ -43,7 +43,14 @@ namespace GraduationProject.Service.Service
                     PostalCode = addStudentDto.PostalCode
                 };
                 await _unitOfWork.Students.AddAsync(newStudent);
-                await _unitOfWork.SaveAsync();
+                // try
+                //{
+                int result = await _unitOfWork.SaveAsync();
+                //  _accountService.DeleteUser(userId);
+                //}
+                //catch(Exception ex)
+                //{
+                //}
                 int studentId = newStudent.Id;
                 QualificationData newQualificationDataStudent = new QualificationData
                 {
@@ -215,7 +222,7 @@ namespace GraduationProject.Service.Service
                     return Response<GetStudentDetailsByUserIdDto>.NoContent("This Student doesn't exists");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Response<GetStudentDetailsByUserIdDto>.ServerError("Error occured while retrieving student's data",
                     "An unexpected error occurred while retrieving student's data. Please try again later.");

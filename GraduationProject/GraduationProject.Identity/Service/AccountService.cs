@@ -124,5 +124,30 @@ namespace GraduationProject.Identity.Service
                 return null; // Return null or handle the failure case accordingly
             }
         }
+
+        public async Task<bool> DeleteUser(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return false;
+            }
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user != null)
+                {
+                    var result = await _userManager.DeleteAsync(user);
+                    if (result.Succeeded)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

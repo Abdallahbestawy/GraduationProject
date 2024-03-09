@@ -7,5 +7,7 @@
         Task<string> AddAdministrationAccount(string NameArabic, string NameEnglish, string NationalID, string Email, string Password);
         Task<string> AddTeacherAccount(string NameArabic, string NameEnglish, string NationalID, string Email, string Password);
         Task<string> AddTeacherAssistantAccount(string NameArabic, string NameEnglish, string NationalID, string Email, string Password);
+        Task<bool> DeleteUser(string userId);
     }
+
 }
