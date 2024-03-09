@@ -1,13 +1,14 @@
-﻿using GraduationProject.Service.DataTransferObject.ExamRolesDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.ExamRolesDto;
 
 namespace GraduationProject.Service.IService
 {
     public interface IExamRoleService
     {
-        Task AddExamRoleAsync(ExamRolesDto addExamRoleDto);
-        Task UpdateExamRoleAsync(ExamRolesDto updateExamRoleDto);
-        Task DeleteExamRoleAsync(int ExamRoleId);
-        Task<ExamRolesDto> GetExamRoleByIdAsync(int ExamRoleId);
-        Task<IQueryable<ExamRolesDto>> GetExamRoleAsync();
+        Task<Response<int>> AddExamRoleAsync(ExamRolesDto addExamRoleDto);
+        Task<Response<int>> UpdateExamRoleAsync(ExamRolesDto updateExamRoleDto);
+        Task<Response<int>> DeleteExamRoleAsync(int ExamRoleId);
+        Task<Response<ExamRolesDto>> GetExamRoleByIdAsync(int ExamRoleId);
+        Task<Response<IQueryable<ExamRolesDto>>> GetExamRoleAsync();
     }
 }

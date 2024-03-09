@@ -16,8 +16,9 @@ namespace GraduationProject.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddDepartment(DepartmentDto departmentDto)
         {
-            await _departmentService.AddDepartmentAsync(departmentDto);
-            return Ok("Add Department Success");
+            var response = await _departmentService.AddDepartmentAsync(departmentDto);
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

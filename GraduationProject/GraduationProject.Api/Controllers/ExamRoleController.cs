@@ -20,20 +20,23 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("Please Enter Id Valid");
             }
-            var examRole = await _examRoleService.GetExamRoleByIdAsync(Id);
-            return Ok(examRole);
+            var response = await _examRoleService.GetExamRoleByIdAsync(Id);
+            
+            return StatusCode(response.StatusCode, response);
         }
         [HttpGet]
         public async Task<IActionResult> GetExamRoles()
         {
-            var examRole = await _examRoleService.GetExamRoleAsync();
-            return Ok(examRole);
+            var response = await _examRoleService.GetExamRoleAsync();
+
+            return StatusCode(response.StatusCode, response);
         }
         [HttpPost]
         public async Task<IActionResult> AddExamRoles(ExamRolesDto addExamRolesDto)
         {
-            await _examRoleService.AddExamRoleAsync(addExamRolesDto);
-            return Ok("Add ExamRoles Success");
+            var response = await _examRoleService.AddExamRoleAsync(addExamRolesDto);
+
+            return StatusCode(response.StatusCode, response);
         }
         [HttpPut("{Id:int}")]
         public async Task<IActionResult> UpdateExamRoles([FromRoute] int Id, [FromBody] ExamRolesDto updateExamRolesDto)
@@ -42,14 +45,16 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("the Id not Valid");
             }
-            await _examRoleService.UpdateExamRoleAsync(updateExamRolesDto);
-            return Ok("the update Success");
+            var response = await _examRoleService.UpdateExamRoleAsync(updateExamRolesDto);
+
+            return StatusCode(response.StatusCode, response);
         }
         [HttpDelete]
         public async Task<IActionResult> DeleteExamRoles([FromRoute] int Id)
         {
-            await _examRoleService.DeleteExamRoleAsync(Id);
-            return Ok("Delete ExamRoles Success");
+            var response = await _examRoleService.DeleteExamRoleAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
