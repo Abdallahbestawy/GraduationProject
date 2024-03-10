@@ -1,13 +1,14 @@
-﻿using GraduationProject.Service.DataTransferObject.PhaseDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.PhaseDto;
 
 namespace GraduationProject.Service.IService
 {
     public interface IPhaseService
     {
-        Task AddPhaseAsync(PhaseDto addPhaseDto);
-        Task UpdatePhaseAsync(PhaseDto updatePhaseDto);
-        Task DeletePhaseAsync(int PhaseId);
-        Task<PhaseDto> GetPhaseByIdAsync(int PhaseId);
-        Task<IQueryable<PhaseDto>> GetPhaseAsync();
+        Task<Response<int>> AddPhaseAsync(PhaseDto addPhaseDto);
+        Task<Response<int>> UpdatePhaseAsync(PhaseDto updatePhaseDto);
+        Task<Response<int>> DeletePhaseAsync(int PhaseId);
+        Task<Response<PhaseDto>> GetPhaseByIdAsync(int PhaseId);
+        Task<Response<IQueryable<PhaseDto>>> GetPhaseAsync();
     }
 }

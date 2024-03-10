@@ -13,6 +13,7 @@ namespace GraduationProject.Api.Controllers
         {
             _phaseService = phaseService;
         }
+
         [HttpGet("{Id:int}")]
         public async Task<IActionResult> GetPhaseById([FromRoute] int Id)
         {
@@ -20,21 +21,27 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("Please Enter Id Valid");
             }
-            var phase = await _phaseService.GetPhaseByIdAsync(Id);
-            return Ok(phase);
+            var response = await _phaseService.GetPhaseByIdAsync(Id);
+            
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetPhases()
         {
-            var phases = await _phaseService.GetPhaseAsync();
-            return Ok(phases);
+            var response = await _phaseService.GetPhaseAsync();
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddPhase(PhaseDto addPhaseDto)
         {
-            await _phaseService.AddPhaseAsync(addPhaseDto);
-            return Ok("Add Phase Success");
+            var response = await _phaseService.AddPhaseAsync(addPhaseDto);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpPut("{Id:int}")]
         public async Task<IActionResult> UpdatePhase([FromRoute] int Id, [FromBody] PhaseDto updatePhaseDto)
         {
@@ -42,14 +49,17 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("the Id not Valid");
             }
-            await _phaseService.UpdatePhaseAsync(updatePhaseDto);
-            return Ok("the update Success");
+            var response = await _phaseService.UpdatePhaseAsync(updatePhaseDto);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpDelete]
         public async Task<IActionResult> DeletePhase([FromRoute] int Id)
         {
-            await _phaseService.DeletePhaseAsync(Id);
-            return Ok("Delete Phase Success");
+            var response = await _phaseService.DeletePhaseAsync(Id);
+            
+            return StatusCode(response.StatusCode, response);
         }
 
     }
