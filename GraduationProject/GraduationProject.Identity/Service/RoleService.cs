@@ -53,7 +53,7 @@ namespace GraduationProject.Identity.Service
                 }).ToList();
 
                 return Response<ICollection<RoleModel>>
-                    .Success(roleModels, "Roles retrieved successfully");
+                    .Success(roleModels, "Roles retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {

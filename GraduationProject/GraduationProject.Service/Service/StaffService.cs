@@ -252,18 +252,28 @@ namespace GraduationProject.Service.Service
             }
             catch (Exception ex)
             {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StaffService",
+                    MethodName = "GetStaffByUserIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
                 return Response<GetStaffDetailsByUserIdDto>.ServerError("Error occured while retrieving Staff's data",
                     "An unexpected error occurred while retrieving Staff's data. Please try again later.");
             }
         }
 
-        public async Task<List<GetAllStaffsDto>> GetAllStaffsAsync()
+        public async Task<Response<List<GetAllStaffsDto>>> GetAllStaffsAsync()
         {
-            var userType = UserType.Staff;
-            SqlParameter pUserType = new SqlParameter("@UserType", userType);
-            var staffs = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
-            if (staffs.Any())
+            try
             {
+                var userType = UserType.Staff;
+                SqlParameter pUserType = new SqlParameter("@UserType", userType);
+                var staffs = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
+                if (!staffs.Any())
+                    Response<List<GetAllStaffsDto>>.NoContent("No staffs are exist");
 
                 List<GetAllStaffsDto> result = staffs.Select(staff => new GetAllStaffsDto
                 {
@@ -277,11 +287,20 @@ namespace GraduationProject.Service.Service
                     Email = staff.Email
                 }).ToList();
 
-                return result;
+                return Response<List<GetAllStaffsDto>>.Success(result, "Staffs retrieved successfully").WithCount();
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StaffService",
+                    MethodName = "GetAllStaffsAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetAllStaffsDto>>.ServerError("Error occured while retrieving Staffs",
+                    "An unexpected error occurred while retrieving Staffs. Please try again later.");
             }
         }
 
