@@ -8,25 +8,19 @@ namespace GraduationProject.Api.Controllers
     [ApiController]
     public class TeacherAssistantController : ControllerBase
     {
-        private readonly ITeacherAssistantService _TeacherAssistantService;
+        private readonly ITeacherAssistantService _teacherAssistantService;
         public TeacherAssistantController(ITeacherAssistantService TeacherAssistantService)
         {
-            _TeacherAssistantService = TeacherAssistantService;
+            _teacherAssistantService = TeacherAssistantService;
         }
         [HttpPost]
         public async Task<IActionResult> AddTeacherAssistant(AddStaffDto addTeacherAssistantDto)
         {
             if (ModelState.IsValid)
             {
-                int raw = await _TeacherAssistantService.AddTeacherAssistantAsync(addTeacherAssistantDto);
-                if (raw == 1)
-                {
-                    return Ok("TeacherAssistant Add");
-                }
-                else
-                {
-                    return BadRequest("please enter valid Model");
-                }
+                var response = await _teacherAssistantService.AddTeacherAssistantAsync(addTeacherAssistantDto);
+
+                return StatusCode(response.StatusCode, response);
             }
             else
             {
@@ -37,20 +31,14 @@ namespace GraduationProject.Api.Controllers
         [HttpGet("GetAllTeacherAssistant")]
         public async Task<IActionResult> GetAllTeacherAssistant()
         {
-            if (_TeacherAssistantService == null)
+            if (_teacherAssistantService == null)
             {
                 return BadRequest();
             }
 
-            var response = await _TeacherAssistantService.GetAllTeacherAssistantsAsync();
-            if (response != null)
-            {
-                return Ok(response);
-            }
-            else
-            {
-                return NotFound("There are not TeacherAssistant");
-            }
+            var response = await _teacherAssistantService.GetAllTeacherAssistantsAsync();
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
