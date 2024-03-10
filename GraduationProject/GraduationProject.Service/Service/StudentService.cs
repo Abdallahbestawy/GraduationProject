@@ -168,8 +168,6 @@ namespace GraduationProject.Service.Service
 
         public async Task<Response<GetStudentDetailsByUserIdDto>> GetStudentByUserId(string userId)
         {
-            //SqlParameter pUserId = new SqlParameter("@UserId", SqlDbType.NVarChar, 450);
-            //pUserId.Value = userId;
             try
             {
                 SqlParameter pUserId = new SqlParameter("@UserId", userId);
@@ -228,5 +226,33 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while retrieving student's data. Please try again later.");
             }
         }
+
+        public async Task<List<GetAllStudentsDto>> GetAllStudentsAsync()
+        {
+            var students = await _unitOfWork.GetAllStudentsModels.CallStoredProcedureAsync("EXECUTE SpGetAllStudents");
+            if (students.Any())
+            {
+
+                List<GetAllStudentsDto> result = students.Select(student => new GetAllStudentsDto
+                {
+                    StudentId = student.Id,
+                    UserId = student.UserId,
+
+                    Nationality = Enum.GetName(typeof(Gender), student.Nationality),
+                    StudentNameArbic = student.NameArabic,
+                    StudentNameEnglish = student.NameEnglish,
+                    Gender = Enum.GetName(typeof(Gender), student.Gender),
+                    Religion = Enum.GetName(typeof(Gender), student.Religion),
+                    Email = student.Email
+                }).ToList();
+
+                return result;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
     }
 }

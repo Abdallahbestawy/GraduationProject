@@ -1,5 +1,4 @@
-﻿using GraduationProject.ResponseHandler.Model;
-using GraduationProject.Service.DataTransferObject.StudentDto;
+﻿using GraduationProject.Service.DataTransferObject.StudentDto;
 using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -57,6 +56,12 @@ namespace GraduationProject.Api.Controllers
             if (response.StatusCode == 500)
                 return StatusCode(response.StatusCode, response);
 
+            return Ok(response);
+        }
+        [HttpGet("GetAllStudents")]
+        public async Task<IActionResult> GetAllStudents()
+        {
+            var response = await _studentService.GetAllStudentsAsync();
             return Ok(response);
         }
     }

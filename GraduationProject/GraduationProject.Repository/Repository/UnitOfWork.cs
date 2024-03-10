@@ -36,7 +36,7 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<GetStudentDetailsByUserIdModel> GetStudentDetailsByUserIdModels { get; private set; }
         public IGeneralRepository<GetStaffDetailsByUserIdModel> GetStaffDetailsByUserIdModels { get; private set; }
         public IGeneralRepository<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels { get; private set; }
-
+        public IGeneralRepository<GetAllStudentsModel> GetAllStudentsModels { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -68,6 +68,7 @@ namespace GraduationProject.Repository.Repository
             GetStudentDetailsByUserIdModels = new GeneralRepository<GetStudentDetailsByUserIdModel>(_context);
             GetStaffDetailsByUserIdModels = new GeneralRepository<GetStaffDetailsByUserIdModel>(_context);
             GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels = new GeneralRepository<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel>(_context);
+            GetAllStudentsModels = new GeneralRepository<GetAllStudentsModel>(_context);
         }
 
 
