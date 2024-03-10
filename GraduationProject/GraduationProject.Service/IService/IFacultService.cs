@@ -1,10 +1,11 @@
-﻿using GraduationProject.Service.DataTransferObject.FacultyDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.FacultyDto;
 
 namespace GraduationProject.Service.IService
 {
 
     public interface IFacultService
     {
-        Task AddFacultAsync(FacultyDto facultyDto);
+        Task<Response<int>> AddFacultAsync(FacultyDto facultyDto);
     }
 }

@@ -16,8 +16,9 @@ namespace GraduationProject.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddFacult(FacultyDto facultyDto)
         {
-            await _facultService.AddFacultAsync(facultyDto);
-            return Ok("Add facult Success");
+            var response = await _facultService.AddFacultAsync(facultyDto);
+            
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
