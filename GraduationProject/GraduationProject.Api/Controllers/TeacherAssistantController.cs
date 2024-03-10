@@ -11,7 +11,7 @@ namespace GraduationProject.Api.Controllers
         private readonly ITeacherAssistantService _TeacherAssistantService;
         public TeacherAssistantController(ITeacherAssistantService TeacherAssistantService)
         {
-            _TeacherAssistantService = _TeacherAssistantService;
+            _TeacherAssistantService = TeacherAssistantService;
         }
         [HttpPost]
         public async Task<IActionResult> AddTeacherAssistant(AddStaffDto addTeacherAssistantDto)
@@ -33,6 +33,24 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter valid Model");
             }
 
+        }
+        [HttpGet("GetAllTeacherAssistant")]
+        public async Task<IActionResult> GetAllTeacherAssistant()
+        {
+            if (_TeacherAssistantService == null)
+            {
+                return BadRequest();
+            }
+
+            var response = await _TeacherAssistantService.GetAllTeacherAssistantsAsync();
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return NotFound("There are not TeacherAssistant");
+            }
         }
     }
 }

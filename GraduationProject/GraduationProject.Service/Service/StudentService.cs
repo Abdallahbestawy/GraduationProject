@@ -229,7 +229,7 @@ namespace GraduationProject.Service.Service
 
         public async Task<List<GetAllStudentsDto>> GetAllStudentsAsync()
         {
-            var students = await _unitOfWork.GetAllStudentsModels.CallStoredProcedureAsync("EXECUTE SpGetAllStudents");
+            var students = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStudents");
             if (students.Any())
             {
 
@@ -238,11 +238,11 @@ namespace GraduationProject.Service.Service
                     StudentId = student.Id,
                     UserId = student.UserId,
 
-                    Nationality = Enum.GetName(typeof(Gender), student.Nationality),
+                    Nationality = Enum.GetName(typeof(Nationality), student.Nationality),
                     StudentNameArbic = student.NameArabic,
                     StudentNameEnglish = student.NameEnglish,
                     Gender = Enum.GetName(typeof(Gender), student.Gender),
-                    Religion = Enum.GetName(typeof(Gender), student.Religion),
+                    Religion = Enum.GetName(typeof(Religion), student.Religion),
                     Email = student.Email
                 }).ToList();
 

@@ -2,7 +2,7 @@
 
 namespace GraduationProject.Data.Models
 {
-    public class GetAllStudentsModel
+    public class GetAllModel
     {
         public int Id { get; set; }
         public string UserId { get; set; }

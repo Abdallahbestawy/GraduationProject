@@ -1,12 +1,12 @@
 ﻿using GraduationProject.Data.Entity;
 using GraduationProject.Data.Enum;
+using GraduationProject.Identity.Enum;
 using GraduationProject.Identity.IService;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.StaffDto;
-using GraduationProject.Service.DataTransferObject.StudentDto;
 using GraduationProject.Service.IService;
 using Microsoft.Data.SqlClient;
 
@@ -103,23 +103,23 @@ namespace GraduationProject.Service.Service
         }
 
 
-        public async Task<Response<GetCourseStaffSemester>> Test(int satffId)
+        public async Task<Response<GetCourseStaffSemesterDto>> GetCourseStaffSemesterAsync(int satffId)
         {
             try
             {
                 var staffSemesters = await _unitOfWork.StaffSemesters
                    .FindWithIncludeAsync(d => d.AcademyYear, c => c.Course);
                 if (staffSemesters == null)
-                    return Response<GetCourseStaffSemester>.BadRequest("This staff doesn't exist");
+                    return Response<GetCourseStaffSemesterDto>.BadRequest("This staff doesn't exist");
 
                 var results = staffSemesters
                     .Where(dc => dc.AcademyYear.IsCurrent && dc.StaffId == satffId)
                     .ToList();
 
                 if (!results.Any())
-                    return Response<GetCourseStaffSemester>.NoContent("This staff doesn't have courses");
+                    return Response<GetCourseStaffSemesterDto>.NoContent("This staff doesn't have courses");
 
-                var staffSemesterDto = new GetCourseStaffSemester
+                var staffSemesterDto = new GetCourseStaffSemesterDto
                 {
                     StaffId = results.First().StaffId,
                     AcademyYearId = results.First().AcademyYearId,
@@ -130,7 +130,7 @@ namespace GraduationProject.Service.Service
                     }).ToList()
                 };
 
-                return Response<GetCourseStaffSemester>.Success(staffSemesterDto, "Staff's courses retrieved successfully")
+                return Response<GetCourseStaffSemesterDto>.Success(staffSemesterDto, "Staff's courses retrieved successfully")
                     .WithCount(staffSemesterDto.CourseDoctorDtos.Count());
             }
             catch (Exception ex)
@@ -143,11 +143,11 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<GetCourseStaffSemester>.ServerError("Error occured while retrieving staff's courses",
+                return Response<GetCourseStaffSemesterDto>.ServerError("Error occured while retrieving staff's courses",
                      "An unexpected error occurred while retrieving staff's courses. Please try again later.");
             }
         }
-        public async Task<Response<GetStaffDetailsByUserIdDto>> GetStaffByUserId(string userId)
+        public async Task<Response<GetStaffDetailsByUserIdDto>> GetStaffByUserIdAsync(string userId)
         {
             try
             {
@@ -195,10 +195,39 @@ namespace GraduationProject.Service.Service
                 {
                     return Response<GetStaffDetailsByUserIdDto>.NoContent("This Staff doesn't exist");
                 }
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return Response<GetStaffDetailsByUserIdDto>.ServerError("Error occured while retrieving Staff's data",
                     "An unexpected error occurred while retrieving Staff's data. Please try again later.");
+            }
+        }
+
+        public async Task<List<GetAllStaffsDto>> GetAllStaffsAsync()
+        {
+            var userType = UserType.Staff;
+            SqlParameter pUserType = new SqlParameter("@UserType", userType);
+            var staffs = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
+            if (staffs.Any())
+            {
+
+                List<GetAllStaffsDto> result = staffs.Select(staff => new GetAllStaffsDto
+                {
+                    StaffId = staff.Id,
+                    UserId = staff.UserId,
+                    Nationality = Enum.GetName(typeof(Nationality), staff.Nationality),
+                    StaffNameArbic = staff.NameArabic,
+                    StaffNameEnglish = staff.NameEnglish,
+                    Gender = Enum.GetName(typeof(Gender), staff.Gender),
+                    Religion = Enum.GetName(typeof(Religion), staff.Religion),
+                    Email = staff.Email
+                }).ToList();
+
+                return result;
+            }
+            else
+            {
+                return null;
             }
         }
 

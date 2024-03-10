@@ -1,6 +1,6 @@
 ﻿namespace GraduationProject.Service.DataTransferObject.StaffDto
 {
-    public class GetCourseStaffSemester
+    public class GetCourseStaffSemesterDto
     {
         public int? StaffId { get; set; }
         public int AcademyYearId { get; set; }

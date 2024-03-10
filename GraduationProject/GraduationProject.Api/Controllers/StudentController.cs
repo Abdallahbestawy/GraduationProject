@@ -62,7 +62,14 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> GetAllStudents()
         {
             var response = await _studentService.GetAllStudentsAsync();
-            return Ok(response);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return NotFound("There are not Student");
+            }
         }
     }
 }

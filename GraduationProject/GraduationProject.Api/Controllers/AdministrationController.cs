@@ -34,5 +34,19 @@ namespace GraduationProject.Api.Controllers
             }
 
         }
+        [HttpGet("GetAllAdministration")]
+        public async Task<IActionResult> GetAllAdministration()
+        {
+
+            var response = await _AdministrationService.GetAllAdministrationsAsync();
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return NotFound("There are not Administration");
+            }
+        }
     }
 }
