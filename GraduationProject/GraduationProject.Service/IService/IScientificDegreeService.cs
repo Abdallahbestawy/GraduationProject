@@ -1,13 +1,14 @@
-﻿using GraduationProject.Service.DataTransferObject.ScientificDegreeDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.ScientificDegreeDto;
 
 namespace GraduationProject.Service.IService
 {
     public interface IScientificDegreeService
     {
-        Task AddScientificDegreeAsync(ScientificDegreeDto addScientificDegreeDto);
-        Task UpdateScientificDegreeAsync(ScientificDegreeDto updateScientificDegreeDto);
-        Task DeleteScientificDegreeAsync(int ScientificDegreeId);
-        Task<ScientificDegreeDto> GetScientificDegreeByIdAsync(int ScientificDegreeId);
-        Task<IQueryable<ScientificDegreeDto>> GetScientificDegreeAsync();
+        Task<Response<int>> AddScientificDegreeAsync(ScientificDegreeDto addScientificDegreeDto);
+        Task<Response<int>> UpdateScientificDegreeAsync(ScientificDegreeDto updateScientificDegreeDto);
+        Task<Response<int>> DeleteScientificDegreeAsync(int ScientificDegreeId);
+        Task<Response<ScientificDegreeDto>> GetScientificDegreeByIdAsync(int ScientificDegreeId);
+        Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeAsync();
     }
 }

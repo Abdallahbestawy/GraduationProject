@@ -13,6 +13,7 @@ namespace GraduationProject.Api.Controllers
         {
             _scientificDegreeService = scientificDegreeService;
         }
+
         [HttpGet("{Id:int}")]
         public async Task<IActionResult> GetScientificDegreeById([FromRoute] int Id)
         {
@@ -20,21 +21,27 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("Please Enter Id Valid");
             }
-            var scientificDegree = await _scientificDegreeService.GetScientificDegreeByIdAsync(Id);
-            return Ok(scientificDegree);
+            var response = await _scientificDegreeService.GetScientificDegreeByIdAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetScientificDegrees()
         {
-            var scientificDegree = await _scientificDegreeService.GetScientificDegreeAsync();
-            return Ok(scientificDegree);
+            var response = await _scientificDegreeService.GetScientificDegreeAsync();
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddScientificDegrees(ScientificDegreeDto addScientificDegreesDto)
         {
-            await _scientificDegreeService.AddScientificDegreeAsync(addScientificDegreesDto);
-            return Ok("Add ScientificDegrees Success");
+            var response = await _scientificDegreeService.AddScientificDegreeAsync(addScientificDegreesDto);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpPut("{Id:int}")]
         public async Task<IActionResult> UpdateScientificDegrees([FromRoute] int Id, [FromBody] ScientificDegreeDto updateScientificDegreesDto)
         {
@@ -42,14 +49,17 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("the Id not Valid");
             }
-            await _scientificDegreeService.UpdateScientificDegreeAsync(updateScientificDegreesDto);
-            return Ok("the update Success");
+            var response = await _scientificDegreeService.UpdateScientificDegreeAsync(updateScientificDegreesDto);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpDelete]
         public async Task<IActionResult> DeleteScientificDegrees([FromRoute] int Id)
         {
-            await _scientificDegreeService.DeleteScientificDegreeAsync(Id);
-            return Ok("Delete ScientificDegrees Success");
+            var response = await _scientificDegreeService.DeleteScientificDegreeAsync(Id);
+            
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
