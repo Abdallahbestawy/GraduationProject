@@ -1,8 +1,11 @@
 ﻿using GraduationProject.Data.Entity;
+using GraduationProject.Data.Enum;
+using GraduationProject.Identity.Enum;
 using GraduationProject.Identity.IService;
 using GraduationProject.Repository.Repository;
 using GraduationProject.Service.DataTransferObject.StaffDto;
 using GraduationProject.Service.IService;
+using Microsoft.Data.SqlClient;
 
 namespace GraduationProject.Service.Service
 {
@@ -54,6 +57,34 @@ namespace GraduationProject.Service.Service
             else
             {
                 return -1;
+            }
+        }
+
+        public async Task<List<GetAllStaffsDto>> GetAllAdministrationsAsync()
+        {
+            var userType = UserType.Administration;
+            SqlParameter pUserType = new SqlParameter("@UserType", userType);
+            var administrations = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
+            if (administrations.Any())
+            {
+
+                List<GetAllStaffsDto> result = administrations.Select(administration => new GetAllStaffsDto
+                {
+                    StaffId = administration.Id,
+                    UserId = administration.UserId,
+                    Nationality = Enum.GetName(typeof(Nationality), administration.Nationality),
+                    StaffNameArbic = administration.NameArabic,
+                    StaffNameEnglish = administration.NameEnglish,
+                    Gender = Enum.GetName(typeof(Gender), administration.Gender),
+                    Religion = Enum.GetName(typeof(Religion), administration.Religion),
+                    Email = administration.Email
+                }).ToList();
+
+                return result;
+            }
+            else
+            {
+                return null;
             }
         }
     }

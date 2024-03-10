@@ -34,5 +34,19 @@ namespace GraduationProject.Api.Controllers
             }
 
         }
+        [HttpGet("GetAllTeacher")]
+        public async Task<IActionResult> GetAllTeacher()
+        {
+
+            var response = await _TeacherService.GetAllTeachersAsync();
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return NotFound("There are not Teacher");
+            }
+        }
     }
 }

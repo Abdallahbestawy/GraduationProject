@@ -7,7 +7,8 @@ namespace GraduationProject.Service.IService
     {
         Task<int> AddStAffAsync(AddStaffDto addSaffDto);
         Task<Response<int>> AddStaffSemesterAsync(AddStaffSemesterDto addStaffSemesterDto);
-        Task<Response<GetCourseStaffSemester>> Test(int satffId);
-        Task<Response<GetStaffDetailsByUserIdDto>> GetStaffByUserId(string userId);
+        Task<Response<GetCourseStaffSemesterDto>> GetCourseStaffSemesterAsync(int satffId);
+        Task<Response<GetStaffDetailsByUserIdDto>> GetStaffByUserIdAsync(string userId);
+        Task<List<GetAllStaffsDto>> GetAllStaffsAsync();
     }
 }
