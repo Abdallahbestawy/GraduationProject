@@ -8,25 +8,19 @@ namespace GraduationProject.Api.Controllers
     [ApiController]
     public class AdministrationController : ControllerBase
     {
-        private readonly IAdministrationService _AdministrationService;
+        private readonly IAdministrationService _administrationService;
         public AdministrationController(IAdministrationService AdministrationService)
         {
-            _AdministrationService = AdministrationService;
+            _administrationService = AdministrationService;
         }
         [HttpPost]
         public async Task<IActionResult> AddAdministration(AddStaffDto addAdministrationDto)
         {
             if (ModelState.IsValid)
             {
-                int raw = await _AdministrationService.AddAdministrationAsync(addAdministrationDto);
-                if (raw == 1)
-                {
-                    return Ok("Administration Add");
-                }
-                else
-                {
-                    return BadRequest("please enter valid Model");
-                }
+                var response= await _administrationService.AddAdministrationAsync(addAdministrationDto);
+
+                return StatusCode(response.StatusCode, response);
             }
             else
             {
@@ -38,15 +32,9 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> GetAllAdministration()
         {
 
-            var response = await _AdministrationService.GetAllAdministrationsAsync();
-            if (response != null)
-            {
-                return Ok(response);
-            }
-            else
-            {
-                return NotFound("There are not Administration");
-            }
+            var response = await _administrationService.GetAllAdministrationsAsync();
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

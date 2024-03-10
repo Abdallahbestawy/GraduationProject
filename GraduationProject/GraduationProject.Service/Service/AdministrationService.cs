@@ -2,7 +2,10 @@
 using GraduationProject.Data.Enum;
 using GraduationProject.Identity.Enum;
 using GraduationProject.Identity.IService;
+using GraduationProject.Mails.IService;
+using GraduationProject.Mails.Models;
 using GraduationProject.Repository.Repository;
+using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.StaffDto;
 using GraduationProject.Service.IService;
 using Microsoft.Data.SqlClient;
@@ -13,60 +16,117 @@ namespace GraduationProject.Service.Service
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly IAccountService _accountService;
-        public AdministrationService(UnitOfWork unitOfWork, IAccountService accountService)
+        private readonly IMailService _mailService;
+        public AdministrationService(UnitOfWork unitOfWork, IAccountService accountService, IMailService mailService)
         {
             _unitOfWork = unitOfWork;
             _accountService = accountService;
+            _mailService = mailService;
         }
-        public async Task<int> AddAdministrationAsync(AddStaffDto addSaffDto)
+        public async Task<Response<int>> AddAdministrationAsync(AddStaffDto addSaffDto)
         {
-            string userId = await _accountService.AddAdministrationAccount(addSaffDto.NameArabic, addSaffDto.NameEnglish,
-                   addSaffDto.NationalID, addSaffDto.Email, addSaffDto.Password);
-            if (!string.IsNullOrEmpty(userId))
+            string userId = "";
+
+            try
             {
-                Staff newAdministration = new Staff
+                userId = await _accountService.AddAdministrationAccount(addSaffDto.NameArabic, addSaffDto.NameEnglish,
+                       addSaffDto.NationalID, addSaffDto.Email, addSaffDto.Password);
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    UserId = userId,
-                    PlaceOfBirth = addSaffDto.PlaceOfBirth,
-                    Gender = addSaffDto.Gender,
-                    Nationality = addSaffDto.Nationality,
-                    Religion = addSaffDto.Religion,
-                    DateOfBirth = addSaffDto.DateOfBirth,
-                    CountryId = addSaffDto.CountryId,
-                    GovernorateId = addSaffDto.GovernorateId,
-                    CityId = addSaffDto.CityId,
-                    Street = addSaffDto.Street,
-                    PostalCode = addSaffDto.PostalCode
-                };
+                    ClassName = "AdministrationService",
+                    MethodName = "AddAdministrationAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while adding AddAdministration",
+                     "An unexpected error occurred while adding AddAdministration. Please try again later.");
+            }
+
+            if (!string.IsNullOrEmpty(userId))
+                return Response<int>.ServerError("Error occured while adding AddAdministration",
+                     "An unexpected error occurred while adding AddAdministration. Please try again later.");
+
+            Staff newAdministration = new Staff
+            {
+                UserId = userId,
+                PlaceOfBirth = addSaffDto.PlaceOfBirth,
+                Gender = addSaffDto.Gender,
+                Nationality = addSaffDto.Nationality,
+                Religion = addSaffDto.Religion,
+                DateOfBirth = addSaffDto.DateOfBirth,
+                CountryId = addSaffDto.CountryId,
+                GovernorateId = addSaffDto.GovernorateId,
+                CityId = addSaffDto.CityId,
+                Street = addSaffDto.Street,
+                PostalCode = addSaffDto.PostalCode
+            };
+
+            try
+            {
                 await _unitOfWork.Staffs.AddAsync(newAdministration);
                 await _unitOfWork.SaveAsync();
-                int AdministrationId = newAdministration.Id;
-                QualificationData newQualificationDataStudent = new QualificationData
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    StaffId = AdministrationId,
-                    PreQualification = addSaffDto.PreQualification,
-                    SeatNumber = addSaffDto.SeatNumber,
-                    QualificationYear = addSaffDto.QualificationYear,
-                    Degree = addSaffDto.Degree
-                };
+                    ClassName = "AdministrationService",
+                    MethodName = "AddAdministrationAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _accountService.DeleteUser(userId);
+                return Response<int>.ServerError("Error occured while adding AddAdministration",
+                     "An unexpected error occurred while adding AddAdministration. Please try again later.");
+            }
+
+            int AdministrationId = newAdministration.Id;
+            QualificationData newQualificationDataStudent = new QualificationData
+            {
+                StaffId = AdministrationId,
+                PreQualification = addSaffDto.PreQualification,
+                SeatNumber = addSaffDto.SeatNumber,
+                QualificationYear = addSaffDto.QualificationYear,
+                Degree = addSaffDto.Degree
+            };
+            try
+            {
                 await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
                 await _unitOfWork.SaveAsync();
-                return 1;
-
             }
-            else
+            catch (Exception ex)
             {
-                return -1;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AdministrationService",
+                    MethodName = "AddAdministrationAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _unitOfWork.Staffs.Delete(newAdministration);
+                await _accountService.DeleteUser(userId);
+                return Response<int>.ServerError("Error occured while adding AddAdministration",
+                     "An unexpected error occurred while adding AddAdministration. Please try again later.");
             }
+
+            return Response<int>.Created("AddAdministration added successfully");
         }
 
-        public async Task<List<GetAllStaffsDto>> GetAllAdministrationsAsync()
+        public async Task<Response<List<GetAllStaffsDto>>> GetAllAdministrationsAsync()
         {
-            var userType = UserType.Administration;
-            SqlParameter pUserType = new SqlParameter("@UserType", userType);
-            var administrations = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
-            if (administrations.Any())
+            try
             {
+                var userType = UserType.Administration;
+                SqlParameter pUserType = new SqlParameter("@UserType", userType);
+                var administrations = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
+                if (!administrations.Any())
+                    return Response<List<GetAllStaffsDto>>.NoContent("No AddAdministrations are exist");
 
                 List<GetAllStaffsDto> result = administrations.Select(administration => new GetAllStaffsDto
                 {
@@ -80,11 +140,20 @@ namespace GraduationProject.Service.Service
                     Email = administration.Email
                 }).ToList();
 
-                return result;
+                return Response<List<GetAllStaffsDto>>.Success(result, "AddAdministrations retrieved successfully").WithCount();
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AdministrationService",
+                    MethodName = "GetAllAdministrationsAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetAllStaffsDto>>.ServerError("Error occured while retrieving AddAdministrations",
+                     "An unexpected error occurred while retrieving AddAdministrations. Please try again later.");
             }
         }
     }

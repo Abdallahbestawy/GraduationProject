@@ -1,10 +1,11 @@
-﻿using GraduationProject.Service.DataTransferObject.StaffDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.StaffDto;
 
 namespace GraduationProject.Service.IService
 {
     public interface IAdministrationService
     {
-        Task<int> AddAdministrationAsync(AddStaffDto addStaffDto);
-        Task<List<GetAllStaffsDto>> GetAllAdministrationsAsync();
+        Task<Response<int>> AddAdministrationAsync(AddStaffDto addStaffDto);
+        Task<Response<List<GetAllStaffsDto>>> GetAllAdministrationsAsync();
     }
 }
