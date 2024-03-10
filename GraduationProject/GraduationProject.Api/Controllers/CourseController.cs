@@ -34,8 +34,9 @@ namespace GraduationProject.Api.Controllers
         [HttpPost("AddCourse")]
         public async Task<IActionResult> AddCourse(CourseDto addCourseDto)
         {
-            await _courseService.AddCourseAsync(addCourseDto);
-            return Ok("Add Course Success");
+            var response = await _courseService.AddCourseAsync(addCourseDto);
+            
+            return StatusCode(response.StatusCode, response);
         }
         [HttpPut("{Id:int}")]
         public async Task<IActionResult> UpdateCourse([FromRoute] int Id, [FromBody] CourseDto updateCourseDto)

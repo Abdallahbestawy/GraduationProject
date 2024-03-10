@@ -20,7 +20,7 @@ namespace GraduationProject.Service.Service
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
         }
-        public async Task AddCourseAsync(CourseDto addCourseDto)
+        public async Task<Response<int>> AddCourseAsync(CourseDto addCourseDto)
         {
             Course newCourse = new Course
             {
@@ -36,21 +36,55 @@ namespace GraduationProject.Service.Service
                 ScientificDegreeId = addCourseDto.ScientificDegreeId,
                 DepartmentId = addCourseDto.DepartmentId
             };
-            await _unitOfWork.Courses.AddAsync(newCourse);
-            await _unitOfWork.SaveAsync();
-            if (addCourseDto.Prerequisite && addCourseDto.CoursePrerequisites != null)
+
+            try
             {
-                int courseId = newCourse.Id;
-                List<CoursePrerequisite> coursePrerequisites = addCourseDto.CoursePrerequisites.Select(p =>
-                new CoursePrerequisite
-                {
-                    CourseId = courseId,
-                    PrerequisiteId = p.CoursePrerequisiteId
-                }).ToList();
-                await _unitOfWork.CoursePrerequisites.AddRangeAsync(coursePrerequisites);
+                await _unitOfWork.Courses.AddAsync(newCourse);
                 await _unitOfWork.SaveAsync();
             }
-
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "CourseService",
+                    MethodName = "AddCourseAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while adding course",
+                     "An unexpected error occurred while adding course. Please try again later.");
+            }
+            try
+            {
+                if (addCourseDto.Prerequisite && addCourseDto.CoursePrerequisites != null)
+                {
+                    int courseId = newCourse.Id;
+                    List<CoursePrerequisite> coursePrerequisites = addCourseDto.CoursePrerequisites.Select(p =>
+                    new CoursePrerequisite
+                    {
+                        CourseId = courseId,
+                        PrerequisiteId = p.CoursePrerequisiteId
+                    }).ToList();
+                    await _unitOfWork.CoursePrerequisites.AddRangeAsync(coursePrerequisites);
+                    await _unitOfWork.SaveAsync();
+                }
+                return Response<int>.Created("Course added successfully");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "CourseService",
+                    MethodName = "AddCourseAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _unitOfWork.Courses.Delete(newCourse);
+                return Response<int>.ServerError("Error occured while adding course",
+                     "An unexpected error occurred while adding course. Please try again later.");
+            }
         }
 
         public async Task<Response<CourseDto>> GetCourseByIdAsync(int CourseId)

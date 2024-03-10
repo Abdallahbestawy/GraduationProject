@@ -5,7 +5,7 @@ namespace GraduationProject.Service.IService
 {
     public interface ICourseService
     {
-        Task AddCourseAsync(CourseDto addCourseDto);
+        Task<Response<int>> AddCourseAsync(CourseDto addCourseDto);
         Task<Response<int>> UpdateCourseAsync(CourseDto updateCourseDto);
         Task<Response<int>> DeleteCourseAsync(int CourseId);
         Task<Response<CourseDto>> GetCourseByIdAsync(int CourseId);
