@@ -2,7 +2,10 @@
 using GraduationProject.Data.Enum;
 using GraduationProject.Identity.Enum;
 using GraduationProject.Identity.IService;
+using GraduationProject.Mails.IService;
+using GraduationProject.Mails.Models;
 using GraduationProject.Repository.Repository;
+using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.StaffDto;
 using GraduationProject.Service.IService;
 using Microsoft.Data.SqlClient;
@@ -14,60 +17,129 @@ namespace GraduationProject.Service.Service
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly IAccountService _accountService;
-        public TeacherService(UnitOfWork unitOfWork, IAccountService accountService)
+        private readonly IMailService _mailService;
+        public TeacherService(UnitOfWork unitOfWork, IAccountService accountService, IMailService mailService)
         {
             _unitOfWork = unitOfWork;
             _accountService = accountService;
+            _mailService = mailService;
         }
-        public async Task<int> AddTeacheAsync(AddStaffDto addSaffDto)
+        public async Task<Response<int>> AddTeacheAsync(AddStaffDto addSaffDto)
         {
-            string userId = await _accountService.AddTeacherAccount(addSaffDto.NameArabic, addSaffDto.NameEnglish,
-                              addSaffDto.NationalID, addSaffDto.Email, addSaffDto.Password);
-            if (!string.IsNullOrEmpty(userId))
+            string userId = "";
+
+            try
             {
-                Staff newTeacher = new Staff
+                userId = await _accountService.AddTeacherAccount(addSaffDto.NameArabic, addSaffDto.NameEnglish,
+                                  addSaffDto.NationalID, addSaffDto.Email, addSaffDto.Password);
+            }
+            catch(Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    UserId = userId,
-                    PlaceOfBirth = addSaffDto.PlaceOfBirth,
-                    Gender = addSaffDto.Gender,
-                    Nationality = addSaffDto.Nationality,
-                    Religion = addSaffDto.Religion,
-                    DateOfBirth = addSaffDto.DateOfBirth,
-                    CountryId = addSaffDto.CountryId,
-                    GovernorateId = addSaffDto.GovernorateId,
-                    CityId = addSaffDto.CityId,
-                    Street = addSaffDto.Street,
-                    PostalCode = addSaffDto.PostalCode
-                };
+                    ClassName = "TeacherService",
+                    MethodName = "AddTeacheAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _accountService.DeleteUser(userId);
+                return Response<int>.ServerError("Error occured while adding Teacher",
+                         "An unexpected error occurred while adding Teacher. Please try again later.");
+            }
+
+            if (!string.IsNullOrEmpty(userId))
+                return Response<int>.ServerError("Error occured while adding Teacher",
+                         "An unexpected error occurred while adding Teacher. Please try again later.");
+
+            Staff newTeacher = new Staff
+            {
+                UserId = userId,
+                PlaceOfBirth = addSaffDto.PlaceOfBirth,
+                Gender = addSaffDto.Gender,
+                Nationality = addSaffDto.Nationality,
+                Religion = addSaffDto.Religion,
+                DateOfBirth = addSaffDto.DateOfBirth,
+                CountryId = addSaffDto.CountryId,
+                GovernorateId = addSaffDto.GovernorateId,
+                CityId = addSaffDto.CityId,
+                Street = addSaffDto.Street,
+                PostalCode = addSaffDto.PostalCode
+            };
+
+            try
+            {
                 await _unitOfWork.Staffs.AddAsync(newTeacher);
                 await _unitOfWork.SaveAsync();
-                int teacherId = newTeacher.Id;
-                QualificationData newQualificationDataStudent = new QualificationData
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    StaffId = teacherId,
-                    PreQualification = addSaffDto.PreQualification,
-                    SeatNumber = addSaffDto.SeatNumber,
-                    QualificationYear = addSaffDto.QualificationYear,
-                    Degree = addSaffDto.Degree
-                };
+                    ClassName = "TeacherService",
+                    MethodName = "AddTeacheAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _accountService.DeleteUser(userId);
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "TeacherService",
+                    MethodName = "AddTeacheAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _accountService.DeleteUser(userId);
+                return Response<int>.ServerError("Error occured while adding Teacher",
+                         "An unexpected error occurred while adding Teacher. Please try again later.");
+            }
+
+            int teacherId = newTeacher.Id;
+            QualificationData newQualificationDataStudent = new QualificationData
+            {
+                StaffId = teacherId,
+                PreQualification = addSaffDto.PreQualification,
+                SeatNumber = addSaffDto.SeatNumber,
+                QualificationYear = addSaffDto.QualificationYear,
+                Degree = addSaffDto.Degree
+            };
+
+            try
+            {
                 await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
                 await _unitOfWork.SaveAsync();
-                return 1;
-
             }
-            else
+            catch (Exception ex)
             {
-                return -1;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "TeacherService",
+                    MethodName = "AddTeacheAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _unitOfWork.Staffs.Delete(newTeacher);
+                await _accountService.DeleteUser(userId);
+                return Response<int>.ServerError("Error occured while adding Teacher",
+                         "An unexpected error occurred while adding Teacher. Please try again later.");
             }
+            return Response<int>.Created("Teacher added successfully");
+
         }
 
-        public async Task<List<GetAllStaffsDto>> GetAllTeachersAsync()
+        public async Task<Response<List<GetAllStaffsDto>>> GetAllTeachersAsync()
         {
-            var userType = UserType.Teacher;
-            SqlParameter pUserType = new SqlParameter("@UserType", userType);
-            var teachers = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
-            if (teachers.Any())
+            try
             {
+                var userType = UserType.Teacher;
+                SqlParameter pUserType = new SqlParameter("@UserType", userType);
+                var teachers = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
+
+                if (!teachers.Any())
+                    return Response<List<GetAllStaffsDto>>.NoContent("No Teachers are exist");
 
                 List<GetAllStaffsDto> result = teachers.Select(teacher => new GetAllStaffsDto
                 {
@@ -81,11 +153,20 @@ namespace GraduationProject.Service.Service
                     Email = teacher.Email
                 }).ToList();
 
-                return result;
+                return Response<List<GetAllStaffsDto>>.Success(result, "Teachers retrieved successfully").WithCount();
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "TeacherService",
+                    MethodName = "GetAllTeachersAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetAllStaffsDto>>.ServerError("Error occured while adding Teacher",
+                         "An unexpected error occurred while adding Teacher. Please try again later.");
             }
         }
     }

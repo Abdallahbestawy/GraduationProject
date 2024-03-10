@@ -8,25 +8,19 @@ namespace GraduationProject.Api.Controllers
     [ApiController]
     public class TeacherController : ControllerBase
     {
-        private readonly ITeacherService _TeacherService;
+        private readonly ITeacherService _teacherService;
         public TeacherController(ITeacherService TeacherService)
         {
-            _TeacherService = TeacherService;
+            _teacherService = TeacherService;
         }
         [HttpPost]
         public async Task<IActionResult> AddTeacher(AddStaffDto addTeacherDto)
         {
             if (ModelState.IsValid)
             {
-                int raw = await _TeacherService.AddTeacheAsync(addTeacherDto);
-                if (raw == 1)
-                {
-                    return Ok("Teacher Add");
-                }
-                else
-                {
-                    return BadRequest("please enter valid Model");
-                }
+                var response = await _teacherService.AddTeacheAsync(addTeacherDto);
+
+                return StatusCode(response.StatusCode, response);
             }
             else
             {
@@ -38,15 +32,9 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> GetAllTeacher()
         {
 
-            var response = await _TeacherService.GetAllTeachersAsync();
-            if (response != null)
-            {
-                return Ok(response);
-            }
-            else
-            {
-                return NotFound("There are not Teacher");
-            }
+            var response = await _teacherService.GetAllTeachersAsync();
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
