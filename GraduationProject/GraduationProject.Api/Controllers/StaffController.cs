@@ -19,15 +19,9 @@ namespace GraduationProject.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                int raw = await _StaffService.AddStAffAsync(addStaffDto);
-                if (raw == 1)
-                {
-                    return Ok("Staff Add");
-                }
-                else
-                {
-                    return BadRequest("please enter valid Model");
-                }
+                var response = await _StaffService.AddStAffAsync(addStaffDto);
+
+                return StatusCode(response.StatusCode, response);
             }
             else
             {

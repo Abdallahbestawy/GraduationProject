@@ -5,7 +5,7 @@ namespace GraduationProject.Service.IService
 {
     public interface IStaffService
     {
-        Task<int> AddStAffAsync(AddStaffDto addSaffDto);
+        Task<Response<int>> AddStAffAsync(AddStaffDto addSaffDto);
         Task<Response<int>> AddStaffSemesterAsync(AddStaffSemesterDto addStaffSemesterDto);
         Task<Response<GetCourseStaffSemesterDto>> GetCourseStaffSemesterAsync(int satffId);
         Task<Response<GetStaffDetailsByUserIdDto>> GetStaffByUserIdAsync(string userId);

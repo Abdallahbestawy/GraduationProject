@@ -25,47 +25,101 @@ namespace GraduationProject.Service.Service
             _courseService = courseService;
             _mailService = mailService;
         }
-        public async Task<int> AddStAffAsync(AddStaffDto addSaffDto)
+        public async Task<Response<int>> AddStAffAsync(AddStaffDto addSaffDto)
         {
-            string userId = await _accountService.AddStaffAccount(addSaffDto.NameArabic, addSaffDto.NameEnglish,
-        addSaffDto.NationalID, addSaffDto.Email, addSaffDto.Password);
-            if (!string.IsNullOrEmpty(userId))
+            string userId = "";
+            try
             {
-                Staff newStaff = new Staff
+                userId = await _accountService.AddStaffAccount(addSaffDto.NameArabic, addSaffDto.NameEnglish,
+                    addSaffDto.NationalID, addSaffDto.Email, addSaffDto.Password);
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    UserId = userId,
-                    PlaceOfBirth = addSaffDto.PlaceOfBirth,
-                    Gender = addSaffDto.Gender,
-                    Nationality = addSaffDto.Nationality,
-                    Religion = addSaffDto.Religion,
-                    DateOfBirth = addSaffDto.DateOfBirth,
-                    CountryId = addSaffDto.CountryId,
-                    GovernorateId = addSaffDto.GovernorateId,
-                    CityId = addSaffDto.CityId,
-                    Street = addSaffDto.Street,
-                    PostalCode = addSaffDto.PostalCode
-                };
+                    ClassName = "StaffService",
+                    MethodName = "AddStaffAccount",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while adding staff",
+                         "An unexpected error occurred while adding staff. Please try again later.");
+            }
+
+            if (string.IsNullOrEmpty(userId))
+                return Response<int>.ServerError("Error occured while adding staff",
+                         "An unexpected error occurred while adding staff. Please try again later.");
+
+            Staff newStaff = new Staff
+            {
+                UserId = userId,
+                PlaceOfBirth = addSaffDto.PlaceOfBirth,
+                Gender = addSaffDto.Gender,
+                Nationality = addSaffDto.Nationality,
+                Religion = addSaffDto.Religion,
+                DateOfBirth = addSaffDto.DateOfBirth,
+                CountryId = addSaffDto.CountryId,
+                GovernorateId = addSaffDto.GovernorateId,
+                CityId = addSaffDto.CityId,
+                Street = addSaffDto.Street,
+                PostalCode = addSaffDto.PostalCode
+            };
+
+            try
+            {
                 await _unitOfWork.Staffs.AddAsync(newStaff);
                 await _unitOfWork.SaveAsync();
-                int staffId = newStaff.Id;
-                QualificationData newQualificationDataStudent = new QualificationData
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    StaffId = staffId,
-                    //StaffId = 0,
-                    PreQualification = addSaffDto.PreQualification,
-                    SeatNumber = addSaffDto.SeatNumber,
-                    QualificationYear = addSaffDto.QualificationYear,
-                    Degree = addSaffDto.Degree
-                };
+                    ClassName = "StaffService",
+                    MethodName = "AddStaffAccount",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _accountService.DeleteUser(userId);
+                return Response<int>.ServerError("Error occured while adding staff",
+                         "An unexpected error occurred while adding staff. Please try again later.");
+            }
+
+            int staffId = newStaff.Id;
+            QualificationData newQualificationDataStudent = new QualificationData
+            {
+                StaffId = staffId,
+                //StaffId = 0,
+                PreQualification = addSaffDto.PreQualification,
+                SeatNumber = addSaffDto.SeatNumber,
+                QualificationYear = addSaffDto.QualificationYear,
+                Degree = addSaffDto.Degree
+            };
+
+            try
+            {
                 await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
                 await _unitOfWork.SaveAsync();
-                return 1;
-
             }
-            else
+            catch (Exception ex)
             {
-                return -1;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StaffService",
+                    MethodName = "AddStaffAccount",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _unitOfWork.Staffs.Delete(newStaff);
+                await _accountService.DeleteUser(userId);
+                return Response<int>.ServerError("Error occured while adding staff",
+                         "An unexpected error occurred while adding staff. Please try again later.");
             }
+            return Response<int>.ServerError("Error occured while adding staff",
+                         "An unexpected error occurred while adding staff. Please try again later.");
+
         }
 
         public async Task<Response<int>> AddStaffSemesterAsync(AddStaffSemesterDto addStaffSemesterDto)
