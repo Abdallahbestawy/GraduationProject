@@ -1,13 +1,14 @@
-﻿using GraduationProject.Service.DataTransferObject.SemesterDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.SemesterDto;
 
 namespace GraduationProject.Service.IService
 {
     public interface ISemesterService
     {
-        Task AddSemesterAsync(SemesterDto addSemesterDto);
-        Task UpdateSemesterAsync(SemesterDto updateSemesterDto);
-        Task DeleteSemesterAsync(int SemesterId);
-        Task<SemesterDto> GetSemesterByIdAsync(int SemesterId);
-        Task<IQueryable<SemesterDto>> GetSemesterAsync();
+        Task<Response<int>> AddSemesterAsync(SemesterDto addSemesterDto);
+        Task<Response<int>> UpdateSemesterAsync(SemesterDto updateSemesterDto);
+        Task<Response<int>> DeleteSemesterAsync(int SemesterId);
+        Task<Response<SemesterDto>> GetSemesterByIdAsync(int SemesterId);
+        Task<Response<IQueryable<SemesterDto>>> GetSemesterAsync();
     }
 }

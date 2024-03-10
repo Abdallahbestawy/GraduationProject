@@ -13,6 +13,7 @@ namespace GraduationProject.Api.Controllers
         {
             _semesterService = semesterService;
         }
+
         [HttpGet("{Id:int}")]
         public async Task<IActionResult> GetSemesterById([FromRoute] int Id)
         {
@@ -20,22 +21,28 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("Please Enter Id Valid");
             }
-            var semester = await _semesterService.GetSemesterByIdAsync(Id);
-            return Ok(semester);
+            var response = await _semesterService.GetSemesterByIdAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
 
         }
+
         [HttpGet]
         public async Task<IActionResult> GetSemesters()
         {
-            var semesters = await _semesterService.GetSemesterAsync();
-            return Ok(semesters);
+            var response = await _semesterService.GetSemesterAsync();
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddSemester(SemesterDto addSemesterDto)
         {
-            await _semesterService.AddSemesterAsync(addSemesterDto);
-            return Ok("Add Semesters Success");
+            var response = await _semesterService.AddSemesterAsync(addSemesterDto);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpPut("{Id:int}")]
         public async Task<IActionResult> UpdateSemester([FromRoute] int Id, [FromBody] SemesterDto updateSemesterDto)
         {
@@ -43,14 +50,17 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("the Id not Valid");
             }
-            await _semesterService.UpdateSemesterAsync(updateSemesterDto);
-            return Ok("the Semesters Success");
+            var response = await _semesterService.UpdateSemesterAsync(updateSemesterDto);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpDelete]
         public async Task<IActionResult> DeleteSemester(int Id)
         {
-            await _semesterService.DeleteSemesterAsync(Id);
-            return Ok("Delete Semester Success");
+            var response = await _semesterService.DeleteSemesterAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
