@@ -183,7 +183,7 @@ namespace GraduationProject.Service.Service
                 await _unitOfWork.Courses.Delete(existingCourse);
                 var result = await _unitOfWork.SaveAsync();
                 if (result > 0)
-                    return Response<int>.Updated("course deleted successfully");
+                    return Response<int>.Deleted("course deleted successfully");
 
                 return Response<int>.ServerError("Error occured while deleting course",
                         "An unexpected error occurred while deleting course. Please try again later.");
@@ -238,7 +238,7 @@ namespace GraduationProject.Service.Service
                 await _unitOfWork.CourseAssessMethods.AddRangeAsync(newCourseAssessMethods);
                 var result = await _unitOfWork.SaveAsync();
                 if (result > 0)
-                    return Response<int>.Updated("course assigned to assess methods successfully");
+                    return Response<int>.Created("course assigned to assess methods successfully");
 
                 return Response<int>.ServerError("Error occured while assigning to assess methods to course",
                         "An unexpected error occurred while assigning to assess methods to course. Please try again later.");
@@ -312,9 +312,9 @@ namespace GraduationProject.Service.Service
                         }).ToList()
                 };
 
-                //var result = new List<CourseStudentsAssessMethodDto> { courseStudentAssessMethodDto };
                 return Response<CourseStudentsAssessMethodDto>
-                    .Success(courseStudentAssessMethodDto, "Student's assess methods with degrees retrieved successfully");
+                    .Success(courseStudentAssessMethodDto, "Student's assess methods with degrees retrieved successfully")
+                    .WithCount(courseStudentAssessMethodDto.StudentDtos.Count());
             }
             catch (Exception ex)
             {

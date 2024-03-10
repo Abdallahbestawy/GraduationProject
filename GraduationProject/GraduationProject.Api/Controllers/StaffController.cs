@@ -13,6 +13,7 @@ namespace GraduationProject.Api.Controllers
         {
             _StaffService = StaffService;
         }
+
         [HttpPost("AddStaff")]
         public async Task<IActionResult> AddStaff(AddStaffDto addStaffDto)
         {
@@ -33,42 +34,38 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter valid Model");
             }
         }
+
         [HttpPost("AddStaffSemester")]
         public async Task<IActionResult> AddStaffSemester(AddStaffSemesterDto addStaffSemesterDto)
         {
             if (ModelState.IsValid)
             {
-                await _StaffService.AddStaffSemesterAsync(addStaffSemesterDto);
-                return Ok("Add Staff Semester Succes");
+                var response = await _StaffService.AddStaffSemesterAsync(addStaffSemesterDto);
+
+                return StatusCode(response.StatusCode, response);
             }
             else
             {
                 return BadRequest("please enter Vaild Model");
             }
         }
+
         [HttpGet("GetCourseStaffSemester{staffId:int}")]
         public async Task<IActionResult> GetCourseStaffSemester(int staffId)
         {
-            var entity = await _StaffService.Test(staffId);
-            if (entity != null)
-            {
-                return Ok(entity);
-            }
-            else
-            {
-                return BadRequest("not course have doctor");
-            }
+            var response = await _StaffService.Test(staffId);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("GetStaff")]
         public async Task<IActionResult> GetStaff()
         {
             string userId = "3ed1410b-286c-4064-9193-35b792b8aebf";
 
             var response = await _StaffService.GetStaffByUserId(userId);
-            if(response.StatusCode == 500)
-                return StatusCode(response.StatusCode, response);
 
-            return Ok(response);
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

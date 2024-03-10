@@ -59,9 +59,13 @@
             return CreateResponse(ResponseType.InternalServerError, message, errors, default(T));
         }
 
-        public Response<T> WithCount()
+        public Response<T> WithCount(int? initialCount = null)
         {
-            if (Data == null)
+            if (initialCount.HasValue)
+            {
+                Count = initialCount.Value;
+            }
+            else if (Data == null)
             {
                 Count = 0;
             }
@@ -80,5 +84,6 @@
 
             return this;
         }
+
     }
 }

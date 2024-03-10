@@ -1,6 +1,8 @@
 ﻿using GraduationProject.Data.Entity;
 using GraduationProject.Data.Enum;
 using GraduationProject.Identity.IService;
+using GraduationProject.Mails.IService;
+using GraduationProject.Mails.Models;
 using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.StaffDto;
@@ -15,11 +17,13 @@ namespace GraduationProject.Service.Service
         private readonly UnitOfWork _unitOfWork;
         private readonly IAccountService _accountService;
         private readonly ICourseService _courseService;
-        public StaffService(UnitOfWork unitOfWork, IAccountService accountService, ICourseService courseService)
+        private readonly IMailService _mailService;
+        public StaffService(UnitOfWork unitOfWork, IAccountService accountService, ICourseService courseService, IMailService mailService)
         {
             _unitOfWork = unitOfWork;
             _accountService = accountService;
             _courseService = courseService;
+            _mailService = mailService;
         }
         public async Task<int> AddStAffAsync(AddStaffDto addSaffDto)
         {
@@ -64,46 +68,84 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<int> AddStaffSemesterAsync(AddStaffSemesterDto addStaffSemesterDto)
+        public async Task<Response<int>> AddStaffSemesterAsync(AddStaffSemesterDto addStaffSemesterDto)
         {
-            StaffSemester newStaffSemester = new StaffSemester
+            try
             {
-                StaffId = addStaffSemesterDto.StaffId,
-                CourseId = addStaffSemesterDto.CourseId,
-                AcademyYearId = addStaffSemesterDto.AcademyYearId
-            };
-            await _unitOfWork.StaffSemesters.AddAsync(newStaffSemester);
-            await _unitOfWork.SaveAsync();
-            return 1;
+                StaffSemester newStaffSemester = new StaffSemester
+                {
+                    StaffId = addStaffSemesterDto.StaffId,
+                    CourseId = addStaffSemesterDto.CourseId,
+                    AcademyYearId = addStaffSemesterDto.AcademyYearId
+                };
+                await _unitOfWork.StaffSemesters.AddAsync(newStaffSemester);
+                var result = await _unitOfWork.SaveAsync();
+
+                if (result > 0)
+                    return Response<int>.Created("Staff assigned to course in semester successfully");
+
+                return Response<int>.ServerError("Error occured while assigning to course in semester",
+                    "An unexpected error occurred while assigning to course in semester. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StaffService",
+                    MethodName = "AddStaffSemesterAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while assigning to course in semester",
+                     "An unexpected error occurred while assigning to course in semester. Please try again later.");
+            }
         }
 
 
-        public async Task<GetCourseStaffSemester> Test(int satffId)
+        public async Task<Response<GetCourseStaffSemester>> Test(int satffId)
         {
-            var staffSemesters = await _unitOfWork.StaffSemesters
-               .FindWithIncludeAsync(d => d.AcademyYear, c => c.Course);
-
-            var results = staffSemesters
-                .Where(dc => dc.AcademyYear.IsCurrent && dc.StaffId == satffId)
-                .ToList();
-
-            if (!results.Any())
+            try
             {
-                return null;
-            }
+                var staffSemesters = await _unitOfWork.StaffSemesters
+                   .FindWithIncludeAsync(d => d.AcademyYear, c => c.Course);
+                if (staffSemesters == null)
+                    return Response<GetCourseStaffSemester>.BadRequest("This staff doesn't exist");
 
-            var staffSemesterDto = new GetCourseStaffSemester
-            {
-                StaffId = results.First().StaffId,
-                AcademyYearId = results.First().AcademyYearId,
-                CourseDoctorDtos = results.Select(result => new CourseDoctorDto
+                var results = staffSemesters
+                    .Where(dc => dc.AcademyYear.IsCurrent && dc.StaffId == satffId)
+                    .ToList();
+
+                if (!results.Any())
+                    return Response<GetCourseStaffSemester>.NoContent("This staff doesn't have courses");
+
+                var staffSemesterDto = new GetCourseStaffSemester
                 {
-                    CourseId = result.Course.Id,
-                    CourseName = result.Course.Name
-                }).ToList()
-            };
+                    StaffId = results.First().StaffId,
+                    AcademyYearId = results.First().AcademyYearId,
+                    CourseDoctorDtos = results.Select(result => new CourseDoctorDto
+                    {
+                        CourseId = result.Course.Id,
+                        CourseName = result.Course.Name
+                    }).ToList()
+                };
 
-            return staffSemesterDto;
+                return Response<GetCourseStaffSemester>.Success(staffSemesterDto, "Staff's courses retrieved successfully")
+                    .WithCount(staffSemesterDto.CourseDoctorDtos.Count());
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StaffService",
+                    MethodName = "Test",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetCourseStaffSemester>.ServerError("Error occured while retrieving staff's courses",
+                     "An unexpected error occurred while retrieving staff's courses. Please try again later.");
+            }
         }
         public async Task<Response<GetStaffDetailsByUserIdDto>> GetStaffByUserId(string userId)
         {
@@ -151,7 +193,7 @@ namespace GraduationProject.Service.Service
                 }
                 else
                 {
-                    return Response<GetStaffDetailsByUserIdDto>.NoContent("This Staff doesn't exists");
+                    return Response<GetStaffDetailsByUserIdDto>.NoContent("This Staff doesn't exist");
                 }
             }catch (Exception ex)
             {
