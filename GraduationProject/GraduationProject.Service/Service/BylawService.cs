@@ -18,7 +18,7 @@ namespace GraduationProject.Service.Service
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
         }
-        public async Task AddBylawAsync(BylawDto addBylawDto)
+        public async Task<Response<int>> AddBylawAsync(BylawDto addBylawDto)
         {
             Bylaw newBylaw = new Bylaw
             {
@@ -30,8 +30,24 @@ namespace GraduationProject.Service.Service
                 FacultyId = addBylawDto.FacultyId,
             };
 
-            await _unitOfWork.Bylaws.AddAsync(newBylaw);
-            await _unitOfWork.SaveAsync();
+            try
+            {
+                await _unitOfWork.Bylaws.AddAsync(newBylaw);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "BylawService",
+                    MethodName = "AddBylawAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while adding Bylaw",
+                     "An unexpected error occurred while adding Bylaw. Please try again later.");
+            }
 
             int bylawyId = newBylaw.Id;
 
@@ -47,8 +63,25 @@ namespace GraduationProject.Service.Service
                     MinPercentage = est.MinPercentageEstimates,
                 }).ToList();
 
-            await _unitOfWork.Estimates.AddRangeAsync(estimates);
-            await _unitOfWork.SaveAsync();
+            try
+            {
+                await _unitOfWork.Estimates.AddRangeAsync(estimates);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "BylawService",
+                    MethodName = "AddBylawAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _unitOfWork.Bylaws.Delete(newBylaw);
+                return Response<int>.ServerError("Error occured while adding Bylaw",
+                     "An unexpected error occurred while adding Bylaw. Please try again later.");
+            }
 
             List<EstimatesCourse> estimatesCourses = addBylawDto.EstimatesCourses.Select(estCourse =>
                 new EstimatesCourse
@@ -60,8 +93,32 @@ namespace GraduationProject.Service.Service
                     MinPercentage = estCourse.MinPercentageEstimatesCourse
                 }).ToList();
 
-            await _unitOfWork.EstimatesCourses.AddRangeAsync(estimatesCourses);
-            await _unitOfWork.SaveAsync();
+            try
+            {
+                await _unitOfWork.EstimatesCourses.AddRangeAsync(estimatesCourses);
+                var result = await _unitOfWork.SaveAsync();
+                if(result >0)
+                    return Response<int>.Created("Bylaw added successfully");
+
+                return Response<int>.ServerError("Error occured while adding Bylaw",
+                     "An unexpected error occurred while adding Bylaw. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "BylawService",
+                    MethodName = "AddBylawAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                //add deleteRangge function //bastawy
+                //await _unitOfWork.Estimates.DeleteRange(estimates);
+                await _unitOfWork.Bylaws.Delete(newBylaw);
+                return Response<int>.ServerError("Error occured while adding Bylaw",
+                     "An unexpected error occurred while adding Bylaw. Please try again later.");
+            }
         }
 
         public async Task<Response<IQueryable<BylawDto>>> GetBylawAsync()

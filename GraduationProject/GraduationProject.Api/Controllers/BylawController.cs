@@ -37,8 +37,9 @@ namespace GraduationProject.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBylaw(BylawDto addBylawDto)
         {
-            await _bylawService.AddBylawAsync(addBylawDto);
-            return Ok("Add Bylaw Success");
+            var response = await _bylawService.AddBylawAsync(addBylawDto);
+            
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPut("{Id:int}")]

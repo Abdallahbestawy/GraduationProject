@@ -5,7 +5,7 @@ namespace GraduationProject.Service.IService
 {
     public interface IBylawService
     {
-        Task AddBylawAsync(BylawDto addBylawDto);
+        Task<Response<int>> AddBylawAsync(BylawDto addBylawDto);
         Task<Response<int>> UpdateBylawAsync(BylawDto updateBylawDto);
         Task<Response<int>> DeleteBylawAsync(int BylawId);
         Task<Response<BylawDto>> GetBylawByIdAsync(int BylawId);
