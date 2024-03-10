@@ -391,7 +391,7 @@ namespace GraduationProject.Service.Service
         {
             try
             {
-                var students = await _unitOfWork.GetAllStudentsModels.CallStoredProcedureAsync("EXECUTE SpGetAllStudents");
+                var students = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStudents");
                 if (!students.Any())
                     return Response<List<GetAllStudentsDto>>.BadRequest("This Student doesn't exists");
 
