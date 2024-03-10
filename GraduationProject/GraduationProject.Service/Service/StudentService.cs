@@ -1,6 +1,8 @@
 ﻿using GraduationProject.Data.Entity;
 using GraduationProject.Data.Enum;
 using GraduationProject.Identity.IService;
+using GraduationProject.Mails.IService;
+using GraduationProject.Mails.Models;
 using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.CourseDto;
@@ -16,17 +18,38 @@ namespace GraduationProject.Service.Service
         private readonly UnitOfWork _unitOfWork;
         private readonly IAccountService _accountService;
         private readonly ICourseService _courseService;
-        public StudentService(UnitOfWork unitOfWork, IAccountService accountService, ICourseService courseService)
+        private readonly IMailService _mailService;
+        public StudentService(UnitOfWork unitOfWork, IAccountService accountService, ICourseService courseService, IMailService mailService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _accountService = accountService ?? throw new ArgumentNullException(nameof(accountService));
             _courseService = courseService ?? throw new ArgumentNullException(nameof(courseService));
+            _mailService = mailService;
         }
-        public async Task<int> AddStudentAsync(AddStudentDto addStudentDto)
+        public async Task<Response<int>> AddStudentAsync(AddStudentDto addStudentDto)
         {
-            string userId = await _accountService.AddStudentAccount(addStudentDto.NameArabic, addStudentDto.NameEnglish,
-        addStudentDto.NationalID, addStudentDto.Email, addStudentDto.Password);
-            if (!string.IsNullOrEmpty(userId))
+            string userId = "";
+
+            try
+            {
+                userId = await _accountService.AddStudentAccount(addStudentDto.NameArabic, addStudentDto.NameEnglish,
+                   addStudentDto.NationalID, addStudentDto.Email, addStudentDto.Password);
+            }
+            catch(Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StudentService",
+                    MethodName = "AddStudentAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while adding student",
+                     "An unexpected error occurred while adding student. Please try again later.");
+            }
+
+            if (string.IsNullOrEmpty(userId))
             {
                 Student newStudent = new Student
                 {
@@ -42,15 +65,27 @@ namespace GraduationProject.Service.Service
                     Street = addStudentDto.Street,
                     PostalCode = addStudentDto.PostalCode
                 };
-                await _unitOfWork.Students.AddAsync(newStudent);
-                // try
-                //{
-                int result = await _unitOfWork.SaveAsync();
-                //  _accountService.DeleteUser(userId);
-                //}
-                //catch(Exception ex)
-                //{
-                //}
+
+                try
+                {
+                    await _unitOfWork.Students.AddAsync(newStudent);
+                    int result = await _unitOfWork.SaveAsync();
+                }
+                catch(Exception ex)
+                {
+                    await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                    {
+                        ClassName = "StudentService",
+                        MethodName = "AddStudentAsync",
+                        ErrorMessage = ex.Message,
+                        StackTrace = ex.StackTrace,
+                        Time = DateTime.UtcNow
+                    });
+                    await _accountService.DeleteUser(userId);
+                    return Response<int>.ServerError("Error occured while adding student",
+                         "An unexpected error occurred while adding student. Please try again later.");
+                }
+
                 int studentId = newStudent.Id;
                 QualificationData newQualificationDataStudent = new QualificationData
                 {
@@ -60,8 +95,28 @@ namespace GraduationProject.Service.Service
                     QualificationYear = addStudentDto.QualificationYear,
                     Degree = addStudentDto.Degree
                 };
-                await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
-                await _unitOfWork.SaveAsync();
+
+                try
+                {
+                    await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
+                    await _unitOfWork.SaveAsync();
+                }
+                catch(Exception ex)
+                {
+                    await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                    {
+                        ClassName = "StudentService",
+                        MethodName = "AddStudentAsync",
+                        ErrorMessage = ex.Message,
+                        StackTrace = ex.StackTrace,
+                        Time = DateTime.UtcNow
+                    });
+                    await _unitOfWork.Students.Delete(newStudent);
+                    await _accountService.DeleteUser(userId);
+                    return Response<int>.ServerError("Error occured while adding student",
+                         "An unexpected error occurred while adding student. Please try again later.");
+                }
+
                 FamilyData FamilyDataStudent = new FamilyData
                 {
                     StudentId = studentId,
@@ -73,31 +128,71 @@ namespace GraduationProject.Service.Service
                     CityId = addStudentDto.ParentCityId,
                     Street = addStudentDto.ParentStreet
                 };
-                await _unitOfWork.FamilyDatas.AddAsync(FamilyDataStudent);
-                await _unitOfWork.SaveAsync();
-                if (addStudentDto.PhoneNumbers != null)
-                {
-                    List<Phone> phones = addStudentDto.PhoneNumbers.Select(ph =>
-                        new Phone
-                        {
-                            StudentId = studentId,
-                            PhoneNumber = ph.PhoneNumber,
-                            Type = ph.Type,
-                        }).ToList();
 
-                    await _unitOfWork.Phones.AddRangeAsync(phones);
+                try
+                {
+                    await _unitOfWork.FamilyDatas.AddAsync(FamilyDataStudent);
                     await _unitOfWork.SaveAsync();
                 }
-                return 1;
+                catch(Exception ex)
+                {
+                    await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                    {
+                        ClassName = "StudentService",
+                        MethodName = "AddStudentAsync",
+                        ErrorMessage = ex.Message,
+                        StackTrace = ex.StackTrace,
+                        Time = DateTime.UtcNow
+                    });
+                    await _unitOfWork.QualificationDatas.Delete(newQualificationDataStudent);
+                    await _unitOfWork.Students.Delete(newStudent);
+                    await _accountService.DeleteUser(userId);
+                    return Response<int>.ServerError("Error occured while adding student",
+                         "An unexpected error occurred while adding student. Please try again later.");
+                }
 
+                try
+                {
+                    if (addStudentDto.PhoneNumbers != null)
+                    {
+                        List<Phone> phones = addStudentDto.PhoneNumbers.Select(ph =>
+                            new Phone
+                            {
+                                StudentId = studentId,
+                                PhoneNumber = ph.PhoneNumber,
+                                Type = ph.Type,
+                            }).ToList();
+
+                        await _unitOfWork.Phones.AddRangeAsync(phones);
+                        await _unitOfWork.SaveAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                    {
+                        ClassName = "StudentService",
+                        MethodName = "AddStudentAsync",
+                        ErrorMessage = ex.Message,
+                        StackTrace = ex.StackTrace,
+                        Time = DateTime.UtcNow
+                    });
+                    await _unitOfWork.FamilyDatas.Delete(FamilyDataStudent);
+                    await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
+                    await _unitOfWork.Students.Delete(newStudent);
+                    await _accountService.DeleteUser(userId);
+                    return Response<int>.ServerError("Error occured while adding student",
+                         "An unexpected error occurred while adding student. Please try again later.");
+                }
+
+                return Response<int>.Created("Student added successfully");
             }
-            else
-            {
-                return -1;
-            }
+
+            return Response<int>.ServerError("Error occured while adding student",
+                         "An unexpected error occurred while adding student. Please try again later.");
         }
 
-        public async Task<int> AddStudentSemesterAsync(AddStudentSemesterDto addStudentSemesterDto)
+        public async Task<Response<int>> AddStudentSemesterAsync(AddStudentSemesterDto addStudentSemesterDto)
         {
             StudentSemester newStudentSemester = new StudentSemester
             {
@@ -106,15 +201,76 @@ namespace GraduationProject.Service.Service
                 ScientificDegreeId = addStudentSemesterDto.ScientificDegreeId,
                 AcademyYearId = addStudentSemesterDto.AcademyYearId
             };
-            await _unitOfWork.StudentSemesters.AddAsync(newStudentSemester);
-            await _unitOfWork.SaveAsync();
-            bool flag = await AddCourseStudent(newStudentSemester.Id, newStudentSemester.ScientificDegreeId);
-            bool flag1 = await AddCourseAssessMethodStudent(newStudentSemester.Id, newStudentSemester.ScientificDegreeId);
+
+            try
+            {
+                await _unitOfWork.StudentSemesters.AddAsync(newStudentSemester);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StudentService",
+                    MethodName = "AddStudentSemesterAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while adding student to semester",
+                     "An unexpected error occurred while adding to semester. Please try again later.");
+            }
+
+            bool flag;
+
+            try
+            {
+                flag = await AddCourseStudent(newStudentSemester.Id, newStudentSemester.ScientificDegreeId);
+            }
+            catch(Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StudentService",
+                    MethodName = "AddStudentSemesterAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _unitOfWork.StudentSemesters.Delete(newStudentSemester);
+                return Response<int>.ServerError("Error occured while adding student to semester",
+                     "An unexpected error occurred while adding student to semester. Please try again later.");
+            }
+
+            bool flag1;
+
+            try
+            {
+                flag1 = await AddCourseAssessMethodStudent(newStudentSemester.Id, newStudentSemester.ScientificDegreeId);
+            }
+            catch( Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StudentService",
+                    MethodName = "AddStudentSemesterAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                // revert AddCourseStudent() //bastawy
+                await _unitOfWork.StudentSemesters.Delete(newStudentSemester);
+                return Response<int>.ServerError("Error occured while adding student to semester",
+                     "An unexpected error occurred while adding student to semester. Please try again later.");
+            }
+
             if (flag && flag1)
             {
-                return 1;
+                return Response<int>.Created("Student assigned to semester successfully");
             }
-            return -1;
+
+            return Response<int>.ServerError("Error occured while adding student to semester",
+                     "An unexpected error occurred while adding student to semester. Please try again later.");
         }
         public async Task<List<CourseDto>> GetCourseByScientificDegree(int scientificDegreeId)
         {
@@ -174,70 +330,75 @@ namespace GraduationProject.Service.Service
 
                 var getStudent = await _unitOfWork.GetStudentDetailsByUserIdModels.CallStoredProcedureAsync(
                     "EXECUTE SpGetStudentDetailsByUserId", pUserId);
-                if (getStudent.Any())
-                {
-                    GetStudentDetailsByUserIdDto getStudentDetailsByUserIdDto = new GetStudentDetailsByUserIdDto
-                    {
-                        NameArabic = getStudent.FirstOrDefault()?.NameArabic,
-                        NameEnglish = getStudent.FirstOrDefault()?.NameEnglish,
-                        NationalID = getStudent.FirstOrDefault()?.NationalID,
-                        Email = getStudent.FirstOrDefault()?.Email,
-                        StudentId = getStudent.FirstOrDefault()?.StudentId ?? 0,
-                        StudentAddress = getStudent.FirstOrDefault()?.StudentAddress,
-                        DateOfBirth = getStudent.FirstOrDefault()?.DateOfBirth,
-                        Gender = Enum.GetName(typeof(Gender), getStudent.FirstOrDefault()?.Gender),
-                        Nationality = Enum.GetName(typeof(Nationality), getStudent.FirstOrDefault()?.Nationality),
-                        PlaceOfBirth = getStudent.FirstOrDefault()?.PlaceOfBirth,
-                        PostalCode = getStudent.FirstOrDefault()?.PostalCode,
-                        ReleasePlace = getStudent.FirstOrDefault()?.ReleasePlace,
-                        Religion = Enum.GetName(typeof(Religion), getStudent.FirstOrDefault()?.Religion),
-                        ParentName = getStudent.FirstOrDefault()?.ParentName,
-                        ParentJob = getStudent.FirstOrDefault()?.ParentJob,
-                        PostalCodeOfParent = getStudent.FirstOrDefault()?.PostalCodeOfParent,
-                        ParentAddress = getStudent.FirstOrDefault()?.ParentAddress,
-                        PreQualification = getStudent.FirstOrDefault()?.PreQualification,
-                        QualificationYear = getStudent.FirstOrDefault()?.QualificationYear,
-                        SeatNumber = getStudent.FirstOrDefault()?.SeatNumber ?? 0,
-                        Degree = getStudent.FirstOrDefault()?.Degree ?? 0.0m,
-                    };
+                if (!getStudent.Any())
+                    return Response<GetStudentDetailsByUserIdDto>.BadRequest("This Student doesn't exists");
 
-                    if (getStudent.Any(s => !string.IsNullOrEmpty(s.StudentPhoneNumber)))
-                    {
-                        getStudentDetailsByUserIdDto.GetPhoneStudentDtos = getStudent
-                            .Where(s => !string.IsNullOrEmpty(s.StudentPhoneNumber))
-                            .Select(s => new GetPhoneStudentDto
-                            {
-                                StudentPhoneNumber = s.StudentPhoneNumber,
-                                PhoneType = Enum.GetName(typeof(PhoneType), s.PhoneType)
-                            })
-                            .ToList();
-                    }
-                    return Response<GetStudentDetailsByUserIdDto>.Success(getStudentDetailsByUserIdDto, "Student data retrieved successfully")
-                        .WithCount();
-                }
-                else
+                GetStudentDetailsByUserIdDto getStudentDetailsByUserIdDto = new GetStudentDetailsByUserIdDto
                 {
-                    return Response<GetStudentDetailsByUserIdDto>.NoContent("This Student doesn't exists");
+                    NameArabic = getStudent.FirstOrDefault()?.NameArabic,
+                    NameEnglish = getStudent.FirstOrDefault()?.NameEnglish,
+                    NationalID = getStudent.FirstOrDefault()?.NationalID,
+                    Email = getStudent.FirstOrDefault()?.Email,
+                    StudentId = getStudent.FirstOrDefault()?.StudentId ?? 0,
+                    StudentAddress = getStudent.FirstOrDefault()?.StudentAddress,
+                    DateOfBirth = getStudent.FirstOrDefault()?.DateOfBirth,
+                    Gender = Enum.GetName(typeof(Gender), getStudent.FirstOrDefault()?.Gender),
+                    Nationality = Enum.GetName(typeof(Nationality), getStudent.FirstOrDefault()?.Nationality),
+                    PlaceOfBirth = getStudent.FirstOrDefault()?.PlaceOfBirth,
+                    PostalCode = getStudent.FirstOrDefault()?.PostalCode,
+                    ReleasePlace = getStudent.FirstOrDefault()?.ReleasePlace,
+                    Religion = Enum.GetName(typeof(Religion), getStudent.FirstOrDefault()?.Religion),
+                    ParentName = getStudent.FirstOrDefault()?.ParentName,
+                    ParentJob = getStudent.FirstOrDefault()?.ParentJob,
+                    PostalCodeOfParent = getStudent.FirstOrDefault()?.PostalCodeOfParent,
+                    ParentAddress = getStudent.FirstOrDefault()?.ParentAddress,
+                    PreQualification = getStudent.FirstOrDefault()?.PreQualification,
+                    QualificationYear = getStudent.FirstOrDefault()?.QualificationYear,
+                    SeatNumber = getStudent.FirstOrDefault()?.SeatNumber ?? 0,
+                    Degree = getStudent.FirstOrDefault()?.Degree ?? 0.0m,
+                };
+
+                if (getStudent.Any(s => !string.IsNullOrEmpty(s.StudentPhoneNumber)))
+                {
+                    getStudentDetailsByUserIdDto.GetPhoneStudentDtos = getStudent
+                        .Where(s => !string.IsNullOrEmpty(s.StudentPhoneNumber))
+                        .Select(s => new GetPhoneStudentDto
+                        {
+                            StudentPhoneNumber = s.StudentPhoneNumber,
+                            PhoneType = Enum.GetName(typeof(PhoneType), s.PhoneType)
+                        })
+                        .ToList();
                 }
+                return Response<GetStudentDetailsByUserIdDto>.Success(getStudentDetailsByUserIdDto, "Student data retrieved successfully")
+                    .WithCount();
             }
             catch (Exception ex)
             {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StudentService",
+                    MethodName = "GetStudentByUserId",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
                 return Response<GetStudentDetailsByUserIdDto>.ServerError("Error occured while retrieving student's data",
                     "An unexpected error occurred while retrieving student's data. Please try again later.");
             }
         }
 
-        public async Task<List<GetAllStudentsDto>> GetAllStudentsAsync()
+        public async Task<Response<List<GetAllStudentsDto>>> GetAllStudentsAsync()
         {
-            var students = await _unitOfWork.GetAllStudentsModels.CallStoredProcedureAsync("EXECUTE SpGetAllStudents");
-            if (students.Any())
+            try
             {
+                var students = await _unitOfWork.GetAllStudentsModels.CallStoredProcedureAsync("EXECUTE SpGetAllStudents");
+                if (!students.Any())
+                    return Response<List<GetAllStudentsDto>>.BadRequest("This Student doesn't exists");
 
                 List<GetAllStudentsDto> result = students.Select(student => new GetAllStudentsDto
                 {
                     StudentId = student.Id,
                     UserId = student.UserId,
-
                     Nationality = Enum.GetName(typeof(Gender), student.Nationality),
                     StudentNameArbic = student.NameArabic,
                     StudentNameEnglish = student.NameEnglish,
@@ -246,13 +407,21 @@ namespace GraduationProject.Service.Service
                     Email = student.Email
                 }).ToList();
 
-                return result;
+                return Response<List<GetAllStudentsDto>>.Success(result, "Students retrieved successfully").WithCount();
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StudentService",
+                    MethodName = "GetAllStudentsAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetAllStudentsDto>>.ServerError("Error occured while retrieving students",
+                    "An unexpected error occurred while retrieving students. Please try again later.");
             }
         }
-
     }
 }

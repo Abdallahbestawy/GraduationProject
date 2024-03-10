@@ -1,4 +1,5 @@
-﻿using GraduationProject.Service.DataTransferObject.StudentDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.StudentDto;
 using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,15 +19,9 @@ namespace GraduationProject.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                int raw = await _studentService.AddStudentAsync(addStudentDto);
-                if (raw == 1)
-                {
-                    return Ok("StudentAdd");
-                }
-                else
-                {
-                    return BadRequest("please enter valid Model");
-                }
+                var response = await _studentService.AddStudentAsync(addStudentDto);
+                
+                return StatusCode(response.StatusCode, response);
             }
             else
             {
@@ -38,8 +33,9 @@ namespace GraduationProject.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _studentService.AddStudentSemesterAsync(addStudentSemesterDto);
-                return Ok("Add Success");
+                var response = await _studentService.AddStudentSemesterAsync(addStudentSemesterDto);
+
+                return StatusCode(response.StatusCode, response);
             }
             else
             {
@@ -53,16 +49,14 @@ namespace GraduationProject.Api.Controllers
 
             var response = await _studentService.GetStudentByUserId(userId);
 
-            if (response.StatusCode == 500)
-                return StatusCode(response.StatusCode, response);
-
-            return Ok(response);
+            return StatusCode(response.StatusCode, response);
         }
         [HttpGet("GetAllStudents")]
         public async Task<IActionResult> GetAllStudents()
         {
             var response = await _studentService.GetAllStudentsAsync();
-            return Ok(response);
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

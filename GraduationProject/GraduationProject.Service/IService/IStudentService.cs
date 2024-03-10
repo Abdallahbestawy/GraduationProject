@@ -5,9 +5,9 @@ namespace GraduationProject.Service.IService
 {
     public interface IStudentService
     {
-        Task<int> AddStudentAsync(AddStudentDto addStudentDto);
-        Task<int> AddStudentSemesterAsync(AddStudentSemesterDto addStudentSemesterDto);
+        Task<Response<int>> AddStudentAsync(AddStudentDto addStudentDto);
+        Task<Response<int>> AddStudentSemesterAsync(AddStudentSemesterDto addStudentSemesterDto);
         Task<Response<GetStudentDetailsByUserIdDto>> GetStudentByUserId(string userId);
-        Task<List<GetAllStudentsDto>> GetAllStudentsAsync();
+        Task<Response<List<GetAllStudentsDto>>> GetAllStudentsAsync();
     }
 }
