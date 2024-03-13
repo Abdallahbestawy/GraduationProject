@@ -61,18 +61,13 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("GetDetails{Id:int}")]
         public async Task<IActionResult> GetDetails(int Id)
         {
             var response = await _scientificDegreeService.GetDetailsByParentIdAsync(Id);
-            if (response != null)
-            {
-                return Ok(response);
-            }
-            else
-            {
-                return BadRequest();
-            }
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

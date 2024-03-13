@@ -220,15 +220,14 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<GetDetailsByParentIdDto> GetDetailsByParentIdAsync(int ParentId)
+        public async Task<Response<GetDetailsByParentIdDto>> GetDetailsByParentIdAsync(int ParentId)
         {
             try
             {
                 var results = await _unitOfWork.ScientificDegrees.GetEntityByPropertyAsync(p => p.ParentId == ParentId);
                 if (results == null || !results.Any())
-                {
-                    return null;
-                }
+                    return Response<GetDetailsByParentIdDto>.BadRequest("This Scientific Degree doesn't exist");
+
                 var scientificDegree = results.Select(sc => new GetDetailsDtos
                 {
                     Id = sc.Id,
@@ -238,11 +237,22 @@ namespace GraduationProject.Service.Service
                 {
                     GetDetailsDtos = scientificDegree
                 };
-                return getDetailsByParentIdDto;
+
+                return Response<GetDetailsByParentIdDto>.Success(getDetailsByParentIdDto, "Scientific Degree retrieved successfully")
+                    .WithCount(getDetailsByParentIdDto.GetDetailsDtos.Count);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ScientificDegreeService",
+                    MethodName = "GetDetailsByParentIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetDetailsByParentIdDto>.ServerError("Error occured while retrieving Scientific Degree",
+                    "An unexpected error occurred while retrieving Scientific Degree. Please try again later.");
             }
         }
     }

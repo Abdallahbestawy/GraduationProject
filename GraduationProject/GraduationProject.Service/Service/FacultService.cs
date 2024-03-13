@@ -51,35 +51,44 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<GetFacultyByUserIdDto> GetFacultByUserIdAsync(string userId)
+        public async Task<Response<GetFacultyByUserIdDto>> GetFacultByUserIdAsync(string userId)
         {
             try
             {
-
-
                 var results = await _unitOfWork.Facultys.GetEntityByPropertyAsync(u => u.UserId == userId);
                 if (results == null || !results.Any())
-                {
-                    return null;
-                }
+                    Response<GetFacultyByUserIdDto>.NoContent("No faculties are exist");
+
                 var facultys = results.Select(faculty => new GetFacultyDtos
                 {
                     FacultId = faculty.Id,
                     FacultName = faculty.Name
                 }).ToList();
+
                 var getFacultyByUserIdDto = new GetFacultyByUserIdDto
                 {
                     GetFacultyDtos = facultys,
                 };
-                return getFacultyByUserIdDto;
+
+                return Response<GetFacultyByUserIdDto>.Success(getFacultyByUserIdDto,"Faculties retrieved successfully")
+                    .WithCount(getFacultyByUserIdDto.GetFacultyDtos.Count);
             }
             catch (Exception ex)
             {
-                throw;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "FacultService",
+                    MethodName = "GetFacultByUserIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetFacultyByUserIdDto>.ServerError("Error occured while retrieving faculties",
+                    "An unexpected error occurred while retrieving faculties. Please try again later.");
             }
         }
 
-        public async Task<GetFacultyDetailsDto> GetFacultyDetailsAsync(int facultyId)
+        public async Task<Response<GetFacultyDetailsDto>> GetFacultyDetailsAsync(int facultyId)
         {
             try
             {
@@ -89,9 +98,7 @@ namespace GraduationProject.Service.Service
                     x => x.Bylaws.Where(f => f.FacultyId == facultyId));
 
                 if (results == null || !results.Any())
-                {
-                    return null;
-                }
+                    return Response<GetFacultyDetailsDto>.BadRequest("This faculty doesn't exist");
 
                 var facultyBylaws = results.SelectMany(faculty => faculty.Bylaws.Select(bylaw => new FacultyBylawDtos
                 {
@@ -118,11 +125,20 @@ namespace GraduationProject.Service.Service
                     FacultyDepatmentDtos = facultyDepartments
                 };
 
-                return facultyDetailsDto;
+                return Response<GetFacultyDetailsDto>.Success(facultyDetailsDto,"Faculty's details retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {
-                throw;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "FacultService",
+                    MethodName = "GetFacultyDetailsAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetFacultyDetailsDto>.ServerError("Error occured while retrieving faculty's details",
+                    "An unexpected error occurred while retrieving faculty's details. Please try again later.");
             }
         }
 

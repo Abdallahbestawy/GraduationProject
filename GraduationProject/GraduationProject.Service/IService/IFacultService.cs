@@ -7,7 +7,7 @@ namespace GraduationProject.Service.IService
     public interface IFacultService
     {
         Task<Response<int>> AddFacultAsync(FacultyDto facultyDto);
-        Task<GetFacultyDetailsDto> GetFacultyDetailsAsync(int facultyId);
-        Task<GetFacultyByUserIdDto> GetFacultByUserIdAsync(string userId);
+        Task<Response<GetFacultyDetailsDto>> GetFacultyDetailsAsync(int facultyId);
+        Task<Response<GetFacultyByUserIdDto>> GetFacultByUserIdAsync(string userId);
     }
 }

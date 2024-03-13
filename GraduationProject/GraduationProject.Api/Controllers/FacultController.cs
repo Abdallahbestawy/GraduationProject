@@ -13,6 +13,7 @@ namespace GraduationProject.Api.Controllers
         {
             _facultService = facultService;
         }
+
         [HttpPost]
         public async Task<IActionResult> AddFacult(FacultyDto facultyDto)
         {
@@ -20,32 +21,22 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("Faculty")]
         public async Task<IActionResult> GetFaculty()
         {
             string userId = "3ed1410b-286c-4064-9193-35b792b8aebf";
             var response = await _facultService.GetFacultByUserIdAsync(userId);
-            if (response != null)
-            {
-                return Ok(response);
-            }
-            else
-            {
-                return BadRequest();
-            }
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("GetFacultyDetails{facultyId:int}")]
         public async Task<IActionResult> GetFacultyDetails(int facultyId)
         {
             var response = await _facultService.GetFacultyDetailsAsync(facultyId);
-            if (response != null)
-            {
-                return Ok(response);
-            }
-            else
-            {
-                return BadRequest();
-            }
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

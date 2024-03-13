@@ -127,7 +127,7 @@ namespace GraduationProject.Service.Service
                 SqlParameter pUserType = new SqlParameter("@UserType", userType);
                 var teacherAssistants = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
                 if (!teacherAssistants.Any())
-                    Response<List<GetAllStaffsDto>>.NoContent("No staffs are exist");
+                    return Response<List<GetAllStaffsDto>>.NoContent("No staffs are exist");
 
                 List<GetAllStaffsDto> result = teacherAssistants.Select(teacherAssistant => new GetAllStaffsDto
                 {
