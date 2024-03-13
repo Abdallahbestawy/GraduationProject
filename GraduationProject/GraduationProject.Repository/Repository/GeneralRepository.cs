@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
+
 namespace GraduationProject.Repository.Repository
 {
     public class GeneralRepository<T> : IGeneralRepository<T> where T : class
@@ -57,32 +58,29 @@ namespace GraduationProject.Repository.Repository
             return entities.AsQueryable();
         }
 
-        public async Task<IQueryable<T>> FindWithIncludeAsync(params Expression<Func<T, object>>[] includes)
+        public async Task<IQueryable<T>> FindWithIncludeIQueryableAsync(params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> entitie = _context.Set<T>();
             if (includes != null)
             {
                 entitie = includes.Aggregate(entitie, (current, include) => current.Include(include));
             }
-            return entitie.AsQueryable();
+            return entitie;
         }
+        public async Task<IEnumerable<T>> FindWithIncludeIEnumerableAsync(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> entities = _context.Set<T>();
 
-        //public async Task<IEnumerable<GetStudentDetailsByUserIdModel>> GetStudentDetailsByUserIdModels(string userId)
-        //{
-        //    var query = _context.GetStudentDetailsByUserId(userId);
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    entities = entities.Include(include);
+                }
+            }
 
-        //    var result = await query.ToListAsync();
-
-        //    return result;
-        //}
-        //public async Task<IEnumerable<GetStaffDetailsByUserIdModel>> GetStaffDetailsByUserIdModel(string userId)
-        //{
-        //    var query = _context.GetStaffDetailsByUserId(userId);
-
-        //    var result = await query.ToListAsync();
-
-        //    return result;
-        //}
+            return await entities.ToListAsync();
+        }
 
         public async Task<IEnumerable<T>> CallStoredProcedureAsync(string storedProcedureName, params SqlParameter[] parameters)
         {
@@ -97,6 +95,12 @@ namespace GraduationProject.Repository.Repository
 
             return query;
 
+        }
+
+        public async Task<IEnumerable<T>> GetEntityByPropertyAsync(Func<T, bool> predicate)
+        {
+            var entities = _context.Set<T>().Where(predicate).ToList();
+            return entities;
         }
     }
 }

@@ -162,7 +162,7 @@ namespace GraduationProject.Service.Service
             try
             {
                 var staffSemesters = await _unitOfWork.StaffSemesters
-                   .FindWithIncludeAsync(d => d.AcademyYear, c => c.Course);
+                   .FindWithIncludeIQueryableAsync(d => d.AcademyYear, c => c.Course);
                 if (staffSemesters == null)
                     return Response<GetCourseStaffSemesterDto>.BadRequest("This staff doesn't exist");
 

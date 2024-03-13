@@ -46,7 +46,7 @@ namespace GraduationProject.Service.Service
                 return Response<int>.ServerError("Error occured while adding Scientific Degree",
                     "An unexpected error occurred while adding Scientific Degree. Please try again later.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
@@ -175,7 +175,7 @@ namespace GraduationProject.Service.Service
                 return Response<int>.ServerError("Error occured while updating Scientific Degree",
                     "An unexpected error occurred while updating Scientific Degree. Please try again later.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
@@ -205,7 +205,7 @@ namespace GraduationProject.Service.Service
                 return Response<int>.ServerError("Error occured while deleting Scientific Degree",
                     "An unexpected error occurred while deleting Scientific Degree. Please try again later.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
@@ -217,6 +217,32 @@ namespace GraduationProject.Service.Service
                 });
                 return Response<int>.ServerError("Error occured while deleting Scientific Degree",
                     "An unexpected error occurred while deleting Scientific Degree. Please try again later.");
+            }
+        }
+
+        public async Task<GetDetailsByParentIdDto> GetDetailsByParentIdAsync(int ParentId)
+        {
+            try
+            {
+                var results = await _unitOfWork.ScientificDegrees.GetEntityByPropertyAsync(p => p.ParentId == ParentId);
+                if (results == null || !results.Any())
+                {
+                    return null;
+                }
+                var scientificDegree = results.Select(sc => new GetDetailsDtos
+                {
+                    Id = sc.Id,
+                    Name = sc.Name,
+                }).ToList();
+                var getDetailsByParentIdDto = new GetDetailsByParentIdDto
+                {
+                    GetDetailsDtos = scientificDegree
+                };
+                return getDetailsByParentIdDto;
+            }
+            catch (Exception e)
+            {
+                throw;
             }
         }
     }

@@ -50,5 +50,81 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while adding faculty. Please try again later.");
             }
         }
+
+        public async Task<GetFacultyByUserIdDto> GetFacultByUserIdAsync(string userId)
+        {
+            try
+            {
+
+
+                var results = await _unitOfWork.Facultys.GetEntityByPropertyAsync(u => u.UserId == userId);
+                if (results == null || !results.Any())
+                {
+                    return null;
+                }
+                var facultys = results.Select(faculty => new GetFacultyDtos
+                {
+                    FacultId = faculty.Id,
+                    FacultName = faculty.Name
+                }).ToList();
+                var getFacultyByUserIdDto = new GetFacultyByUserIdDto
+                {
+                    GetFacultyDtos = facultys,
+                };
+                return getFacultyByUserIdDto;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<GetFacultyDetailsDto> GetFacultyDetailsAsync(int facultyId)
+        {
+            try
+            {
+                var results = await _unitOfWork.Facultys.FindWithIncludeIEnumerableAsync(
+                    x => x.AssessMethods.Where(f => f.FacultyId == facultyId),
+                    x => x.Departments.Where(f => f.FacultyId == facultyId),
+                    x => x.Bylaws.Where(f => f.FacultyId == facultyId));
+
+                if (results == null || !results.Any())
+                {
+                    return null;
+                }
+
+                var facultyBylaws = results.SelectMany(faculty => faculty.Bylaws.Select(bylaw => new FacultyBylawDtos
+                {
+                    Id = bylaw.Id,
+                    BylawName = bylaw.Name
+                })).ToList();
+
+                var facultyDepartments = results.SelectMany(faculty => faculty.Departments.Select(dept => new FacultyDepatmentDtos
+                {
+                    Id = dept.Id,
+                    DepatmentName = dept.Name
+                })).ToList();
+
+                var facultyAssessMethods = results.SelectMany(faculty => faculty.AssessMethods.Select(ass => new FacultyAssessMethodDtos
+                {
+                    Id = ass.Id,
+                    AssessMethodName = ass.Name
+                })).ToList();
+
+                var facultyDetailsDto = new GetFacultyDetailsDto
+                {
+                    FacultyAssessMethodDtos = facultyAssessMethods,
+                    FacultyBylawDtos = facultyBylaws,
+                    FacultyDepatmentDtos = facultyDepartments
+                };
+
+                return facultyDetailsDto;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
     }
 }

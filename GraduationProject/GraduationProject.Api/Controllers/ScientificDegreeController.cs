@@ -58,8 +58,21 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> DeleteScientificDegrees([FromRoute] int Id)
         {
             var response = await _scientificDegreeService.DeleteScientificDegreeAsync(Id);
-            
+
             return StatusCode(response.StatusCode, response);
+        }
+        [HttpGet("GetDetails{Id:int}")]
+        public async Task<IActionResult> GetDetails(int Id)
+        {
+            var response = await _scientificDegreeService.GetDetailsByParentIdAsync(Id);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }
