@@ -73,6 +73,7 @@ builder.Services.AddTransient<UnitOfWork>();
 builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IMailService, MailService>();
+builder.Services.AddTransient<IControlService, ControlService>();
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 

@@ -2,6 +2,6 @@
 {
     public interface IControlService
     {
-        Task Test();
+        Task Test(int courseId);
     }
 }
