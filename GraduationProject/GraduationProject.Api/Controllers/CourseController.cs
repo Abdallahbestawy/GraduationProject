@@ -35,7 +35,7 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> AddCourse(CourseDto addCourseDto)
         {
             var response = await _courseService.AddCourseAsync(addCourseDto);
-            
+
             return StatusCode(response.StatusCode, response);
         }
         [HttpPut("{Id:int}")]
@@ -70,12 +70,6 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [HttpGet("GetStudentSemesterAssessMethodsBySpecificCourseControlMembers{courseId:int}")]
-        public async Task<IActionResult> GetStudentSemesterAssessMethodsBySpecificCourseControlMembers(int courseId)
-        {
-            var response = await _courseService.GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(courseId, true);
 
-            return StatusCode(response.StatusCode, response);
-        }
     }
 }
