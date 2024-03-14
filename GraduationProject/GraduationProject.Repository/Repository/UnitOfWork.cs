@@ -27,7 +27,7 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<CoursePrerequisite> CoursePrerequisites { get; private set; }
         public IGeneralRepository<AssessMethod> AssessMethods { get; private set; }
         public IGeneralRepository<AcademyYear> AcademyYears { get; private set; }
-        public IGeneralRepository<StudentSemester> StudentSemesters { get; private set; }
+        public IStudentSemestersRepository StudentSemesters { get; private set; }
         public IGeneralRepository<StudentSemesterCourse> StudentSemesterCourses { get; private set; }
         public IGeneralRepository<CourseAssessMethod> CourseAssessMethods { get; private set; }
         public IGeneralRepository<StudentSemesterAssessMethod> StudentSemesterAssessMethods { get; private set; }
@@ -60,7 +60,7 @@ namespace GraduationProject.Repository.Repository
             CoursePrerequisites = new GeneralRepository<CoursePrerequisite>(_context);
             AssessMethods = new GeneralRepository<AssessMethod>(_context);
             AcademyYears = new GeneralRepository<AcademyYear>(_context);
-            StudentSemesters = new GeneralRepository<StudentSemester>(_context);
+            StudentSemesters = new StudentSemestersRepository(_context);
             StudentSemesterCourses = new GeneralRepository<StudentSemesterCourse>(_context);
             CourseAssessMethods = new GeneralRepository<CourseAssessMethod>(_context);
             StudentSemesterAssessMethods = new GeneralRepository<StudentSemesterAssessMethod>(_context);

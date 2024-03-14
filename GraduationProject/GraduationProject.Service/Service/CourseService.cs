@@ -4,7 +4,6 @@ using GraduationProject.Mails.Models;
 using GraduationProject.Repository.IRepository;
 using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
-using GraduationProject.Service.DataTransferObject.BylawDto;
 using GraduationProject.Service.DataTransferObject.CourseDto;
 using GraduationProject.Service.IService;
 using Microsoft.Data.SqlClient;
@@ -30,6 +29,7 @@ namespace GraduationProject.Service.Service
                 Type = addCourseDto.Type,
                 Category = addCourseDto.Category,
                 MaxDegree = addCourseDto.MaxDegree,
+                MinDegree = addCourseDto.MinDegree,
                 NumberOfCreditHours = addCourseDto.NumberOfCreditHours,
                 NumberOfPoints = addCourseDto.NumberOfPoints,
                 Prerequisite = addCourseDto.Prerequisite,
@@ -193,7 +193,7 @@ namespace GraduationProject.Service.Service
                 return Response<int>.ServerError("Error occured while updating course",
                         "An unexpected error occurred while updating course. Please try again later.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
@@ -222,7 +222,7 @@ namespace GraduationProject.Service.Service
                 return Response<int>.ServerError("Error occured while deleting course",
                         "An unexpected error occurred while deleting course. Please try again later.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {

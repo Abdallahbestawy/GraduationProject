@@ -18,6 +18,7 @@ namespace GraduationProject.Service.DataTransferObject.CourseDto
         public CourseCategory Category { get; set; }
 
         public decimal MaxDegree { get; set; }
+        public decimal MinDegree { get; set; }
 
         public int? NumberOfPoints { get; set; }
 

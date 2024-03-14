@@ -220,6 +220,9 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Property<decimal>("MaxDegree")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal>("MinDegree")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -998,7 +1001,190 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.ToTable("StudentSemesterCourses");
                 });
 
-            modelBuilder.Entity("GraduationProject.Data.Models.SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus", b =>
+            modelBuilder.Entity("GraduationProject.Data.Models.GetAllModel", b =>
+                {
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<short>("Gender")
+                        .HasColumnType("smallint");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NameArabic")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameEnglish")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Nationality")
+                        .HasColumnType("int");
+
+                    b.Property<short>("Religion")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("GetAllStudents");
+                });
+
+            modelBuilder.Entity("GraduationProject.Data.Models.GetStaffDetailsByUserIdModel", b =>
+                {
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("Degree")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<short>("Gender")
+                        .HasColumnType("smallint");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NameArabic")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameEnglish")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NationalID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Nationality")
+                        .HasColumnType("int");
+
+                    b.Property<short?>("PhoneType")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("PlaceOfBirth")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PreQualification")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("QualificationYear")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReleasePlace")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<short>("Religion")
+                        .HasColumnType("smallint");
+
+                    b.Property<int?>("SeatNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StaffAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StaffPhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("SpGetStaffDetailsByUserId");
+                });
+
+            modelBuilder.Entity("GraduationProject.Data.Models.GetStudentDetailsByUserIdModel", b =>
+                {
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("Degree")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<short>("Gender")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("NameArabic")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameEnglish")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NationalID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Nationality")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ParentAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ParentJob")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ParentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<short?>("PhoneType")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("PlaceOfBirth")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCodeOfParent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PreQualification")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("QualificationYear")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReleasePlace")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<short>("Religion")
+                        .HasColumnType("smallint");
+
+                    b.Property<int?>("SeatNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentPhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("SpGetStudentDetailsByUserId");
+                });
+
+            modelBuilder.Entity("GraduationProject.Data.Models.GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel", b =>
                 {
                     b.Property<string>("AssessmentMethodName")
                         .IsRequired()
@@ -1012,8 +1198,8 @@ namespace GraduationProject.EntityFramework.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Degree")
-                        .HasColumnType("float");
+                    b.Property<decimal?>("Degree")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsControlStatus")
                         .HasColumnType("bit");
@@ -1089,6 +1275,9 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<short?>("UserType")
+                        .HasColumnType("smallint");
 
                     b.HasKey("Id");
 

@@ -24,7 +24,7 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<CoursePrerequisite> CoursePrerequisites { get; }
         IGeneralRepository<AssessMethod> AssessMethods { get; }
         IGeneralRepository<AcademyYear> AcademyYears { get; }
-        IGeneralRepository<StudentSemester> StudentSemesters { get; }
+        IStudentSemestersRepository StudentSemesters { get; }
         IGeneralRepository<StudentSemesterCourse> StudentSemesterCourses { get; }
         IGeneralRepository<CourseAssessMethod> CourseAssessMethods { get; }
         IGeneralRepository<StaffSemester> StaffSemesters { get; }
