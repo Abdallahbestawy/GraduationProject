@@ -18,29 +18,56 @@ namespace GraduationProject.Repository.Repository
             try
             {
                 var students = await _context.StudentSemesters
-                              .Include(s => s.StudentSemesterCourse.Where(c => c.CourseId == courseId))
-                              .ThenInclude(s => s.Course)
-                              .Include(s => s.StudentSemesterAssessMethods.Where(c => c.CourseAssessMethod.CourseId == courseId))
-                              .Where(a => a.AcademyYear.IsCurrent)
-                              .ToListAsync();
+                    .Include(s => s.StudentSemesterCourse.Where(c => c.CourseId == courseId))
+                        .ThenInclude(s => s.Course)
+                    .Include(s => s.StudentSemesterAssessMethods.Where(c => c.CourseAssessMethod.CourseId == courseId))
+                        .ThenInclude(assess=>assess.CourseAssessMethod) // دا شيله لو هتشتغل كورس كورس
+                    .Where(a => a.AcademyYear.IsCurrent)
+                    .ToListAsync();
+
                 foreach (var student in students)
                 {
+
+                    //foreach (var assessMethod in student.StudentSemesterAssessMethods)
+                    //{
+                    //    total += assessMethod.Degree;
+                    //}
+                    //foreach (var course in student.StudentSemesterCourse)
+                    //{
+                    //    var res = await _context.StudentSemesterCourses.FindAsync(course.Id);
+                    //    res.CourseDegree = total;
+                    //    if (course.Course.MinDegree < total)
+                    //    {
+                    //        res.Passing = true;
+                    //    }
+                    //    await _context.SaveChangesAsync();
+                    //}
+                    ////////////////////////////////////////////  الكود اللي تحت دا عشان لو عايز الترك كله مره واحدة
+                    //foreach (var course in student.StudentSemesterCourse)
+                    //{
+                    //    decimal? total = 0;
+                    //    var assessMethods = course.StudentSemester.StudentSemesterAssessMethods
+                    //        .Where(crs => crs.CourseAssessMethod.CourseId == course.CourseId);
+
+                    //    foreach (var assessMethod in assessMethods)
+                    //    {
+                    //        total += assessMethod.Degree;
+                    //    }
+                    //    course.CourseDegree = total;
+                    //    course.Passing = total > 50;
+                    //}
+
                     decimal? total = 0;
-                    foreach (var assessMethod in student.StudentSemesterAssessMethods)
+                    var course = student.StudentSemesterCourse.First();
+
+                    foreach (var assessMethod in course.StudentSemester.StudentSemesterAssessMethods)
                     {
                         total += assessMethod.Degree;
                     }
-                    foreach (var course in student.StudentSemesterCourse)
-                    {
-                        var res = await _context.StudentSemesterCourses.FindAsync(course.Id);
-                        res.CourseDegree = total;
-                        if (course.Course.MinDegree < total)
-                        {
-                            res.Passing = true;
-                        }
-                        await _context.SaveChangesAsync();
-                    }
+                    course.CourseDegree = total;
+                    course.Passing = total > 50;
                 }
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
