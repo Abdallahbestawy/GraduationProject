@@ -13,7 +13,8 @@ namespace GraduationProject.Repository.Repository
         {
             _context = context;
         }
-        public async Task Test(int courseId)
+
+        public async Task<bool> RaisingGradesCourseAsync(int courseId)
         {
             try
             {
@@ -21,68 +22,102 @@ namespace GraduationProject.Repository.Repository
                     .Include(s => s.StudentSemesterCourse.Where(c => c.CourseId == courseId))
                         .ThenInclude(s => s.Course)
                     .Include(s => s.StudentSemesterAssessMethods.Where(c => c.CourseAssessMethod.CourseId == courseId))
-                        .ThenInclude(assess=>assess.CourseAssessMethod) // دا شيله لو هتشتغل كورس كورس
+                        .ThenInclude(assess => assess.CourseAssessMethod)
                     .Where(a => a.AcademyYear.IsCurrent)
                     .ToListAsync();
+                if (students == null || !students.Any())
+                {
+                    return false;
+                }
 
                 foreach (var student in students)
                 {
-
-                    //foreach (var assessMethod in student.StudentSemesterAssessMethods)
-                    //{
-                    //    total += assessMethod.Degree;
-                    //}
-                    //foreach (var course in student.StudentSemesterCourse)
-                    //{
-                    //    var res = await _context.StudentSemesterCourses.FindAsync(course.Id);
-                    //    res.CourseDegree = total;
-                    //    if (course.Course.MinDegree < total)
-                    //    {
-                    //        res.Passing = true;
-                    //    }
-                    //    await _context.SaveChangesAsync();
-                    //}
-                    ////////////////////////////////////////////  الكود اللي تحت دا عشان لو عايز الترك كله مره واحدة
-                    //foreach (var course in student.StudentSemesterCourse)
-                    //{
-                    //    decimal? total = 0;
-                    //    var assessMethods = course.StudentSemester.StudentSemesterAssessMethods
-                    //        .Where(crs => crs.CourseAssessMethod.CourseId == course.CourseId);
-
-                    //    foreach (var assessMethod in assessMethods)
-                    //    {
-                    //        total += assessMethod.Degree;
-                    //    }
-                    //    course.CourseDegree = total;
-                    //    course.Passing = total > 50;
-                    //}
-
-                    decimal? total = 0;
-                    var course = student.StudentSemesterCourse.First();
-
-                    foreach (var assessMethod in course.StudentSemester.StudentSemesterAssessMethods)
+                    if (student == null)
                     {
-                        total += assessMethod.Degree;
+                        continue;
                     }
-                    course.CourseDegree = total;
-                    course.Passing = total > 50;
+                    foreach (var course in student.StudentSemesterCourse)
+                    {
+                        if (course == null)
+                        {
+                            continue;
+                        }
+                        decimal? total = 0;
+
+                        foreach (var assessMethod in course.StudentSemester.StudentSemesterAssessMethods)
+                        {
+                            if (assessMethod == null)
+                            {
+                                continue;
+                            }
+                            total += assessMethod.Degree;
+                        }
+                        course.CourseDegree = total;
+                        course.Passing = total > course.Course.MinDegree;
+                    }
                 }
-                await _context.SaveChangesAsync();
+                return true;
             }
             catch (Exception ex)
             {
-                throw;
+                return false;
             }
-
         }
 
-        private async Task UpdateStudentCourseAsync(StudentSemesterCourse course, decimal total)
+
+        public async Task<bool> RaisingGradesSemesterAsync(int SemId)
         {
-            var studentCourse = await _context.StudentSemesterCourses.FindAsync(course.Id);
-            if (studentCourse != null)
+            try
             {
-                studentCourse.CourseDegree = total;
-                studentCourse.Passing = course.Course.MinDegree < total;
+                var students = await _context.StudentSemesters
+                    .Include(s => s.StudentSemesterCourse)
+                        .ThenInclude(s => s.Course)
+                    .Include(s => s.StudentSemesterAssessMethods)
+                        .ThenInclude(assess => assess.CourseAssessMethod)
+                    .Where(a => a.AcademyYear.IsCurrent && a.ScientificDegreeId == SemId)
+                    .ToListAsync();
+
+                if (students == null || !students.Any())
+                {
+                    return false;
+                }
+
+                foreach (var student in students)
+                {
+                    CalculateStudentCourseDegrees(student);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        private void CalculateStudentCourseDegrees(StudentSemester student)
+        {
+            foreach (var course in student.StudentSemesterCourse)
+            {
+                if (course == null)
+                {
+                    continue;
+                }
+
+                decimal? total = 0;
+                var assessMethods = course.StudentSemester.StudentSemesterAssessMethods
+                    .Where(crs => crs.CourseAssessMethod.CourseId == course.CourseId);
+
+                foreach (var assessMethod in assessMethods)
+                {
+                    if (assessMethod == null)
+                    {
+                        continue;
+                    }
+                    total += assessMethod.Degree;
+                }
+
+                course.CourseDegree = total;
+                course.Passing = total > course.Course.MinDegree;
             }
         }
 

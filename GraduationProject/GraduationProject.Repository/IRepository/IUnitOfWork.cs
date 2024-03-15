@@ -3,7 +3,7 @@ using GraduationProject.Data.Models;
 
 namespace GraduationProject.Repository.IRepository
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         IGeneralRepository<Department> Departments { get; }
         IGeneralRepository<Student> Students { get; }

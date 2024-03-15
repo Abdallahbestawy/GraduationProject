@@ -11,6 +11,25 @@ namespace GraduationProject.Service.Service
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
+
+        public async Task<bool> RaisingGradesSemesterAsync(int semesterId)
+        {
+            try
+            {
+                bool result = await _unitOfWork.StudentSemesters.RaisingGradesSemesterAsync(semesterId);
+                if (result)
+                {
+                    await _unitOfWork.SaveAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         //public async Task Test(int courseId)
         //{
         //    //var students = await _context.StudentSemesterCourses
@@ -57,11 +76,24 @@ namespace GraduationProject.Service.Service
         //        }
         //    }
         //}
-        public async Task Test(int courseId)
+        public async Task<bool> RaisingGradesCourseAsync(int courseId)
         {
-            await _unitOfWork.StudentSemesters.Test(courseId);
+            try
+            {
+                bool result = await _unitOfWork.StudentSemesters.RaisingGradesCourseAsync(courseId);
+                if (result)
+                {
+                    await _unitOfWork.SaveAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
 
-            //await _unitOfWork.SaveAsync();
+
         }
     }
 }
