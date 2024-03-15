@@ -21,7 +21,7 @@ namespace GraduationProject.Repository.Repository
                     .Include(s => s.StudentSemesterCourse.Where(c => c.CourseId == courseId))
                         .ThenInclude(s => s.Course)
                     .Include(s => s.StudentSemesterAssessMethods.Where(c => c.CourseAssessMethod.CourseId == courseId))
-                        .ThenInclude(assess=>assess.CourseAssessMethod) // دا شيله لو هتشتغل كورس كورس
+                        //.ThenInclude(assess=>assess.CourseAssessMethod) // دا شيله لو هتشتغل كورس كورس
                     .Where(a => a.AcademyYear.IsCurrent)
                     .ToListAsync();
 

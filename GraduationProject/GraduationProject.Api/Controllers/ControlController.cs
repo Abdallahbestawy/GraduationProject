@@ -25,7 +25,7 @@ namespace GraduationProject.Api.Controllers
         [HttpGet("test")]
         public async Task<IActionResult> test()
         {
-            await _controlService.Test(1);
+            await _controlService.Test(2);
             return Ok();
         }
     }

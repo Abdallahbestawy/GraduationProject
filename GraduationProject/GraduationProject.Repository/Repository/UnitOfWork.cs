@@ -38,6 +38,10 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels { get; private set; }
         public IGeneralRepository<GetAllModel> GetAllModels { get; private set; }
 
+        public IGeneralRepository<City> Cities { get; private set; }
+        public IGeneralRepository<Country> Countries { get; private set; }
+        public IGeneralRepository<Governorate> Governorates { get; private set; }
+
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
@@ -69,6 +73,9 @@ namespace GraduationProject.Repository.Repository
             GetStaffDetailsByUserIdModels = new GeneralRepository<GetStaffDetailsByUserIdModel>(_context);
             GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels = new GeneralRepository<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel>(_context);
             GetAllModels = new GeneralRepository<GetAllModel>(_context);
+            Cities = new GeneralRepository<City>(_context);
+            Countries = new GeneralRepository<Country>(_context);
+            Governorates = new GeneralRepository<Governorate>(_context);
         }
 
 

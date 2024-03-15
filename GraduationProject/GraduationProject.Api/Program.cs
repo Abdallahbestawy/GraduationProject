@@ -73,6 +73,9 @@ builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<IControlService, ControlService>();
+builder.Services.AddTransient<ICityService, CityService>();
+builder.Services.AddTransient<ICountryService, CountryService>();
+builder.Services.AddTransient<IGovernorateService, GovernorateService>();
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
