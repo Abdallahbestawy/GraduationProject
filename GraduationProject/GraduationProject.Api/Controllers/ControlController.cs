@@ -22,11 +22,25 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [HttpGet("test")]
-        public async Task<IActionResult> test()
+        [HttpGet("RaisingGradesCourse{courseId:int}")]
+        public async Task<IActionResult> RaisingGradesCourse(int courseId)
         {
-            await _controlService.Test(2);
-            return Ok();
+            bool response = await _controlService.RaisingGradesCourseAsync(courseId);
+            if (response)
+            {
+                return Ok("the Raising Grades Course Success");
+            }
+            return BadRequest();
+        }
+        [HttpGet("RaisingGradesSemester{semesterId:int}")]
+        public async Task<IActionResult> RaisingGradesSemester(int semesterId)
+        {
+            bool response = await _controlService.RaisingGradesSemesterAsync(semesterId);
+            if (response)
+            {
+                return Ok("the Raising Grades Semester Success");
+            }
+            return BadRequest();
         }
     }
 }

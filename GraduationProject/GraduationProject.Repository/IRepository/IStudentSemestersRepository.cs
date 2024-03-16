@@ -6,7 +6,7 @@ namespace GraduationProject.Repository.IRepository
     {
         // Task semTest(List<int> courseId);
         Task<bool> RaisingGradesCourseAsync(int courseId);
-        Task<bool> RaisingGradesSemesterAsync(int SemId);
+        Task<bool> RaisingGradesSemesterAsync(int SemesterId);
 
     }
 }
