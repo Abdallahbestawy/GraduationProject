@@ -2,6 +2,7 @@
 {
     public interface IControlService
     {
-        Task Test(int courseId);
+        Task<bool> RaisingGradesSemesterAsync(int semesterId);
+        Task<bool> RaisingGradesCourseAsync(int courseId);
     }
 }
