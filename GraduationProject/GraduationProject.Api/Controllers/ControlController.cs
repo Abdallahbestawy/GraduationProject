@@ -42,5 +42,26 @@ namespace GraduationProject.Api.Controllers
             }
             return BadRequest();
         }
+        [HttpGet("GetAllSemester")]
+        public async Task<IActionResult> GetAllSemester()
+        {
+            var response = await _controlService.GetAllSemesterCurrentAsync();
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            return NotFound("Not Semester Exixt");
+        }
+        [HttpGet("GetAllCourse{semesterId:int}")]
+        public async Task<IActionResult> GetAllCourseBySemesterId(int semesterId)
+        {
+            var response = await _courseService.GetCourseBySemesterIdAsync(semesterId);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            return NotFound("Not Course in Semester Exixt");
+        }
+
     }
 }

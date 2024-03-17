@@ -13,6 +13,29 @@ namespace GraduationProject.Repository.Repository
         {
             _context = context;
         }
+
+        public async Task<List<StudentSemester>> GetAllSemesterCurrentAsync()
+        {
+            try
+            {
+                var semesters = await _context.StudentSemesters
+                    .Include(s => s.ScientificDegree)
+                    .Where(a => a.AcademyYear.IsCurrent)
+                    .GroupBy(a => a.ScientificDegreeId)
+                    .Select(g => g.FirstOrDefault())
+                    .ToListAsync();
+                if (semesters == null || !semesters.Any())
+                {
+                    return null;
+                }
+                return semesters;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task<bool> RaisingGradesCourseAsync(int courseId)
         {
             try
@@ -41,7 +64,6 @@ namespace GraduationProject.Repository.Repository
                         course.Passing = total > 50;
                     }
                 }
-
                 await _context.SaveChangesAsync();
 
                 return true;

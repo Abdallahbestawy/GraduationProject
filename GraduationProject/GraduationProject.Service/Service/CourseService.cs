@@ -365,6 +365,87 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while retrieving Student's assess methods with degrees. Please try again later.");
             }
         }
+        public async Task<List<GetCourseDto>> GetCoursePrerequisiteAsync(int courseId)
+        {
+            var preCourse = await _unitOfWork.CoursePrerequisites
+                .FindWithIncludeIEnumerableAsync(
+                    c => c.Course,
+                    c => c.Prerequisite
+                );
+            if (preCourse == null || !preCourse.Any())
+            {
+                return null;
+            }
+
+            preCourse = preCourse.Where(c => c.CourseId == courseId);
+            if (preCourse == null || !preCourse.Any())
+            {
+                return null;
+            }
+
+            List<GetCourseDto> getCoursePrerequisiteDtos = preCourse
+                .Select(cs => new GetCourseDto
+                {
+                    CourseId = cs.Prerequisite.Id,
+                    CourseName = cs.Prerequisite.Name,
+                    CourseCode = cs.Prerequisite.Code
+                }).ToList();
+
+            return getCoursePrerequisiteDtos;
+        }
+        public async Task<List<GetCourseDto>> GetCourseBySemesterIdAsync(int semesterId)
+        {
+            var courses = await _unitOfWork.Courses.GetEntityByPropertyAsync(c => c.ScientificDegreeId == semesterId);
+            if (courses == null || !courses.Any())
+            {
+                return null;
+            }
+
+            var getCourseDtos = courses.Select(course => new GetCourseDto
+            {
+                CourseId = course.Id,
+                CourseName = course.Name,
+                CourseCode = course.Code
+            }).ToList();
+
+            return getCourseDtos;
+        }
+        public async Task<bool> UpdateCourseStudentsAssessMethodAsync(List<UpdateCourseStudentsAssessMethodDto> updateCourseStudentsAssessMethodDto)
+        {
+            if (updateCourseStudentsAssessMethodDto == null || !updateCourseStudentsAssessMethodDto.Any())
+            {
+                return false;
+            }
+            try
+            {
+                var entitiesToUpdate = new List<StudentSemesterAssessMethod>();
+
+                foreach (var asDto in updateCourseStudentsAssessMethodDto)
+                {
+                    var old = await _unitOfWork.StudentSemesterAssessMethods.GetByIdAsync(asDto.StudentSemesterAssessMethodId);
+                    if (old != null)
+                    {
+                        old.Degree = asDto.Degree;
+                        entitiesToUpdate.Add(old);
+                    }
+                }
+                if (entitiesToUpdate.Any())
+                {
+                    bool result = await _unitOfWork.StudentSemesterAssessMethods.UpdateRangeAsync(entitiesToUpdate);
+                    if (result)
+                    {
+                        await _unitOfWork.SaveAsync();
+                        return true;
+                    }
+                    return false;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
 
         //public async Task GetTest()
         //{

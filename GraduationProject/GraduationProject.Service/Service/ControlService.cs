@@ -1,4 +1,5 @@
 ﻿using GraduationProject.Repository.Repository;
+using GraduationProject.Service.DataTransferObject.SemesterDto;
 using GraduationProject.Service.IService;
 
 namespace GraduationProject.Service.Service
@@ -29,53 +30,6 @@ namespace GraduationProject.Service.Service
                 return false;
             }
         }
-
-        //public async Task Test(int courseId)
-        //{
-        //    //var students = await _context.StudentSemesterCourses
-        //    //    .Where(crs => crs.CourseId == courseId && crs.StudentSemester.AcademyYear.IsCurrent == true)
-        //    //    .Include(sems => sems.StudentSemester)
-        //    //    .Include(assess => assess.StudentSemester.StudentSemesterAssessMethods)
-        //    //        .ThenInclude(assess=>assess.CourseAssessMethod)
-        //    //    .Include(scien => scien.StudentSemester.ScientificDegree)
-        //    //        .ThenInclude(bylaw => bylaw.Bylaw)
-        //    //            .ThenInclude(est => est.EstimatesCourses).ToListAsync();
-        //    var students = await _context.StudentSemesterCourses.
-        //        Where(c => c.CourseId == courseId && c.StudentSemester.AcademyYear.IsCurrent)
-        //       .Include(assess => assess.StudentSemester.StudentSemesterAssessMethods)
-        //         .ThenInclude(assess => assess.CourseAssessMethod).ToListAsync();
-
-        //    foreach (var student in students)
-        //    {
-        //        decimal? total = 0;
-        //        var studentassess = student.StudentSemester.StudentSemesterAssessMethods
-        //            .Where(assess => assess.CourseAssessMethod.CourseId == courseId).ToList();
-        //        foreach (var assess in studentassess)
-        //        {
-        //            total += assess.Degree;
-        //        }
-        //    }
-        //}
-        //public async Task Test(int courseId)
-        //{
-        //    var students = await _context.StudentSemesterCourses
-        //        .Where(c => c.CourseId == courseId && c.StudentSemester.AcademyYear.IsCurrent)
-        //        .Include(assess => assess.StudentSemester.StudentSemesterAssessMethods)
-        //        .ThenInclude(assess => assess.CourseAssessMethod)
-        //        .ToListAsync();
-
-        //    foreach (var student in students)
-        //    {
-        //        decimal? total = 0;
-        //        //var studentAssessments = student.StudentSemester.StudentSemesterAssessMethods
-        //        //    .Where(assess => assess.CourseAssessMethod.CourseId == courseId).ToList();
-
-        //        foreach (var assess in student.StudentSemester.StudentSemesterAssessMethods.)
-        //        {
-        //            total += assess.Degree;
-        //        }
-        //    }
-        //}
         public async Task<bool> RaisingGradesCourseAsync(int courseId)
         {
             try
@@ -93,7 +47,23 @@ namespace GraduationProject.Service.Service
                 return false;
             }
 
+        }
+        public async Task<List<GetAllSemesterCurrentDto>> GetAllSemesterCurrentAsync()
+        {
+            var semesters = await _unitOfWork.StudentSemesters.GetAllSemesterCurrentAsync();
 
+            if (semesters == null)
+            {
+                return null;
+            }
+
+            var getAllSemesterCurrentDtos = semesters.Select(semester => new GetAllSemesterCurrentDto
+            {
+                Id = semester.ScientificDegreeId,
+                Name = semester.ScientificDegree.Name
+            }).ToList();
+
+            return getAllSemesterCurrentDtos;
         }
     }
 }

@@ -102,5 +102,18 @@ namespace GraduationProject.Repository.Repository
             var entities = _context.Set<T>().Where(predicate).ToList();
             return entities;
         }
+        public async Task<bool> UpdateRangeAsync(IEnumerable<T> entities)
+        {
+            try
+            {
+                _context.Set<T>().UpdateRange(entities);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
     }
 }
