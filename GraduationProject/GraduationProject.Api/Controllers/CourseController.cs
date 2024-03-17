@@ -85,11 +85,11 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> UpdateCourseStudentsAssessMethod(List<UpdateCourseStudentsAssessMethodDto> updateCourseStudentsAssessMethodDto)
         {
             var response = await _courseService.UpdateCourseStudentsAssessMethodAsync(updateCourseStudentsAssessMethodDto);
-            if (response != null)
+            if (response)
             {
                 return Ok("Update Succes");
             }
-            return BadRequest("pl Enter Valid Model");
+            return BadRequest("please Enter Valid Model");
 
         }
     }
