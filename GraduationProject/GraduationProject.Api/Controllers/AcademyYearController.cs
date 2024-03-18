@@ -1,5 +1,4 @@
-﻿using GraduationProject.ResponseHandler.Model;
-using GraduationProject.Service.DataTransferObject.AcademyYearDto;
+﻿using GraduationProject.Service.DataTransferObject.AcademyYearDto;
 using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +14,7 @@ namespace GraduationProject.Api.Controllers
             _academyYearService = academyYearService;
         }
 
-        [HttpGet("GetAcademyYearById{Id:int}")]
+        [HttpGet("Get{Id:int}")]
         public async Task<IActionResult> GetAcademyYearById([FromRoute] int Id)
         {
             if (Id.Equals(null))
@@ -27,15 +26,15 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         public async Task<IActionResult> GetAcademyYears()
         {
             var response = await _academyYearService.GetAcademyYearAsync();
-            
-            return StatusCode(response.StatusCode,response);
+
+            return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPost("AddAcademyYear")]
+        [HttpPost("Add")]
         public async Task<IActionResult> AddAcademyYear(AcademyYearDto addAcademyYearDto)
         {
             var response = await _academyYearService.AddAcademyYearAsync(addAcademyYearDto);
@@ -43,7 +42,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPut("UpdateAcademyYear{Id:int}")]
+        [HttpPut("Update{Id:int}")]
         public async Task<IActionResult> UpdateAcademyYear([FromRoute] int Id, [FromBody] AcademyYearDto updateAcademyYearDto)
         {
             if (Id != updateAcademyYearDto.Id)
@@ -55,7 +54,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpDelete("DeleteAcademyYear")]
+        [HttpDelete("Delete")]
         public async Task<IActionResult> DeleteAcademyYear([FromRoute] int Id)
         {
             var response = await _academyYearService.DeleteAcademyYearAsync(Id);
