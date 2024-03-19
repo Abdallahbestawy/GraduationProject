@@ -62,6 +62,12 @@ namespace GraduationProject.Api.Controllers
             }
             return NotFound("Not Course in Semester Exixt");
         }
+        //[HttpGet("Test")]
+        //public async Task<IActionResult> Test()
+        //{
+        //    await _controlService.Test();
+        //    return Ok();
+        //}
 
     }
 }

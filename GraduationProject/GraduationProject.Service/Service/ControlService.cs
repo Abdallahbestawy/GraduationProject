@@ -65,5 +65,10 @@ namespace GraduationProject.Service.Service
 
             return getAllSemesterCurrentDtos;
         }
+        //public async Task Test()
+        //{
+        //    await _unitOfWork.StudentSemesters.CalculateStudentSemesterStatistics(3);
+        //    await _unitOfWork.SaveAsync();
+        //}
     }
 }

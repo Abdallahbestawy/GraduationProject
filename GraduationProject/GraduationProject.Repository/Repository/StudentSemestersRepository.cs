@@ -99,7 +99,12 @@ namespace GraduationProject.Repository.Repository
                     }
                     await CalculateStudentCourseDegrees(student);
                 }
-                return true;
+                bool result = await CalculateStudentSemesterStatistics(SemesterId);
+                if (result)
+                {
+                    return true;
+                }
+                return false;
             }
             catch (Exception ex)
             {
@@ -107,8 +112,7 @@ namespace GraduationProject.Repository.Repository
 
             }
         }
-
-        private async Task CalculateStudentCourseDegrees(StudentSemester student) // Changed return type to Task
+        private async Task CalculateStudentCourseDegrees(StudentSemester student)
         {
             foreach (var course in student.StudentSemesterCourse)
             {
@@ -135,5 +139,54 @@ namespace GraduationProject.Repository.Repository
             }
 
         }
+        private async Task<bool> CalculateStudentSemesterStatistics(int scientificDegreeId)
+        {
+            try
+            {
+                var studentSemesters = await _context.StudentSemesters
+                    .Include(ss => ss.StudentSemesterCourse)
+                        .ThenInclude(s => s.Course)
+                    .Include(ss => ss.ScientificDegree)
+                    .Where(ss => ss.ScientificDegreeId == scientificDegreeId)
+                    .Where(ss => ss.AcademyYear.IsCurrent)
+                    .ToListAsync();
+                if (studentSemesters == null || !studentSemesters.Any())
+                {
+                    return false;
+                }
+
+                foreach (var studentSemester in studentSemesters)
+                {
+                    var studentCourses = studentSemester.StudentSemesterCourse.Where(sc => sc.StudentSemesterId == studentSemester.Id).ToList();
+                    if (studentCourses == null || !studentCourses.Any())
+                    {
+                        continue;
+                    }
+
+                    decimal? totalMaxDegree = studentCourses.Sum(sc => sc.Course.MaxDegree);
+                    decimal? totalCourseDegree = studentCourses.Sum(sc => sc.CourseDegree);
+
+                    studentSemester.Total = totalCourseDegree;
+                    studentSemester.Percentage = totalMaxDegree != 0 ? totalCourseDegree / totalMaxDegree : null;
+
+                    if (studentSemester.ScientificDegree.SuccessPercentageSemester.HasValue)
+                    {
+                        studentSemester.Passing = studentSemester.Percentage > studentSemester.ScientificDegree.SuccessPercentageSemester;
+                    }
+                    else
+                    {
+                        studentSemester.Passing = true;
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+
     }
 }
+
