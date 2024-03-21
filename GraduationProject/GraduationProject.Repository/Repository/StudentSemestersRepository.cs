@@ -168,6 +168,7 @@ namespace GraduationProject.Repository.Repository
 
                     studentSemester.Total = totalCourseDegree;
                     studentSemester.Percentage = totalMaxDegree != 0 ? totalCourseDegree / totalMaxDegree : null;
+                    studentSemester.TotalCourses = totalMaxDegree;
 
                     if (studentSemester.ScientificDegree.SuccessPercentageSemester.HasValue)
                     {
@@ -185,8 +186,70 @@ namespace GraduationProject.Repository.Repository
                 return false;
             }
         }
+        public async Task Test(int scientificDegreeId)
+        {
+            List<StudentSemester> studentSemesters = new List<StudentSemester>();
+            var stdCompl = await _context.StudentSemesters.Include(d => d.ScientificDegree).Where(ss => /*ss.ScientificDegreeId == scientificDegreeId &&*/
+            ss.AcademyYear.IsCurrent).ToListAsync();
+            var std = stdCompl.Where(s => s.ScientificDegreeId == scientificDegreeId);
+            var Index = std.FirstOrDefault().ScientificDegree.Order;
+            Index++;
+            var stdsem = await _context.ScientificDegrees.Where(s => s.Order == Index).FirstOrDefaultAsync();
+            var sd = std.FirstOrDefault();
+            if (sd.ScientificDegree.ParentId == stdsem.ParentId)
+            {
+                foreach (var s in std)
+                    if (s.ScientificDegree.ParentId == stdsem.ParentId)
+                    {
+                        StudentSemester newstudentSemester = new StudentSemester();
+
+                        if (s.Passing)
+                        {
+                            {
+                                newstudentSemester.ScientificDegreeId = stdsem.Id;
+                                newstudentSemester.AcademyYearId = s.AcademyYearId;
+                                newstudentSemester.DepartmentId = s.DepartmentId;
+                                newstudentSemester.StudentId = s.StudentId;
+                            };
+                        }
+                        else
+                        {
+                            newstudentSemester.ScientificDegreeId = s.ScientificDegreeId;
+                            newstudentSemester.AcademyYearId = s.AcademyYearId;
+                            newstudentSemester.DepartmentId = s.DepartmentId;
+                            newstudentSemester.StudentId = s.StudentId;
+                        }
+                        studentSemesters.Add(newstudentSemester);
+                    }
+            }
+            else
+            {
+                var parent1 = await _context.ScientificDegrees.Where(sh => sh.Id == sd.ScientificDegree.ParentId).FirstOrDefaultAsync();
+                var parent2 = await _context.ScientificDegrees.Where(sh => sh.Id == stdsem.ParentId).FirstOrDefaultAsync();
+                if (parent1.ParentId == parent2.ParentId)
+                {
+                    foreach (var sn in std)
+                    {
+                        //if (parent2.SuccessPercentageBand != null)
+                        // {
+                        decimal? total = 0;
+                        var stdTest = stdCompl.Where(d => d.StudentId == sn.StudentId).ToList();
+                        decimal? total1 = 0;
+                        decimal? tolal2 = 0;
+                        foreach (var id in stdTest)
+                        {
+                            total1 = id.Total;
+                            tolal2 = id.TotalCourses;
+                        }
+                        //}
+                    }
+                }
+
+
+                await _context.AddRangeAsync(studentSemesters);
+            }
+        }
 
 
     }
 }
-

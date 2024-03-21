@@ -61,7 +61,7 @@ namespace GraduationProject.Service.Service
             try
             {
                 var bandEntities = await _unitOfWork.Bands.GetAll();
-                if(!bandEntities.Any())
+                if (!bandEntities.Any())
                     return Response<IQueryable<BandDto>>.NoContent("No Bands is exist");
 
                 var bandDto = bandEntities.Select(entity => new BandDto
@@ -73,7 +73,7 @@ namespace GraduationProject.Service.Service
                     FacultyId = entity.FacultyId
                 });
 
-                return Response<IQueryable<BandDto>>.Success(bandDto,"Bands retrieved successfully").WithCount();
+                return Response<IQueryable<BandDto>>.Success(bandDto, "Bands retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {

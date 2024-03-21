@@ -28,6 +28,8 @@ namespace GraduationProject.Data.Entity
         public decimal? Percentage { get; set; }
         public bool Passing { get; set; } = false;
         public char? Char { get; set; }
+        public decimal? TotalCourses { get; set; }
+
         public virtual ICollection<StudentSemesterAssessMethod> StudentSemesterAssessMethods { get; set; } = new List<StudentSemesterAssessMethod>();
         public virtual ICollection<StudentSemesterCourse> StudentSemesterCourse { get; set; } = new List<StudentSemesterCourse>();
     }

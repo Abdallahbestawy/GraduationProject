@@ -23,7 +23,7 @@ namespace GraduationProject.Service.DataTransferObject.ScientificDegreeDto
 
         public decimal? SuccessPercentagePhase { get; set; }
 
-        public int? BylawId { get; set; }
+        public int BylawId { get; set; }
 
         public int? BandId { get; set; }
 

@@ -27,7 +27,7 @@ namespace GraduationProject.Data.Entity
         public decimal? SuccessPercentagePhase { get; set; }
 
         [ForeignKey("Bylaw")]
-        public int? BylawId { get; set; } = null;
+        public int BylawId { get; set; }
         public Bylaw? Bylaw { get; set; }
 
         [ForeignKey("Band")]

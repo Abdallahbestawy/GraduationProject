@@ -4,6 +4,7 @@ using GraduationProject.EntityFramework.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GraduationProject.EntityFramework.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240321004808_AddTotalCourse")]
+    partial class AddTotalCourse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -678,7 +680,7 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Property<int?>("BandId")
                         .HasColumnType("int");
 
-                    b.Property<int>("BylawId")
+                    b.Property<int?>("BylawId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -1596,9 +1598,7 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     b.HasOne("GraduationProject.Data.Entity.Bylaw", "Bylaw")
                         .WithMany("ScientificDegrees")
-                        .HasForeignKey("BylawId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BylawId");
 
                     b.HasOne("GraduationProject.Data.Entity.ExamRole", "ExamRole")
                         .WithMany("ScientificDegrees")
