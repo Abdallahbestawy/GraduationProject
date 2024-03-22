@@ -10,5 +10,6 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> DeleteBandAsync(int bandId);
         Task<Response<BandDto>> GetBandByIdAsync(int bandId);
         Task<Response<IQueryable<BandDto>>> GetBandAsync();
+        Task<Response<IQueryable<BandDto>>> GetBandByFacultyIdAsync(int facultyId);
     }
 }

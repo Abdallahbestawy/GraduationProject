@@ -10,6 +10,7 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> DeleteScientificDegreeAsync(int ScientificDegreeId);
         Task<Response<ScientificDegreeDto>> GetScientificDegreeByIdAsync(int ScientificDegreeId);
         Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeAsync();
+        Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeByBylawIdAsync(int bylawId);
         Task<Response<GetDetailsByParentIdDto>> GetDetailsByParentIdAsync(int ParentId);
     }
 }

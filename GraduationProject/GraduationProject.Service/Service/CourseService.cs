@@ -14,11 +14,13 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+
         public CourseService(UnitOfWork unitOfWork, IMailService mailService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
         }
+
         public async Task<Response<int>> AddCourseAsync(CourseDto addCourseDto)
         {
             Course newCourse = new Course
@@ -92,8 +94,10 @@ namespace GraduationProject.Service.Service
             try
             {
                 var courseEntity = await _unitOfWork.Courses.GetByIdAsync(CourseId);
+
                 if (courseEntity == null)
                     return Response<CourseDto>.BadRequest("This course doesn't exist");
+
                 CourseDto courseDto = new CourseDto
                 {
                     Name = courseEntity.Name,
@@ -108,6 +112,7 @@ namespace GraduationProject.Service.Service
                     ScientificDegreeId = courseEntity.ScientificDegreeId,
                     DepartmentId = courseEntity.DepartmentId
                 };
+
                 return Response<CourseDto>.Success(courseDto, "Course retrieved successfully").WithCount();
             }
             catch (Exception ex)
@@ -130,8 +135,9 @@ namespace GraduationProject.Service.Service
             try
             {
                 var bandEntities = await _unitOfWork.Courses.GetAll();
+
                 if (!bandEntities.Any())
-                    return Response<IQueryable<CourseDto>>.NoContent("No courses is exist");
+                    return Response<IQueryable<CourseDto>>.NoContent("No courses are exist");
 
                 var courseDto = bandEntities.Select(entity => new CourseDto
                 {
@@ -170,6 +176,7 @@ namespace GraduationProject.Service.Service
             try
             {
                 Course existingCourse = await _unitOfWork.Courses.GetByIdAsync(updateCourseDto.Id);
+
                 if (existingCourse == null)
                     return Response<int>.BadRequest("This course doesn't exist");
 
@@ -187,6 +194,7 @@ namespace GraduationProject.Service.Service
 
                 await _unitOfWork.Courses.Update(existingCourse);
                 var result = await _unitOfWork.SaveAsync();
+
                 if (result > 0)
                     return Response<int>.Updated("course updated successfully");
 
@@ -207,15 +215,19 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while updating courses. Please try again later.");
             }
         }
+
         public async Task<Response<int>> DeleteCourseAsync(int CourseId)
         {
             try
             {
                 var existingCourse = await _unitOfWork.Courses.GetByIdAsync(CourseId);
+
                 if (existingCourse == null)
                     return Response<int>.BadRequest("This course doesn't exist");
+
                 await _unitOfWork.Courses.Delete(existingCourse);
                 var result = await _unitOfWork.SaveAsync();
+
                 if (result > 0)
                     return Response<int>.Deleted("course deleted successfully");
 
@@ -271,6 +283,7 @@ namespace GraduationProject.Service.Service
                 }).ToList();
                 await _unitOfWork.CourseAssessMethods.AddRangeAsync(newCourseAssessMethods);
                 var result = await _unitOfWork.SaveAsync();
+
                 if (result > 0)
                     return Response<int>.Created("course assigned to assess methods successfully");
 
@@ -325,7 +338,7 @@ namespace GraduationProject.Service.Service
                     .CallStoredProcedureAsync("EXECUTE SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus", pCourseId, pIsControlStatus);
 
                 if (courseStudentAssessMethods == null)
-                    return Response<CourseStudentsAssessMethodDto>.NoContent("No Student's assess methods with degrees exist");
+                    return Response<CourseStudentsAssessMethodDto>.NoContent("No Student's assess methods with degrees are exist");
 
                 var courseStudentAssessMethodDto = new CourseStudentsAssessMethodDto
                 {
@@ -360,62 +373,96 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<CourseStudentsAssessMethodDto>
-                    .ServerError("Error occured while retrieving Student's assess methods with degrees",
+                return Response<CourseStudentsAssessMethodDto>.ServerError("Error occured while retrieving Student's assess methods with degrees",
                     "An unexpected error occurred while retrieving Student's assess methods with degrees. Please try again later.");
             }
         }
-        public async Task<List<GetCourseDto>> GetCoursePrerequisiteAsync(int courseId)
+
+        public async Task<Response<List<GetCourseDto>>> GetCoursePrerequisiteAsync(int courseId)
         {
-            var preCourse = await _unitOfWork.CoursePrerequisites
-                .FindWithIncludeIEnumerableAsync(
-                    c => c.Course,
-                    c => c.Prerequisite
-                );
-            if (preCourse == null || !preCourse.Any())
+            try
             {
-                return null;
-            }
+                if (await _unitOfWork.Courses.GetByIdAsync(courseId) == null)
+                    return Response<List<GetCourseDto>>.BadRequest("This course doesn't exist");
 
-            preCourse = preCourse.Where(c => c.CourseId == courseId);
-            if (preCourse == null || !preCourse.Any())
+                var preCourse = await _unitOfWork.CoursePrerequisites
+                    .FindWithIncludeIEnumerableAsync(
+                        c => c.Course,
+                        c => c.Prerequisite
+                    );
+                if (preCourse == null || !preCourse.Any())
+                    return Response<List<GetCourseDto>>.NoContent("No Prerequisites are exist");
+
+                preCourse = preCourse.Where(c => c.CourseId == courseId);
+                if (preCourse == null || !preCourse.Any())
+                    return Response<List<GetCourseDto>>.NoContent("No Prerequisites are exist for this course");
+
+                List<GetCourseDto> getCoursePrerequisiteDtos = preCourse
+                    .Select(cs => new GetCourseDto
+                    {
+                        CourseId = cs.Prerequisite.Id,
+                        CourseName = cs.Prerequisite.Name,
+                        CourseCode = cs.Prerequisite.Code
+                    }).ToList();
+
+                return Response<List<GetCourseDto>>.Success(getCoursePrerequisiteDtos, "Prerequisites are retrieved successfully").WithCount();
+            }
+            catch(Exception ex)
             {
-                return null;
-            }
-
-            List<GetCourseDto> getCoursePrerequisiteDtos = preCourse
-                .Select(cs => new GetCourseDto
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    CourseId = cs.Prerequisite.Id,
-                    CourseName = cs.Prerequisite.Name,
-                    CourseCode = cs.Prerequisite.Code
+                    ClassName = "CourseService",
+                    MethodName = "GetCoursePrerequisiteAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetCourseDto>>.ServerError("Error occured while retrieving course's Prerequisites",
+                    "An unexpected error occurred while retrieving course's Prerequisites. Please try again later.");
+            }
+        }
+
+        public async Task<Response<List<GetCourseDto>>> GetCourseBySemesterIdAsync(int semesterId)
+        {
+            try
+            {
+                if (_unitOfWork.Semesters.GetByIdAsync(semesterId) == null)
+                    return Response<List<GetCourseDto>>.BadRequest("This semester doesn't exist");
+
+                var courses = await _unitOfWork.Courses.GetEntityByPropertyAsync(c => c.ScientificDegreeId == semesterId);
+
+                if (courses == null || !courses.Any())
+                    return Response<List<GetCourseDto>>.NoContent("No coureses are exist");
+
+                var getCourseDtos = courses.Select(course => new GetCourseDto
+                {
+                    CourseId = course.Id,
+                    CourseName = course.Name,
+                    CourseCode = course.Code
                 }).ToList();
 
-            return getCoursePrerequisiteDtos;
-        }
-        public async Task<List<GetCourseDto>> GetCourseBySemesterIdAsync(int semesterId)
-        {
-            var courses = await _unitOfWork.Courses.GetEntityByPropertyAsync(c => c.ScientificDegreeId == semesterId);
-            if (courses == null || !courses.Any())
-            {
-                return null;
+                return Response<List<GetCourseDto>>.Success(getCourseDtos, "Courses are retrieved successfully").WithCount();
             }
-
-            var getCourseDtos = courses.Select(course => new GetCourseDto
+            catch (Exception ex)
             {
-                CourseId = course.Id,
-                CourseName = course.Name,
-                CourseCode = course.Code
-            }).ToList();
-
-            return getCourseDtos;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "CourseService",
+                    MethodName = "GetCourseBySemesterIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetCourseDto>>.ServerError("Error occured while retrieving semester's courses",
+                    "An unexpected error occurred while retrieving semester's courses. Please try again later.");
+            }
         }
-        public async Task<bool> UpdateCourseStudentsAssessMethodAsync(List<UpdateCourseStudentsAssessMethodDto> updateCourseStudentsAssessMethodDto)
+
+        public async Task<Response<bool>> UpdateCourseStudentsAssessMethodAsync(List<UpdateCourseStudentsAssessMethodDto> updateCourseStudentsAssessMethodDto)
         {
             if (updateCourseStudentsAssessMethodDto == null || !updateCourseStudentsAssessMethodDto.Any())
-            {
-                return false;
-            }
+                return Response<bool>.BadRequest("Please enter valid degrees");
+
             try
             {
                 var entitiesToUpdate = new List<StudentSemesterAssessMethod>();
@@ -429,21 +476,32 @@ namespace GraduationProject.Service.Service
                         entitiesToUpdate.Add(old);
                     }
                 }
-                if (entitiesToUpdate.Any())
-                {
-                    bool result = await _unitOfWork.StudentSemesterAssessMethods.UpdateRangeAsync(entitiesToUpdate);
-                    if (result)
-                    {
-                        await _unitOfWork.SaveAsync();
-                        return true;
-                    }
-                    return false;
-                }
-                return false;
+
+                if (!entitiesToUpdate.Any())
+                    return Response<bool>.BadRequest("Student Semester Assess Methods doesn't exist");
+
+                bool result = await _unitOfWork.StudentSemesterAssessMethods.UpdateRangeAsync(entitiesToUpdate);
+
+                if (!result)
+                    return Response<bool>.ServerError("Error occured while updating Student Semester Assess Methods",
+                    "An unexpected error occurred while updating Student Semester Assess Methods. Please try again later.");
+
+                await _unitOfWork.SaveAsync();
+
+                return Response<bool>.Updated("Student Semester Assess Methods updated successfully");
             }
             catch (Exception ex)
             {
-                return false;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "CourseService",
+                    MethodName = "UpdateCourseStudentsAssessMethodAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while updating Student Semester Assess Methods",
+                    "An unexpected error occurred while updating Student Semester Assess Methods. Please try again later.");
             }
         }
 

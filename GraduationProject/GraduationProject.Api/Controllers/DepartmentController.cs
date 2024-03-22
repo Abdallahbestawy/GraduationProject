@@ -23,7 +23,7 @@ namespace GraduationProject.Api.Controllers
         [HttpGet("All")]
         public async Task<IActionResult> GetAllDepartment()
         {
-            var response = await _departmentService.GetDepartmentAllAsync();
+            var response = await _departmentService.GetAllDepartmentsAsync();
             if (response != null)
             {
                 return Ok(response);
@@ -33,12 +33,9 @@ namespace GraduationProject.Api.Controllers
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateDepartment(DepartmentDto updateDepartmentDto)
         {
-            bool response = await _departmentService.UpdateDepartmentAsync(updateDepartmentDto);
-            if (response)
-            {
-                return Ok("Update Success");
-            }
-            return NotFound("Please Enter Valide Model");
+            var response = await _departmentService.UpdateDepartmentAsync(updateDepartmentDto);
+            
+            return StatusCode(response.StatusCode, response);
         }
         [HttpGet("Get{Id:int}")]
         public async Task<IActionResult> GetDepartmentById([FromRoute] int Id)
@@ -53,12 +50,9 @@ namespace GraduationProject.Api.Controllers
         [HttpDelete("Delete{Id:int}")]
         public async Task<IActionResult> DeleteDepartment(int Id)
         {
-            bool response = await _departmentService.DeleteDepartmentAsync(Id);
-            if (response)
-            {
-                return Ok("Delete Success");
-            }
-            return NotFound("Please Enter Valide Id");
+            var response = await _departmentService.DeleteDepartmentAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

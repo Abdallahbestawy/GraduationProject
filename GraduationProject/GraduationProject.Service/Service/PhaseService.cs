@@ -13,11 +13,13 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+
         public PhaseService(UnitOfWork unitOfWork, IMailService mailService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
         }
+
         public async Task<Response<int>> AddPhaseAsync(PhaseDto addPhaseDto)
         {
             try
@@ -53,13 +55,12 @@ namespace GraduationProject.Service.Service
             }
         }
 
-
-
         public async Task<Response<IQueryable<PhaseDto>>> GetPhaseAsync()
         {
             try
             {
                 var phaseEntities = await _unitOfWork.Phases.GetAll();
+
                 if (!phaseEntities.Any())
                     return Response<IQueryable<PhaseDto>>.NoContent("No phases are exist");
 
@@ -94,6 +95,7 @@ namespace GraduationProject.Service.Service
             try
             {
                 var phaseEntity = await _unitOfWork.Phases.GetByIdAsync(PhaseId);
+
                 if (phaseEntity == null)
                     return Response<PhaseDto>.BadRequest("This phase doesn't exist");
 
@@ -105,6 +107,7 @@ namespace GraduationProject.Service.Service
                     Order = phaseEntity.Order,
                     FacultyId = phaseEntity.FacultyId
                 };
+
                 return Response<PhaseDto>.Success(phaseDto, "Phase retrieved successfully").WithCount();
             }
             catch(Exception ex)
@@ -127,6 +130,7 @@ namespace GraduationProject.Service.Service
             try
             {
                 Phase existingPhase = await _unitOfWork.Phases.GetByIdAsync(updatePhaseDto.Id);
+
                 if (existingPhase == null)
                     return Response<int>.BadRequest("This phase doesn't exist");
 
@@ -158,11 +162,13 @@ namespace GraduationProject.Service.Service
                         "An unexpected error occurred while updating phase. Please try again later.");
             }
         }
+
         public async Task<Response<int>> DeletePhaseAsync(int PhaseId)
         {
             try
             {
                 var existingPhase = await _unitOfWork.Phases.GetByIdAsync(PhaseId);
+
                 if (existingPhase == null)
                     return Response<int>.BadRequest("This phase doesn't exist");
 
@@ -187,6 +193,41 @@ namespace GraduationProject.Service.Service
                 });
                 return Response<int>.ServerError("Error occured while deleting phase",
                         "An unexpected error occurred while deleting phase. Please try again later.");
+            }
+        }
+
+        public async Task<Response<IQueryable<PhaseDto>>> GetPhaseByFacultyIdAsync(int facultyId)
+        {
+            try
+            {
+                var phaseEntities = await _unitOfWork.Phases.GetEntityByPropertyAsync(phase => phase.FacultyId == facultyId);
+
+                if (!phaseEntities.Any())
+                    return Response<IQueryable<PhaseDto>>.NoContent("No phases are exist");
+
+                var phaseDtos = phaseEntities.Select(entity => new PhaseDto
+                {
+                    Id = entity.Id,
+                    Name = entity.Name,
+                    Code = entity.Code,
+                    Order = entity.Order,
+                    FacultyId = entity.FacultyId
+                });
+
+                return Response<IQueryable<PhaseDto>>.Success(phaseDtos.AsQueryable(), "Phases retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "PhaseService",
+                    MethodName = "GetPhaseByFacultyIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<IQueryable<PhaseDto>>.ServerError("Error occured while retrieving phases",
+                    "An unexpected error occurred while retrieving phases. Please try again later.");
             }
         }
     }

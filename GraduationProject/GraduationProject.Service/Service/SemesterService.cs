@@ -13,11 +13,13 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+
         public SemesterService(UnitOfWork unitOfWork, IMailService mailService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
         }
+
         public async Task<Response<int>> AddSemesterAsync(SemesterDto addSemesterDto)
         {
             try
@@ -58,6 +60,7 @@ namespace GraduationProject.Service.Service
             try
             {
                 var semesterEntities = await _unitOfWork.Semesters.GetAll();
+
                 if (!semesterEntities.Any())
                     return Response<IQueryable<SemesterDto>>.NoContent("No semesters are exist");
 
@@ -125,6 +128,7 @@ namespace GraduationProject.Service.Service
             try
             {
                 Semester existingSemester = await _unitOfWork.Semesters.GetByIdAsync(updateSemesterDto.Id);
+
                 if (existingSemester == null)
                     return Response<int>.BadRequest("This semester doesn't exist");
 
@@ -156,11 +160,13 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while updating Semester. Please try again later.");
             }
         }
+
         public async Task<Response<int>> DeleteSemesterAsync(int SemesterId)
         {
             try
             {
                 var existingSemester = await _unitOfWork.Semesters.GetByIdAsync(SemesterId);
+
                 if (existingSemester == null)
                     return Response<int>.BadRequest("This semester doesn't exist");
 
@@ -185,6 +191,41 @@ namespace GraduationProject.Service.Service
                 });
                 return Response<int>.ServerError("Error occured while deleting Semester",
                     "An unexpected error occurred while deleting Semester. Please try again later.");
+            }
+        }
+
+        public async Task<Response<IQueryable<SemesterDto>>> GetSemesterByFacultyIdAsync(int facultyId)
+        {
+            try
+            {
+                var semesterEntities = await _unitOfWork.Semesters.GetEntityByPropertyAsync(semes => semes.FacultyId == facultyId);
+
+                if (!semesterEntities.Any())
+                    return Response<IQueryable<SemesterDto>>.NoContent("No semesters are exist");
+
+                var semesterDtos = semesterEntities.Select(entity => new SemesterDto
+                {
+                    Id = entity.Id,
+                    Name = entity.Name,
+                    Code = entity.Code,
+                    Order = entity.Order,
+                    FacultyId = entity.FacultyId
+                });
+
+                return Response<IQueryable<SemesterDto>>.Success(semesterDtos.AsQueryable(), "Semesters retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "SemesterService",
+                    MethodName = "GetSemesterAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<IQueryable<SemesterDto>>.ServerError("Error occured while Retrieving Semesters",
+                    "An unexpected error occurred while Retrieving Semesters. Please try again later.");
             }
         }
     }

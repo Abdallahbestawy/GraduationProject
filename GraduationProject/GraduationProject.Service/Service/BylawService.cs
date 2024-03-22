@@ -13,11 +13,13 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+
         public BylawService(UnitOfWork unitOfWork, IMailService mailService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
         }
+
         public async Task<Response<int>> AddBylawAsync(BylawDto addBylawDto)
         {
             Bylaw newBylaw = new Bylaw
@@ -126,8 +128,9 @@ namespace GraduationProject.Service.Service
             try
             {
                 var bylawEntities = await _unitOfWork.Bylaws.GetAll();
+
                 if (!bylawEntities.Any())
-                    return Response<IQueryable<BylawDto>>.NoContent("No Bylaws is exist");
+                    return Response<IQueryable<BylawDto>>.NoContent("No Bylaws are exist");
 
                 var bylawDtos = bylawEntities.Select(entity => new BylawDto
                 {
@@ -161,8 +164,10 @@ namespace GraduationProject.Service.Service
             try
             {
                 var bylawEntity = await _unitOfWork.Bylaws.GetByIdAsync(BylawId);
+
                 if (bylawEntity == null)
                     return Response<BylawDto>.BadRequest("This bylaw doesn't exist");
+
                 BylawDto bylawDto = new BylawDto
                 {
                     Id = bylawEntity.Id,
@@ -173,6 +178,7 @@ namespace GraduationProject.Service.Service
                     End = bylawEntity.End,
                     FacultyId = bylawEntity.FacultyId
                 };
+
                 return Response<BylawDto>.Success(bylawDto, "Bylaw retrieved successfully").WithCount();
             }
             catch (Exception ex)
@@ -195,8 +201,10 @@ namespace GraduationProject.Service.Service
             try
             {
                 Bylaw existingBylaw = await _unitOfWork.Bylaws.GetByIdAsync(updateBylawDto.Id);
+
                 if (existingBylaw == null)
                     return Response<int>.BadRequest("This bylaw doesn't exist");
+
                 existingBylaw.Name = updateBylawDto.Name;
                 existingBylaw.Description = updateBylawDto.Description;
                 existingBylaw.Type = updateBylawDto.Type;
@@ -206,6 +214,7 @@ namespace GraduationProject.Service.Service
 
                 await _unitOfWork.Bylaws.Update(existingBylaw);
                 var result = await _unitOfWork.SaveAsync();
+
                 if (result > 0)
                     return Response<int>.Updated("Bylaw updated successfully");
 
@@ -226,15 +235,19 @@ namespace GraduationProject.Service.Service
                         "An unexpected error occurred while updating bylaw. Please try again later.");
             }
         }
+
         public async Task<Response<int>> DeleteBylawAsync(int BylawId)
         {
             try
             {
                 var existingBlaw = await _unitOfWork.Bylaws.GetByIdAsync(BylawId);
+
                 if (existingBlaw == null)
                     return Response<int>.BadRequest("This bylaw doesn't exist");
+
                 await _unitOfWork.Bylaws.Delete(existingBlaw);
                 var result = await _unitOfWork.SaveAsync();
+
                 if (result > 0)
                     return Response<int>.Deleted("Bylaw deleted successfully");
 

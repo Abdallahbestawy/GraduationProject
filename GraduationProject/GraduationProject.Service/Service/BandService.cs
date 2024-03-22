@@ -13,11 +13,13 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+
         public BandService(UnitOfWork unitOfWork, IMailService mailService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
         }
+        
         public async Task<Response<int>> AddBandAsync(BandDto addBandDto)
         {
             try
@@ -35,8 +37,7 @@ namespace GraduationProject.Service.Service
                 if (result > 0)
                     return Response<int>.Created("Band added successfully");
 
-                return Response<int>
-                    .ServerError("Error occured while adding Band",
+                return Response<int>.ServerError("Error occured while adding Band",
                     "An unexpected error occurred while adding Band. Please try again later.");
             }
             catch (Exception ex)
@@ -49,20 +50,19 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<int>
-                    .ServerError("Error occured while adding Band",
+                return Response<int>.ServerError("Error occured while adding Band",
                     "An unexpected error occurred while adding Band. Please try again later.");
             }
         }
-
 
         public async Task<Response<IQueryable<BandDto>>> GetBandAsync()
         {
             try
             {
                 var bandEntities = await _unitOfWork.Bands.GetAll();
+
                 if (!bandEntities.Any())
-                    return Response<IQueryable<BandDto>>.NoContent("No Bands is exist");
+                    return Response<IQueryable<BandDto>>.NoContent("No Bands are exist");
 
                 var bandDto = bandEntities.Select(entity => new BandDto
                 {
@@ -85,8 +85,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<IQueryable<BandDto>>
-                    .ServerError("Error occured while retrieving Bands",
+                return Response<IQueryable<BandDto>>.ServerError("Error occured while retrieving Bands",
                     "An unexpected error occurred while retrieving Bands. Please try again later.");
             }
         }
@@ -96,8 +95,10 @@ namespace GraduationProject.Service.Service
             try
             {
                 var bandEntity = await _unitOfWork.Bands.GetByIdAsync(bandId);
+                
                 if (bandEntity == null)
                     return Response<BandDto>.BadRequest("This band doesn't exist");
+                
                 BandDto bandDto = new BandDto
                 {
                     Id = bandEntity.Id,
@@ -106,6 +107,7 @@ namespace GraduationProject.Service.Service
                     Order = bandEntity.Order,
                     FacultyId = bandEntity.FacultyId
                 };
+                
                 return Response<BandDto>.Success(bandDto, "Band retrieved successfully").WithCount();
             }
             catch (Exception ex)
@@ -118,8 +120,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<BandDto>
-                    .ServerError("Error occured while retrieving Band",
+                return Response<BandDto>.ServerError("Error occured while retrieving Band",
                     "An unexpected error occurred while retrieving Band. Please try again later.");
             }
         }
@@ -129,8 +130,10 @@ namespace GraduationProject.Service.Service
             try
             {
                 Band existingBand = await _unitOfWork.Bands.GetByIdAsync(updateBandDto.Id);
+
                 if (existingBand == null)
                     return Response<int>.BadRequest("This band doesn't exist");
+                
                 existingBand.Name = updateBandDto.Name;
                 existingBand.Code = updateBandDto.Code;
                 existingBand.Order = updateBandDto.Order;
@@ -142,8 +145,7 @@ namespace GraduationProject.Service.Service
                 if (result > 0)
                     return Response<int>.Updated("Band updated successfully");
 
-                return Response<int>
-                    .ServerError("Error occured while updating Band",
+                return Response<int>.ServerError("Error occured while updating Band",
                     "An unexpected error occurred while updating Band. Please try again later.");
             }
             catch (Exception ex)
@@ -156,26 +158,27 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<int>
-                    .ServerError("Error occured while updating Band",
+                return Response<int>.ServerError("Error occured while updating Band",
                     "An unexpected error occurred while updating Band. Please try again later.");
             }
         }
+
         public async Task<Response<int>> DeleteBandAsync(int bandId)
         {
             try
             {
                 var existingBand = await _unitOfWork.Bands.GetByIdAsync(bandId);
+
                 if (existingBand == null)
                     return Response<int>.BadRequest("This band doesn't exist");
+
                 await _unitOfWork.Bands.Delete(existingBand);
                 var result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
                     return Response<int>.Deleted("Band deleted successfully");
 
-                return Response<int>
-                    .ServerError("Error occured while deleting Band",
+                return Response<int>.ServerError("Error occured while deleting Band",
                     "An unexpected error occurred while deleting Band. Please try again later.");
             }
             catch (Exception ex)
@@ -188,9 +191,43 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<int>
-                    .ServerError("Error occured while deleting Band",
+                return Response<int>.ServerError("Error occured while deleting Band",
                     "An unexpected error occurred while deleting Band. Please try again later.");
+            }
+        }
+
+        public async Task<Response<IQueryable<BandDto>>> GetBandByFacultyIdAsync(int facultyId)
+        {
+            try
+            {
+                var bandEntities = await _unitOfWork.Bands.GetEntityByPropertyAsync(band=>band.FacultyId == facultyId);
+
+                if (!bandEntities.Any())
+                    return Response<IQueryable<BandDto>>.NoContent("No Bands are exist");
+
+                var bandDto = bandEntities.Select(entity => new BandDto
+                {
+                    Id = entity.Id,
+                    Name = entity.Name,
+                    Code = entity.Code,
+                    Order = entity.Order,
+                    FacultyId = entity.FacultyId
+                });
+
+                return Response<IQueryable<BandDto>>.Success(bandDto.AsQueryable(), "Bands retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "BandService",
+                    MethodName = "GetBandAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<IQueryable<BandDto>>.ServerError("Error occured while retrieving Bands",
+                    "An unexpected error occurred while retrieving Bands. Please try again later.");
             }
         }
     }

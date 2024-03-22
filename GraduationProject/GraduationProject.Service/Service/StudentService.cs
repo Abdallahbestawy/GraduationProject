@@ -19,6 +19,7 @@ namespace GraduationProject.Service.Service
         private readonly IAccountService _accountService;
         private readonly ICourseService _courseService;
         private readonly IMailService _mailService;
+
         public StudentService(UnitOfWork unitOfWork, IAccountService accountService, ICourseService courseService, IMailService mailService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
@@ -26,6 +27,7 @@ namespace GraduationProject.Service.Service
             _courseService = courseService ?? throw new ArgumentNullException(nameof(courseService));
             _mailService = mailService;
         }
+
         public async Task<Response<int>> AddStudentAsync(AddStudentDto addStudentDto)
         {
             string userId = "";
@@ -272,12 +274,14 @@ namespace GraduationProject.Service.Service
             return Response<int>.ServerError("Error occured while adding student to semester",
                      "An unexpected error occurred while adding student to semester. Please try again later.");
         }
+
         public async Task<List<CourseDto>> GetCourseByScientificDegree(int scientificDegreeId)
         {
             IQueryable<CourseDto> coursesQuery = await _courseService.GetCoursesByScientificDegreeIdAsync(scientificDegreeId);
             List<CourseDto> courses = coursesQuery.ToList();
             return courses;
         }
+
         public async Task<CourseAssessMethodDto> GetAssessMethodsCourse(int courseId)
         {
             CourseAssessMethodDto courseAssessMethodDto = await _courseService.GetAssessMethodsByCoursesIdAsync(courseId);
@@ -304,6 +308,7 @@ namespace GraduationProject.Service.Service
             await _unitOfWork.SaveAsync();
             return true;
         }
+
         private async Task<bool> AddCourseAssessMethodStudent(int studentId, int scientificDegreeId)
         {
             List<CourseDto> courses = await GetCourseByScientificDegree(scientificDegreeId);

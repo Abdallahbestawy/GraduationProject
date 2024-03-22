@@ -35,6 +35,14 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpGet("ByFacultyId/{facultyId:int}")]
+        public async Task<IActionResult> GetSemestersByFacultyId(int facultyId)
+        {
+            var response = await _semesterService.GetSemesterByFacultyIdAsync(facultyId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddSemester(SemesterDto addSemesterDto)
         {

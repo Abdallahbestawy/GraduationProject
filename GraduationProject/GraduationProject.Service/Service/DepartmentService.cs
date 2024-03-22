@@ -14,12 +14,14 @@ namespace GraduationProject.Service.Service
         private readonly UnitOfWork _unitOfWork;
         private readonly IMapper _DepartmentMapper;
         private readonly IMailService _mailService;
+
         public DepartmentService(UnitOfWork unitOfWork, IMapper DepartmentMapper, IMailService mailService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _DepartmentMapper = DepartmentMapper;
             _mailService = mailService;
         }
+
         public async Task<Response<int>> AddDepartmentAsync(DepartmentDto departmentDto)
         {
             //Department newDepartment = new Department
@@ -34,11 +36,11 @@ namespace GraduationProject.Service.Service
                 var newDepartment = _DepartmentMapper.Map<Department>(departmentDto);
                 await _unitOfWork.Departments.AddAsync(newDepartment);
                 var result = await _unitOfWork.SaveAsync();
+
                 if (result > 0)
                     return Response<int>.Created("Department added successfully");
 
-                return Response<int>
-                    .ServerError("Error occured while adding Department",
+                return Response<int>.ServerError("Error occured while adding Department",
                     "An unexpected error occurred while adding Department. Please try again later.");
             }
             catch (Exception ex)
@@ -51,39 +53,45 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<int>
-                    .ServerError("Error occured while adding Department",
+                return Response<int>.ServerError("Error occured while adding Department",
                     "An unexpected error occurred while adding Department. Please try again later.");
             }
         }
 
-
-
-        public async Task<List<GetDepartmentDto>> GetDepartmentAllAsync()
+        public async Task<Response<List<GetDepartmentDto>>> GetAllDepartmentsAsync()
         {
             try
             {
                 var departments = await _unitOfWork.Departments.GetAll();
-                if (departments == null || !departments.Any())
-                {
-                    return null;
-                }
 
-                return departments
+                if (departments == null || !departments.Any())
+                    return Response<List<GetDepartmentDto>>.NoContent("No departments are exist");
+
+                var result = departments
                     .Select(department => new GetDepartmentDto
                     {
                         DepartmentId = department.Id,
                         DepartmentName = department.Name
                     })
                     .ToList();
+                return Response<List<GetDepartmentDto>>.Success(result, "Departments are retrieved successfully").WithCount();
             }
-            catch
+            catch(Exception ex)
             {
-                return null;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "DepartmentService",
+                    MethodName = "GetAllDepartmentsAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetDepartmentDto>>.ServerError("Error occured while retrieving departments",
+                    "An unexpected error occurred while retrieving departments. Please try again later.");
             }
         }
 
-        public async Task<GetDeDepartmentByIdDto> GetDepartmentByIdAsync(int departmentId)
+        public async Task<Response<GetDeDepartmentByIdDto>> GetDepartmentByIdAsync(int departmentId)
         {
             try
             {
@@ -97,9 +105,8 @@ namespace GraduationProject.Service.Service
                 var department = dept.FirstOrDefault();
 
                 if (department == null)
-                {
-                    return null;
-                }
+                    return Response<GetDeDepartmentByIdDto>.BadRequest("This department doesn't exist");
+
                 var departmentDto = new GetDeDepartmentByIdDto
                 {
                     Id = department.Id,
@@ -109,61 +116,90 @@ namespace GraduationProject.Service.Service
                     FacultyName = department.Faculty.Name,
                 };
 
-                return departmentDto;
+                return Response<GetDeDepartmentByIdDto>.Success(departmentDto,"Department retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {
-                return null;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "DepartmentService",
+                    MethodName = "GetDepartmentByIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetDeDepartmentByIdDto>.ServerError("Error occured while retrieving department",
+                    "An unexpected error occurred while retrieving department. Please try again later.");
             }
         }
 
-
-        public async Task<bool> UpdateDepartmentAsync(DepartmentDto updateDepartmentDto)
+        public async Task<Response<bool>> UpdateDepartmentAsync(DepartmentDto updateDepartmentDto)
         {
             try
             {
                 Department existingDepartment = await _unitOfWork.Departments.GetByIdAsync(updateDepartmentDto.Id);
+
                 if (existingDepartment == null)
-                {
-                    return false;
-                }
+                    return Response<bool>.BadRequest("This department doesn't exist");
+
                 existingDepartment.Name = updateDepartmentDto.Name;
                 existingDepartment.Description = updateDepartmentDto.Description;
                 existingDepartment.Code = updateDepartmentDto.Code;
                 existingDepartment.FacultyId = updateDepartmentDto.FacultyId;
                 await _unitOfWork.Departments.Update(existingDepartment);
                 int result = await _unitOfWork.SaveAsync();
+
                 if (result > 0)
-                {
-                    return true;
-                }
-                return false;
+                    return Response<bool>.Updated("Department updated successfully");
+
+                return Response<bool>.ServerError("Error occured while updating department",
+                    "An unexpected error occurred while updating department. Please try again later.");
             }
-            catch
+            catch(Exception ex)
             {
-                return false;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "DepartmentService",
+                    MethodName = "UpdateDepartmentAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while updating department",
+                    "An unexpected error occurred while updating department. Please try again later.");
             }
         }
-        public async Task<bool> DeleteDepartmentAsync(int departmentId)
+
+        public async Task<Response<bool>> DeleteDepartmentAsync(int departmentId)
         {
             try
             {
                 var oldDept = await _unitOfWork.Departments.GetByIdAsync(departmentId);
+
                 if (oldDept == null)
-                {
-                    return false;
-                }
+                    return Response<bool>.BadRequest("This department doesn't exist");
+
                 await _unitOfWork.Departments.Delete(oldDept);
                 int result = await _unitOfWork.SaveAsync();
+
                 if (result > 0)
-                {
-                    return true;
-                }
-                return false;
+                    return Response<bool>.Deleted("Department deleted successfully");
+
+                return Response<bool>.ServerError("Error occured while deleting department",
+                    "An unexpected error occurred while deleting department. Please try again later.");
             }
-            catch
+            catch(Exception ex)
             {
-                return false;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "DepartmentService",
+                    MethodName = "DeleteDepartmentAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while deleting department",
+                    "An unexpected error occurred while deleting department. Please try again later.");
             }
         }
     }

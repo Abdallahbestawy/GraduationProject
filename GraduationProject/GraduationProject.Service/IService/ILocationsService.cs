@@ -1,17 +1,18 @@
-﻿using GraduationProject.Service.DataTransferObject.LocationsDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.LocationsDto;
 
 namespace GraduationProject.Service.IService
 {
     public interface ILocationsService
     {
-        Task<bool> AddCountryAsync(CountryDto AddCountryDto);
-        Task<List<CountryDto>> GetCountryAsync();
-        Task<CountryDto> GetCountryByIdAsync(int countryId);
-        Task<bool> UpdateCountryAsync(CountryDto updateCountryDto);
-        Task<bool> AddGovernorateAsync(List<GovernorateDto> AddGovernorateDto);
-        Task<List<GovernorateDto>> GetGovernorateAsync();
-        Task<bool> AddCityAsync(List<CityDto> AddGCityDto);
-        Task<List<CityDto>> GetCityAsync();
+        Task<Response<bool>> AddCountryAsync(CountryDto AddCountryDto);
+        Task<Response<List<CountryDto>>> GetCountryAsync();
+        Task<Response<CountryDto>> GetCountryByIdAsync(int countryId);
+        Task<Response<bool>> UpdateCountryAsync(CountryDto updateCountryDto);
+        Task<Response<bool>> AddGovernorateAsync(List<GovernorateDto> AddGovernorateDto);
+        Task<Response<List<GovernorateDto>>> GetGovernorateAsync();
+        Task<Response<bool>> AddCityAsync(List<CityDto> AddGCityDto);
+        Task<Response<List<CityDto>>> GetCityAsync();
 
 
     }

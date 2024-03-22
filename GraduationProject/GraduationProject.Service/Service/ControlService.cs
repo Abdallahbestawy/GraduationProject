@@ -1,4 +1,7 @@
-﻿using GraduationProject.Repository.Repository;
+﻿using GraduationProject.Mails.IService;
+using GraduationProject.Mails.Models;
+using GraduationProject.Repository.Repository;
+using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.SemesterDto;
 using GraduationProject.Service.IService;
 
@@ -8,62 +11,101 @@ namespace GraduationProject.Service.Service
     {
 
         private readonly UnitOfWork _unitOfWork;
-        public ControlService(UnitOfWork unitOfWork)
+        private readonly IMailService _mailService;
+
+        public ControlService(UnitOfWork unitOfWork, IMailService mailService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _mailService = mailService;
         }
 
-        public async Task<bool> RaisingGradesSemesterAsync(int semesterId)
+        public async Task<Response<bool>> RaisingGradesSemesterAsync(int semesterId)
         {
             try
             {
                 bool result = await _unitOfWork.StudentSemesters.RaisingGradesSemesterAsync(semesterId);
-                if (result)
-                {
-                    await _unitOfWork.SaveAsync();
-                    return true;
-                }
-                return false;
+
+                if (!result)
+                    return Response<bool>.ServerError("Error occured while raising semester's grades",
+                     "An unexpected error occurred while raising semester's grades. Please try again later.");
+
+                await _unitOfWork.SaveAsync();
+                return Response<bool>.Success(result, "Raising semester's grades success");
             }
             catch (Exception ex)
             {
-                return false;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ControlService",
+                    MethodName = "RaisingGradesSemesterAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while raising semester's grades",
+                     "An unexpected error occurred while raising semester's grades. Please try again later.");
             }
         }
-        public async Task<bool> RaisingGradesCourseAsync(int courseId)
+
+        public async Task<Response<bool>> RaisingGradesCourseAsync(int courseId)
         {
             try
             {
                 bool result = await _unitOfWork.StudentSemesters.RaisingGradesCourseAsync(courseId);
-                if (result)
-                {
-                    await _unitOfWork.SaveAsync();
-                    return true;
-                }
-                return false;
+
+                if (!result)
+                    return Response<bool>.ServerError("Error occured while raising course's grades",
+                     "An unexpected error occurred while raising course's grades. Please try again later.");
+
+                await _unitOfWork.SaveAsync();
+                return Response<bool>.Success(result, "Raising course's grades success");
             }
             catch (Exception ex)
             {
-                return false;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ControlService",
+                    MethodName = "RaisingGradesCourseAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while raising course's grades",
+                     "An unexpected error occurred while raising course's grades. Please try again later.");
             }
 
         }
-        public async Task<List<GetAllSemesterCurrentDto>> GetAllSemesterCurrentAsync()
+
+        public async Task<Response<List<GetAllSemesterCurrentDto>>> GetAllSemesterCurrentAsync()
         {
-            var semesters = await _unitOfWork.StudentSemesters.GetAllSemesterCurrentAsync();
-
-            if (semesters == null)
+            try
             {
-                return null;
+                var semesters = await _unitOfWork.StudentSemesters.GetAllSemesterCurrentAsync();
+
+                if (semesters == null)
+                    return Response<List<GetAllSemesterCurrentDto>>.NoContent("No semesters are exist");
+
+                var getAllSemesterCurrentDtos = semesters.Select(semester => new GetAllSemesterCurrentDto
+                {
+                    Id = semester.ScientificDegreeId,
+                    Name = semester.ScientificDegree.Name
+                }).ToList();
+
+                return Response<List<GetAllSemesterCurrentDto>>.Success(getAllSemesterCurrentDtos, "Semesters are retrieved successfully").WithCount();
             }
-
-            var getAllSemesterCurrentDtos = semesters.Select(semester => new GetAllSemesterCurrentDto
+            catch (Exception ex)
             {
-                Id = semester.ScientificDegreeId,
-                Name = semester.ScientificDegree.Name
-            }).ToList();
-
-            return getAllSemesterCurrentDtos;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ControlService",
+                    MethodName = "GetAllSemesterCurrentAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetAllSemesterCurrentDto>>.ServerError("Error occured while retrieving semesters",
+                     "An unexpected error occurred while retrieving semesters. Please try again later.");
+            }
         }
         public async Task<bool> EndSemesterAsync(int semesterId)
         {

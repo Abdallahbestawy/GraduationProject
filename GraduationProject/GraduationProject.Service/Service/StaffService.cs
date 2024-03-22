@@ -18,6 +18,7 @@ namespace GraduationProject.Service.Service
         private readonly IAccountService _accountService;
         private readonly ICourseService _courseService;
         private readonly IMailService _mailService;
+
         public StaffService(UnitOfWork unitOfWork, IAccountService accountService, ICourseService courseService, IMailService mailService)
         {
             _unitOfWork = unitOfWork;
@@ -25,6 +26,7 @@ namespace GraduationProject.Service.Service
             _courseService = courseService;
             _mailService = mailService;
         }
+
         public async Task<Response<int>> AddStAffAsync(AddStaffDto addSaffDto)
         {
             string userId = "";
@@ -38,7 +40,7 @@ namespace GraduationProject.Service.Service
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
                     ClassName = "StaffService",
-                    MethodName = "AddStaffAccount",
+                    MethodName = "AddStAffAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
@@ -76,7 +78,7 @@ namespace GraduationProject.Service.Service
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
                     ClassName = "StaffService",
-                    MethodName = "AddStaffAccount",
+                    MethodName = "AddStAffAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
@@ -107,7 +109,7 @@ namespace GraduationProject.Service.Service
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
                     ClassName = "StaffService",
-                    MethodName = "AddStaffAccount",
+                    MethodName = "AddStAffAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
@@ -156,7 +158,6 @@ namespace GraduationProject.Service.Service
             }
         }
 
-
         public async Task<Response<GetCourseStaffSemesterDto>> GetCourseStaffSemesterAsync(int satffId)
         {
             try
@@ -192,7 +193,7 @@ namespace GraduationProject.Service.Service
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
                     ClassName = "StaffService",
-                    MethodName = "Test",
+                    MethodName = "GetCourseStaffSemesterAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
@@ -201,6 +202,7 @@ namespace GraduationProject.Service.Service
                      "An unexpected error occurred while retrieving staff's courses. Please try again later.");
             }
         }
+
         public async Task<Response<GetStaffDetailsByUserIdDto>> GetStaffByUserIdAsync(string userId)
         {
             try
@@ -273,7 +275,7 @@ namespace GraduationProject.Service.Service
                 SqlParameter pUserType = new SqlParameter("@UserType", userType);
                 var staffs = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
                 if (!staffs.Any())
-                    Response<List<GetAllStaffsDto>>.NoContent("No staffs are exist");
+                    return Response<List<GetAllStaffsDto>>.NoContent("No staffs are exist");
 
                 List<GetAllStaffsDto> result = staffs.Select(staff => new GetAllStaffsDto
                 {

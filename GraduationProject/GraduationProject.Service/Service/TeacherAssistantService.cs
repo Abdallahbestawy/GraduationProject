@@ -17,12 +17,14 @@ namespace GraduationProject.Service.Service
         private readonly UnitOfWork _unitOfWork;
         private readonly IAccountService _accountService;
         private readonly IMailService _mailService;
+
         public TeacherAssistantService(UnitOfWork unitOfWork, IAccountService accountService, IMailService mailService)
         {
             _unitOfWork = unitOfWork;
             _accountService = accountService;
             _mailService = mailService;
         }
+
         public async Task<Response<int>> AddTeacherAssistantAsync(AddStaffDto addTeacherAssistantDto)
         {
             string userId;
@@ -115,8 +117,8 @@ namespace GraduationProject.Service.Service
                 return Response<int>.ServerError("Error occured while adding Teacher Assistant",
                         "An unexpected error occurred while adding Teacher Assistant. Please try again later.");
             }
+
             return Response<int>.Created("Teacher Assistant added successfully");
-            
         }
 
         public async Task<Response<List<GetAllStaffsDto>>> GetAllTeacherAssistantsAsync()
@@ -126,6 +128,7 @@ namespace GraduationProject.Service.Service
                 var userType = UserType.TeacherAssistant;
                 SqlParameter pUserType = new SqlParameter("@UserType", userType);
                 var teacherAssistants = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
+
                 if (!teacherAssistants.Any())
                     return Response<List<GetAllStaffsDto>>.NoContent("No staffs are exist");
 
