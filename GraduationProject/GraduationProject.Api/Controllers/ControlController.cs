@@ -9,10 +9,12 @@ namespace GraduationProject.Api.Controllers
     {
         private readonly ICourseService _courseService;
         private readonly IControlService _controlService;
-        public ControlController(ICourseService courseService, IControlService controlService)
+        private readonly IStudentService _studentService;
+        public ControlController(ICourseService courseService, IControlService controlService, IStudentService studentService)
         {
             _courseService = courseService;
             _controlService = controlService;
+            _studentService = studentService;
         }
 
         [HttpGet("GetStudentSemesterAssessMethodsBySpecificCourseControlMembers{courseId:int}")]
@@ -25,22 +27,16 @@ namespace GraduationProject.Api.Controllers
         [HttpPost("RaisingGradesCourse{courseId:int}")]
         public async Task<IActionResult> RaisingGradesCourse(int courseId)
         {
-            bool response = await _controlService.RaisingGradesCourseAsync(courseId);
-            if (response)
-            {
-                return Ok("the Raising Grades Course Success");
-            }
-            return BadRequest();
+            var response = await _controlService.RaisingGradesCourseAsync(courseId);
+
+            return StatusCode(response.StatusCode, response);
         }
         [HttpPost("RaisingGradesSemester{semesterId:int}")]
         public async Task<IActionResult> RaisingGradesSemester(int semesterId)
         {
-            bool response = await _controlService.RaisingGradesSemesterAsync(semesterId);
-            if (response)
-            {
-                return Ok("the Raising Grades Semester Success");
-            }
-            return BadRequest();
+            var response = await _controlService.RaisingGradesSemesterAsync(semesterId);
+
+            return StatusCode(response.StatusCode, response);
         }
         [HttpGet("GetAllSemester")]
         public async Task<IActionResult> GetAllSemester()
@@ -75,7 +71,7 @@ namespace GraduationProject.Api.Controllers
         [HttpGet("Test")]
         public async Task<IActionResult> Test()
         {
-            await _controlService.Test();
+            await _studentService.AssignCoursesToStudents();
             return Ok();
         }
 

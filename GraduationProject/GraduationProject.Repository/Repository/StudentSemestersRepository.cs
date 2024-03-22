@@ -324,7 +324,7 @@ namespace GraduationProject.Repository.Repository
             };
             return newstudentSemester;
         }
-        public async Task Test()
+        public async Task<List<object>> GetTheCurrentSemesterWithStudents()
         {
             var studentsWithoutPercentageAndTotal = await _context.StudentSemesters
             .Where(sd => sd.Percentage == null && sd.Total == null && sd.TotalCourses == null && sd.AcademyYear.IsCurrent)
@@ -337,8 +337,10 @@ namespace GraduationProject.Repository.Repository
                     ScientificDegreeId = group.Key,
                     Students = group.ToList()
                 })
+                .Cast<object>()
                 .ToList();
-        }
 
+            return groupedStudents;
+        }
     }
 }

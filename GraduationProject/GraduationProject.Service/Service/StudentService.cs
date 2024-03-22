@@ -275,6 +275,93 @@ namespace GraduationProject.Service.Service
                      "An unexpected error occurred while adding student to semester. Please try again later.");
         }
 
+        public async Task<Response<int>> AssignCoursesToStudents()
+        {
+            var studentsWithScientificDegreeId = await GetTheCurrentSemesterWithStudents();
+
+            var students = studentsWithScientificDegreeId.First().Students;
+            var scientificDegreeId = students.First().ScientificDegreeId;
+
+            foreach (var student in students)
+            {
+                bool flag;
+
+                try
+                {
+                    flag = await AddCourseStudent(student.Id, scientificDegreeId);
+                }
+                catch (Exception ex)
+                {
+                    await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                    {
+                        ClassName = "StudentService",
+                        MethodName = "AssignCoursesToStudents",
+                        ErrorMessage = ex.Message,
+                        StackTrace = ex.StackTrace,
+                        Time = DateTime.UtcNow
+                    });
+                    return Response<int>.ServerError("Error occured while adding student to semester",
+                         "An unexpected error occurred while adding student to semester. Please try again later.");
+                }
+
+                bool flag1;
+
+                try
+                {
+                    flag1 = await AddCourseAssessMethodStudent(student.Id, scientificDegreeId);
+                }
+                catch (Exception ex)
+                {
+                    await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                    {
+                        ClassName = "StudentService",
+                        MethodName = "AssignCoursesToStudents",
+                        ErrorMessage = ex.Message,
+                        StackTrace = ex.StackTrace,
+                        Time = DateTime.UtcNow
+                    });
+                    // revert AddCourseStudent() //bastawy
+                    return Response<int>.ServerError("Error occured while adding student to semester",
+                         "An unexpected error occurred while adding student to semester. Please try again later.");
+                }
+
+                if (!(flag && flag1))
+                {
+                    return Response<int>.ServerError("Error occured while adding student to semester",
+                         "An unexpected error occurred while adding student to semester. Please try again later.");
+                }
+
+            }
+            return Response<int>.Created("Student assigned to semester successfully");
+        }
+
+        private async Task<bool> AddOldCoursesIfExist(int scientificDegreeId)
+        {
+            var currentSemester = await _unitOfWork.ScientificDegrees.GetByIdAsync(scientificDegreeId);
+
+            var scientificDegrees = await _unitOfWork.ScientificDegrees
+                .GetEntityByPropertyAsync(degree => degree.BylawId == currentSemester.BylawId);
+
+            var allSemesters = scientificDegrees.Where(degree => degree.Type == currentSemester.Type);
+
+            
+
+            return true;
+        }
+
+        private async Task<List<SemesterStudentsDTO>> GetTheCurrentSemesterWithStudents()
+        {
+            var students = await _unitOfWork.StudentSemesters.GetTheCurrentSemesterWithStudents();
+
+            var result = students.Select(group => new SemesterStudentsDTO
+            {
+                ScientificDegreeId = (int)group.GetType().GetProperty("ScientificDegreeId").GetValue(group, null),
+                Students = (List<StudentSemester>)group.GetType().GetProperty("Students").GetValue(group, null)
+            }).ToList();
+
+            return result;
+        }
+
         public async Task<List<CourseDto>> GetCourseByScientificDegree(int scientificDegreeId)
         {
             IQueryable<CourseDto> coursesQuery = await _courseService.GetCoursesByScientificDegreeIdAsync(scientificDegreeId);

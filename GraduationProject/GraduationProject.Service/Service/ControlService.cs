@@ -1,8 +1,10 @@
-﻿using GraduationProject.Mails.IService;
+﻿using GraduationProject.Data.Entity;
+using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.SemesterDto;
+using GraduationProject.Service.DataTransferObject.StudentDto;
 using GraduationProject.Service.IService;
 
 namespace GraduationProject.Service.Service
@@ -129,9 +131,16 @@ namespace GraduationProject.Service.Service
                 return false;
             }
         }
-        public async Task Test()
-        {
-            await _unitOfWork.StudentSemesters.Test();
-        }
+        //public async Task Test()
+        //{
+        //    var students = await _unitOfWork.StudentSemesters.GetTheCurrentSemesterWithStudents();
+
+        //    var mappedResult = students.Select(group => new SemesterStudentsDTO
+        //    {
+        //        ScientificDegreeId = (int)group.GetType().GetProperty("ScientificDegreeId").GetValue(group, null),
+        //        Students = (List<StudentSemester>)group.GetType().GetProperty("Students").GetValue(group, null)
+        //    }).ToList();
+
+        //}
     }
 }
