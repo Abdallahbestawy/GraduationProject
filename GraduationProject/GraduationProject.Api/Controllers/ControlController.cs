@@ -22,46 +22,39 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("RaisingGradesCourse{courseId:int}")]
         public async Task<IActionResult> RaisingGradesCourse(int courseId)
         {
-            bool response = await _controlService.RaisingGradesCourseAsync(courseId);
-            if (response)
-            {
-                return Ok("the Raising Grades Course Success");
-            }
-            return BadRequest();
+            var response = await _controlService.RaisingGradesCourseAsync(courseId);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("RaisingGradesSemester{semesterId:int}")]
         public async Task<IActionResult> RaisingGradesSemester(int semesterId)
         {
-            bool response = await _controlService.RaisingGradesSemesterAsync(semesterId);
-            if (response)
-            {
-                return Ok("the Raising Grades Semester Success");
-            }
-            return BadRequest();
+            var response = await _controlService.RaisingGradesSemesterAsync(semesterId);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("GetAllSemester")]
         public async Task<IActionResult> GetAllSemester()
         {
             var response = await _controlService.GetAllSemesterCurrentAsync();
-            if (response != null)
-            {
-                return Ok(response);
-            }
-            return NotFound("Not Semester Exixt");
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("GetAllCourse{semesterId:int}")]
         public async Task<IActionResult> GetAllCourseBySemesterId(int semesterId)
         {
             var response = await _courseService.GetCourseBySemesterIdAsync(semesterId);
-            if (response != null)
-            {
-                return Ok(response);
-            }
-            return NotFound("Not Course in Semester Exixt");
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("Test")]
         public async Task<IActionResult> Test()
         {

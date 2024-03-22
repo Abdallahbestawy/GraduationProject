@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GraduationProject.Mails")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+07a3adc6f1664db13fb8b5893edcebbf8fbf7f06")]
 [assembly: System.Reflection.AssemblyProductAttribute("GraduationProject.Mails")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GraduationProject.Mails")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

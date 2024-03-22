@@ -14,11 +14,13 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+
         public AcademyYearService(UnitOfWork unitOfWork, IMailService mailService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
         }
+
         public async Task<Response<int>> AddAcademyYearAsync(AcademyYearDto addAcademyYearDto)
         {
             try
@@ -37,8 +39,7 @@ namespace GraduationProject.Service.Service
                 if(result > 0)
                     return Response<int>.Created( "Academic year added successfully");
 
-                return Response<int>
-                    .ServerError("Error occured while adding Academic year",
+                return Response<int>.ServerError("Error occured while adding Academic year",
                     "An unexpected error occurred while adding Academic year. Please try again later.");
             } 
             catch (Exception ex)
@@ -51,8 +52,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<int>
-                    .ServerError("Error occured while adding Academic year",
+                return Response<int>.ServerError("Error occured while adding Academic year",
                     "An unexpected error occurred while adding Academic year. Please try again later.");
             }
         }
@@ -62,8 +62,9 @@ namespace GraduationProject.Service.Service
             try
             {
                 var academyYearEntities = await _unitOfWork.AcademyYears.GetAll();
+
                 if (!academyYearEntities.Any())
-                    return Response<IQueryable<AcademyYearDto>>.NoContent("No Academic years is exist");
+                    return Response<IQueryable<AcademyYearDto>>.NoContent("No Academic years are exist");
 
                 var academyYearDto = academyYearEntities.Select(entity => new AcademyYearDto
                 {
@@ -89,8 +90,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<IQueryable<AcademyYearDto>>
-                    .ServerError("Error occured while retrieving Academic years",
+                return Response<IQueryable<AcademyYearDto>>.ServerError("Error occured while retrieving Academic years",
                     "An unexpected error occurred while retrieving Academic years. Please try again later.");
             }
         }
@@ -100,8 +100,10 @@ namespace GraduationProject.Service.Service
             try
             {
                 var academyYearEntity = await _unitOfWork.AcademyYears.GetByIdAsync(academyYearId);
+
                 if (academyYearEntity == null)
                     return Response<AcademyYearDto>.BadRequest("This Academic year doesn't exist");
+
                 AcademyYearDto academyYearDto = new AcademyYearDto
                 {
                     Id = academyYearEntity.Id,
@@ -124,8 +126,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<AcademyYearDto>
-                    .ServerError("Error occured while retrieving Academic year",
+                return Response<AcademyYearDto>.ServerError("Error occured while retrieving Academic year",
                     "An unexpected error occurred while retrieving Academic year. Please try again later.");
             }
         }
@@ -135,8 +136,10 @@ namespace GraduationProject.Service.Service
             try
             {
                 AcademyYear existingAcademyYear = await _unitOfWork.AcademyYears.GetByIdAsync(updateAcademyYearDto.Id);
+
                 if (existingAcademyYear == null)
                     return Response<int>.BadRequest("This Academic year doesn't exist");
+
                 existingAcademyYear.Start = updateAcademyYearDto.Start;
                 existingAcademyYear.End = updateAcademyYearDto.End;
                 existingAcademyYear.Description = updateAcademyYearDto.Description;
@@ -150,8 +153,7 @@ namespace GraduationProject.Service.Service
                 if (result > 0)
                     return Response<int>.Updated("Academic year updated successfully");
 
-                return Response<int>
-                    .ServerError("Error occured while updating Academic year",
+                return Response<int>.ServerError("Error occured while updating Academic year",
                     "An unexpected error occurred while updating Academic year. Please try again later.");
 
             }
@@ -165,11 +167,11 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<int>
-                    .ServerError("Error occured while updating Academic year",
+                return Response<int>.ServerError("Error occured while updating Academic year",
                     "An unexpected error occurred while updating Academic year. Please try again later.");
             }
         }
+
         public async Task<Response<int>> DeleteAcademyYearAsync(int academyYearId)
         {
             try
@@ -183,8 +185,7 @@ namespace GraduationProject.Service.Service
                 if (result > 0)
                     return Response<int>.Deleted("Academic year deleted successfully");
 
-                return Response<int>
-                    .ServerError("Error occured while deleting Academic year",
+                return Response<int>.ServerError("Error occured while deleting Academic year",
                     "An unexpected error occurred while deleting Academic year. Please try again later.");
             }
             catch (Exception ex)
@@ -197,8 +198,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<int>
-                    .ServerError("Error occured while updating Academic year",
+                return Response<int>.ServerError("Error occured while updating Academic year",
                     "An unexpected error occurred while updating Academic year. Please try again later.");
             }
         }

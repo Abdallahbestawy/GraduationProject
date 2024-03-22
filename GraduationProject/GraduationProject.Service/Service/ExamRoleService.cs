@@ -13,11 +13,13 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+
         public ExamRoleService(UnitOfWork unitOfWork, IMailService mailService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
         }
+
         public async Task<Response<int>> AddExamRoleAsync(ExamRolesDto addExamRoleDto)
         {
             try
@@ -31,6 +33,7 @@ namespace GraduationProject.Service.Service
                 };
                 await _unitOfWork.ExamRoles.AddAsync(newExamRole);
                 var result = await _unitOfWork.SaveAsync();
+
                 if (result > 0)
                     return Response<int>.Created("Exam Role added successfully");
 
@@ -57,8 +60,9 @@ namespace GraduationProject.Service.Service
             try
             {
                 var examRolesEntities = await _unitOfWork.ExamRoles.GetAll();
+
                 if (!examRolesEntities.Any())
-                    return Response<IQueryable<ExamRolesDto>>.NoContent("No Exam Roles is exist");
+                    return Response<IQueryable<ExamRolesDto>>.NoContent("No Exam Roles are exist");
 
                 var examRolesDtos = examRolesEntities.Select(entity => new ExamRolesDto
                 {
@@ -91,8 +95,10 @@ namespace GraduationProject.Service.Service
             try
             {
                 var examRolesEntity = await _unitOfWork.ExamRoles.GetByIdAsync(ExamRoleId);
+
                 if(examRolesEntity == null)
                     return Response<ExamRolesDto>.BadRequest("This Exam Role doesn't exist");
+
                 ExamRolesDto examRolesDto = new ExamRolesDto
                 {
                     Id = examRolesEntity.Id,
@@ -101,6 +107,7 @@ namespace GraduationProject.Service.Service
                     Order = examRolesEntity.Order,
                     FacultyId = examRolesEntity.FacultyId
                 };
+
                 return Response<ExamRolesDto>.Success(examRolesDto, "Exam Role retrieved successfully").WithCount();
             }
             catch (Exception ex)
@@ -123,8 +130,10 @@ namespace GraduationProject.Service.Service
             try
             {
                 ExamRole existingExamRole = await _unitOfWork.ExamRoles.GetByIdAsync(updateExamRoleDto.Id);
+
                 if (existingExamRole == null)
                     return Response<int>.BadRequest("This Exam Role doesn't exist");
+
                 existingExamRole.Name = updateExamRoleDto.Name;
                 existingExamRole.Code = updateExamRoleDto.Code;
                 existingExamRole.Order = updateExamRoleDto.Order;
@@ -132,8 +141,9 @@ namespace GraduationProject.Service.Service
 
                 await _unitOfWork.ExamRoles.Update(existingExamRole);
                 var result = await _unitOfWork.SaveAsync();
+
                 if (result > 0)
-                    return Response<int>.Created("Exam Role updated successfully");
+                    return Response<int>.Updated("Exam Role updated successfully");
 
                 return Response<int>.ServerError("Error occured while updating Exam Role",
                     "An unexpected error occurred while updating Exam Role. Please try again later.");
@@ -152,18 +162,21 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while updating Exam Role. Please try again later.");
             }
         }
+
         public async Task<Response<int>> DeleteExamRoleAsync(int ExamRoleId)
         {
             try
             {
                 var existingExamRole = await _unitOfWork.ExamRoles.GetByIdAsync(ExamRoleId);
+
                 if (existingExamRole == null)
                     return Response<int>.BadRequest("This Exam Role doesn't exist");
 
                 await _unitOfWork.ExamRoles.Delete(existingExamRole);
                 var result = await _unitOfWork.SaveAsync();
+
                 if (result > 0)
-                    return Response<int>.Created("Exam Role deleted successfully");
+                    return Response<int>.Deleted("Exam Role deleted successfully");
 
                 return Response<int>.ServerError("Error occured while deleting Exam Role",
                     "An unexpected error occurred while deleting Exam Role. Please try again later.");

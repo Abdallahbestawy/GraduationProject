@@ -13,11 +13,13 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+
         public ScientificDegreeService(UnitOfWork unitOfWork, IMailService mailService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
         }
+
         public async Task<Response<int>> AddScientificDegreeAsync(ScientificDegreeDto addScientificDegreeDto)
         {
             try
@@ -40,6 +42,7 @@ namespace GraduationProject.Service.Service
                 };
                 await _unitOfWork.ScientificDegrees.AddAsync(newScientificDegree);
                 var result = await _unitOfWork.SaveAsync();
+
                 if (result > 0)
                     return Response<int>.Created("Scientific Degree added successfully");
 
@@ -66,6 +69,7 @@ namespace GraduationProject.Service.Service
             try
             {
                 var scientificDegreeEntities = await _unitOfWork.ScientificDegrees.GetAll();
+
                 if (!scientificDegreeEntities.Any())
                     return Response<IQueryable<ScientificDegreeDto>>.NoContent("No Scientific Degrees are exist");
 
@@ -103,11 +107,13 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while retrieving Scientific Degrees. Please try again later.");
             }
         }
+
         public async Task<Response<ScientificDegreeDto>> GetScientificDegreeByIdAsync(int ScientificDegreeId)
         {
             try
             {
                 var scientificDegreeEntities = await _unitOfWork.ScientificDegrees.GetByIdAsync(ScientificDegreeId);
+
                 if (scientificDegreeEntities == null)
                     return Response<ScientificDegreeDto>.BadRequest("This Scientific Degree doesn't exist");
 
@@ -128,6 +134,7 @@ namespace GraduationProject.Service.Service
                     ExamRoleId = scientificDegreeEntities.ExamRoleId,
                     ParentId = scientificDegreeEntities.ParentId
                 };
+
                 return Response<ScientificDegreeDto>.Success(scientificDegreeDto, "Scientific Degree retrieved successfully").WithCount();
             }
             catch (Exception ex)
@@ -150,6 +157,7 @@ namespace GraduationProject.Service.Service
             try
             {
                 ScientificDegree existingScientificDegree = await _unitOfWork.ScientificDegrees.GetByIdAsync(updateScientificDegreeDto.Id);
+
                 if (existingScientificDegree == null)
                     return Response<int>.BadRequest("This Scientific Degree doesn't exist");
 
@@ -169,6 +177,7 @@ namespace GraduationProject.Service.Service
 
                 await _unitOfWork.ScientificDegrees.Update(existingScientificDegree);
                 var result = await _unitOfWork.SaveAsync();
+
                 if (result > 0)
                     return Response<int>.Updated("Scientific Degree updated successfully");
 
@@ -189,16 +198,19 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while updating Scientific Degree. Please try again later.");
             }
         }
+
         public async Task<Response<int>> DeleteScientificDegreeAsync(int ScientificDegreeId)
         {
             try
             {
                 var existingScientificDegree = await _unitOfWork.ScientificDegrees.GetByIdAsync(ScientificDegreeId);
+
                 if (existingScientificDegree == null)
                     return Response<int>.BadRequest("This Scientific Degree doesn't exist");
 
                 await _unitOfWork.ScientificDegrees.Delete(existingScientificDegree);
                 var result = await _unitOfWork.SaveAsync();
+
                 if (result > 0)
                     return Response<int>.Deleted("Scientific Degree deleted successfully");
 
@@ -225,6 +237,7 @@ namespace GraduationProject.Service.Service
             try
             {
                 var results = await _unitOfWork.ScientificDegrees.GetEntityByPropertyAsync(p => p.ParentId == ParentId);
+
                 if (results == null || !results.Any())
                     return Response<GetDetailsByParentIdDto>.BadRequest("This Scientific Degree doesn't exist");
 

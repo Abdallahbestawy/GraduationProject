@@ -12,11 +12,13 @@ namespace GraduationProject.Service.Service
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+
         public FacultService(UnitOfWork unitOfWork, IMailService mailService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
         }
+
         public async Task<Response<int>> AddFacultAsync(FacultyDto facultyDto)
         {
             try
@@ -56,8 +58,9 @@ namespace GraduationProject.Service.Service
             try
             {
                 var results = await _unitOfWork.Facultys.GetEntityByPropertyAsync(u => u.UserId == userId);
+
                 if (results == null || !results.Any())
-                    Response<GetFacultyByUserIdDto>.NoContent("No faculties are exist");
+                    return Response<GetFacultyByUserIdDto>.NoContent("No faculties are exist");
 
                 var facultys = results.Select(faculty => new GetFacultyDtos
                 {

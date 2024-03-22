@@ -17,12 +17,14 @@ namespace GraduationProject.Service.Service
         private readonly UnitOfWork _unitOfWork;
         private readonly IAccountService _accountService;
         private readonly IMailService _mailService;
+
         public AdministrationService(UnitOfWork unitOfWork, IAccountService accountService, IMailService mailService)
         {
             _unitOfWork = unitOfWork;
             _accountService = accountService;
             _mailService = mailService;
         }
+
         public async Task<Response<int>> AddAdministrationAsync(AddStaffDto addSaffDto)
         {
             string userId = "";
@@ -94,6 +96,7 @@ namespace GraduationProject.Service.Service
                 QualificationYear = addSaffDto.QualificationYear,
                 Degree = addSaffDto.Degree
             };
+
             try
             {
                 await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
@@ -125,6 +128,7 @@ namespace GraduationProject.Service.Service
                 var userType = UserType.Administration;
                 SqlParameter pUserType = new SqlParameter("@UserType", userType);
                 var administrations = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
+
                 if (!administrations.Any())
                     return Response<List<GetAllStaffsDto>>.NoContent("No AddAdministrations are exist");
 

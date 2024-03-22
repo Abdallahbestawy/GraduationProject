@@ -74,23 +74,16 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> GetCoursePrerequisite(int courseId)
         {
             var response = await _courseService.GetCoursePrerequisiteAsync(courseId);
-            if (response != null)
-            {
-                return Ok(response);
-            }
-            return NotFound("not Prerequisite Exist");
+
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPut("EditDegree")]
         public async Task<IActionResult> UpdateCourseStudentsAssessMethod(List<UpdateCourseStudentsAssessMethodDto> updateCourseStudentsAssessMethodDto)
         {
             var response = await _courseService.UpdateCourseStudentsAssessMethodAsync(updateCourseStudentsAssessMethodDto);
-            if (response)
-            {
-                return Ok("Update Succes");
-            }
-            return BadRequest("please Enter Valid Model");
 
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
