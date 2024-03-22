@@ -268,5 +268,49 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while retrieving Scientific Degree. Please try again later.");
             }
         }
+
+        public async Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeByBylawId(int bylawId)
+        {
+            try
+            {
+                var scientificDegreeEntities = await _unitOfWork.ScientificDegrees.GetEntityByPropertyAsync(scien => scien.BylawId == bylawId);
+
+                if (!scientificDegreeEntities.Any())
+                    return Response<IQueryable<ScientificDegreeDto>>.NoContent("No Scientific Degrees are exist");
+
+                var scientificDegreeDto = scientificDegreeEntities.Select(entity => new ScientificDegreeDto
+                {
+                    Name = entity.Name,
+                    Description = entity.Description,
+                    Type = entity.Type,
+                    BylawId = entity.BylawId,
+                    SuccessPercentageCourse = entity.SuccessPercentageCourse,
+                    SuccessPercentageBand = entity.SuccessPercentageBand,
+                    SuccessPercentageSemester = entity.SuccessPercentageSemester,
+                    SuccessPercentagePhase = entity.SuccessPercentagePhase,
+                    PhaseId = entity.PhaseId,
+                    BandId = entity.BandId,
+                    SemesterId = entity.SemesterId,
+                    ExamRoleId = entity.ExamRoleId,
+                    ParentId = entity.ParentId
+                });
+
+                return Response<IQueryable<ScientificDegreeDto>>.Success(scientificDegreeDto.AsQueryable()
+                    , "Scientific Degrees retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ScientificDegreeService",
+                    MethodName = "GetScientificDegreeByBylawId",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<IQueryable<ScientificDegreeDto>>.ServerError("Error occured while retrieving Scientific Degrees",
+                    "An unexpected error occurred while retrieving Scientific Degrees. Please try again later.");
+            }
+        }
     }
 }

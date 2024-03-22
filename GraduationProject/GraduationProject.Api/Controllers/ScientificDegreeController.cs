@@ -34,6 +34,14 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpGet("ByBylawId/{bylawId:int}")]
+        public async Task<IActionResult> GetScientificDegrees(int bylawId)
+        {
+            var response = await _scientificDegreeService.GetScientificDegreeByBylawId(bylawId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddScientificDegrees(ScientificDegreeDto addScientificDegreesDto)
         {
