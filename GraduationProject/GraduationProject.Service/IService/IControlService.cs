@@ -7,6 +7,7 @@ namespace GraduationProject.Service.IService
         Task<bool> RaisingGradesSemesterAsync(int semesterId);
         Task<bool> RaisingGradesCourseAsync(int courseId);
         Task<List<GetAllSemesterCurrentDto>> GetAllSemesterCurrentAsync();
+        Task<bool> EndSemesterAsync(int semesterId);
         Task Test();
     }
 }

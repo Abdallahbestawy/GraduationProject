@@ -8,7 +8,8 @@ namespace GraduationProject.Repository.IRepository
         Task<bool> RaisingGradesCourseAsync(int courseId);
         Task<bool> RaisingGradesSemesterAsync(int SemesterId);
         Task<List<StudentSemester>> GetAllSemesterCurrentAsync();
-        Task Test(int scientificDegreeId);
+        Task<List<StudentSemester>> EndSemesterAsync(int scientificDegreeId);
+        Task Test();
 
     }
 }

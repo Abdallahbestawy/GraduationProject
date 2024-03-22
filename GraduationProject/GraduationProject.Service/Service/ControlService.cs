@@ -65,10 +65,31 @@ namespace GraduationProject.Service.Service
 
             return getAllSemesterCurrentDtos;
         }
+        public async Task<bool> EndSemesterAsync(int semesterId)
+        {
+            try
+            {
+                var std = await _unitOfWork.StudentSemesters.EndSemesterAsync(semesterId);
+                if (std == null)
+                {
+                    return false;
+                }
+                await _unitOfWork.StudentSemesters.AddRangeAsync(std);
+                int result = await _unitOfWork.SaveAsync();
+                if (result > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
         public async Task Test()
         {
-            await _unitOfWork.StudentSemesters.Test(3);
-            //await _unitOfWork.SaveAsync();
+            await _unitOfWork.StudentSemesters.Test();
         }
     }
 }

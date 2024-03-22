@@ -22,7 +22,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [HttpGet("RaisingGradesCourse{courseId:int}")]
+        [HttpPost("RaisingGradesCourse{courseId:int}")]
         public async Task<IActionResult> RaisingGradesCourse(int courseId)
         {
             bool response = await _controlService.RaisingGradesCourseAsync(courseId);
@@ -32,7 +32,7 @@ namespace GraduationProject.Api.Controllers
             }
             return BadRequest();
         }
-        [HttpGet("RaisingGradesSemester{semesterId:int}")]
+        [HttpPost("RaisingGradesSemester{semesterId:int}")]
         public async Task<IActionResult> RaisingGradesSemester(int semesterId)
         {
             bool response = await _controlService.RaisingGradesSemesterAsync(semesterId);
@@ -61,6 +61,16 @@ namespace GraduationProject.Api.Controllers
                 return Ok(response);
             }
             return NotFound("Not Course in Semester Exixt");
+        }
+        [HttpPost("EndSemester{semesterId:int}")]
+        public async Task<IActionResult> EndSemester([FromRoute] int semesterId)
+        {
+            bool response = await _controlService.EndSemesterAsync(semesterId);
+            if (response)
+            {
+                return Ok("the End Semester Success");
+            }
+            return BadRequest();
         }
         [HttpGet("Test")]
         public async Task<IActionResult> Test()
