@@ -195,5 +195,40 @@ namespace GraduationProject.Service.Service
                         "An unexpected error occurred while deleting phase. Please try again later.");
             }
         }
+
+        public async Task<Response<IQueryable<PhaseDto>>> GetPhaseByFacultyIdAsync(int facultyId)
+        {
+            try
+            {
+                var phaseEntities = await _unitOfWork.Phases.GetEntityByPropertyAsync(phase => phase.FacultyId == facultyId);
+
+                if (!phaseEntities.Any())
+                    return Response<IQueryable<PhaseDto>>.NoContent("No phases are exist");
+
+                var phaseDtos = phaseEntities.Select(entity => new PhaseDto
+                {
+                    Id = entity.Id,
+                    Name = entity.Name,
+                    Code = entity.Code,
+                    Order = entity.Order,
+                    FacultyId = entity.FacultyId
+                });
+
+                return Response<IQueryable<PhaseDto>>.Success(phaseDtos.AsQueryable(), "Phases retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "PhaseService",
+                    MethodName = "GetPhaseByFacultyIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<IQueryable<PhaseDto>>.ServerError("Error occured while retrieving phases",
+                    "An unexpected error occurred while retrieving phases. Please try again later.");
+            }
+        }
     }
 }

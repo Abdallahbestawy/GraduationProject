@@ -37,7 +37,7 @@ namespace GraduationProject.Api.Controllers
         [HttpGet("ByBylawId/{bylawId:int}")]
         public async Task<IActionResult> GetScientificDegrees(int bylawId)
         {
-            var response = await _scientificDegreeService.GetScientificDegreeByBylawId(bylawId);
+            var response = await _scientificDegreeService.GetScientificDegreeByBylawIdAsync(bylawId);
 
             return StatusCode(response.StatusCode, response);
         }

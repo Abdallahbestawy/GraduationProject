@@ -195,5 +195,40 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while deleting Exam Role. Please try again later.");
             }
         }
+
+        public async Task<Response<IQueryable<ExamRolesDto>>> GetExamRoleByFacultyIdAsync(int facultyId)
+        {
+            try
+            {
+                var examRolesEntities = await _unitOfWork.ExamRoles.GetEntityByPropertyAsync(examrole=>examrole.FacultyId == facultyId);
+
+                if (!examRolesEntities.Any())
+                    return Response<IQueryable<ExamRolesDto>>.NoContent("No Exam Roles are exist");
+
+                var examRolesDtos = examRolesEntities.Select(entity => new ExamRolesDto
+                {
+                    Id = entity.Id,
+                    Name = entity.Name,
+                    Code = entity.Code,
+                    Order = entity.Order,
+                    FacultyId = entity.FacultyId
+                });
+
+                return Response<IQueryable<ExamRolesDto>>.Success(examRolesDtos.AsQueryable(), "Exam Roles retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ExamRoleService",
+                    MethodName = "GetExamRoleByFacultyIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<IQueryable<ExamRolesDto>>.ServerError("Error occured while retriveing Exam Roles",
+                    "An unexpected error occurred while retriveing Exam Roles. Please try again later.");
+            }
+        }
     }
 }

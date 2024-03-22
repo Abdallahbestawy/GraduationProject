@@ -193,5 +193,40 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while deleting Semester. Please try again later.");
             }
         }
+
+        public async Task<Response<IQueryable<SemesterDto>>> GetSemesterByFacultyIdAsync(int facultyId)
+        {
+            try
+            {
+                var semesterEntities = await _unitOfWork.Semesters.GetEntityByPropertyAsync(semes => semes.FacultyId == facultyId);
+
+                if (!semesterEntities.Any())
+                    return Response<IQueryable<SemesterDto>>.NoContent("No semesters are exist");
+
+                var semesterDtos = semesterEntities.Select(entity => new SemesterDto
+                {
+                    Id = entity.Id,
+                    Name = entity.Name,
+                    Code = entity.Code,
+                    Order = entity.Order,
+                    FacultyId = entity.FacultyId
+                });
+
+                return Response<IQueryable<SemesterDto>>.Success(semesterDtos.AsQueryable(), "Semesters retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "SemesterService",
+                    MethodName = "GetSemesterAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<IQueryable<SemesterDto>>.ServerError("Error occured while Retrieving Semesters",
+                    "An unexpected error occurred while Retrieving Semesters. Please try again later.");
+            }
+        }
     }
 }

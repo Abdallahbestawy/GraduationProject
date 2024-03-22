@@ -195,5 +195,40 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while deleting Band. Please try again later.");
             }
         }
+
+        public async Task<Response<IQueryable<BandDto>>> GetBandByFacultyIdAsync(int facultyId)
+        {
+            try
+            {
+                var bandEntities = await _unitOfWork.Bands.GetEntityByPropertyAsync(band=>band.FacultyId == facultyId);
+
+                if (!bandEntities.Any())
+                    return Response<IQueryable<BandDto>>.NoContent("No Bands are exist");
+
+                var bandDto = bandEntities.Select(entity => new BandDto
+                {
+                    Id = entity.Id,
+                    Name = entity.Name,
+                    Code = entity.Code,
+                    Order = entity.Order,
+                    FacultyId = entity.FacultyId
+                });
+
+                return Response<IQueryable<BandDto>>.Success(bandDto.AsQueryable(), "Bands retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "BandService",
+                    MethodName = "GetBandAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<IQueryable<BandDto>>.ServerError("Error occured while retrieving Bands",
+                    "An unexpected error occurred while retrieving Bands. Please try again later.");
+            }
+        }
     }
 }

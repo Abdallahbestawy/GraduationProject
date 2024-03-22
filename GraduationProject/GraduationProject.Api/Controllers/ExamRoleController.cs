@@ -9,10 +9,12 @@ namespace GraduationProject.Api.Controllers
     public class ExamRoleController : ControllerBase
     {
         private readonly IExamRoleService _examRoleService;
+
         public ExamRoleController(IExamRoleService examRoleService)
         {
             _examRoleService = examRoleService;
         }
+
         [HttpGet("{Id:int}")]
         public async Task<IActionResult> GetExamRoleById([FromRoute] int Id)
         {
@@ -24,6 +26,7 @@ namespace GraduationProject.Api.Controllers
             
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetExamRoles()
         {
@@ -31,6 +34,15 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpGet("ByFacultyId/{facultyId:int}")]
+        public async Task<IActionResult> GetExamByFacultyIdRoles(int facultyId)
+        {
+            var response = await _examRoleService.GetExamRoleByFacultyIdAsync(facultyId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddExamRoles(ExamRolesDto addExamRolesDto)
         {
@@ -38,6 +50,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpPut("{Id:int}")]
         public async Task<IActionResult> UpdateExamRoles([FromRoute] int Id, [FromBody] ExamRolesDto updateExamRolesDto)
         {
@@ -49,6 +62,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpDelete]
         public async Task<IActionResult> DeleteExamRoles([FromRoute] int Id)
         {

@@ -34,6 +34,14 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpGet("ByFacultyId/{facultyId:int}")]
+        public async Task<IActionResult> GetPhasesByFacultyId(int facultyId)
+        {
+            var response = await _phaseService.GetPhaseByFacultyIdAsync(facultyId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddPhase(PhaseDto addPhaseDto)
         {

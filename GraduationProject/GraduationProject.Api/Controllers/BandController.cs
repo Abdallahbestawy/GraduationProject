@@ -34,6 +34,14 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpGet("ByFacultyId/{facultyId:int}")]
+        public async Task<IActionResult> GetBandsByFacultyId(int facultyId)
+        {
+            var response = await _bandService.GetBandByFacultyIdAsync(facultyId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddBand(BandDto addBandDto)
         {

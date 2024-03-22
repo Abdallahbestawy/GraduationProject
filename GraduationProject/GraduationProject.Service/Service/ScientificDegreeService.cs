@@ -269,7 +269,7 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeByBylawId(int bylawId)
+        public async Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeByBylawIdAsync(int bylawId)
         {
             try
             {
@@ -303,7 +303,7 @@ namespace GraduationProject.Service.Service
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
                     ClassName = "ScientificDegreeService",
-                    MethodName = "GetScientificDegreeByBylawId",
+                    MethodName = "GetScientificDegreeByBylawIdAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
