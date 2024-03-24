@@ -277,10 +277,28 @@ namespace GraduationProject.Service.Service
 
         public async Task<Response<int>> AssignCoursesToStudents()
         {
-            var studentsWithScientificDegreeId = await GetTheCurrentSemesterWithStudents();
-
-            var students = studentsWithScientificDegreeId.First().Students;
-            var scientificDegreeId = students.First().ScientificDegreeId;
+            List<SemesterStudentsDTO> studentsWithScientificDegreeId = new List<SemesterStudentsDTO>();
+            List<StudentSemester> students = new List<StudentSemester>();
+            int scientificDegreeId = 0;
+            try
+            {
+                studentsWithScientificDegreeId = await GetTheCurrentSemesterWithStudents();
+                students = studentsWithScientificDegreeId.First().Students;
+                scientificDegreeId = students.First().ScientificDegreeId;
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StudentService",
+                    MethodName = "AssignCoursesToStudents",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while assigning courses to students",
+                     "An unexpected error occurred while assigning courses to students. Please try again later.");
+            }
 
             foreach (var student in students)
             {
@@ -300,8 +318,8 @@ namespace GraduationProject.Service.Service
                         StackTrace = ex.StackTrace,
                         Time = DateTime.UtcNow
                     });
-                    return Response<int>.ServerError("Error occured while adding student to semester",
-                         "An unexpected error occurred while adding student to semester. Please try again later.");
+                    return Response<int>.ServerError("Error occured while assigning courses to students",
+                         "An unexpected error occurred while assigning courses to students. Please try again later.");
                 }
 
                 bool flag1;
@@ -321,32 +339,111 @@ namespace GraduationProject.Service.Service
                         Time = DateTime.UtcNow
                     });
                     // revert AddCourseStudent() //bastawy
-                    return Response<int>.ServerError("Error occured while adding student to semester",
-                         "An unexpected error occurred while adding student to semester. Please try again later.");
+                    return Response<int>.ServerError("Error occured while assigning courses to students",
+                         "An unexpected error occurred while assigning courses to students. Please try again later.");
                 }
 
                 if (!(flag && flag1))
                 {
-                    return Response<int>.ServerError("Error occured while adding student to semester",
-                         "An unexpected error occurred while adding student to semester. Please try again later.");
+                    return Response<int>.ServerError("Error occured while assigning courses to students",
+                         "An unexpected error occurred while assigning courses to students. Please try again later.");
                 }
 
+                bool falg3;
+                try
+                {
+                    falg3 = await AddOldCoursesIfExist(scientificDegreeId, student.StudentId, student.Id);
+                }
+                catch (Exception ex)
+                {
+                    await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                    {
+                        ClassName = "StudentService",
+                        MethodName = "AssignCoursesToStudents",
+                        ErrorMessage = ex.Message,
+                        StackTrace = ex.StackTrace,
+                        Time = DateTime.UtcNow
+                    });
+                    return Response<int>.ServerError("Error occured while assigning courses to students",
+                         "An unexpected error occurred while assigning courses to students. Please try again later.");
+                }
+
+                if (!falg3)
+                {
+                    //revert what happen in flag1 and flag2
+                    return Response<int>.ServerError("Error occured while assigning courses to students",
+                         "An unexpected error occurred while assigning courses to students. Please try again later.");
+                }
             }
-            return Response<int>.Created("Student assigned to semester successfully");
+            return Response<int>.Created("Students assigned to semester's courses successfully");
         }
 
-        private async Task<bool> AddOldCoursesIfExist(int scientificDegreeId)
+        private async Task<bool> AddOldCoursesIfExist(int scientificDegreeId, int studentId,int studentSemesterId)
         {
-            var currentSemester = await _unitOfWork.ScientificDegrees.GetByIdAsync(scientificDegreeId);
+            var currentSemester = _unitOfWork.ScientificDegrees.GetEntityByPropertyAsync(semes=>semes.Id == scientificDegreeId).Result.SingleOrDefault();
 
             var scientificDegrees = await _unitOfWork.ScientificDegrees
                 .GetEntityByPropertyAsync(degree => degree.BylawId == currentSemester.BylawId);
 
-            var allSemesters = scientificDegrees.Where(degree => degree.Type == currentSemester.Type);
+            var bands = scientificDegrees.Where(degree => degree.Type == ScientificDegreeType.Band)
+                .GroupBy(degree => degree.Order).ToList();
 
-            
+            // check if the student in the first year if true the student doesn't have old courses
+            if (currentSemester.ParentId == bands.First().First().Id)
+                return true;
 
+            var semestersWithTheSameOrder = await GetSemestersWithTheSameOrder(currentSemester, scientificDegrees);
+            var oldCoursesIds = new List<int>();
+
+            foreach (var semester in semestersWithTheSameOrder)
+            {
+                var courses = await GetCourseByScientificDegree(semester);
+                var coursesIds = courses.Select(crs => crs.Id);
+                var oldCourses = await _unitOfWork.StudentSemesterCourses.FindWithIncludeIEnumerableAsync(crs => crs.StudentSemester);
+
+                 oldCoursesIds = oldCourses
+                    .Where(crs => crs.StudentSemester.StudentId == studentId && crs.Passing == false && coursesIds.Contains(crs.CourseId))
+                    .Select(crs=>crs.CourseId).ToList();
+
+                foreach (var course in oldCoursesIds)
+                {
+                    //add the course
+                    List<StudentSemesterCourse> studentSemesterCourses = courses.Where(crs => crs.Id == course)
+                        .Select(course => new StudentSemesterCourse
+                        {
+                            StudentSemesterId = studentSemesterId,
+                            CourseId = course.Id
+                        }).ToList();
+                    await _unitOfWork.StudentSemesterCourses.AddRangeAsync(studentSemesterCourses);
+
+                    //add the assess methods
+                    CourseAssessMethodDto courseAssessMethodDto = await GetAssessMethodsCourse(course);
+                    List<StudentSemesterAssessMethod> newStudentSemesterAssessMethod = courseAssessMethodDto.CourseAssessMethods.Select(ac =>
+                    new StudentSemesterAssessMethod
+                    {
+                        StudentSemesterId = studentId,
+                        CourseAssessMethodId = ac.Id
+                    }).ToList();
+                    await _unitOfWork.StudentSemesterAssessMethods.AddRangeAsync(newStudentSemesterAssessMethod);
+                }
+            }
+            //await _unitOfWork.SaveAsync();
             return true;
+        }
+
+        private async Task<List<int>> GetSemestersWithTheSameOrder(ScientificDegree currentSemester, IEnumerable<ScientificDegree> scientificDegrees)
+        {
+            var parentOrder = currentSemester.Parent.Order;
+
+            var result = new List<int>();
+            foreach (var scientificdegree in scientificDegrees.Where(degree=>degree.Type == ScientificDegreeType.Band && degree.Order < parentOrder))
+            {
+                var semesterId = scientificDegrees.Where(semes => semes.Order == currentSemester.Order && semes.ParentId == scientificdegree.Id)
+                    .Select(semes => semes.Id).SingleOrDefault();
+                result.Add(semesterId);
+            }
+
+            return result;
         }
 
         private async Task<List<SemesterStudentsDTO>> GetTheCurrentSemesterWithStudents()
