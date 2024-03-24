@@ -37,7 +37,7 @@ namespace GraduationProject.Service.Service
                 userId = await _accountService.AddStudentAccount(addStudentDto.NameArabic, addStudentDto.NameEnglish,
                    addStudentDto.NationalID, addStudentDto.Email, addStudentDto.Password);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
@@ -73,7 +73,7 @@ namespace GraduationProject.Service.Service
                     await _unitOfWork.Students.AddAsync(newStudent);
                     int result = await _unitOfWork.SaveAsync();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     await _mailService.SendExceptionEmail(new ExceptionEmailModel
                     {
@@ -103,7 +103,7 @@ namespace GraduationProject.Service.Service
                     await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
                     await _unitOfWork.SaveAsync();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     await _mailService.SendExceptionEmail(new ExceptionEmailModel
                     {
@@ -136,7 +136,7 @@ namespace GraduationProject.Service.Service
                     await _unitOfWork.FamilyDatas.AddAsync(FamilyDataStudent);
                     await _unitOfWork.SaveAsync();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     await _mailService.SendExceptionEmail(new ExceptionEmailModel
                     {
@@ -229,7 +229,7 @@ namespace GraduationProject.Service.Service
             {
                 flag = await AddCourseStudent(newStudentSemester.Id, newStudentSemester.ScientificDegreeId);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
@@ -250,7 +250,7 @@ namespace GraduationProject.Service.Service
             {
                 flag1 = await AddCourseAssessMethodStudent(newStudentSemester.Id, newStudentSemester.ScientificDegreeId);
             }
-            catch( Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
@@ -378,9 +378,9 @@ namespace GraduationProject.Service.Service
             return Response<int>.Created("Students assigned to semester's courses successfully");
         }
 
-        private async Task<bool> AddOldCoursesIfExist(int scientificDegreeId, int studentId,int studentSemesterId)
+        private async Task<bool> AddOldCoursesIfExist(int scientificDegreeId, int studentId, int studentSemesterId)
         {
-            var currentSemester = _unitOfWork.ScientificDegrees.GetEntityByPropertyAsync(semes=>semes.Id == scientificDegreeId).Result.SingleOrDefault();
+            var currentSemester = _unitOfWork.ScientificDegrees.GetEntityByPropertyAsync(semes => semes.Id == scientificDegreeId).Result.SingleOrDefault();
 
             var scientificDegrees = await _unitOfWork.ScientificDegrees
                 .GetEntityByPropertyAsync(degree => degree.BylawId == currentSemester.BylawId);
@@ -401,9 +401,9 @@ namespace GraduationProject.Service.Service
                 var coursesIds = courses.Select(crs => crs.Id);
                 var oldCourses = await _unitOfWork.StudentSemesterCourses.FindWithIncludeIEnumerableAsync(crs => crs.StudentSemester);
 
-                 oldCoursesIds = oldCourses
-                    .Where(crs => crs.StudentSemester.StudentId == studentId && crs.Passing == false && coursesIds.Contains(crs.CourseId))
-                    .Select(crs=>crs.CourseId).ToList();
+                oldCoursesIds = oldCourses
+                   .Where(crs => crs.StudentSemester.StudentId == studentId && crs.Passing == false && coursesIds.Contains(crs.CourseId))
+                   .Select(crs => crs.CourseId).ToList();
 
                 foreach (var course in oldCoursesIds)
                 {
@@ -427,7 +427,7 @@ namespace GraduationProject.Service.Service
                     await _unitOfWork.StudentSemesterAssessMethods.AddRangeAsync(newStudentSemesterAssessMethod);
                 }
             }
-            //await _unitOfWork.SaveAsync();
+            await _unitOfWork.SaveAsync();
             return true;
         }
 
@@ -436,7 +436,7 @@ namespace GraduationProject.Service.Service
             var parentOrder = currentSemester.Parent.Order;
 
             var result = new List<int>();
-            foreach (var scientificdegree in scientificDegrees.Where(degree=>degree.Type == ScientificDegreeType.Band && degree.Order < parentOrder))
+            foreach (var scientificdegree in scientificDegrees.Where(degree => degree.Type == ScientificDegreeType.Band && degree.Order < parentOrder))
             {
                 var semesterId = scientificDegrees.Where(semes => semes.Order == currentSemester.Order && semes.ParentId == scientificdegree.Id)
                     .Select(semes => semes.Id).SingleOrDefault();

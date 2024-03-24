@@ -1,5 +1,4 @@
-﻿using GraduationProject.ResponseHandler.Model;
-using GraduationProject.Service.IService;
+﻿using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
@@ -69,7 +68,7 @@ namespace GraduationProject.Api.Controllers
             }
             return BadRequest();
         }
-        [HttpGet("AssignCoursesToStudents")]
+        [HttpPost("AssignCourses")]
         public async Task<IActionResult> AssignCoursesToStudents()
         {
             var response = await _studentService.AssignCoursesToStudents();
