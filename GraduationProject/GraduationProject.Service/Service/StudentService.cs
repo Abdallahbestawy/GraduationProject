@@ -421,7 +421,7 @@ namespace GraduationProject.Service.Service
                     List<StudentSemesterAssessMethod> newStudentSemesterAssessMethod = courseAssessMethodDto.CourseAssessMethods.Select(ac =>
                     new StudentSemesterAssessMethod
                     {
-                        StudentSemesterId = studentId,
+                        StudentSemesterId = studentSemesterId,
                         CourseAssessMethodId = ac.Id
                     }).ToList();
                     await _unitOfWork.StudentSemesterAssessMethods.AddRangeAsync(newStudentSemesterAssessMethod);
