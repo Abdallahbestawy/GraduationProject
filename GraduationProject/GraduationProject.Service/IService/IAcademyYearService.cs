@@ -10,5 +10,6 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> DeleteAcademyYearAsync(int academyYearId);
         Task<Response<AcademyYearDto>> GetAcademyYearByIdAsync(int academyYearId);
         Task<Response<IQueryable<AcademyYearDto>>> GetAcademyYearAsync();
+        //Task<int> AcademyYearOperation(AcademyYear academyYear);
     }
 }

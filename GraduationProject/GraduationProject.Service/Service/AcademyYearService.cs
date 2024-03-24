@@ -1,5 +1,4 @@
 ﻿using GraduationProject.Data.Entity;
-using GraduationProject.Identity.Models;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.IRepository;
@@ -35,13 +34,13 @@ namespace GraduationProject.Service.Service
                     IsCurrent = addAcademyYearDto.IsCurrent
                 };
                 await _unitOfWork.AcademyYears.AddAsync(newAcademyYear);
-                var result  = await _unitOfWork.SaveAsync();
-                if(result > 0)
-                    return Response<int>.Created( "Academic year added successfully");
+                var result = await _unitOfWork.SaveAsync();
+                if (result > 0)
+                    return Response<int>.Created("Academic year added successfully");
 
                 return Response<int>.ServerError("Error occured while adding Academic year",
                     "An unexpected error occurred while adding Academic year. Please try again later.");
-            } 
+            }
             catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
@@ -202,5 +201,7 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while updating Academic year. Please try again later.");
             }
         }
+
+
     }
 }

@@ -19,5 +19,6 @@ namespace GraduationProject.Data.Entity
 
         public decimal? CourseDegree { get; set; }
         public bool Passing { get; set; } = false;
+        public char? Char { get; set; }
     }
 }

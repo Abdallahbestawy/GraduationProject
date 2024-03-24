@@ -995,6 +995,9 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Char")
+                        .HasColumnType("nvarchar(1)");
+
                     b.Property<decimal?>("CourseDegree")
                         .HasColumnType("decimal(18,2)");
 
