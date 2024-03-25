@@ -9,6 +9,6 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> UpdateAssessMethodAsync(AssessMethodDto updateAssessMethodDto);
         Task<Response<int>> DeleteAssessMethodAsync(int assessMethodId);
         Task<Response<AssessMethodDto>> GetAssessMethodByIdAsync(int assessMethodId);
-        Task<Response<IQueryable<AssessMethodDto>>> GetAssessMethodAsync();
+        Task<Response<IQueryable<GetAssessMethodDto>>> GetAssessMethodAsync(int facultyId);
     }
 }

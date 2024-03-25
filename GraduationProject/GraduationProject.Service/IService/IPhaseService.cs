@@ -10,6 +10,6 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> DeletePhaseAsync(int PhaseId);
         Task<Response<PhaseDto>> GetPhaseByIdAsync(int PhaseId);
         Task<Response<IQueryable<PhaseDto>>> GetPhaseAsync();
-        Task<Response<IQueryable<PhaseDto>>> GetPhaseByFacultyIdAsync(int facultyId);
+        Task<Response<IQueryable<GetPhaseDto>>> GetPhaseByFacultyIdAsync(int facultyId);
     }
 }

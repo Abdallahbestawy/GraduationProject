@@ -1,5 +1,4 @@
-﻿using GraduationProject.ResponseHandler.Model;
-using GraduationProject.Service.DataTransferObject.AssessMethodDto;
+﻿using GraduationProject.Service.DataTransferObject.AssessMethodDto;
 using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,24 +22,24 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("Please Enter Valid Id");
             }
             var response = await _assessMethodService.GetAssessMethodByIdAsync(Id);
-            
+
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAssessMethods()
+        [HttpGet("All{facultyId:int}")]
+        public async Task<IActionResult> GetAssessMethods(int facultyId)
         {
-            var response = await _assessMethodService.GetAssessMethodAsync();
+            var response = await _assessMethodService.GetAssessMethodAsync(facultyId);
 
-            return StatusCode(response.StatusCode,response);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddBand(AssessMethodDto addAssessMethodDto)
         {
             var response = await _assessMethodService.AddAssessMethodAsync(addAssessMethodDto);
-            
-            return StatusCode(response.StatusCode,response);
+
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPut("{Id:int}")]

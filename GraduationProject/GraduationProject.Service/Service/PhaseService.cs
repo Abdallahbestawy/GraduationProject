@@ -110,7 +110,7 @@ namespace GraduationProject.Service.Service
 
                 return Response<PhaseDto>.Success(phaseDto, "Phase retrieved successfully").WithCount();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
@@ -196,25 +196,27 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<IQueryable<PhaseDto>>> GetPhaseByFacultyIdAsync(int facultyId)
+        public async Task<Response<IQueryable<GetPhaseDto>>> GetPhaseByFacultyIdAsync(int facultyId)
         {
             try
             {
-                var phaseEntities = await _unitOfWork.Phases.GetEntityByPropertyAsync(phase => phase.FacultyId == facultyId);
+                var phaseEntities = await _unitOfWork.Phases.FindWithIncludeIEnumerableAsync(f => f.Faculty);
 
-                if (!phaseEntities.Any())
-                    return Response<IQueryable<PhaseDto>>.NoContent("No phases are exist");
-
-                var phaseDtos = phaseEntities.Select(entity => new PhaseDto
+                if (phaseEntities == null || !phaseEntities.Any())
+                    return Response<IQueryable<GetPhaseDto>>.NoContent("No phases are exist");
+                var phaseEntitiesFilter = phaseEntities.Where(f => f.FacultyId == facultyId).ToList();
+                if (phaseEntitiesFilter == null || !phaseEntitiesFilter.Any())
+                    return Response<IQueryable<GetPhaseDto>>.NoContent("No phases are exist");
+                var phaseDtos = phaseEntitiesFilter.Select(entity => new GetPhaseDto
                 {
                     Id = entity.Id,
                     Name = entity.Name,
                     Code = entity.Code,
                     Order = entity.Order,
-                    FacultyId = entity.FacultyId
+                    FacultyName = entity.Faculty.Name
                 });
 
-                return Response<IQueryable<PhaseDto>>.Success(phaseDtos.AsQueryable(), "Phases retrieved successfully").WithCount();
+                return Response<IQueryable<GetPhaseDto>>.Success(phaseDtos.AsQueryable(), "Phases retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {
@@ -226,7 +228,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<IQueryable<PhaseDto>>.ServerError("Error occured while retrieving phases",
+                return Response<IQueryable<GetPhaseDto>>.ServerError("Error occured while retrieving phases",
                     "An unexpected error occurred while retrieving phases. Please try again later.");
             }
         }

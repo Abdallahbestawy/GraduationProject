@@ -56,29 +56,32 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<IQueryable<AssessMethodDto>>> GetAssessMethodAsync()
+        public async Task<Response<IQueryable<GetAssessMethodDto>>> GetAssessMethodAsync(int facultyId)
         {
             try
             {
-                var assessMethodEntities = await _unitOfWork.AssessMethods.GetAll();
+                var assessMethodEntities = await _unitOfWork.AssessMethods.FindWithIncludeIEnumerableAsync(d => d.Faculty);
 
-                if (!assessMethodEntities.Any())
-                    return Response<IQueryable<AssessMethodDto>>.NoContent("No Assess Methods are exist");
+                if (assessMethodEntities == null || !assessMethodEntities.Any())
+                    return Response<IQueryable<GetAssessMethodDto>>.NoContent("No Assess Methods are exist");
+                var assessMethodEntitiesFilter = assessMethodEntities.Where(f => f.FacultyId == facultyId).ToList();
+                if (assessMethodEntitiesFilter == null || !assessMethodEntitiesFilter.Any())
+                    return Response<IQueryable<GetAssessMethodDto>>.NoContent("No Assess Methods are exist");
 
-                var assessMethodDto = assessMethodEntities.Select(entity => new AssessMethodDto
+                var assessMethodDto = assessMethodEntitiesFilter.Select(entity => new GetAssessMethodDto
                 {
                     Id = entity.Id,
                     Name = entity.Name,
                     Description = entity.Description,
                     MaxDegree = entity.MaxDegree,
                     MinDegree = entity.MinDegree,
-                    FacultyId = entity.FacultyId
+                    FacultyName = entity.Faculty.Name
                 });
 
-                return Response<IQueryable<AssessMethodDto>>.Success(assessMethodDto.AsQueryable(), "Assess Methods retrieved successfully")
+                return Response<IQueryable<GetAssessMethodDto>>.Success(assessMethodDto.AsQueryable(), "Assess Methods retrieved successfully")
                     .WithCount();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
@@ -88,7 +91,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<IQueryable<AssessMethodDto>>.ServerError("Error occured while retrieving Assess Methods",
+                return Response<IQueryable<GetAssessMethodDto>>.ServerError("Error occured while retrieving Assess Methods",
                     "An unexpected error occurred while retrieving Assess Methods. Please try again later.");
             }
         }
@@ -98,10 +101,10 @@ namespace GraduationProject.Service.Service
             try
             {
                 var assessMethodEntities = await _unitOfWork.AssessMethods.GetByIdAsync(assessMethodId);
-                
+
                 if (assessMethodEntities == null)
                     return Response<AssessMethodDto>.BadRequest("This Assess Method doesn't exist");
-                
+
                 AssessMethodDto assessMethodDto = new AssessMethodDto
                 {
                     Id = assessMethodEntities.Id,
@@ -111,7 +114,7 @@ namespace GraduationProject.Service.Service
                     MaxDegree = assessMethodEntities.MaxDegree,
                     FacultyId = assessMethodEntities.FacultyId
                 };
-                
+
                 return Response<AssessMethodDto>.Success(assessMethodDto, "Assess Method retrieved successfully").WithCount();
             }
             catch (Exception ex)
@@ -134,10 +137,10 @@ namespace GraduationProject.Service.Service
             try
             {
                 AssessMethod existingAssessMethod = await _unitOfWork.AssessMethods.GetByIdAsync(updateAssessMethodDto.Id);
-                
+
                 if (existingAssessMethod == null)
                     return Response<int>.BadRequest("This Assess Method doesn't exist");
-                
+
                 existingAssessMethod.Name = updateAssessMethodDto.Name;
                 existingAssessMethod.Description = updateAssessMethodDto.Description;
                 existingAssessMethod.MinDegree = updateAssessMethodDto.MinDegree;
@@ -146,7 +149,7 @@ namespace GraduationProject.Service.Service
 
                 await _unitOfWork.AssessMethods.Update(existingAssessMethod);
                 var result = await _unitOfWork.SaveAsync();
-                
+
                 if (result > 0)
                     return Response<int>.Updated("Assess Method updated successfully");
 
@@ -172,20 +175,20 @@ namespace GraduationProject.Service.Service
             try
             {
                 var existingAssessMethod = await _unitOfWork.AssessMethods.GetByIdAsync(assessMethodId);
-                
+
                 if (existingAssessMethod == null)
                     return Response<int>.BadRequest("This Assess Method doesn't exist");
-                
+
                 await _unitOfWork.AssessMethods.Delete(existingAssessMethod);
                 var result = await _unitOfWork.SaveAsync();
-                
+
                 if (result > 0)
                     return Response<int>.Deleted("Assess Method deleted successfully");
 
                 return Response<int>.ServerError("Error occured while deleting Assess Method",
                     "An unexpected error occurred while deleting Assess Method. Please try again later.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {

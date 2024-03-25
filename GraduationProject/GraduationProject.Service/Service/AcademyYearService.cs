@@ -56,27 +56,29 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<IQueryable<AcademyYearDto>>> GetAcademyYearAsync()
+        public async Task<Response<IQueryable<GetAcademyYearDto>>> GetAcademyYearAsync(int facultId)
         {
             try
             {
-                var academyYearEntities = await _unitOfWork.AcademyYears.GetAll();
+                var academyYearEntities = await _unitOfWork.AcademyYears.FindWithIncludeIEnumerableAsync(d => d.Facultys);
 
-                if (!academyYearEntities.Any())
-                    return Response<IQueryable<AcademyYearDto>>.NoContent("No Academic years are exist");
-
-                var academyYearDto = academyYearEntities.Select(entity => new AcademyYearDto
+                if (academyYearEntities == null || !academyYearEntities.Any())
+                    return Response<IQueryable<GetAcademyYearDto>>.NoContent("No Academic years are exist");
+                var academyYearEntitiesFilter = academyYearEntities.Where(f => f.FacultyId == facultId).ToList();
+                if (academyYearEntitiesFilter == null || !academyYearEntitiesFilter.Any())
+                    return Response<IQueryable<GetAcademyYearDto>>.NoContent("No Academic years are exist");
+                var academyYearDto = academyYearEntitiesFilter.Select(entity => new GetAcademyYearDto
                 {
                     Id = entity.Id,
                     Start = entity.Start,
                     End = entity.End,
                     Description = entity.Description,
                     AcademyYearOrder = entity.AcademyYearOrder,
-                    FacultyId = entity.FacultyId,
+                    FacultyName = entity.Facultys.Name,
                     IsCurrent = entity.IsCurrent
                 });
 
-                return Response<IQueryable<AcademyYearDto>>.Success(academyYearDto.AsQueryable(), "Academic years retrieved successfully")
+                return Response<IQueryable<GetAcademyYearDto>>.Success(academyYearDto.AsQueryable(), "Academic years retrieved successfully")
                     .WithCount();
             }
             catch (Exception ex)
@@ -89,7 +91,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<IQueryable<AcademyYearDto>>.ServerError("Error occured while retrieving Academic years",
+                return Response<IQueryable<GetAcademyYearDto>>.ServerError("Error occured while retrieving Academic years",
                     "An unexpected error occurred while retrieving Academic years. Please try again later.");
             }
         }
@@ -202,6 +204,36 @@ namespace GraduationProject.Service.Service
             }
         }
 
-
+        public async Task<GetAcademyYearDto> GetCurrentAcademyYearAsync(int facultId)
+        {
+            try
+            {
+                var result = await _unitOfWork.AcademyYears.FindWithIncludeIEnumerableAsync(d => d.Facultys);
+                if (result == null || !result.Any())
+                {
+                    return null;
+                }
+                var firstResult = result.Where(f => f.FacultyId == facultId && f.IsCurrent).FirstOrDefault();
+                if (firstResult == null)
+                {
+                    return null;
+                }
+                GetAcademyYearDto academyYearDto = new GetAcademyYearDto
+                {
+                    Id = firstResult.Id,
+                    Description = firstResult.Description,
+                    Start = firstResult.Start,
+                    End = firstResult.End,
+                    AcademyYearOrder = firstResult.AcademyYearOrder,
+                    FacultyName = firstResult.Facultys.Name,
+                    IsCurrent = firstResult.IsCurrent,
+                };
+                return academyYearDto;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace GraduationProject.Service.Service
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
         }
-        
+
         public async Task<Response<int>> AddBandAsync(BandDto addBandDto)
         {
             try
@@ -95,10 +95,10 @@ namespace GraduationProject.Service.Service
             try
             {
                 var bandEntity = await _unitOfWork.Bands.GetByIdAsync(bandId);
-                
+
                 if (bandEntity == null)
                     return Response<BandDto>.BadRequest("This band doesn't exist");
-                
+
                 BandDto bandDto = new BandDto
                 {
                     Id = bandEntity.Id,
@@ -107,7 +107,7 @@ namespace GraduationProject.Service.Service
                     Order = bandEntity.Order,
                     FacultyId = bandEntity.FacultyId
                 };
-                
+
                 return Response<BandDto>.Success(bandDto, "Band retrieved successfully").WithCount();
             }
             catch (Exception ex)
@@ -133,7 +133,7 @@ namespace GraduationProject.Service.Service
 
                 if (existingBand == null)
                     return Response<int>.BadRequest("This band doesn't exist");
-                
+
                 existingBand.Name = updateBandDto.Name;
                 existingBand.Code = updateBandDto.Code;
                 existingBand.Order = updateBandDto.Order;
@@ -196,25 +196,28 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<IQueryable<BandDto>>> GetBandByFacultyIdAsync(int facultyId)
+        public async Task<Response<IQueryable<GetBandDto>>> GetBandByFacultyIdAsync(int facultyId)
         {
             try
             {
-                var bandEntities = await _unitOfWork.Bands.GetEntityByPropertyAsync(band=>band.FacultyId == facultyId);
+                var bandEntities = await _unitOfWork.Bands.FindWithIncludeIEnumerableAsync(f => f.Faculty);
 
-                if (!bandEntities.Any())
-                    return Response<IQueryable<BandDto>>.NoContent("No Bands are exist");
+                if (bandEntities == null || !bandEntities.Any())
+                    return Response<IQueryable<GetBandDto>>.NoContent("No Bands are exist");
+                var bandEntitiesFilter = bandEntities.Where(f => f.FacultyId == facultyId).ToList();
+                if (bandEntitiesFilter == null || !bandEntitiesFilter.Any())
+                    return Response<IQueryable<GetBandDto>>.NoContent("No Bands are exist");
 
-                var bandDto = bandEntities.Select(entity => new BandDto
+                var bandDto = bandEntitiesFilter.Select(entity => new GetBandDto
                 {
                     Id = entity.Id,
                     Name = entity.Name,
                     Code = entity.Code,
                     Order = entity.Order,
-                    FacultyId = entity.FacultyId
+                    FacultyName = entity.Faculty.Name
                 });
 
-                return Response<IQueryable<BandDto>>.Success(bandDto.AsQueryable(), "Bands retrieved successfully").WithCount();
+                return Response<IQueryable<GetBandDto>>.Success(bandDto.AsQueryable(), "Bands retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {
@@ -226,7 +229,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<IQueryable<BandDto>>.ServerError("Error occured while retrieving Bands",
+                return Response<IQueryable<GetBandDto>>.ServerError("Error occured while retrieving Bands",
                     "An unexpected error occurred while retrieving Bands. Please try again later.");
             }
         }

@@ -33,7 +33,7 @@ namespace GraduationProject.Service.Service
                 };
                 await _unitOfWork.Semesters.AddAsync(newSemester);
                 var result = await _unitOfWork.SaveAsync();
-                
+
                 if (result > 0)
                     return Response<int>.Created("Semester added successfully");
 
@@ -75,7 +75,7 @@ namespace GraduationProject.Service.Service
 
                 return Response<IQueryable<SemesterDto>>.Success(semesterDtos.AsQueryable(), "Semesters retrieved successfully").WithCount();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
@@ -194,25 +194,28 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<IQueryable<SemesterDto>>> GetSemesterByFacultyIdAsync(int facultyId)
+        public async Task<Response<IQueryable<GetSemesterDto>>> GetSemesterByFacultyIdAsync(int facultyId)
         {
             try
             {
-                var semesterEntities = await _unitOfWork.Semesters.GetEntityByPropertyAsync(semes => semes.FacultyId == facultyId);
+                var semesterEntities = await _unitOfWork.Semesters.FindWithIncludeIEnumerableAsync(f => f.Faculty);
 
-                if (!semesterEntities.Any())
-                    return Response<IQueryable<SemesterDto>>.NoContent("No semesters are exist");
+                if (semesterEntities == null || !semesterEntities.Any())
+                    return Response<IQueryable<GetSemesterDto>>.NoContent("No semesters are exist");
+                var semesterEntitiesFilter = semesterEntities.Where(f => f.FacultyId == facultyId).ToList();
+                if (semesterEntitiesFilter == null || !semesterEntitiesFilter.Any())
+                    return Response<IQueryable<GetSemesterDto>>.NoContent("No semesters are exist");
 
-                var semesterDtos = semesterEntities.Select(entity => new SemesterDto
+                var semesterDtos = semesterEntitiesFilter.Select(entity => new GetSemesterDto
                 {
                     Id = entity.Id,
                     Name = entity.Name,
                     Code = entity.Code,
                     Order = entity.Order,
-                    FacultyId = entity.FacultyId
+                    FacultyName = entity.Faculty.Name
                 });
 
-                return Response<IQueryable<SemesterDto>>.Success(semesterDtos.AsQueryable(), "Semesters retrieved successfully").WithCount();
+                return Response<IQueryable<GetSemesterDto>>.Success(semesterDtos.AsQueryable(), "Semesters retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {
@@ -224,7 +227,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<IQueryable<SemesterDto>>.ServerError("Error occured while Retrieving Semesters",
+                return Response<IQueryable<GetSemesterDto>>.ServerError("Error occured while Retrieving Semesters",
                     "An unexpected error occurred while Retrieving Semesters. Please try again later.");
             }
         }

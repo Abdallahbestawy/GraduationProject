@@ -9,7 +9,7 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> UpdateAcademyYearAsync(AcademyYearDto updateAcademyYearDto);
         Task<Response<int>> DeleteAcademyYearAsync(int academyYearId);
         Task<Response<AcademyYearDto>> GetAcademyYearByIdAsync(int academyYearId);
-        Task<Response<IQueryable<AcademyYearDto>>> GetAcademyYearAsync();
-        //Task<int> AcademyYearOperation(AcademyYear academyYear);
+        Task<Response<IQueryable<GetAcademyYearDto>>> GetAcademyYearAsync(int facultId);
+        Task<GetAcademyYearDto> GetCurrentAcademyYearAsync(int facultId);
     }
 }

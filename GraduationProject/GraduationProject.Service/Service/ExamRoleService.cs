@@ -96,7 +96,7 @@ namespace GraduationProject.Service.Service
             {
                 var examRolesEntity = await _unitOfWork.ExamRoles.GetByIdAsync(ExamRoleId);
 
-                if(examRolesEntity == null)
+                if (examRolesEntity == null)
                     return Response<ExamRolesDto>.BadRequest("This Exam Role doesn't exist");
 
                 ExamRolesDto examRolesDto = new ExamRolesDto
@@ -196,25 +196,28 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<IQueryable<ExamRolesDto>>> GetExamRoleByFacultyIdAsync(int facultyId)
+        public async Task<Response<IQueryable<GetExamRolesDto>>> GetExamRoleByFacultyIdAsync(int facultyId)
         {
             try
             {
-                var examRolesEntities = await _unitOfWork.ExamRoles.GetEntityByPropertyAsync(examrole=>examrole.FacultyId == facultyId);
+                var examRolesEntities = await _unitOfWork.ExamRoles.FindWithIncludeIEnumerableAsync(f => f.Faculty);
 
-                if (!examRolesEntities.Any())
-                    return Response<IQueryable<ExamRolesDto>>.NoContent("No Exam Roles are exist");
+                if (examRolesEntities == null || !examRolesEntities.Any())
+                    return Response<IQueryable<GetExamRolesDto>>.NoContent("No Exam Roles are exist");
+                var examRolesEntitiesFilter = examRolesEntities.Where(f => f.FacultyId == facultyId).ToList();
+                if (examRolesEntitiesFilter == null || !examRolesEntitiesFilter.Any())
+                    return Response<IQueryable<GetExamRolesDto>>.NoContent("No Exam Roles are exist");
 
-                var examRolesDtos = examRolesEntities.Select(entity => new ExamRolesDto
+                var examRolesDtos = examRolesEntitiesFilter.Select(entity => new GetExamRolesDto
                 {
                     Id = entity.Id,
                     Name = entity.Name,
                     Code = entity.Code,
                     Order = entity.Order,
-                    FacultyId = entity.FacultyId
+                    FacultyName = entity.Faculty.Name
                 });
 
-                return Response<IQueryable<ExamRolesDto>>.Success(examRolesDtos.AsQueryable(), "Exam Roles retrieved successfully").WithCount();
+                return Response<IQueryable<GetExamRolesDto>>.Success(examRolesDtos.AsQueryable(), "Exam Roles retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {
@@ -226,7 +229,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<IQueryable<ExamRolesDto>>.ServerError("Error occured while retriveing Exam Roles",
+                return Response<IQueryable<GetExamRolesDto>>.ServerError("Error occured while retriveing Exam Roles",
                     "An unexpected error occurred while retriveing Exam Roles. Please try again later.");
             }
         }

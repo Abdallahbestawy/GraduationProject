@@ -10,6 +10,6 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> DeleteExamRoleAsync(int ExamRoleId);
         Task<Response<ExamRolesDto>> GetExamRoleByIdAsync(int ExamRoleId);
         Task<Response<IQueryable<ExamRolesDto>>> GetExamRoleAsync();
-        Task<Response<IQueryable<ExamRolesDto>>> GetExamRoleByFacultyIdAsync(int facultyId);
+        Task<Response<IQueryable<GetExamRolesDto>>> GetExamRoleByFacultyIdAsync(int facultyId);
     }
 }
