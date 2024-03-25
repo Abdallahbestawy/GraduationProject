@@ -149,5 +149,28 @@ namespace GraduationProject.Identity.Service
                 return false;
             }
         }
+
+        public async Task<string> AddControlMembers(string NameArabic, string NameEnglish, string NationalID, string Email, string Password)
+        {
+            ApplicationUser user = new ApplicationUser();
+            user.NameArabic = NameArabic;
+            user.NameEnglish = NameEnglish;
+            user.NationalID = NationalID;
+            user.Email = Email;
+            user.UserName = NationalID;
+            user.UserType = Enum.UserType.ControlMembers;
+
+            IdentityResult result = await _userManager.CreateAsync(user, Password);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "ControlMembers");
+                return user.Id;
+            }
+            else
+            {
+                return null; // Return null or handle the failure case accordingly
+            }
+        }
     }
 }

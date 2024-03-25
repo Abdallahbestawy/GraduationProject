@@ -1,5 +1,6 @@
 ﻿using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.SemesterDto;
+using GraduationProject.Service.DataTransferObject.StaffDto;
 
 namespace GraduationProject.Service.IService
 {
@@ -9,6 +10,8 @@ namespace GraduationProject.Service.IService
         Task<Response<bool>> RaisingGradesCourseAsync(int courseId);
         Task<Response<List<GetAllSemesterCurrentDto>>> GetAllSemesterCurrentAsync();
         Task<bool> EndSemesterAsync(int semesterId);
+        Task<Response<int>> AddControlMembersAsync(AddStaffDto addControlMembersDto);
+        Task<Response<List<GetAllStaffsDto>>> GetAllControlMembersAsync();
         //Task Test();
     }
 }

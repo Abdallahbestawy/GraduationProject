@@ -1,11 +1,15 @@
 ﻿using GraduationProject.Data.Entity;
+using GraduationProject.Data.Enum;
+using GraduationProject.Identity.Enum;
+using GraduationProject.Identity.IService;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.SemesterDto;
-using GraduationProject.Service.DataTransferObject.StudentDto;
+using GraduationProject.Service.DataTransferObject.StaffDto;
 using GraduationProject.Service.IService;
+using Microsoft.Data.SqlClient;
 
 namespace GraduationProject.Service.Service
 {
@@ -14,11 +18,15 @@ namespace GraduationProject.Service.Service
 
         private readonly UnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+        private readonly IAccountService _accountService;
 
-        public ControlService(UnitOfWork unitOfWork, IMailService mailService)
+
+        public ControlService(UnitOfWork unitOfWork, IMailService mailService, IAccountService accountService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
+            _accountService = accountService;
+
         }
 
         public async Task<Response<bool>> RaisingGradesSemesterAsync(int semesterId)
@@ -129,6 +137,142 @@ namespace GraduationProject.Service.Service
             catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        public async Task<Response<int>> AddControlMembersAsync(AddStaffDto addControlMembersDto)
+        {
+            string userId = "";
+
+            try
+            {
+                userId = await _accountService.AddControlMembers(addControlMembersDto.NameArabic, addControlMembersDto.NameEnglish,
+                       addControlMembersDto.NationalID, addControlMembersDto.Email, addControlMembersDto.Password);
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AdministrationService",
+                    MethodName = "AddAdministrationAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while adding AddAdministration",
+                     "An unexpected error occurred while adding AddAdministration. Please try again later.");
+            }
+
+            if (!string.IsNullOrEmpty(userId))
+                return Response<int>.ServerError("Error occured while adding AddAdministration",
+                     "An unexpected error occurred while adding AddAdministration. Please try again later.");
+
+            Staff newaddControlMembersDto = new Staff
+            {
+                UserId = userId,
+                PlaceOfBirth = addControlMembersDto.PlaceOfBirth,
+                Gender = addControlMembersDto.Gender,
+                Nationality = addControlMembersDto.Nationality,
+                Religion = addControlMembersDto.Religion,
+                DateOfBirth = addControlMembersDto.DateOfBirth,
+                CountryId = addControlMembersDto.CountryId,
+                GovernorateId = addControlMembersDto.GovernorateId,
+                CityId = addControlMembersDto.CityId,
+                Street = addControlMembersDto.Street,
+                PostalCode = addControlMembersDto.PostalCode
+            };
+
+            try
+            {
+                await _unitOfWork.Staffs.AddAsync(newaddControlMembersDto);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AdministrationService",
+                    MethodName = "AddAdministrationAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _accountService.DeleteUser(userId);
+                return Response<int>.ServerError("Error occured while adding AddAdministration",
+                     "An unexpected error occurred while adding AddAdministration. Please try again later.");
+            }
+
+            int AdministrationId = newaddControlMembersDto.Id;
+            QualificationData newQualificationDataStudent = new QualificationData
+            {
+                StaffId = AdministrationId,
+                PreQualification = addControlMembersDto.PreQualification,
+                SeatNumber = addControlMembersDto.SeatNumber,
+                QualificationYear = addControlMembersDto.QualificationYear,
+                Degree = addControlMembersDto.Degree
+            };
+
+            try
+            {
+                await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AdministrationService",
+                    MethodName = "AddAdministrationAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _unitOfWork.Staffs.Delete(newaddControlMembersDto);
+                await _accountService.DeleteUser(userId);
+                return Response<int>.ServerError("Error occured while adding AddAdministration",
+                     "An unexpected error occurred while adding AddAdministration. Please try again later.");
+            }
+
+            return Response<int>.Created("AddAdministration added successfully");
+        }
+
+        public async Task<Response<List<GetAllStaffsDto>>> GetAllControlMembersAsync()
+        {
+            try
+            {
+                var userType = UserType.ControlMembers;
+                SqlParameter pUserType = new SqlParameter("@UserType", userType);
+                var administrations = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
+
+                if (!administrations.Any())
+                    return Response<List<GetAllStaffsDto>>.NoContent("No AddAdministrations are exist");
+
+                List<GetAllStaffsDto> result = administrations.Select(administration => new GetAllStaffsDto
+                {
+                    StaffId = administration.Id,
+                    UserId = administration.UserId,
+                    Nationality = Enum.GetName(typeof(Nationality), administration.Nationality),
+                    StaffNameArbic = administration.NameArabic,
+                    StaffNameEnglish = administration.NameEnglish,
+                    Gender = Enum.GetName(typeof(Gender), administration.Gender),
+                    Religion = Enum.GetName(typeof(Religion), administration.Religion),
+                    Email = administration.Email
+                }).ToList();
+
+                return Response<List<GetAllStaffsDto>>.Success(result, "AddAdministrations retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AdministrationService",
+                    MethodName = "GetAllAdministrationsAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetAllStaffsDto>>.ServerError("Error occured while retrieving AddAdministrations",
+                     "An unexpected error occurred while retrieving AddAdministrations. Please try again later.");
             }
         }
         //public async Task Test()

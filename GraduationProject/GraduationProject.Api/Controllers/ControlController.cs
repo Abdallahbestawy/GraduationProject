@@ -1,4 +1,5 @@
-﻿using GraduationProject.Service.IService;
+﻿using GraduationProject.Service.DataTransferObject.StaffDto;
+using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
@@ -15,6 +16,29 @@ namespace GraduationProject.Api.Controllers
             _courseService = courseService;
             _controlService = controlService;
             _studentService = studentService;
+        }
+        [HttpPost("Add")]
+        public async Task<IActionResult> AddControlMembers(AddStaffDto addControlMembersDto)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _controlService.AddControlMembersAsync(addControlMembersDto);
+
+                return StatusCode(response.StatusCode, response);
+            }
+            else
+            {
+                return BadRequest("please enter valid Model");
+            }
+
+        }
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAllControlMember()
+        {
+
+            var response = await _controlService.GetAllControlMembersAsync();
+
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpGet("GetStudentSemesterAssessMethodsBySpecificCourseControlMembers{courseId:int}")]
