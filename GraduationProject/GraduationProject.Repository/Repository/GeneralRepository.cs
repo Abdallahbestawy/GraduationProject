@@ -30,7 +30,11 @@ namespace GraduationProject.Repository.Repository
         {
             _context.Set<T>().Remove(entity);
         }
+        public async Task DeleteRangeAsyn(IEnumerable<T> entities)
+        {
+            _context.Set<T>().RemoveRange(entities);
 
+        }
         public async Task<IQueryable<T>> GetAll()
         {
             var entities = await _context.Set<T>().ToListAsync();

@@ -48,7 +48,7 @@ namespace GraduationProject.Service.DataTransferObject.StudentDto
         public string? PreQualification { get; set; }
 
         public int? SeatNumber { get; set; }
-
+        [DataType(DataType.Date)]
         public DateTime? QualificationYear { get; set; }
 
         public decimal? Degree { get; set; }

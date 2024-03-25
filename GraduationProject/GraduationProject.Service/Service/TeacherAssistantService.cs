@@ -48,7 +48,7 @@ namespace GraduationProject.Service.Service
                      "An unexpected error occurred while adding Teacher Assistant. Please try again later.");
             }
 
-            if (string.IsNullOrEmpty(userId))
+            if (!string.IsNullOrEmpty(userId))
                 return Response<int>.ServerError("Error occured while adding Teacher Assistant",
                          "An unexpected error occurred while adding Teacher Assistant. Please try again later.");
 
@@ -72,7 +72,7 @@ namespace GraduationProject.Service.Service
                 await _unitOfWork.Staffs.AddAsync(newTeacherAssistant);
                 await _unitOfWork.SaveAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
@@ -146,7 +146,7 @@ namespace GraduationProject.Service.Service
 
                 return Response<List<GetAllStaffsDto>>.Success(result, "Staffs retrieved successfully").WithCount();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {

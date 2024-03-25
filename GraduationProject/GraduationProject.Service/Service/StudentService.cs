@@ -51,7 +51,7 @@ namespace GraduationProject.Service.Service
                      "An unexpected error occurred while adding student. Please try again later.");
             }
 
-            if (string.IsNullOrEmpty(userId))
+            if (!string.IsNullOrEmpty(userId))
             {
                 Student newStudent = new Student
                 {
@@ -610,6 +610,51 @@ namespace GraduationProject.Service.Service
                 });
                 return Response<List<GetAllStudentsDto>>.ServerError("Error occured while retrieving students",
                     "An unexpected error occurred while retrieving students. Please try again later.");
+            }
+        }
+
+        public async Task<bool> DeleteStudentAsync(int studentId)
+        {
+            try
+            {
+                var familydataEntity = await _unitOfWork.FamilyDatas.GetEntityByPropertyAsync(std => std.StudentId == studentId);
+                var familydata = familydataEntity.FirstOrDefault();
+
+                if (familydata != null)
+                {
+                    await _unitOfWork.FamilyDatas.Delete(familydata);
+                }
+                var qualificationDataEntity = await _unitOfWork.QualificationDatas.GetEntityByPropertyAsync(std => std.StudentId == studentId);
+                var qualificationData = qualificationDataEntity.FirstOrDefault();
+                if (qualificationData != null)
+                {
+                    await _unitOfWork.QualificationDatas.Delete(qualificationData);
+                }
+                var phones = await _unitOfWork.Phones.GetEntityByPropertyAsync(std => std.StudentId == studentId);
+                if (phones != null || phones.Any())
+                {
+                    await _unitOfWork.Phones.DeleteRangeAsyn(phones);
+                }
+                var oldstd = await _unitOfWork.Students.GetByIdAsync(studentId);
+                if (oldstd != null)
+                {
+                    await _unitOfWork.Students.Delete(oldstd);
+                    int result = await _unitOfWork.SaveAsync();
+                    if (result > 0)
+                    {
+                        bool flag = await _accountService.DeleteUser(oldstd.UserId);
+                        if (flag)
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using GraduationProject.ResponseHandler.Model;
-using GraduationProject.Service.DataTransferObject.StudentDto;
+﻿using GraduationProject.Service.DataTransferObject.StudentDto;
 using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +19,7 @@ namespace GraduationProject.Api.Controllers
             if (ModelState.IsValid)
             {
                 var response = await _studentService.AddStudentAsync(addStudentDto);
-                
+
                 return StatusCode(response.StatusCode, response);
             }
             else
@@ -57,6 +56,16 @@ namespace GraduationProject.Api.Controllers
             var response = await _studentService.GetAllStudentsAsync();
 
             return StatusCode(response.StatusCode, response);
+        }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteStudent(int studentId)
+        {
+            bool respone = await _studentService.DeleteStudentAsync(studentId);
+            if (respone)
+            {
+                return Ok("Delete Student Success");
+            }
+            return BadRequest("please enter vaild student and Try again");
         }
     }
 }
