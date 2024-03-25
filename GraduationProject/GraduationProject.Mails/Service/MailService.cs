@@ -1,5 +1,6 @@
 ﻿using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
+using GraduationProject.Mails.Templates;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
@@ -14,30 +15,62 @@ namespace GraduationProject.Mails.Service
         {
             _mailSettings = mailSettings.Value;
         }
-        public async Task SendExceptionEmail(ExceptionEmailModel model)
+        public async Task<string> SendExceptionEmail(ExceptionEmailModel model)
+        {
+            try
+            {
+                var email = new MimeMessage
+                {
+                    Sender = MailboxAddress.Parse(_mailSettings.Email),
+                    Subject = "Exception Notifications"
+                };
+
+                foreach (var emailTo in model.Emails)
+                {
+                    email.To.Add(MailboxAddress.Parse(emailTo));
+                }
+
+                var builder = new BodyBuilder();
+
+                var mailText = ExceptionsTemplate.Value;
+
+                mailText = mailText.Replace("[className]", model.ClassName).Replace("[methodName]", model.MethodName)
+                    .Replace("[errorMessage]", model.ErrorMessage).Replace("[time]", model.Time.ToString()).Replace("[stackTrace]", model.StackTrace);
+
+                builder.HtmlBody = mailText;
+                email.Body = builder.ToMessageBody();
+                email.From.Add(new MailboxAddress(_mailSettings.DisplayName, _mailSettings.Email));
+
+
+                using var smtp = new SmtpClient();
+                smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
+                smtp.Authenticate(_mailSettings.Email, _mailSettings.Password);
+                await smtp.SendAsync(email);
+
+                smtp.Disconnect(true);
+                return "OK";
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
+        }
+
+        public async Task<bool> SendResetPasswordEmail(ResetPasswordEmailModel model)
         {
             var email = new MimeMessage
             {
                 Sender = MailboxAddress.Parse(_mailSettings.Email),
-                Subject = "Exception Notifications"
+                Subject = "Reset Password"
             };
 
-            foreach (var emailTo in model.Emails)
-            {
-                email.To.Add(MailboxAddress.Parse(emailTo));
-            }
+            email.To.Add(MailboxAddress.Parse(model.Email));
 
             var builder = new BodyBuilder();
 
-            var projectDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
-            var filePath = Path.Combine(projectDirectory, "GraduationProject.Mails", "Templates", "exceptionsTemplate.html");
+            var mailText = ResetPasswordTemplate.Value;
 
-            var str = new StreamReader(filePath);
-
-            var mailText = str.ReadToEnd();
-            str.Close();
-            mailText = mailText.Replace("[className]", model.ClassName).Replace("[methodName]", model.MethodName)
-                .Replace("[errorMessage]", model.ErrorMessage).Replace("[time]", model.Time.ToString()).Replace("[stackTrace]", model.StackTrace);
+            mailText = mailText.Replace("[UserName]", model.UserName).Replace("[ResetURL]", model.ResetURL);
 
             builder.HtmlBody = mailText;
             email.Body = builder.ToMessageBody();
@@ -47,9 +80,11 @@ namespace GraduationProject.Mails.Service
             using var smtp = new SmtpClient();
             smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
             smtp.Authenticate(_mailSettings.Email, _mailSettings.Password);
-            await smtp.SendAsync(email);
+            var result = await smtp.SendAsync(email);
 
             smtp.Disconnect(true);
+
+            return true;
         }
     }
 }

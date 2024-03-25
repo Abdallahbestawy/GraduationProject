@@ -92,6 +92,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequiredUniqueChars = 0;
     options.Password.RequiredLength = 5;
 })
+.AddDefaultTokenProviders()
 .AddEntityFrameworkStores<IdentityDbContext>();
 builder.Services.AddAuthentication(options =>
 {

@@ -73,5 +73,23 @@ namespace GraduationProject.Api.Controllers
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
         }
 
+
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
+        {
+            string baseURL = $"{Request.Scheme}://{Request.Host}";
+
+            var response = await _authService.ForgotPassword(model,baseURL);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromQuery] ResetPasswordModel model)
+        {
+            string baseURL = $"{Request.Scheme}://{Request.Host}";
+
+            return Ok();
+        }
     }
 }
