@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Release\net6.0\publish\</_PublishTargetUrl>
+    <History>True|2024-03-25T03:34:04.6235821Z;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Data Source=GraduationProject-db.mssql.somee.com%3bInitial Catalog=GraduationProject-db%3bUser Id=Mohamed_185_SQLLogin_3%3bPassword=hmh7eh5mp2</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

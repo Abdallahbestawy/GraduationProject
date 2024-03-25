@@ -9,6 +9,7 @@ namespace GraduationProject.Mails.IService
 {
     public interface IMailService
     {
-        Task SendExceptionEmail(ExceptionEmailModel model);
+        Task<string> SendExceptionEmail(ExceptionEmailModel model);
+        Task<bool> SendResetPasswordEmail(ResetPasswordEmailModel model);
     }
 }

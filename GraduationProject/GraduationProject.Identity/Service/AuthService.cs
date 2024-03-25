@@ -1,7 +1,11 @@
 ﻿using GraduationProject.Identity.IService;
 using GraduationProject.Identity.Models;
 using GraduationProject.Identity.Settings;
+using GraduationProject.Mails.IService;
+using GraduationProject.Mails.Models;
+using GraduationProject.ResponseHandler.Model;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -17,12 +21,14 @@ namespace GraduationProject.Identity.Service
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly JWT _jwt;
+        private readonly IMailService _mailService;
         public AuthService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
-            IOptions<JWT> jwt)
+            IOptions<JWT> jwt, IMailService mailService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _jwt = jwt.Value;
+            _mailService = mailService;
         }
         public async Task<AuthModel> LoginAsync(LoginUserModel loginUserModel)
         {
@@ -160,6 +166,50 @@ namespace GraduationProject.Identity.Service
                 ExpiresOn = DateTime.UtcNow.AddDays(10),
                 CreatedOn = DateTime.UtcNow
             };
+        }
+
+        public async Task<Response<bool>> ForgotPassword(ForgotPasswordModel forgotPasswordModel,string baseURL)
+        {
+            var user = await _userManager.FindByEmailAsync(forgotPasswordModel.Email);
+            if (user == null /*|| !(await _userManager.IsEmailConfirmedAsync(user))*/)
+            {
+                // Don't reveal that the user does not exist or is not confirmed
+                return Response<bool>.BadRequest("This email doesn't exist");
+            }
+
+            // For more information on how to enable account confirmation and password reset please
+            // visit https://go.microsoft.com/fwlink/?LinkID=532713
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+            var callbackUrl = $"{baseURL}/api/auth/resetpassword?email={Uri.EscapeDataString(forgotPasswordModel.Email)}&token={code}";
+
+            var result = await _mailService.SendResetPasswordEmail(new ResetPasswordEmailModel
+            {
+                Email = forgotPasswordModel.Email,
+                UserName = user.NameArabic,
+                ResetURL = callbackUrl
+            });
+
+            return Response<bool>.Success(true, "Forgot password confirmation email sent successfully");
+        }
+
+        public async Task<Response<bool>> ResetPassword(ResetPasswordModel resetPasswordModel)
+        {
+            var user = await _userManager.FindByEmailAsync(resetPasswordModel.Email);
+            if (user == null)
+            {
+                // Don't reveal that the user does not exist
+                return Response<bool>.BadRequest("This email doesn't exist");
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, resetPasswordModel.token, "P@ssword123");
+            if (result.Succeeded)
+            {
+                return Response<bool>.Success(true, "Password has been reset successfully");
+            }
+
+            return Response<bool>.ServerError("Error occured while reseting password", result.Errors);
         }
     }
 }
