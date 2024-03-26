@@ -57,7 +57,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [HttpDelete("{studentId:int}")]
+        [HttpDelete("student{studentId:int}")]
         public async Task<IActionResult> DeleteStudent(int studentId)
         {
             if (studentId == 0 || studentId == null)
@@ -70,6 +70,20 @@ namespace GraduationProject.Api.Controllers
                 return Ok("Delete Student Success");
             }
             return BadRequest("please enter vaild student and Try again");
+        }
+        [HttpDelete("studentSemesters{studentSemesterId:int}")]
+        public async Task<IActionResult> DeleteStudentSemester(int studentSemesterId)
+        {
+            if (studentSemesterId == 0 || studentSemesterId == null)
+            {
+                return BadRequest("please enter valid studentSemesterId");
+            }
+            bool respone = await _studentService.DeleteStudentSemesterAsync(studentSemesterId);
+            if (respone)
+            {
+                return Ok("Delete Student Semester Success");
+            }
+            return BadRequest("please enter vaild Student Semester and Try again");
         }
     }
 }

@@ -657,5 +657,30 @@ namespace GraduationProject.Service.Service
                 return false;
             }
         }
+
+        public async Task<bool> DeleteStudentSemesterAsync(int studentSemesterId)
+        {
+            var oldstudentCourse = await _unitOfWork.StudentSemesterCourses.GetEntityByPropertyAsync(sdt => sdt.StudentSemesterId == studentSemesterId);
+            if (oldstudentCourse != null || oldstudentCourse.Any())
+            {
+                await _unitOfWork.StudentSemesterCourses.DeleteRangeAsyn(oldstudentCourse);
+            }
+            var oldstudentSemesterAssessMethods = await _unitOfWork.StudentSemesterAssessMethods.GetEntityByPropertyAsync(sdt => sdt.StudentSemesterId == studentSemesterId);
+            if (oldstudentSemesterAssessMethods != null || oldstudentSemesterAssessMethods.Any())
+            {
+                await _unitOfWork.StudentSemesterAssessMethods.DeleteRangeAsyn(oldstudentSemesterAssessMethods);
+            }
+            var oldstudentSemester = await _unitOfWork.StudentSemesters.GetByIdAsync(studentSemesterId);
+            if (oldstudentSemester != null)
+            {
+                await _unitOfWork.StudentSemesters.Delete(oldstudentSemester);
+                int result = await _unitOfWork.SaveAsync();
+                if (result > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

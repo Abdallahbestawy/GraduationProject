@@ -75,5 +75,19 @@ namespace GraduationProject.Api.Controllers
                 return NotFound("There are not Staff");
             }
         }
+        [HttpDelete("staffSemester{staffSemesterId:int}")]
+        public async Task<IActionResult> DeleteStaffSemester(int staffSemesterId)
+        {
+            if (staffSemesterId == 0 || staffSemesterId == null)
+            {
+                return BadRequest("please enter valid staffSemesterId");
+            }
+            bool respone = await _StaffService.DeleteStaffSemesterAsync(staffSemesterId);
+            if (respone)
+            {
+                return Ok("Delete Staff Semester Success");
+            }
+            return BadRequest("please enter vaild Staff Semester and Try again");
+        }
     }
 }

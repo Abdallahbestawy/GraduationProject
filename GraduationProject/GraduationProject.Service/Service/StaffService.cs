@@ -336,6 +336,21 @@ namespace GraduationProject.Service.Service
             }
         }
 
+        public async Task<bool> DeleteStaffSemesterAsync(int staffSemesterId)
+        {
+            var oldStaffSemester = await _unitOfWork.StaffSemesters.GetByIdAsync(staffSemesterId);
+            if (oldStaffSemester != null)
+            {
+                await _unitOfWork.StaffSemesters.Delete(oldStaffSemester);
+                int result = await _unitOfWork.SaveAsync();
+                if (result > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         //public async Task<GetCourseStaffSemester> Test(int staffId)
         //{
 
