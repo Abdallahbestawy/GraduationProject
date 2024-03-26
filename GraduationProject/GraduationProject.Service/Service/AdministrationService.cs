@@ -48,7 +48,7 @@ namespace GraduationProject.Service.Service
                      "An unexpected error occurred while adding AddAdministration. Please try again later.");
             }
 
-            if (!string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
                 return Response<int>.ServerError("Error occured while adding AddAdministration",
                      "An unexpected error occurred while adding AddAdministration. Please try again later.");
 
@@ -117,8 +117,78 @@ namespace GraduationProject.Service.Service
                 return Response<int>.ServerError("Error occured while adding AddAdministration",
                      "An unexpected error occurred while adding AddAdministration. Please try again later.");
             }
+            try
+            {
+                if (addSaffDto.PhoneNumbers != null)
+                {
+                    List<Phone> phones = addSaffDto.PhoneNumbers.Select(ph =>
+                        new Phone
+                        {
+                            StaffId = AdministrationId,
+                            PhoneNumber = ph.PhoneNumber,
+                            Type = ph.Type,
+                        }).ToList();
+
+                    await _unitOfWork.Phones.AddRangeAsync(phones);
+                    await _unitOfWork.SaveAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AdministrationService",
+                    MethodName = "AddAdministrationAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _unitOfWork.QualificationDatas.Delete(newQualificationDataStudent);
+                await _unitOfWork.Staffs.Delete(newAdministration);
+                await _accountService.DeleteUser(userId);
+                return Response<int>.ServerError("Error occured while adding Administration",
+                     "An unexpected error occurred while adding Administration. Please try again later.");
+            }
 
             return Response<int>.Created("AddAdministration added successfully");
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            try
+            {
+                var qualificationDataEntity = await _unitOfWork.QualificationDatas.GetEntityByPropertyAsync(std => std.StaffId == id);
+                var qualificationData = qualificationDataEntity.FirstOrDefault();
+                if (qualificationData != null)
+                {
+                    await _unitOfWork.QualificationDatas.Delete(qualificationData);
+                }
+                var phones = await _unitOfWork.Phones.GetEntityByPropertyAsync(std => std.StaffId == id);
+                if (phones != null || phones.Any())
+                {
+                    await _unitOfWork.Phones.DeleteRangeAsyn(phones);
+                }
+                var oldstaff = await _unitOfWork.Staffs.GetByIdAsync(id);
+                if (oldstaff != null)
+                {
+                    await _unitOfWork.Staffs.Delete(oldstaff);
+                    int result = await _unitOfWork.SaveAsync();
+                    if (result > 0)
+                    {
+                        bool flag = await _accountService.DeleteUser(oldstaff.UserId);
+                        if (flag)
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public async Task<Response<List<GetAllStaffsDto>>> GetAllAdministrationsAsync()

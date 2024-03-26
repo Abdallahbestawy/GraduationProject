@@ -92,7 +92,6 @@ namespace GraduationProject.Service.Service
             QualificationData newQualificationDataStudent = new QualificationData
             {
                 StaffId = staffId,
-                //StaffId = 0,
                 PreQualification = addSaffDto.PreQualification,
                 SeatNumber = addSaffDto.SeatNumber,
                 QualificationYear = addSaffDto.QualificationYear,
@@ -119,8 +118,39 @@ namespace GraduationProject.Service.Service
                 return Response<int>.ServerError("Error occured while adding staff",
                          "An unexpected error occurred while adding staff. Please try again later.");
             }
-            return Response<int>.ServerError("Error occured while adding staff",
-                         "An unexpected error occurred while adding staff. Please try again later.");
+            try
+            {
+                if (addSaffDto.PhoneNumbers != null)
+                {
+                    List<Phone> phones = addSaffDto.PhoneNumbers.Select(ph =>
+                        new Phone
+                        {
+                            StaffId = staffId,
+                            PhoneNumber = ph.PhoneNumber,
+                            Type = ph.Type,
+                        }).ToList();
+
+                    await _unitOfWork.Phones.AddRangeAsync(phones);
+                    await _unitOfWork.SaveAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StaffService",
+                    MethodName = "StaffService",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _unitOfWork.QualificationDatas.Delete(newQualificationDataStudent);
+                await _unitOfWork.Staffs.Delete(newStaff);
+                await _accountService.DeleteUser(userId);
+                return Response<int>.ServerError("Error occured while adding Staff",
+                     "An unexpected error occurred while adding Staff. Please try again later.");
+            }
+            return Response<int>.Created("Staff added successfully");
 
         }
 

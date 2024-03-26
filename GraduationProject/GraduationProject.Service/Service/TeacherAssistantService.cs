@@ -48,7 +48,7 @@ namespace GraduationProject.Service.Service
                      "An unexpected error occurred while adding Teacher Assistant. Please try again later.");
             }
 
-            if (!string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
                 return Response<int>.ServerError("Error occured while adding Teacher Assistant",
                          "An unexpected error occurred while adding Teacher Assistant. Please try again later.");
 
@@ -116,6 +116,38 @@ namespace GraduationProject.Service.Service
                 await _accountService.DeleteUser(userId);
                 return Response<int>.ServerError("Error occured while adding Teacher Assistant",
                         "An unexpected error occurred while adding Teacher Assistant. Please try again later.");
+            }
+            try
+            {
+                if (addTeacherAssistantDto.PhoneNumbers != null)
+                {
+                    List<Phone> phones = addTeacherAssistantDto.PhoneNumbers.Select(ph =>
+                        new Phone
+                        {
+                            StaffId = teacherAssistantId,
+                            PhoneNumber = ph.PhoneNumber,
+                            Type = ph.Type,
+                        }).ToList();
+
+                    await _unitOfWork.Phones.AddRangeAsync(phones);
+                    await _unitOfWork.SaveAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "TeacherAssistantService",
+                    MethodName = "AddTeacherAssistantAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _unitOfWork.QualificationDatas.Delete(newQualificationDataStudent);
+                await _unitOfWork.Staffs.Delete(newTeacherAssistant);
+                await _accountService.DeleteUser(userId);
+                return Response<int>.ServerError("Error occured while adding TeacherAssistant",
+                     "An unexpected error occurred while adding TeacherAssistant. Please try again later.");
             }
 
             return Response<int>.Created("Teacher Assistant added successfully");

@@ -1,4 +1,5 @@
 ﻿using GraduationProject.Data.Enum;
+using GraduationProject.Service.DataTransferObject.PhoneDto;
 using System.ComponentModel.DataAnnotations;
 
 namespace GraduationProject.Service.DataTransferObject.StaffDto
@@ -18,7 +19,7 @@ namespace GraduationProject.Service.DataTransferObject.StaffDto
         public string Email { get; set; }
         [Required]
         [DataType(DataType.Password)]
-        public string Password { get; set; }    
+        public string Password { get; set; }
         [Required]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Password and ConfirmPassword Not matched")]
@@ -52,5 +53,6 @@ namespace GraduationProject.Service.DataTransferObject.StaffDto
         public DateTime? QualificationYear { get; set; }
 
         public decimal? Degree { get; set; }
+        public List<PhoneNumberDto>? PhoneNumbers { get; set; }
     }
 }

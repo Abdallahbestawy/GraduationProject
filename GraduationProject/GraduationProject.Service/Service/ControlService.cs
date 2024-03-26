@@ -153,19 +153,19 @@ namespace GraduationProject.Service.Service
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "AdministrationService",
-                    MethodName = "AddAdministrationAsync",
+                    ClassName = "ControlMembersService",
+                    MethodName = "AddControlMembersAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<int>.ServerError("Error occured while adding AddAdministration",
-                     "An unexpected error occurred while adding AddAdministration. Please try again later.");
+                return Response<int>.ServerError("Error occured while adding ControlMembers",
+                     "An unexpected error occurred while adding ControlMembers. Please try again later.");
             }
 
-            if (!string.IsNullOrEmpty(userId))
-                return Response<int>.ServerError("Error occured while adding AddAdministration",
-                     "An unexpected error occurred while adding AddAdministration. Please try again later.");
+            if (string.IsNullOrEmpty(userId))
+                return Response<int>.ServerError("Error occured while adding ControlMembers",
+                     "An unexpected error occurred while adding ControlMembers. Please try again later.");
 
             Staff newaddControlMembersDto = new Staff
             {
@@ -191,21 +191,21 @@ namespace GraduationProject.Service.Service
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "AdministrationService",
-                    MethodName = "AddAdministrationAsync",
+                    ClassName = "ControlMembersService",
+                    MethodName = "AddControlMembersAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
                 await _accountService.DeleteUser(userId);
-                return Response<int>.ServerError("Error occured while adding AddAdministration",
-                     "An unexpected error occurred while adding AddAdministration. Please try again later.");
+                return Response<int>.ServerError("Error occured while adding ControlMembers",
+                     "An unexpected error occurred while adding ControlMembers. Please try again later.");
             }
 
-            int AdministrationId = newaddControlMembersDto.Id;
+            int ControlMemberId = newaddControlMembersDto.Id;
             QualificationData newQualificationDataStudent = new QualificationData
             {
-                StaffId = AdministrationId,
+                StaffId = ControlMemberId,
                 PreQualification = addControlMembersDto.PreQualification,
                 SeatNumber = addControlMembersDto.SeatNumber,
                 QualificationYear = addControlMembersDto.QualificationYear,
@@ -221,19 +221,51 @@ namespace GraduationProject.Service.Service
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "AdministrationService",
-                    MethodName = "AddAdministrationAsync",
+                    ClassName = "ControlMembersService",
+                    MethodName = "ControlMembersAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
                 await _unitOfWork.Staffs.Delete(newaddControlMembersDto);
                 await _accountService.DeleteUser(userId);
-                return Response<int>.ServerError("Error occured while adding AddAdministration",
-                     "An unexpected error occurred while adding AddAdministration. Please try again later.");
+                return Response<int>.ServerError("Error occured while adding ControlMembers",
+                     "An unexpected error occurred while adding ControlMembers. Please try again later.");
+            }
+            try
+            {
+                if (addControlMembersDto.PhoneNumbers != null)
+                {
+                    List<Phone> phones = addControlMembersDto.PhoneNumbers.Select(ph =>
+                        new Phone
+                        {
+                            StaffId = ControlMemberId,
+                            PhoneNumber = ph.PhoneNumber,
+                            Type = ph.Type,
+                        }).ToList();
+
+                    await _unitOfWork.Phones.AddRangeAsync(phones);
+                    await _unitOfWork.SaveAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ControlMembersService",
+                    MethodName = "ControlMembersAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                await _unitOfWork.QualificationDatas.Delete(newQualificationDataStudent);
+                await _unitOfWork.Staffs.Delete(newaddControlMembersDto);
+                await _accountService.DeleteUser(userId);
+                return Response<int>.ServerError("Error occured while adding ControlMembers",
+                     "An unexpected error occurred while adding ControlMembers. Please try again later.");
             }
 
-            return Response<int>.Created("AddAdministration added successfully");
+            return Response<int>.Created("ControlMembers added successfully");
         }
 
         public async Task<Response<List<GetAllStaffsDto>>> GetAllControlMembersAsync()
@@ -242,37 +274,37 @@ namespace GraduationProject.Service.Service
             {
                 var userType = UserType.ControlMembers;
                 SqlParameter pUserType = new SqlParameter("@UserType", userType);
-                var administrations = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
+                var controlMembers = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
 
-                if (!administrations.Any())
-                    return Response<List<GetAllStaffsDto>>.NoContent("No AddAdministrations are exist");
+                if (!controlMembers.Any())
+                    return Response<List<GetAllStaffsDto>>.NoContent("No ControlMembers are exist");
 
-                List<GetAllStaffsDto> result = administrations.Select(administration => new GetAllStaffsDto
+                List<GetAllStaffsDto> result = controlMembers.Select(controlMember => new GetAllStaffsDto
                 {
-                    StaffId = administration.Id,
-                    UserId = administration.UserId,
-                    Nationality = Enum.GetName(typeof(Nationality), administration.Nationality),
-                    StaffNameArbic = administration.NameArabic,
-                    StaffNameEnglish = administration.NameEnglish,
-                    Gender = Enum.GetName(typeof(Gender), administration.Gender),
-                    Religion = Enum.GetName(typeof(Religion), administration.Religion),
-                    Email = administration.Email
+                    StaffId = controlMember.Id,
+                    UserId = controlMember.UserId,
+                    Nationality = Enum.GetName(typeof(Nationality), controlMember.Nationality),
+                    StaffNameArbic = controlMember.NameArabic,
+                    StaffNameEnglish = controlMember.NameEnglish,
+                    Gender = Enum.GetName(typeof(Gender), controlMember.Gender),
+                    Religion = Enum.GetName(typeof(Religion), controlMember.Religion),
+                    Email = controlMember.Email
                 }).ToList();
 
-                return Response<List<GetAllStaffsDto>>.Success(result, "AddAdministrations retrieved successfully").WithCount();
+                return Response<List<GetAllStaffsDto>>.Success(result, "ControlMembers retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "AdministrationService",
-                    MethodName = "GetAllAdministrationsAsync",
+                    ClassName = "ControlMembersService",
+                    MethodName = "GetAllControlMembersAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<List<GetAllStaffsDto>>.ServerError("Error occured while retrieving AddAdministrations",
-                     "An unexpected error occurred while retrieving AddAdministrations. Please try again later.");
+                return Response<List<GetAllStaffsDto>>.ServerError("Error occured while retrieving ControlMembers",
+                     "An unexpected error occurred while retrieving ControlMembers. Please try again later.");
             }
         }
         //public async Task Test()

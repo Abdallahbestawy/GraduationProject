@@ -57,9 +57,13 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [HttpDelete]
+        [HttpDelete("{studentId:int}")]
         public async Task<IActionResult> DeleteStudent(int studentId)
         {
+            if (studentId == 0 || studentId == null)
+            {
+                return BadRequest("please enter valid StudentId");
+            }
             bool respone = await _studentService.DeleteStudentAsync(studentId);
             if (respone)
             {

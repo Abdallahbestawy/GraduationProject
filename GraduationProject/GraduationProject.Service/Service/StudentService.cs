@@ -180,7 +180,7 @@ namespace GraduationProject.Service.Service
                         Time = DateTime.UtcNow
                     });
                     await _unitOfWork.FamilyDatas.Delete(FamilyDataStudent);
-                    await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
+                    await _unitOfWork.QualificationDatas.Delete(newQualificationDataStudent);
                     await _unitOfWork.Students.Delete(newStudent);
                     await _accountService.DeleteUser(userId);
                     return Response<int>.ServerError("Error occured while adding student",

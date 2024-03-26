@@ -18,7 +18,7 @@ namespace GraduationProject.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response= await _administrationService.AddAdministrationAsync(addAdministrationDto);
+                var response = await _administrationService.AddAdministrationAsync(addAdministrationDto);
 
                 return StatusCode(response.StatusCode, response);
             }
@@ -35,6 +35,20 @@ namespace GraduationProject.Api.Controllers
             var response = await _administrationService.GetAllAdministrationsAsync();
 
             return StatusCode(response.StatusCode, response);
+        }
+        [HttpDelete("{Id:int}")]
+        public async Task<IActionResult> Delete(int Id)
+        {
+            if (Id == 0 || Id == null)
+            {
+                return BadRequest("please enter valid StudentId");
+            }
+            bool respone = await _administrationService.DeleteAsync(Id);
+            if (respone)
+            {
+                return Ok("Delete Success");
+            }
+            return BadRequest("please enter vaild Model and Try again");
         }
     }
 }
