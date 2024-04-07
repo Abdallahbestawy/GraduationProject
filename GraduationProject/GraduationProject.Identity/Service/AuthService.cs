@@ -168,17 +168,12 @@ namespace GraduationProject.Identity.Service
             };
         }
 
-        public async Task<Response<bool>> ForgotPassword(ForgotPasswordModel forgotPasswordModel,string baseURL)
+        public async Task<Response<bool>> ForgotPassword(ForgotPasswordModel forgotPasswordModel, string baseURL)
         {
             var user = await _userManager.FindByEmailAsync(forgotPasswordModel.Email);
             if (user == null /*|| !(await _userManager.IsEmailConfirmedAsync(user))*/)
-            {
-                // Don't reveal that the user does not exist or is not confirmed
                 return Response<bool>.BadRequest("This email doesn't exist");
-            }
 
-            // For more information on how to enable account confirmation and password reset please
-            // visit https://go.microsoft.com/fwlink/?LinkID=532713
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
@@ -198,18 +193,17 @@ namespace GraduationProject.Identity.Service
         {
             var user = await _userManager.FindByEmailAsync(resetPasswordModel.Email);
             if (user == null)
-            {
-                // Don't reveal that the user does not exist
                 return Response<bool>.BadRequest("This email doesn't exist");
-            }
 
-            var result = await _userManager.ResetPasswordAsync(user, resetPasswordModel.token, "P@ssword123");
+            var Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(resetPasswordModel.token));
+
+            var result = await _userManager.ResetPasswordAsync(user, Code, "P@ssword123");
             if (result.Succeeded)
             {
                 return Response<bool>.Success(true, "Password has been reset successfully");
             }
 
-            return Response<bool>.ServerError("Error occured while reseting password", result.Errors);
+            return Response<bool>.BadRequest("Error occured while reseting password", result.Errors);
         }
     }
 }

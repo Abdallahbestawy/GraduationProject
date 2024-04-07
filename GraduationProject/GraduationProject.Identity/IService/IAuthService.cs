@@ -9,5 +9,6 @@ namespace GraduationProject.Identity.IService
         Task<AuthModel> RefreshTokenAsync(string token);
         Task<bool> RevokeTokenAsync(string token);
         Task<Response<bool>> ForgotPassword(ForgotPasswordModel forgotPasswordModel, string baseURL);
+        Task<Response<bool>> ResetPassword(ResetPasswordModel resetPasswordModel);
     }
 }

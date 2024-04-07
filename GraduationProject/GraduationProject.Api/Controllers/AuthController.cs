@@ -87,9 +87,9 @@ namespace GraduationProject.Api.Controllers
         [HttpGet("ResetPassword")]
         public async Task<IActionResult> ResetPassword([FromQuery] ResetPasswordModel model)
         {
-            string baseURL = $"{Request.Scheme}://{Request.Host}";
+            var response = await _authService.ResetPassword(model);
 
-            return Ok();
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
