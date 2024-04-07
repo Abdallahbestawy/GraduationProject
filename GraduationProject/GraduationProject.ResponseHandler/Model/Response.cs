@@ -49,9 +49,9 @@
             return CreateResponse(ResponseType.NoContent, message, null, default(T));
         }
 
-        public static Response<T> BadRequest(string? message = null)
+        public static Response<T> BadRequest(string? message = null, object? errors = null)
         {
-            return CreateResponse(ResponseType.BadRequest, message, null, default(T));
+            return CreateResponse(ResponseType.BadRequest, message, errors, default(T));
         }
 
         public static Response<T> ServerError(string? message = null, object? errors = null)
