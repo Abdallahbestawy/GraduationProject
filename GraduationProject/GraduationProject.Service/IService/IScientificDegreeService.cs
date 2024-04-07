@@ -1,5 +1,6 @@
 ﻿using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.ScientificDegreeDto;
+using GraduationProject.Service.DataTransferObject.SemesterDto;
 
 namespace GraduationProject.Service.IService
 {
@@ -12,5 +13,6 @@ namespace GraduationProject.Service.IService
         Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeAsync();
         Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeByBylawIdAsync(int bylawId);
         Task<Response<GetDetailsByParentIdDto>> GetDetailsByParentIdAsync(int ParentId);
+        Task<Response<List<GetAllSemesterCurrentDto>>> GetSemsetersByBylawIdAsync(int facultyId);
     }
 }

@@ -26,6 +26,18 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpGet("ByFacultyId/{facultyId:int}")]
+        public async Task<IActionResult> GetBylawByFacultyId(int facultyId)
+        {
+            if (facultyId.Equals(null))
+            {
+                return BadRequest("Please Enter Valid Id");
+            }
+            var response = await _bylawService.GetBylawByFacultyIdAsync(facultyId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetBylaws()
         {

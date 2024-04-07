@@ -1,10 +1,12 @@
 ﻿using GraduationProject.Data.Entity;
+using GraduationProject.Data.Enum;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.IRepository;
 using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.ScientificDegreeDto;
+using GraduationProject.Service.DataTransferObject.SemesterDto;
 using GraduationProject.Service.IService;
 
 namespace GraduationProject.Service.Service
@@ -75,6 +77,7 @@ namespace GraduationProject.Service.Service
 
                 var scientificDegreeDto = scientificDegreeEntities.Select(entity => new ScientificDegreeDto
                 {
+                    Id = entity.Id,
                     Name = entity.Name,
                     Description = entity.Description,
                     Type = entity.Type,
@@ -310,6 +313,47 @@ namespace GraduationProject.Service.Service
                 });
                 return Response<IQueryable<ScientificDegreeDto>>.ServerError("Error occured while retrieving Scientific Degrees",
                     "An unexpected error occurred while retrieving Scientific Degrees. Please try again later.");
+            }
+        }
+
+        public async Task<Response<List<GetAllSemesterCurrentDto>>> GetSemsetersByBylawIdAsync(int facultyId)
+        {
+            try
+            {
+                var bylaws = await _unitOfWork.Bylaws.GetEntityByPropertyAsync(bylaw => bylaw.FacultyId == facultyId);
+                if(!bylaws.Any())
+                    return Response<List<GetAllSemesterCurrentDto>>.NoContent("No bylaws are exist");
+
+                var scientificDegreeEntities = await _unitOfWork.ScientificDegrees
+                    .GetEntityByPropertyAsync(scien => bylaws.Contains(scien.Bylaw) && scien.Type == ScientificDegreeType.Semester);
+                if(!scientificDegreeEntities.Any())
+                    return Response<List<GetAllSemesterCurrentDto>>.NoContent("No semseters are exist");
+
+                List<GetAllSemesterCurrentDto> result = new();
+
+                foreach (var semester in scientificDegreeEntities)
+                {
+                    var semesterObject = new GetAllSemesterCurrentDto();
+                    semesterObject.Id = semester.Id;
+                    semesterObject.Name = $"{semester.Parent.Name} - {semester.Name}";
+                    result.Add(semesterObject);
+                }
+
+                return Response<List<GetAllSemesterCurrentDto>>.Success(result,"Semesters retrieved successfully");
+
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ScientificDegreeService",
+                    MethodName = "GetSemsetersByBylawIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetAllSemesterCurrentDto>>.ServerError("Error occured while retrieving Semesters",
+                    "An unexpected error occurred while retrieving Semesters. Please try again later.");
             }
         }
     }

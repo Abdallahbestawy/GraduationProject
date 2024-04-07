@@ -268,5 +268,41 @@ namespace GraduationProject.Service.Service
                         "An unexpected error occurred while deleting bylaw. Please try again later.");
             }
         }
+
+        public async Task<Response<IQueryable<BylawDto>>> GetBylawByFacultyIdAsync(int facultyId)
+        {
+            try
+            {
+                var bylawEntities = await _unitOfWork.Bylaws.GetEntityByPropertyAsync(bylaw=>bylaw.FacultyId == facultyId);
+
+                if (!bylawEntities.Any())
+                    return Response<IQueryable<BylawDto>>.NoContent("No Bylaws are exist");
+
+                var bylawDtos = bylawEntities.Select(entity => new BylawDto
+                {
+                    Id = entity.Id,
+                    Name = entity.Name,
+                    Description = entity.Description,
+                    Start = entity.Start,
+                    End = entity.End,
+                    FacultyId = entity.FacultyId
+                });
+
+                return Response<IQueryable<BylawDto>>.Success(bylawDtos.AsQueryable(), "Bylaws retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "BylawService",
+                    MethodName = "GetBylawByFacultyIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<IQueryable<BylawDto>>.ServerError("Error occured while retrieving bylaws",
+                    "An unexpected error occurred while retrieving bylaws. Please try again later.");
+            }
+        }
     }
 }

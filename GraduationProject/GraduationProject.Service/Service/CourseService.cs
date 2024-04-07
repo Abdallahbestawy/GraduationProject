@@ -141,6 +141,7 @@ namespace GraduationProject.Service.Service
 
                 var courseDto = bandEntities.Select(entity => new CourseDto
                 {
+                    Id = entity.Id,
                     Name = entity.Name,
                     Code = entity.Code,
                     Description = entity.Description,
