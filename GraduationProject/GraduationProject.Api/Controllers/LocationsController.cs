@@ -67,10 +67,10 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("GetGovernorate")]
-        public async Task<IActionResult> GetGovernorate()
+        [HttpGet("GetGovernorateByCountryId/{countryId:int}")]
+        public async Task<IActionResult> GetGovernorate(int countryId)
         {
-            var response = await _locationsService.GetGovernorateAsync();
+            var response = await _locationsService.GetGovernorateCountryIdAsync(countryId);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -87,10 +87,10 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("GetCity")]
-        public async Task<IActionResult> GetCity()
+        [HttpGet("GetCityByGovernorateId/{governorateId:int}")]
+        public async Task<IActionResult> GetCity(int governorateId)
         {
-            var response = await _locationsService.GetCityAsync();
+            var response = await _locationsService.GetCityByGovernorateIdAsync(governorateId);
 
             return StatusCode(response.StatusCode, response);
         }

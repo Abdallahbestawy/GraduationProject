@@ -183,14 +183,14 @@ namespace GraduationProject.Service.Service
 
         }
 
-        public async Task<Response<List<GovernorateDto>>> GetGovernorateAsync()
+        public async Task<Response<List<GovernorateDto>>> GetGovernorateCountryIdAsync(int CountryId)
         {
             try
             {
-                var governorates = await _unitOfWork.Governorates.GetAll();
+                var governorates = await _unitOfWork.Governorates.GetEntityByPropertyAsync(gov => gov.CountryId == CountryId);
 
                 if (governorates == null || !governorates.Any())
-                    return Response<List<GovernorateDto>>.NoContent();
+                    return Response<List<GovernorateDto>>.NoContent("No Governorates are exist");
 
                 var governoratesDto = governorates.Select(g => new GovernorateDto
                 {
@@ -205,7 +205,7 @@ namespace GraduationProject.Service.Service
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
                     ClassName = "LocationsService",
-                    MethodName = "GetGovernorateAsync",
+                    MethodName = "GetGovernorateCountryIdAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
@@ -248,11 +248,11 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<List<CityDto>>> GetCityAsync()
+        public async Task<Response<List<CityDto>>> GetCityByGovernorateIdAsync(int governorateId)
         {
             try
             {
-                var citys = await _unitOfWork.Cities.GetAll();
+                var citys = await _unitOfWork.Cities.GetEntityByPropertyAsync(city=>city.GovernorateId == governorateId);
                 if (citys == null || !citys.Any())
                     return Response<List<CityDto>>.NoContent("No cities are exist");
 
@@ -270,7 +270,7 @@ namespace GraduationProject.Service.Service
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
                     ClassName = "LocationsService",
-                    MethodName = "GetCityAsync",
+                    MethodName = "GetCityByGovernorateIdAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow

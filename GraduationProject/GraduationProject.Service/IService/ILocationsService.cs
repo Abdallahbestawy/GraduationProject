@@ -10,10 +10,8 @@ namespace GraduationProject.Service.IService
         Task<Response<CountryDto>> GetCountryByIdAsync(int countryId);
         Task<Response<bool>> UpdateCountryAsync(CountryDto updateCountryDto);
         Task<Response<bool>> AddGovernorateAsync(List<GovernorateDto> AddGovernorateDto);
-        Task<Response<List<GovernorateDto>>> GetGovernorateAsync();
+        Task<Response<List<GovernorateDto>>> GetGovernorateCountryIdAsync(int CountryId);
         Task<Response<bool>> AddCityAsync(List<CityDto> AddGCityDto);
-        Task<Response<List<CityDto>>> GetCityAsync();
-
-
+        Task<Response<List<CityDto>>> GetCityByGovernorateIdAsync(int governorateId);
     }
 }
