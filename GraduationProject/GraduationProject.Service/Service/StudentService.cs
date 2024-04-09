@@ -613,7 +613,7 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<bool> DeleteStudentAsync(int studentId)
+        public async Task<Response<bool>> DeleteStudentAsync(int studentId)
         {
             try
             {
@@ -621,40 +621,44 @@ namespace GraduationProject.Service.Service
                 var familydata = familydataEntity.FirstOrDefault();
 
                 if (familydata != null)
-                {
                     await _unitOfWork.FamilyDatas.Delete(familydata);
-                }
+
                 var qualificationDataEntity = await _unitOfWork.QualificationDatas.GetEntityByPropertyAsync(std => std.StudentId == studentId);
                 var qualificationData = qualificationDataEntity.FirstOrDefault();
                 if (qualificationData != null)
-                {
                     await _unitOfWork.QualificationDatas.Delete(qualificationData);
-                }
+
                 var phones = await _unitOfWork.Phones.GetEntityByPropertyAsync(std => std.StudentId == studentId);
                 if (phones != null || phones.Any())
-                {
                     await _unitOfWork.Phones.DeleteRangeAsyn(phones);
-                }
+
                 var oldstd = await _unitOfWork.Students.GetByIdAsync(studentId);
                 if (oldstd != null)
+                    return Response<bool>.BadRequest("This student doesn't exist");
+
+                await _unitOfWork.Students.Delete(oldstd);
+                int result = await _unitOfWork.SaveAsync();
+                if (result > 0)
                 {
-                    await _unitOfWork.Students.Delete(oldstd);
-                    int result = await _unitOfWork.SaveAsync();
-                    if (result > 0)
-                    {
-                        bool flag = await _accountService.DeleteUser(oldstd.UserId);
-                        if (flag)
-                        {
-                            return true;
-                        }
-                        return false;
-                    }
+                    bool flag = await _accountService.DeleteUser(oldstd.UserId);
+                    if (flag)
+                        return Response<bool>.Deleted("The student is deleted successfully");
                 }
-                return false;
+                return Response<bool>.ServerError("Error occured while deleting student",
+                    "An unexpected error occurred while deleting student. Please try again later.");
             }
             catch (Exception ex)
             {
-                return false;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StudentService",
+                    MethodName = "DeleteStudentAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while deleting student",
+                    "An unexpected error occurred while deleting student. Please try again later.");
             }
         }
 

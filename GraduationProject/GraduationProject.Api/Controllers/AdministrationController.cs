@@ -41,14 +41,11 @@ namespace GraduationProject.Api.Controllers
         {
             if (Id == 0 || Id == null)
             {
-                return BadRequest("please enter valid StudentId");
+                return BadRequest("please enter valid AdministrationId");
             }
-            bool respone = await _administrationService.DeleteAsync(Id);
-            if (respone)
-            {
-                return Ok("Delete Success");
-            }
-            return BadRequest("please enter vaild Model and Try again");
+            var respone = await _administrationService.DeleteAsync(Id);
+            
+            return StatusCode(respone.StatusCode, respone);
         }
     }
 }

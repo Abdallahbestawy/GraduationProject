@@ -64,12 +64,9 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("please enter valid StudentId");
             }
-            bool respone = await _studentService.DeleteStudentAsync(studentId);
-            if (respone)
-            {
-                return Ok("Delete Student Success");
-            }
-            return BadRequest("please enter vaild student and Try again");
+            var respone = await _studentService.DeleteStudentAsync(studentId);
+            
+            return StatusCode(respone.StatusCode, respone);
         }
         [HttpDelete("studentSemesters{studentSemesterId:int}")]
         public async Task<IActionResult> DeleteStudentSemester(int studentSemesterId)

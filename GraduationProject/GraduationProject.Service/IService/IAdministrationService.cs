@@ -7,6 +7,6 @@ namespace GraduationProject.Service.IService
     {
         Task<Response<int>> AddAdministrationAsync(AddStaffDto addStaffDto);
         Task<Response<List<GetAllStaffsDto>>> GetAllAdministrationsAsync();
-        Task<bool> DeleteAsync(int id);
+        Task<Response<bool>> DeleteAsync(int id);
     }
 }

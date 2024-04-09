@@ -153,41 +153,47 @@ namespace GraduationProject.Service.Service
             return Response<int>.Created("AddAdministration added successfully");
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<Response<bool>> DeleteAsync(int id)
         {
             try
             {
                 var qualificationDataEntity = await _unitOfWork.QualificationDatas.GetEntityByPropertyAsync(std => std.StaffId == id);
                 var qualificationData = qualificationDataEntity.FirstOrDefault();
                 if (qualificationData != null)
-                {
                     await _unitOfWork.QualificationDatas.Delete(qualificationData);
-                }
+
                 var phones = await _unitOfWork.Phones.GetEntityByPropertyAsync(std => std.StaffId == id);
                 if (phones != null || phones.Any())
-                {
                     await _unitOfWork.Phones.DeleteRangeAsyn(phones);
-                }
+
                 var oldstaff = await _unitOfWork.Staffs.GetByIdAsync(id);
-                if (oldstaff != null)
+                if (oldstaff == null)
+                    return Response<bool>.BadRequest("This user doesn't exist");
+
+                await _unitOfWork.Staffs.Delete(oldstaff);
+                int result = await _unitOfWork.SaveAsync();
+                if (result > 0)
                 {
-                    await _unitOfWork.Staffs.Delete(oldstaff);
-                    int result = await _unitOfWork.SaveAsync();
-                    if (result > 0)
-                    {
-                        bool flag = await _accountService.DeleteUser(oldstaff.UserId);
-                        if (flag)
-                        {
-                            return true;
-                        }
-                        return false;
-                    }
+                    bool flag = await _accountService.DeleteUser(oldstaff.UserId);
+                    if (flag)
+                        return Response<bool>.Deleted("This user Deleted successfully");
                 }
-                return false;
+
+                return Response<bool>.ServerError("Error occured while deleting this user",
+                    "An unexpected error occurred while deleting this user. Please try again later.");
             }
             catch (Exception ex)
             {
-                return false;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AdministrationService",
+                    MethodName = "DeleteAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while deleting this user",
+                    "An unexpected error occurred while deleting this user. Please try again later.");
             }
         }
 
