@@ -11,7 +11,7 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> DeleteScientificDegreeAsync(int ScientificDegreeId);
         Task<Response<ScientificDegreeDto>> GetScientificDegreeByIdAsync(int ScientificDegreeId);
         Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeAsync();
-        Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeByBylawIdAsync(int bylawId);
+        Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeByBylawIdForSpecificTypeAsync(int bylawId,int type);
         Task<Response<GetDetailsByParentIdDto>> GetDetailsByParentIdAsync(int ParentId);
         Task<Response<List<GetAllSemesterCurrentDto>>> GetSemsetersByBylawIdAsync(int facultyId);
     }

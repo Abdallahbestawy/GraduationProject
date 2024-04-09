@@ -272,17 +272,39 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeByBylawIdAsync(int bylawId)
+        public async Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeByBylawIdForSpecificTypeAsync(int bylawId,int type)
         {
             try
             {
-                var scientificDegreeEntities = await _unitOfWork.ScientificDegrees.GetEntityByPropertyAsync(scien => scien.BylawId == bylawId);
+                IEnumerable<ScientificDegree>? scientificDegreeEntities = Enumerable.Empty<ScientificDegree>();
+                if(!((ScientificDegreeType)type == ScientificDegreeType.Bylaw))
+                {
+                    if (!((ScientificDegreeType)type == ScientificDegreeType.Band))
+                    {
+                        if ((ScientificDegreeType)type == ScientificDegreeType.Phase)
+                            type = (int)ScientificDegreeType.Bylaw;
+                        else if ((ScientificDegreeType)type == ScientificDegreeType.Semester)
+                            type = (int)ScientificDegreeType.Band;
+                        else if ((ScientificDegreeType)type == ScientificDegreeType.ExamRole)
+                            type = (int)ScientificDegreeType.Semester;
+
+                        scientificDegreeEntities = await _unitOfWork.ScientificDegrees
+                            .GetEntityByPropertyAsync(scien => scien.BylawId == bylawId && (int)scien.Type == type);
+
+                    }else // if the type is band
+                    {
+                        scientificDegreeEntities = await _unitOfWork.ScientificDegrees
+                            .GetEntityByPropertyAsync(scien => scien.BylawId == bylawId 
+                            && (scien.Type == ScientificDegreeType.Phase || scien.Type == ScientificDegreeType.Bylaw));
+                    }
+                }
 
                 if (!scientificDegreeEntities.Any())
                     return Response<IQueryable<ScientificDegreeDto>>.NoContent("No Scientific Degrees are exist");
 
                 var scientificDegreeDto = scientificDegreeEntities.Select(entity => new ScientificDegreeDto
                 {
+                    Id = entity.Id,
                     Name = entity.Name,
                     Description = entity.Description,
                     Type = entity.Type,
@@ -306,7 +328,7 @@ namespace GraduationProject.Service.Service
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
                     ClassName = "ScientificDegreeService",
-                    MethodName = "GetScientificDegreeByBylawIdAsync",
+                    MethodName = "GetScientificDegreeByBylawIdForSpecificTypeAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
