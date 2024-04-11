@@ -1,4 +1,5 @@
 ﻿using GraduationProject.Data.Entity;
+using GraduationProject.LogHandler.Service;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.IRepository;
@@ -13,11 +14,13 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+        public LoggerHandler<Band> _logger;
 
-        public BandService(UnitOfWork unitOfWork, IMailService mailService)
+        public BandService(UnitOfWork unitOfWork, IMailService mailService, LoggerHandler<Band> logger)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
+            _logger = logger;
         }
 
         public async Task<Response<int>> AddBandAsync(BandDto addBandDto)
@@ -35,7 +38,10 @@ namespace GraduationProject.Service.Service
                 var result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
+                {
+                    await _logger.InsertLog("123", "Bands", newBand.Id.ToString(), null, newBand);
                     return Response<int>.Created("Band added successfully");
+                }
 
                 return Response<int>.ServerError("Error occured while adding Band",
                     "An unexpected error occurred while adding Band. Please try again later.");
@@ -130,9 +136,17 @@ namespace GraduationProject.Service.Service
             try
             {
                 Band existingBand = await _unitOfWork.Bands.GetByIdAsync(updateBandDto.Id);
-
                 if (existingBand == null)
                     return Response<int>.BadRequest("This band doesn't exist");
+
+                Band oldBand = new Band
+                {
+                    Id = existingBand.Id,
+                    Name = existingBand.Name,
+                    Code = existingBand.Code,
+                    Order = existingBand.Order,
+                    FacultyId = existingBand.FacultyId
+                };
 
                 existingBand.Name = updateBandDto.Name;
                 existingBand.Code = updateBandDto.Code;
@@ -143,7 +157,10 @@ namespace GraduationProject.Service.Service
                 var result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
+                {
+                    await _logger.UpdateLog("123", "Bands", existingBand.Id.ToString(), oldBand, existingBand);
                     return Response<int>.Updated("Band updated successfully");
+                }
 
                 return Response<int>.ServerError("Error occured while updating Band",
                     "An unexpected error occurred while updating Band. Please try again later.");
@@ -172,11 +189,23 @@ namespace GraduationProject.Service.Service
                 if (existingBand == null)
                     return Response<int>.BadRequest("This band doesn't exist");
 
+                Band oldBand = new Band
+                {
+                    Id = existingBand.Id,
+                    Name = existingBand.Name,
+                    Code = existingBand.Code,
+                    Order = existingBand.Order,
+                    FacultyId = existingBand.FacultyId
+                };
+
                 await _unitOfWork.Bands.Delete(existingBand);
                 var result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
+                {
+                    await _logger.DeleteLog("123", "Bands", oldBand.Id.ToString(), oldBand, null);
                     return Response<int>.Deleted("Band deleted successfully");
+                }
 
                 return Response<int>.ServerError("Error occured while deleting Band",
                     "An unexpected error occurred while deleting Band. Please try again later.");

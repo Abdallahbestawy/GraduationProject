@@ -196,3 +196,7 @@ E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Debug\
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Text.Encoding.CodePages.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.Mails.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.Mails.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.LogHandler.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.LogHandler.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.Shared.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.Shared.pdb

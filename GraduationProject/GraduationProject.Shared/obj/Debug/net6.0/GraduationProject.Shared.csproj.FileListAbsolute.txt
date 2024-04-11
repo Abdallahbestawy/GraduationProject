@@ -1,0 +1,12 @@
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\bin\Debug\net6.0\GraduationProject.Shared.deps.json
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\bin\Debug\net6.0\GraduationProject.Shared.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\bin\Debug\net6.0\GraduationProject.Shared.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.AssemblyInfoInputs.cache
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.AssemblyInfo.cs
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.csproj.CoreCompileInputs.cache
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.sourcelink.json
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\refint\GraduationProject.Shared.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\ref\GraduationProject.Shared.dll

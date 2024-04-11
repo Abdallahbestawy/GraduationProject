@@ -36,6 +36,7 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<City> Cities { get; }
         IGeneralRepository<Country> Countries { get; }
         IGeneralRepository<Governorate> Governorates { get; }
+        IGeneralRepository<ActivityLog> ActivityLogs { get; }
 
 
 

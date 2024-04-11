@@ -640,7 +640,8 @@
       },
       "GraduationProject.Data/1.0.0": {
         "dependencies": {
-          "GraduationProject.Identity": "1.0.0"
+          "GraduationProject.Identity": "1.0.0",
+          "GraduationProject.Shared": "1.0.0"
         },
         "runtime": {
           "GraduationProject.Data.dll": {}
@@ -673,6 +674,11 @@
       "GraduationProject.ResponseHandler/1.0.0": {
         "runtime": {
           "GraduationProject.ResponseHandler.dll": {}
+        }
+      },
+      "GraduationProject.Shared/1.0.0": {
+        "runtime": {
+          "GraduationProject.Shared.dll": {}
         }
       }
     }
@@ -1119,6 +1125,11 @@
       "sha512": ""
     },
     "GraduationProject.ResponseHandler/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "GraduationProject.Shared/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

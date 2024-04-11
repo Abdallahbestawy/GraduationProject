@@ -62,10 +62,11 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpDelete]
+        [HttpDelete("{Id:int}")]
         public async Task<IActionResult> DeleteBand([FromRoute] int Id)
         {
             var response = await _bandService.DeleteBandAsync(Id);
+
             return StatusCode(response.StatusCode, response);
         }
     }

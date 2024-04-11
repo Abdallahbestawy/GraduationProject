@@ -35,7 +35,6 @@ namespace GraduationProject.Api.Controllers
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllControlMember()
         {
-
             var response = await _controlService.GetAllControlMembersAsync();
 
             return StatusCode(response.StatusCode, response);

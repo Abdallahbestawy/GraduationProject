@@ -1017,7 +1017,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
-          "GraduationProject.Identity": "1.0.0"
+          "GraduationProject.Identity": "1.0.0",
+          "GraduationProject.Shared": "1.0.0"
         },
         "compile": {
           "bin/placeholder/GraduationProject.Data.dll": {}
@@ -1084,6 +1085,16 @@
         },
         "runtime": {
           "bin/placeholder/GraduationProject.ResponseHandler.dll": {}
+        }
+      },
+      "GraduationProject.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/GraduationProject.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/GraduationProject.Shared.dll": {}
         }
       }
     }
@@ -2873,6 +2884,11 @@
       "type": "project",
       "path": "../GraduationProject.ResponseHandler/GraduationProject.ResponseHandler.csproj",
       "msbuildProject": "../GraduationProject.ResponseHandler/GraduationProject.ResponseHandler.csproj"
+    },
+    "GraduationProject.Shared/1.0.0": {
+      "type": "project",
+      "path": "../GraduationProject.Shared/GraduationProject.Shared.csproj",
+      "msbuildProject": "../GraduationProject.Shared/GraduationProject.Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {

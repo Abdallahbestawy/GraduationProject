@@ -1056,6 +1056,16 @@
         "runtime": {
           "bin/placeholder/GraduationProject.ResponseHandler.dll": {}
         }
+      },
+      "GraduationProject.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/GraduationProject.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/GraduationProject.Shared.dll": {}
+        }
       }
     }
   },
@@ -2834,11 +2844,17 @@
       "type": "project",
       "path": "../GraduationProject.ResponseHandler/GraduationProject.ResponseHandler.csproj",
       "msbuildProject": "../GraduationProject.ResponseHandler/GraduationProject.ResponseHandler.csproj"
+    },
+    "GraduationProject.Shared/1.0.0": {
+      "type": "project",
+      "path": "../GraduationProject.Shared/GraduationProject.Shared.csproj",
+      "msbuildProject": "../GraduationProject.Shared/GraduationProject.Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "GraduationProject.Identity >= 1.0.0"
+      "GraduationProject.Identity >= 1.0.0",
+      "GraduationProject.Shared >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -2876,6 +2892,9 @@
           "projectReferences": {
             "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj": {
               "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj"
+            },
+            "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Shared\\GraduationProject.Shared.csproj": {
+              "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Shared\\GraduationProject.Shared.csproj"
             }
           }
         }

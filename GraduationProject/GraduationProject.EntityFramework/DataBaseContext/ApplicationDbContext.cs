@@ -51,6 +51,7 @@ namespace GraduationProject.EntityFramework.DataBaseContext
         public DbSet<StudentSemester> StudentSemesters { get; set; }
         public DbSet<StudentSemesterAssessMethod> StudentSemesterAssessMethods { get; set; }
         public DbSet<StudentSemesterCourse> StudentSemesterCourses { get; set; }
+        public DbSet<ActivityLog> ActivityLogs { get; set; }
         // Name Sp
         public DbSet<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel> SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus { get; set; }
 

@@ -8,6 +8,7 @@
 
 	<ItemGroup>
     <ProjectReference Include="..\GraduationProject.Identity\GraduationProject.Identity.csproj" />
+    <ProjectReference Include="..\GraduationProject.Shared\GraduationProject.Shared.csproj" />
 
   </ItemGroup>
   

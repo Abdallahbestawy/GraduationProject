@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GraduationProject.Data\GraduationProject.Data.csproj" />
+    <ProjectReference Include="..\GraduationProject.Logger\GraduationProject.LogHandler.csproj" />
     <ProjectReference Include="..\GraduationProject.Repository\GraduationProject.Repository.csproj" />
   </ItemGroup>
 

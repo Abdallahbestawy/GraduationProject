@@ -4,6 +4,7 @@ using GraduationProject.Identity.IService;
 using GraduationProject.Identity.Models;
 using GraduationProject.Identity.Service;
 using GraduationProject.Identity.Settings;
+using GraduationProject.LogHandler.Service;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Mails.Service;
@@ -74,6 +75,7 @@ builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<IControlService, ControlService>();
 builder.Services.AddTransient<ILocationsService, LocationsService>();
+builder.Services.AddTransient(typeof(LoggerHandler<>));
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 

@@ -33,7 +33,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProject.ResponseH
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GraduationProject.Mails", "GraduationProject.Mails", "{709099B1-26CA-44B3-B254-7EA78C0F9AD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraduationProject.Mails", "GraduationProject.Mails\GraduationProject.Mails.csproj", "{36E388C7-8D5C-481B-9CEB-689FE652DEA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProject.Mails", "GraduationProject.Mails\GraduationProject.Mails.csproj", "{36E388C7-8D5C-481B-9CEB-689FE652DEA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraduationProject.LogHandler", "GraduationProject.Logger\GraduationProject.LogHandler.csproj", "{80F52AA8-A905-453C-A6AB-C78A35016A08}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GraduationProject.LogHandler", "GraduationProject.LogHandler", "{F34E90DE-7B0C-4561-A868-B373AF42638E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GraduationProject.Shared", "GraduationProject.Shared", "{FA9431A9-FB66-4FAB-9645-67CA4322ACDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraduationProject.Shared", "GraduationProject.Shared\GraduationProject.Shared.csproj", "{A7FFE256-F4AE-40DD-BA31-25653ACCC47F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +81,14 @@ Global
 		{36E388C7-8D5C-481B-9CEB-689FE652DEA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36E388C7-8D5C-481B-9CEB-689FE652DEA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36E388C7-8D5C-481B-9CEB-689FE652DEA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80F52AA8-A905-453C-A6AB-C78A35016A08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80F52AA8-A905-453C-A6AB-C78A35016A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80F52AA8-A905-453C-A6AB-C78A35016A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80F52AA8-A905-453C-A6AB-C78A35016A08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7FFE256-F4AE-40DD-BA31-25653ACCC47F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7FFE256-F4AE-40DD-BA31-25653ACCC47F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7FFE256-F4AE-40DD-BA31-25653ACCC47F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7FFE256-F4AE-40DD-BA31-25653ACCC47F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,6 +105,10 @@ Global
 		{980524C2-90F9-4466-875A-54E4E3F46B6C} = {79BED1D4-20F8-436D-BFCD-192066A7EE95}
 		{709099B1-26CA-44B3-B254-7EA78C0F9AD6} = {996AA549-DC27-4438-8F2C-75795F9002AE}
 		{36E388C7-8D5C-481B-9CEB-689FE652DEA6} = {709099B1-26CA-44B3-B254-7EA78C0F9AD6}
+		{80F52AA8-A905-453C-A6AB-C78A35016A08} = {F34E90DE-7B0C-4561-A868-B373AF42638E}
+		{F34E90DE-7B0C-4561-A868-B373AF42638E} = {996AA549-DC27-4438-8F2C-75795F9002AE}
+		{FA9431A9-FB66-4FAB-9645-67CA4322ACDE} = {996AA549-DC27-4438-8F2C-75795F9002AE}
+		{A7FFE256-F4AE-40DD-BA31-25653ACCC47F} = {FA9431A9-FB66-4FAB-9645-67CA4322ACDE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5C178144-DC46-4CF4-86F8-9AD923E24B80}
