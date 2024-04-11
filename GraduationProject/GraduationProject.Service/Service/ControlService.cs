@@ -98,7 +98,7 @@ namespace GraduationProject.Service.Service
                 var getAllSemesterCurrentDtos = semesters.Select(semester => new GetAllSemesterCurrentDto
                 {
                     Id = semester.ScientificDegreeId,
-                    Name = semester.ScientificDegree.Name
+                    Name = $"{semester.ScientificDegree.Parent.Name} - {semester.ScientificDegree.Name}"
                 }).ToList();
 
                 return Response<List<GetAllSemesterCurrentDto>>.Success(getAllSemesterCurrentDtos, "Semesters are retrieved successfully").WithCount();

@@ -22,6 +22,7 @@ namespace GraduationProject.Repository.Repository
             {
                 var semesters = await _context.StudentSemesters
                     .Include(s => s.ScientificDegree)
+                        .ThenInclude(parent=>parent.Parent)
                     .Where(sd => sd.Percentage == null && sd.Total == null && sd.TotalCourses == null && sd.AcademyYear.IsCurrent)
                     .GroupBy(a => a.ScientificDegreeId)
                     .Select(g => g.FirstOrDefault())
