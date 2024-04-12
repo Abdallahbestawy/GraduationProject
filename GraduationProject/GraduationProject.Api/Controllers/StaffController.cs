@@ -29,8 +29,8 @@ namespace GraduationProject.Api.Controllers
             }
         }
 
-        [HttpPost("AddStaffSemester")]
-        public async Task<IActionResult> AddStaffSemester(AddStaffSemesterDto addStaffSemesterDto)
+        [HttpPost("AssignCourseStaff")]
+        public async Task<IActionResult> AddStaffSemester([FromBody] List<AddStaffSemesterDto> addStaffSemesterDto)
         {
             if (ModelState.IsValid)
             {

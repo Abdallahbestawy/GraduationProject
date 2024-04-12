@@ -7,8 +7,5 @@
         public int DepartmentId { get; set; }
 
         public int ScientificDegreeId { get; set; }
-        public int AcademyYearId { get; set; }
-
-
     }
 }

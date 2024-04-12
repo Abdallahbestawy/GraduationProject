@@ -196,12 +196,19 @@ namespace GraduationProject.Service.Service
 
         public async Task<Response<int>> AddStudentSemesterAsync(AddStudentSemesterDto addStudentSemesterDto)
         {
+
+            var academyYear = await _unitOfWork.AcademyYears.GetEntityByPropertyAsync(s => s.IsCurrent);
+            if (academyYear == null || !academyYear.Any())
+            {
+                return Response<int>.ServerError("Error Academy Years",
+                 "There Is No Active Academic Year.");
+            }
             StudentSemester newStudentSemester = new StudentSemester
             {
                 StudentId = addStudentSemesterDto.StudentId,
                 DepartmentId = addStudentSemesterDto.DepartmentId,
                 ScientificDegreeId = addStudentSemesterDto.ScientificDegreeId,
-                AcademyYearId = addStudentSemesterDto.AcademyYearId
+                AcademyYearId = academyYear.FirstOrDefault().Id
             };
 
             try

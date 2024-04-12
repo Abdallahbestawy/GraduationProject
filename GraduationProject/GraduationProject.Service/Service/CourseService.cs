@@ -408,7 +408,7 @@ namespace GraduationProject.Service.Service
 
                 return Response<List<GetCourseDto>>.Success(getCoursePrerequisiteDtos, "Prerequisites are retrieved successfully").WithCount();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
@@ -427,7 +427,7 @@ namespace GraduationProject.Service.Service
         {
             try
             {
-                if (_unitOfWork.Semesters.GetByIdAsync(semesterId) == null)
+                if (await _unitOfWork.ScientificDegrees.GetByIdAsync(semesterId) == null)
                     return Response<List<GetCourseDto>>.BadRequest("This semester doesn't exist");
 
                 var courses = await _unitOfWork.Courses.GetEntityByPropertyAsync(c => c.ScientificDegreeId == semesterId);
