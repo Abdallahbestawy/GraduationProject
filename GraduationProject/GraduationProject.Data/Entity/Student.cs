@@ -42,7 +42,6 @@ namespace GraduationProject.Data.Entity
         public string? PostalCode { get; set; }
 
         public virtual ICollection<StudentSemester> StudentSemesters { get; set; } = new List<StudentSemester>();
-        public virtual ICollection<Result> Results { get; set; } = new List<Result>();
         public virtual FamilyData FamilyDatas { get; set; }
         public virtual ICollection<Phone> Phones { get; set; } = new List<Phone>();
         public virtual QualificationData QualificationDatas { get; set; }

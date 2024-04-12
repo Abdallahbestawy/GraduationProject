@@ -200,3 +200,7 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.LogHandler.pdb
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.Shared.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.Shared.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.LogHandler.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.Shared.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.LogHandler.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Debug\net6.0\GraduationProject.Shared.pdb

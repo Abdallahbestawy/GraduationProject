@@ -22,8 +22,8 @@ namespace GraduationProject.Repository.Repository
             {
                 var semesters = await _context.StudentSemesters
                     .Include(s => s.ScientificDegree)
-                        .ThenInclude(parent=>parent.Parent)
-                    .Where(sd => sd.Percentage == null && sd.Total == null && sd.TotalCourses == null && sd.AcademyYear.IsCurrent)
+                        .ThenInclude(parent => parent.Parent)
+                    .Where(sd => sd.Total == null && sd.TotalCourses == null && sd.AcademyYear.IsCurrent)
                     .GroupBy(a => a.ScientificDegreeId)
                     .Select(g => g.FirstOrDefault())
                     .ToListAsync();
@@ -87,7 +87,7 @@ namespace GraduationProject.Repository.Repository
                         .ThenInclude(s => s.Course)
                     .Include(s => s.StudentSemesterAssessMethods)
                         .ThenInclude(assess => assess.CourseAssessMethod)
-                    .Where(a => a.AcademyYear.IsCurrent && a.ScientificDegreeId == SemesterId)
+                    .Where(a => a.ScientificDegreeId == SemesterId)
                     .ToListAsync();
 
                 if (students == null || !students.Any())
@@ -165,7 +165,6 @@ namespace GraduationProject.Repository.Repository
                         .ThenInclude(s => s.Course)
                     .Include(ss => ss.ScientificDegree)
                     .Where(ss => ss.ScientificDegreeId == scientificDegreeId)
-                    .Where(ss => ss.AcademyYear.IsCurrent)
                     .ToListAsync();
                 if (studentSemesters == null || !studentSemesters.Any())
                 {
@@ -182,15 +181,18 @@ namespace GraduationProject.Repository.Repository
 
                     decimal? totalMaxDegree = studentCourses.Sum(sc => sc.Course.MaxDegree);
                     decimal? totalCourseDegree = studentCourses.Sum(sc => sc.CourseDegree);
-
                     studentSemester.Total = totalCourseDegree;
-                    studentSemester.Percentage = totalMaxDegree != 0 ? totalCourseDegree / totalMaxDegree : null;
                     studentSemester.TotalCourses = totalMaxDegree;
-                    studentSemester.Char = await CalculateCharEstimates(studentSemester.Percentage, studentSemester.ScientificDegree.BylawId);
-
+                    Result result = new Result();
+                    result.StudentSemesterId = studentSemester.Id;
+                    result.Percentage = totalCourseDegree / totalMaxDegree;
+                    result.Char = await CalculateCharEstimates(result.Percentage, studentSemester.ScientificDegree.BylawId);
+                    result.PercentageTotal = await RatioCalculation(studentSemester.StudentId);
+                    result.CharTotal = await CalculateCharEstimates(result.PercentageTotal, studentSemester.ScientificDegree.BylawId);
+                    _context.Results.Add(result);
                     if (studentSemester.ScientificDegree.SuccessPercentageSemester.HasValue)
                     {
-                        studentSemester.Passing = studentSemester.Percentage > studentSemester.ScientificDegree.SuccessPercentageSemester;
+                        studentSemester.Passing = result.Percentage > studentSemester.ScientificDegree.SuccessPercentageSemester;
                     }
                     else
                     {
@@ -225,13 +227,14 @@ namespace GraduationProject.Repository.Repository
                 var studentSemestersComplete = await _context.StudentSemesters
                      .Include(d => d.ScientificDegree)
                      .Include(d => d.AcademyYear)
+                     .Include(d => d.Results)
                      .ToListAsync();
 
                 if (studentSemestersComplete == null || !studentSemestersComplete.Any())
                 {
                     return null;
                 }
-                var studentSemesters = studentSemestersComplete.Where(s => s.ScientificDegreeId == scientificDegreeId && s.AcademyYear.IsCurrent).ToList();
+                var studentSemesters = studentSemestersComplete.Where(s => s.ScientificDegreeId == scientificDegreeId /*&& s.AcademyYear.IsCurrent*/).ToList();
                 if (studentSemesters == null || !studentSemesters.Any())
                 {
                     return null;
@@ -291,9 +294,12 @@ namespace GraduationProject.Repository.Repository
                         StudentSemester newstudentSemester = new StudentSemester();
                         if (studentsem.Percentage != null)
                         {
-                            var stdDegree = studentSemestersComplete.Where(d => d.StudentId == std.StudentId).ToList();
-                            decimal precntage = await RatioCalculation(stdDegree);
-                            if (studentsem.Percentage >= precntage)
+                            var precntage = std.Results.Where(sd => sd.StudentSemesterId == std.Id).FirstOrDefault();
+                            if (precntage == null)
+                            {
+                                continue;
+                            }
+                            if (studentsem.Percentage >= precntage.PercentageTotal)
                             {
                                 newstudentSemester = await CreateNewStudentSemester(std, studentsem.Id, academyYearId);
                             }
@@ -317,9 +323,12 @@ namespace GraduationProject.Repository.Repository
                         StudentSemester newstudentSemester = new StudentSemester();
                         if (studentsem.Percentage != null)
                         {
-                            var stdDegree = studentSemestersComplete.Where(d => d.StudentId == std.StudentId).ToList();
-                            decimal precntage = await RatioCalculation(stdDegree);
-                            if (studentsem.Percentage >= precntage)
+                            var precntage = std.Results.Where(sd => sd.StudentSemesterId == std.Id).FirstOrDefault();
+                            if (precntage == null)
+                            {
+                                continue;
+                            }
+                            if (studentsem.Percentage >= precntage.PercentageTotal)
                             {
                                 newstudentSemester = await CreateNewStudentSemester(std, studentsem.Id, academyYearId);
                             }
@@ -354,8 +363,13 @@ namespace GraduationProject.Repository.Repository
             };
             return newstudentSemester;
         }
-        private async Task<decimal> RatioCalculation(List<StudentSemester> studentSemester)
+        private async Task<decimal?> RatioCalculation(int studentId)
         {
+            var studentSemester = await _context.StudentSemesters.Where(sd => sd.StudentId == studentId).ToListAsync();
+            if (studentSemester == null || !studentSemester.Any())
+            {
+                return null;
+            }
             decimal? total1 = 0;
             decimal? tolal2 = 0;
             foreach (var id in studentSemester)
@@ -370,7 +384,7 @@ namespace GraduationProject.Repository.Repository
         public async Task<List<object>> GetTheCurrentSemesterWithStudents()
         {
             var studentsWithoutPercentageAndTotal = await _context.StudentSemesters
-            .Where(sd => sd.Percentage == null && sd.Total == null && sd.TotalCourses == null && sd.AcademyYear.IsCurrent)
+            .Where(sd => sd.Total == null && sd.TotalCourses == null && sd.AcademyYear.IsCurrent)
             .ToListAsync();
 
             var groupedStudents = studentsWithoutPercentageAndTotal
@@ -437,7 +451,7 @@ namespace GraduationProject.Repository.Repository
             {
                 Id = studentsem.Id,
                 Type = 2,
-                Percentage = studentsem.SuccessPercentageBand
+                Percentage = studentBand.SuccessPercentageBand
             };
             return result;
         }
@@ -459,7 +473,7 @@ namespace GraduationProject.Repository.Repository
             {
                 Id = studentBand.Id,
                 Type = 3,
-                Percentage = studentBand.SuccessPercentagePhase
+                Percentage = studentPhase.SuccessPercentagePhase
             };
             return result;
 

@@ -13,6 +13,7 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<Faculty> Facultys { get; }
         IGeneralRepository<Band> Bands { get; }
         IGeneralRepository<Bylaw> Bylaws { get; }
+        IGeneralRepository<Result> Results { get; }
         IGeneralRepository<Semester> Semesters { get; }
         IGeneralRepository<Phase> Phases { get; }
         IGeneralRepository<ExamRole> ExamRoles { get; }

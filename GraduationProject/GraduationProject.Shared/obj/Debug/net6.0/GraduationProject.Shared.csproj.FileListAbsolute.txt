@@ -10,3 +10,15 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\refint\GraduationProject.Shared.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.pdb
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\ref\GraduationProject.Shared.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Shared\bin\Debug\net6.0\GraduationProject.Shared.deps.json
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Shared\bin\Debug\net6.0\GraduationProject.Shared.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Shared\bin\Debug\net6.0\GraduationProject.Shared.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.csproj.AssemblyReference.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.GeneratedMSBuildEditorConfig.editorconfig
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.AssemblyInfoInputs.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.AssemblyInfo.cs
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.csproj.CoreCompileInputs.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\refint\GraduationProject.Shared.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\GraduationProject.Shared.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Shared\obj\Debug\net6.0\ref\GraduationProject.Shared.dll

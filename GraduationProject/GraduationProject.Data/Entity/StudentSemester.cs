@@ -25,12 +25,13 @@ namespace GraduationProject.Data.Entity
         public int AcademyYearId { get; set; }
         public AcademyYear AcademyYear { get; set; }
         public decimal? Total { get; set; }
-        public decimal? Percentage { get; set; }
         public bool Passing { get; set; } = false;
-        public char? Char { get; set; }
+
         public decimal? TotalCourses { get; set; }
 
         public virtual ICollection<StudentSemesterAssessMethod> StudentSemesterAssessMethods { get; set; } = new List<StudentSemesterAssessMethod>();
         public virtual ICollection<StudentSemesterCourse> StudentSemesterCourse { get; set; } = new List<StudentSemesterCourse>();
+        public virtual ICollection<Result> Results { get; set; } = new List<Result>();
+
     }
 }

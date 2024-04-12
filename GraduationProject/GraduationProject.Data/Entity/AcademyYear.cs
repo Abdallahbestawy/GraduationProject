@@ -22,6 +22,5 @@ namespace GraduationProject.Data.Entity
         public virtual Faculty Facultys { get; set; }
         public virtual ICollection<StudentSemester> StudentSemesters { get; set; } = new List<StudentSemester>();
         public virtual ICollection<StaffSemester> StaffSemesters { get; set; } = new List<StaffSemester>();
-        public virtual ICollection<Result> Results { get; set; } = new List<Result>();
     }
 }

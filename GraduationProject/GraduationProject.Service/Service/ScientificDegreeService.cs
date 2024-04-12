@@ -32,7 +32,6 @@ namespace GraduationProject.Service.Service
                     Description = addScientificDegreeDto.Description,
                     Type = addScientificDegreeDto.Type,
                     BylawId = addScientificDegreeDto.BylawId,
-                    SuccessPercentageCourse = addScientificDegreeDto.SuccessPercentageCourse,
                     SuccessPercentageBand = addScientificDegreeDto.SuccessPercentageBand,
                     SuccessPercentageSemester = addScientificDegreeDto.SuccessPercentageSemester,
                     SuccessPercentagePhase = addScientificDegreeDto.SuccessPercentagePhase,
@@ -82,7 +81,6 @@ namespace GraduationProject.Service.Service
                     Description = entity.Description,
                     Type = entity.Type,
                     BylawId = entity.BylawId,
-                    SuccessPercentageCourse = entity.SuccessPercentageCourse,
                     SuccessPercentageBand = entity.SuccessPercentageBand,
                     SuccessPercentageSemester = entity.SuccessPercentageSemester,
                     SuccessPercentagePhase = entity.SuccessPercentagePhase,
@@ -127,7 +125,6 @@ namespace GraduationProject.Service.Service
                     Description = scientificDegreeEntities.Description,
                     Type = scientificDegreeEntities.Type,
                     BylawId = scientificDegreeEntities.BylawId,
-                    SuccessPercentageCourse = scientificDegreeEntities.SuccessPercentageCourse,
                     SuccessPercentageBand = scientificDegreeEntities.SuccessPercentageBand,
                     SuccessPercentageSemester = scientificDegreeEntities.SuccessPercentageSemester,
                     SuccessPercentagePhase = scientificDegreeEntities.SuccessPercentagePhase,
@@ -168,7 +165,6 @@ namespace GraduationProject.Service.Service
                 existingScientificDegree.Description = updateScientificDegreeDto.Description;
                 existingScientificDegree.Type = updateScientificDegreeDto.Type;
                 existingScientificDegree.BylawId = updateScientificDegreeDto.BylawId;
-                existingScientificDegree.SuccessPercentageCourse = updateScientificDegreeDto.SuccessPercentageCourse;
                 existingScientificDegree.SuccessPercentageBand = updateScientificDegreeDto.SuccessPercentageBand;
                 existingScientificDegree.SuccessPercentageSemester = updateScientificDegreeDto.SuccessPercentageSemester;
                 existingScientificDegree.SuccessPercentagePhase = updateScientificDegreeDto.SuccessPercentagePhase;
@@ -272,12 +268,12 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeByBylawIdForSpecificTypeAsync(int bylawId,int type)
+        public async Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeByBylawIdForSpecificTypeAsync(int bylawId, int type)
         {
             try
             {
                 IEnumerable<ScientificDegree>? scientificDegreeEntities = Enumerable.Empty<ScientificDegree>();
-                if(!((ScientificDegreeType)type == ScientificDegreeType.Bylaw))
+                if (!((ScientificDegreeType)type == ScientificDegreeType.Bylaw))
                 {
                     if (!((ScientificDegreeType)type == ScientificDegreeType.Band))
                     {
@@ -291,10 +287,11 @@ namespace GraduationProject.Service.Service
                         scientificDegreeEntities = await _unitOfWork.ScientificDegrees
                             .GetEntityByPropertyAsync(scien => scien.BylawId == bylawId && (int)scien.Type == type);
 
-                    }else // if the type is band
+                    }
+                    else // if the type is band
                     {
                         scientificDegreeEntities = await _unitOfWork.ScientificDegrees
-                            .GetEntityByPropertyAsync(scien => scien.BylawId == bylawId 
+                            .GetEntityByPropertyAsync(scien => scien.BylawId == bylawId
                             && (scien.Type == ScientificDegreeType.Phase || scien.Type == ScientificDegreeType.Bylaw));
                     }
                 }
@@ -309,7 +306,6 @@ namespace GraduationProject.Service.Service
                     Description = entity.Description,
                     Type = entity.Type,
                     BylawId = entity.BylawId,
-                    SuccessPercentageCourse = entity.SuccessPercentageCourse,
                     SuccessPercentageBand = entity.SuccessPercentageBand,
                     SuccessPercentageSemester = entity.SuccessPercentageSemester,
                     SuccessPercentagePhase = entity.SuccessPercentagePhase,
@@ -343,12 +339,12 @@ namespace GraduationProject.Service.Service
             try
             {
                 var bylaws = await _unitOfWork.Bylaws.GetEntityByPropertyAsync(bylaw => bylaw.FacultyId == facultyId);
-                if(!bylaws.Any())
+                if (!bylaws.Any())
                     return Response<List<GetAllSemesterCurrentDto>>.NoContent("No bylaws are exist");
 
                 var scientificDegreeEntities = await _unitOfWork.ScientificDegrees
                     .GetEntityByPropertyAsync(scien => bylaws.Contains(scien.Bylaw) && scien.Type == ScientificDegreeType.Semester);
-                if(!scientificDegreeEntities.Any())
+                if (!scientificDegreeEntities.Any())
                     return Response<List<GetAllSemesterCurrentDto>>.NoContent("No semseters are exist");
 
                 List<GetAllSemesterCurrentDto> result = new();
@@ -361,7 +357,7 @@ namespace GraduationProject.Service.Service
                     result.Add(semesterObject);
                 }
 
-                return Response<List<GetAllSemesterCurrentDto>>.Success(result,"Semesters retrieved successfully");
+                return Response<List<GetAllSemesterCurrentDto>>.Success(result, "Semesters retrieved successfully");
 
             }
             catch (Exception ex)

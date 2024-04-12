@@ -42,6 +42,8 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<Country> Countries { get; private set; }
         public IGeneralRepository<Governorate> Governorates { get; private set; }
         public IGeneralRepository<ActivityLog> ActivityLogs { get; set; }
+        public IGeneralRepository<Result> Results { get; private set; }
+
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -78,6 +80,7 @@ namespace GraduationProject.Repository.Repository
             Countries = new GeneralRepository<Country>(_context);
             Governorates = new GeneralRepository<Governorate>(_context);
             ActivityLogs = new GeneralRepository<ActivityLog>(_context);
+            Results = new GeneralRepository<Result>(_context);
         }
 
 

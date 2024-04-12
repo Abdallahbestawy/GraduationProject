@@ -15,7 +15,6 @@ namespace GraduationProject.Service.DataTransferObject.ScientificDegreeDto
 
         public int Order { get; set; }
 
-        public decimal? SuccessPercentageCourse { get; set; }
 
         public decimal? SuccessPercentageBand { get; set; }
 

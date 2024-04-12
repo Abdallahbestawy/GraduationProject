@@ -671,30 +671,24 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AcademyYearId")
-                        .HasColumnType("int");
+                    b.Property<string>("Char")
+                        .HasColumnType("nvarchar(1)");
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
+                    b.Property<string>("CharTotal")
+                        .HasColumnType("nvarchar(1)");
 
-                    b.Property<decimal>("GPA")
+                    b.Property<decimal?>("Percentage")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ScientificDegreeId")
-                        .HasColumnType("int");
+                    b.Property<decimal?>("PercentageTotal")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("StudentId")
+                    b.Property<int>("StudentSemesterId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AcademyYearId");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("ScientificDegreeId");
-
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentSemesterId");
 
                     b.ToTable("Results");
                 });
@@ -737,9 +731,6 @@ namespace GraduationProject.EntityFramework.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal?>("SuccessPercentageBand")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("SuccessPercentageCourse")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("SuccessPercentagePhase")
@@ -956,17 +947,11 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Property<int>("AcademyYearId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Char")
-                        .HasColumnType("nvarchar(1)");
-
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Passing")
                         .HasColumnType("bit");
-
-                    b.Property<decimal?>("Percentage")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ScientificDegreeId")
                         .HasColumnType("int");
@@ -1590,37 +1575,13 @@ namespace GraduationProject.EntityFramework.Migrations
 
             modelBuilder.Entity("GraduationProject.Data.Entity.Result", b =>
                 {
-                    b.HasOne("GraduationProject.Data.Entity.AcademyYear", "AcademyYear")
+                    b.HasOne("GraduationProject.Data.Entity.StudentSemester", "studentSemester")
                         .WithMany("Results")
-                        .HasForeignKey("AcademyYearId")
+                        .HasForeignKey("StudentSemesterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GraduationProject.Data.Entity.Department", "Department")
-                        .WithMany("Results")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GraduationProject.Data.Entity.ScientificDegree", "ScientificDegree")
-                        .WithMany("Results")
-                        .HasForeignKey("ScientificDegreeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GraduationProject.Data.Entity.Student", "Student")
-                        .WithMany("Results")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AcademyYear");
-
-                    b.Navigation("Department");
-
-                    b.Navigation("ScientificDegree");
-
-                    b.Navigation("Student");
+                    b.Navigation("studentSemester");
                 });
 
             modelBuilder.Entity("GraduationProject.Data.Entity.ScientificDegree", b =>
@@ -1884,8 +1845,6 @@ namespace GraduationProject.EntityFramework.Migrations
 
             modelBuilder.Entity("GraduationProject.Data.Entity.AcademyYear", b =>
                 {
-                    b.Navigation("Results");
-
                     b.Navigation("StaffSemesters");
 
                     b.Navigation("StudentSemesters");
@@ -1948,8 +1907,6 @@ namespace GraduationProject.EntityFramework.Migrations
                 {
                     b.Navigation("Courses");
 
-                    b.Navigation("Results");
-
                     b.Navigation("StudentSemesters");
                 });
 
@@ -1999,8 +1956,6 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     b.Navigation("ParentScientificDegree");
 
-                    b.Navigation("Results");
-
                     b.Navigation("StudentSemesters");
                 });
 
@@ -2028,13 +1983,13 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Navigation("QualificationDatas")
                         .IsRequired();
 
-                    b.Navigation("Results");
-
                     b.Navigation("StudentSemesters");
                 });
 
             modelBuilder.Entity("GraduationProject.Data.Entity.StudentSemester", b =>
                 {
+                    b.Navigation("Results");
+
                     b.Navigation("StudentSemesterAssessMethods");
 
                     b.Navigation("StudentSemesterCourse");

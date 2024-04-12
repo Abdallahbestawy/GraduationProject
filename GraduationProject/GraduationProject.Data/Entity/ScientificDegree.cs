@@ -18,8 +18,6 @@ namespace GraduationProject.Data.Entity
 
         public int Order { get; set; }
 
-        public decimal? SuccessPercentageCourse { get; set; }
-
         public decimal? SuccessPercentageBand { get; set; }
 
         public decimal? SuccessPercentageSemester { get; set; }
@@ -53,6 +51,5 @@ namespace GraduationProject.Data.Entity
         public virtual ICollection<ScientificDegree> ParentScientificDegree { get; set; } = new List<ScientificDegree>();
         public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
         public virtual ICollection<StudentSemester> StudentSemesters { get; set; } = new List<StudentSemester>();
-        public virtual ICollection<Result> Results { get; set; } = new List<Result>();
     }
 }
