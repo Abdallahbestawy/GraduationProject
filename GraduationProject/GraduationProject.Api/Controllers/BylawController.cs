@@ -42,7 +42,7 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> GetBylaws()
         {
             var response = await _bylawService.GetBylawAsync();
-            
+
             return StatusCode(response.StatusCode, response);
         }
 
@@ -50,16 +50,16 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> AddBylaw(BylawDto addBylawDto)
         {
             var response = await _bylawService.AddBylawAsync(addBylawDto);
-            
+
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPut("{Id:int}")]
-        public async Task<IActionResult> UpdateBylaw([FromRoute] int Id, [FromBody] BylawDto updateBylawDto)
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateBylaw([FromBody] BylawDto updateBylawDto)
         {
-            if (Id != updateBylawDto.Id)
+            if (updateBylawDto == null)
             {
-                return BadRequest("the Id not Valid");
+                return BadRequest("Please Enter Valid Model");
             }
             var response = await _bylawService.UpdateBylawAsync(updateBylawDto);
 

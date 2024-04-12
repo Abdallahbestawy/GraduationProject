@@ -50,12 +50,12 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPut("{Id:int}")]
-        public async Task<IActionResult> UpdateBand([FromRoute] int Id, [FromBody] BandDto updateBandDto)
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateBand([FromBody] BandDto updateBandDto)
         {
-            if (Id != updateBandDto.Id)
+            if (updateBandDto == null)
             {
-                return BadRequest("the Id not Valid");
+                return BadRequest("please emter valid model");
             }
             var response = await _bandService.UpdateBandAsync(updateBandDto);
 

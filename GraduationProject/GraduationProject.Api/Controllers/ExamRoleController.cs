@@ -23,7 +23,7 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("Please Enter Id Valid");
             }
             var response = await _examRoleService.GetExamRoleByIdAsync(Id);
-            
+
             return StatusCode(response.StatusCode, response);
         }
 
@@ -51,12 +51,12 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPut("{Id:int}")]
-        public async Task<IActionResult> UpdateExamRoles([FromRoute] int Id, [FromBody] ExamRolesDto updateExamRolesDto)
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateExamRoles([FromBody] ExamRolesDto updateExamRolesDto)
         {
-            if (Id != updateExamRolesDto.Id)
+            if (updateExamRolesDto == null)
             {
-                return BadRequest("the Id not Valid");
+                return BadRequest("Please Enter Valid Model");
             }
             var response = await _examRoleService.UpdateExamRoleAsync(updateExamRolesDto);
 

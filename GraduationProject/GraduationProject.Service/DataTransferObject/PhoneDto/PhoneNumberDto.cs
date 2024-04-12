@@ -4,6 +4,7 @@ namespace GraduationProject.Service.DataTransferObject.PhoneDto
 {
     public class PhoneNumberDto
     {
+        public int? Id { get; set; }
         public string PhoneNumber { get; set; }
 
         public PhoneType Type { get; set; }

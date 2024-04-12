@@ -686,5 +686,98 @@ namespace GraduationProject.Service.Service
             }
             return false;
         }
+
+        public async Task<int> UpdateStudentAsync(AddStudentDto updateStudentDto)
+        {
+            try
+            {
+                var existingStudent = await _unitOfWork.Students.GetByIdAsync(updateStudentDto.id ?? 0);
+                if (existingStudent == null)
+                {
+                    return -1;
+                }
+                SqlParameter pUserId = new SqlParameter("@UserId", existingStudent.UserId);
+                var getStudent = await _unitOfWork.GetStudentDetailsByUserIdModels.CallStoredProcedureAsync(
+                    "EXECUTE SpGetStudentDetailsByUserId", pUserId);
+                if (!getStudent.Any() || getStudent == null)
+                    return 0;
+                existingStudent.PlaceOfBirth = updateStudentDto.PlaceOfBirth;
+                existingStudent.Gender = updateStudentDto.Gender;
+                existingStudent.Nationality = updateStudentDto.Nationality;
+                existingStudent.Religion = updateStudentDto.Religion;
+                existingStudent.DateOfBirth = updateStudentDto.DateOfBirth;
+                existingStudent.CountryId = updateStudentDto.CountryId;
+                existingStudent.GovernorateId = updateStudentDto.GovernorateId;
+                existingStudent.CityId = updateStudentDto.CityId;
+                existingStudent.Street = updateStudentDto.Street;
+                existingStudent.PostalCode = updateStudentDto.PostalCode;
+                _unitOfWork.Students.Update(existingStudent);
+                var qualicationData = await _unitOfWork.QualificationDatas.GetEntityByPropertyAsync(s => s.StudentId == existingStudent.Id);
+                if (qualicationData != null || qualicationData.Any())
+                {
+                    var existingQualicationData = qualicationData.FirstOrDefault();
+                    existingQualicationData.PreQualification = updateStudentDto.PreQualification;
+                    existingQualicationData.SeatNumber = updateStudentDto.SeatNumber;
+                    existingQualicationData.QualificationYear = updateStudentDto.QualificationYear;
+                    existingQualicationData.Degree = updateStudentDto.Degree;
+                    _unitOfWork.QualificationDatas.Update(existingQualicationData);
+                }
+                var familyData = await _unitOfWork.FamilyDatas.GetEntityByPropertyAsync(s => s.StudentId == existingStudent.Id);
+                if (familyData != null || familyData.Any())
+                {
+                    var existingFamilyData = familyData.FirstOrDefault();
+                    existingFamilyData.ParentName = updateStudentDto.ParentName;
+                    existingFamilyData.Job = updateStudentDto.ParentJob;
+                    existingFamilyData.CountryId = updateStudentDto.ParentCountryId;
+                    existingFamilyData.GovernorateId = updateStudentDto.ParentGovernorateId;
+                    existingFamilyData.CityId = updateStudentDto.ParentCityId;
+                    existingFamilyData.Street = updateStudentDto.ParentStreet;
+                    _unitOfWork.FamilyDatas.Update(existingFamilyData);
+                }
+                var existingPhones = await _unitOfWork.Phones.GetEntityByPropertyAsync(s => s.StudentId == existingStudent.Id);
+                if (existingPhones != null || existingPhones.Any())
+                {
+                    foreach (var existingPhone in existingPhones)
+                    {
+                        var updateDtoPhone = updateStudentDto.PhoneNumbers.FirstOrDefault(ph => ph.Id == existingPhone.Id);
+                        if (updateDtoPhone != null)
+                        {
+                            existingPhone.PhoneNumber = updateDtoPhone.PhoneNumber;
+                            existingPhone.Type = updateDtoPhone.Type;
+                        }
+                    }
+                    _unitOfWork.Phones.UpdateRangeAsync(existingPhones);
+                }
+                else
+                {
+                    if (updateStudentDto.PhoneNumbers != null)
+                    {
+                        List<Phone> phones = updateStudentDto.PhoneNumbers.Select(ph =>
+                            new Phone
+                            {
+                                StudentId = existingStudent.Id,
+                                PhoneNumber = ph.PhoneNumber,
+                                Type = ph.Type,
+                            }).ToList();
+
+                        await _unitOfWork.Phones.AddRangeAsync(phones);
+                    }
+                }
+                int result = await _unitOfWork.SaveAsync();
+                if (result > 0)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
+        }
+
     }
 }

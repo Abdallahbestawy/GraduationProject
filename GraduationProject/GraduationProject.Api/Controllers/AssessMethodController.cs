@@ -42,12 +42,12 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPut("{Id:int}")]
-        public async Task<IActionResult> UpdateAssessMethod([FromRoute] int Id, [FromBody] AssessMethodDto updateAssessMethodDto)
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateAssessMethod([FromBody] AssessMethodDto updateAssessMethodDto)
         {
-            if (Id != updateAssessMethodDto.Id)
+            if (updateAssessMethodDto == null)
             {
-                return BadRequest("the Id not Valid");
+                return BadRequest("Please Enter Valid Model");
             }
             var response = await _assessMethodService.UpdateAssessMethodAsync(updateAssessMethodDto);
 

@@ -6,7 +6,7 @@ namespace GraduationProject.Service.DataTransferObject.StudentDto
 {
     public class AddStudentDto
     {
-        private int id;
+        public int? id { get; set; }
         [Required, MaxLength(500)]
         public string NameArabic { get; set; }
         [Required, MaxLength(500)]

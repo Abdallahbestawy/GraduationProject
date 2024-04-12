@@ -51,12 +51,12 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPut("{Id:int}")]
-        public async Task<IActionResult> UpdateSemester([FromRoute] int Id, [FromBody] SemesterDto updateSemesterDto)
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateSemester([FromBody] SemesterDto updateSemesterDto)
         {
-            if (Id != updateSemesterDto.Id)
+            if (updateSemesterDto == null)
             {
-                return BadRequest("the Id not Valid");
+                return BadRequest("Please Enter Valid Model");
             }
             var response = await _semesterService.UpdateSemesterAsync(updateSemesterDto);
 

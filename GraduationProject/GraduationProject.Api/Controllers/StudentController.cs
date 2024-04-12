@@ -65,7 +65,7 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter valid StudentId");
             }
             var respone = await _studentService.DeleteStudentAsync(studentId);
-            
+
             return StatusCode(respone.StatusCode, respone);
         }
         [HttpDelete("studentSemesters{studentSemesterId:int}")]
@@ -81,6 +81,24 @@ namespace GraduationProject.Api.Controllers
                 return Ok("Delete Student Semester Success");
             }
             return BadRequest("please enter vaild Student Semester and Try again");
+        }
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateStudent([FromBody] AddStudentDto updateStudentDto)
+        {
+            if (updateStudentDto == null)
+            {
+                return BadRequest("Please enter valid Model");
+            }
+            int respone = await _studentService.UpdateStudentAsync(updateStudentDto);
+            if (respone > 0)
+            {
+                return Ok("The Update Student Success");
+            }
+            else
+            {
+                return BadRequest("Please Try Again And Enter Valid Model");
+
+            }
         }
     }
 }

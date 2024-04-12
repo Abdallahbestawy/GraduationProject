@@ -22,7 +22,7 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("Please Enter Id Valid");
             }
             var response = await _phaseService.GetPhaseByIdAsync(Id);
-            
+
             return StatusCode(response.StatusCode, response);
         }
 
@@ -50,12 +50,12 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPut("{Id:int}")]
-        public async Task<IActionResult> UpdatePhase([FromRoute] int Id, [FromBody] PhaseDto updatePhaseDto)
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdatePhase([FromBody] PhaseDto updatePhaseDto)
         {
-            if (Id != updatePhaseDto.Id)
+            if (updatePhaseDto == null)
             {
-                return BadRequest("the Id not Valid");
+                return BadRequest("Please Enter Valid Model");
             }
             var response = await _phaseService.UpdatePhaseAsync(updatePhaseDto);
 
@@ -66,7 +66,7 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> DeletePhase([FromRoute] int Id)
         {
             var response = await _phaseService.DeletePhaseAsync(Id);
-            
+
             return StatusCode(response.StatusCode, response);
         }
 

@@ -35,9 +35,9 @@ namespace GraduationProject.Api.Controllers
         }
 
         [HttpGet("ByBylawId")]
-        public async Task<IActionResult> GetScientificDegrees([FromQuery]int bylawId,[FromQuery]int type)
+        public async Task<IActionResult> GetScientificDegrees([FromQuery] int bylawId, [FromQuery] int type)
         {
-            var response = await _scientificDegreeService.GetScientificDegreeByBylawIdForSpecificTypeAsync(bylawId,type);
+            var response = await _scientificDegreeService.GetScientificDegreeByBylawIdForSpecificTypeAsync(bylawId, type);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -58,12 +58,12 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPut("{Id:int}")]
-        public async Task<IActionResult> UpdateScientificDegrees([FromRoute] int Id, [FromBody] ScientificDegreeDto updateScientificDegreesDto)
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateScientificDegrees([FromBody] ScientificDegreeDto updateScientificDegreesDto)
         {
-            if (Id != updateScientificDegreesDto.Id)
+            if (updateScientificDegreesDto == null)
             {
-                return BadRequest("the Id not Valid");
+                return BadRequest("Please Enter Valid Model");
             }
             var response = await _scientificDegreeService.UpdateScientificDegreeAsync(updateScientificDegreesDto);
 

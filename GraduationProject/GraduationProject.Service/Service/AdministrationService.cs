@@ -88,7 +88,7 @@ namespace GraduationProject.Service.Service
             }
 
             int AdministrationId = newAdministration.Id;
-            QualificationData newQualificationDataStudent = new QualificationData
+            QualificationData newQualificationDataStaff = new QualificationData
             {
                 StaffId = AdministrationId,
                 PreQualification = addSaffDto.PreQualification,
@@ -99,7 +99,7 @@ namespace GraduationProject.Service.Service
 
             try
             {
-                await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
+                await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStaff);
                 await _unitOfWork.SaveAsync();
             }
             catch (Exception ex)
@@ -143,7 +143,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                await _unitOfWork.QualificationDatas.Delete(newQualificationDataStudent);
+                await _unitOfWork.QualificationDatas.Delete(newQualificationDataStaff);
                 await _unitOfWork.Staffs.Delete(newAdministration);
                 await _accountService.DeleteUser(userId);
                 return Response<int>.ServerError("Error occured while adding Administration",
@@ -234,6 +234,86 @@ namespace GraduationProject.Service.Service
                 });
                 return Response<List<GetAllStaffsDto>>.ServerError("Error occured while retrieving AddAdministrations",
                      "An unexpected error occurred while retrieving AddAdministrations. Please try again later.");
+            }
+        }
+
+        public async Task<int> UpdateStaffAsync(AddStaffDto updateStaffDto)
+        {
+            try
+            {
+                var existingStaff = await _unitOfWork.Staffs.GetByIdAsync(updateStaffDto.id ?? 0);
+                if (existingStaff == null)
+                {
+                    return -1;
+                }
+                SqlParameter pUserId = new SqlParameter("@UserId", existingStaff.UserId);
+                var getStaff = await _unitOfWork.GetStaffDetailsByUserIdModels.CallStoredProcedureAsync(
+                    "EXECUTE SpGetStaffDetailsByUserId", pUserId);
+                if (!getStaff.Any() || getStaff == null)
+                    return 0;
+                existingStaff.PlaceOfBirth = updateStaffDto.PlaceOfBirth;
+                existingStaff.Gender = updateStaffDto.Gender;
+                existingStaff.Nationality = updateStaffDto.Nationality;
+                existingStaff.Religion = updateStaffDto.Religion;
+                existingStaff.DateOfBirth = updateStaffDto.DateOfBirth;
+                existingStaff.CountryId = updateStaffDto.CountryId;
+                existingStaff.GovernorateId = updateStaffDto.GovernorateId;
+                existingStaff.CityId = updateStaffDto.CityId;
+                existingStaff.Street = updateStaffDto.Street;
+                existingStaff.PostalCode = updateStaffDto.PostalCode;
+                _unitOfWork.Staffs.Update(existingStaff);
+                var qualicationData = await _unitOfWork.QualificationDatas.GetEntityByPropertyAsync(s => s.StaffId == existingStaff.Id);
+                if (qualicationData != null || qualicationData.Any())
+                {
+                    var existingQualicationData = qualicationData.FirstOrDefault();
+                    existingQualicationData.PreQualification = updateStaffDto.PreQualification;
+                    existingQualicationData.SeatNumber = updateStaffDto.SeatNumber;
+                    existingQualicationData.QualificationYear = updateStaffDto.QualificationYear;
+                    existingQualicationData.Degree = updateStaffDto.Degree;
+                    _unitOfWork.QualificationDatas.Update(existingQualicationData);
+                }
+                var existingPhones = await _unitOfWork.Phones.GetEntityByPropertyAsync(s => s.StaffId == existingStaff.Id);
+                if (existingPhones != null || existingPhones.Any())
+                {
+                    foreach (var existingPhone in existingPhones)
+                    {
+                        var updateDtoPhone = updateStaffDto.PhoneNumbers.FirstOrDefault(ph => ph.Id == existingPhone.Id);
+                        if (updateDtoPhone != null)
+                        {
+                            existingPhone.PhoneNumber = updateDtoPhone.PhoneNumber;
+                            existingPhone.Type = updateDtoPhone.Type;
+                        }
+                    }
+                    _unitOfWork.Phones.UpdateRangeAsync(existingPhones);
+                }
+                else
+                {
+                    if (updateStaffDto.PhoneNumbers != null)
+                    {
+                        List<Phone> phones = updateStaffDto.PhoneNumbers.Select(ph =>
+                            new Phone
+                            {
+                                StaffId = existingStaff.Id,
+                                PhoneNumber = ph.PhoneNumber,
+                                Type = ph.Type,
+                            }).ToList();
+
+                        await _unitOfWork.Phones.AddRangeAsync(phones);
+                    }
+                }
+                int result = await _unitOfWork.SaveAsync();
+                if (result > 0)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                return -1;
             }
         }
     }

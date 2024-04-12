@@ -33,8 +33,12 @@ namespace GraduationProject.Api.Controllers
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateDepartment(DepartmentDto updateDepartmentDto)
         {
+            if (updateDepartmentDto == null)
+            {
+                return BadRequest("Please Enter Valid Model");
+            }
             var response = await _departmentService.UpdateDepartmentAsync(updateDepartmentDto);
-            
+
             return StatusCode(response.StatusCode, response);
         }
         [HttpGet("Get{Id:int}")]
