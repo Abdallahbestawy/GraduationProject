@@ -23,7 +23,7 @@ namespace GraduationProject.Repository.Repository
                 var semesters = await _context.StudentSemesters
                     .Include(s => s.ScientificDegree)
                         .ThenInclude(parent => parent.Parent)
-                    .Where(sd => sd.Total == null && sd.TotalCourses == null && sd.AcademyYear.IsCurrent)
+                    .Where(sd => sd.AcademyYear.IsCurrent)
                     .GroupBy(a => a.ScientificDegreeId)
                     .Select(g => g.FirstOrDefault())
                     .ToListAsync();
@@ -44,6 +44,7 @@ namespace GraduationProject.Repository.Repository
             try
             {
                 var students = await _context.StudentSemesters
+                    .Include(s => s.ScientificDegree)
                     .Include(s => s.StudentSemesterCourse)
                         .ThenInclude(s => s.Course)
                     .Include(s => s.StudentSemesterAssessMethods)
@@ -54,9 +55,9 @@ namespace GraduationProject.Repository.Repository
                 {
                     return false;
                 }
-
                 foreach (var student in students)
                 {
+                    int bylawId = student.ScientificDegree.BylawId;
                     foreach (var course in student.StudentSemesterCourse.Where(c => c.CourseId == courseId))
                     {
                         decimal? total = course.StudentSemester.StudentSemesterAssessMethods
@@ -64,11 +65,10 @@ namespace GraduationProject.Repository.Repository
                             .Sum(assessMethod => assessMethod.Degree);
 
                         course.CourseDegree = total;
-                        course.Passing = total > 50;
+                        course.Passing = total > course.Course.MinDegree;
+                        course.Char = await CalculateCharEstimatesCourses(total, bylawId);
                     }
                 }
-                await _context.SaveChangesAsync();
-
                 return true;
             }
             catch (Exception ex)
@@ -88,10 +88,12 @@ namespace GraduationProject.Repository.Repository
                     .Include(s => s.StudentSemesterAssessMethods)
                         .ThenInclude(assess => assess.CourseAssessMethod)
                     .Where(a => a.ScientificDegreeId == SemesterId)
+                    .Where(a => a.AcademyYear.IsCurrent)
                     .ToListAsync();
 
                 if (students == null || !students.Any())
                 {
+
                     return false;
                 }
 
@@ -234,7 +236,7 @@ namespace GraduationProject.Repository.Repository
                 {
                     return null;
                 }
-                var studentSemesters = studentSemestersComplete.Where(s => s.ScientificDegreeId == scientificDegreeId /*&& s.AcademyYear.IsCurrent*/).ToList();
+                var studentSemesters = studentSemestersComplete.Where(s => s.ScientificDegreeId == scientificDegreeId && s.AcademyYear.IsCurrent).ToList();
                 if (studentSemesters == null || !studentSemesters.Any())
                 {
                     return null;
@@ -299,7 +301,7 @@ namespace GraduationProject.Repository.Repository
                             {
                                 continue;
                             }
-                            if (studentsem.Percentage >= precntage.PercentageTotal)
+                            if (studentsem.Percentage <= precntage.PercentageTotal)
                             {
                                 newstudentSemester = await CreateNewStudentSemester(std, studentsem.Id, academyYearId);
                             }
@@ -328,7 +330,7 @@ namespace GraduationProject.Repository.Repository
                             {
                                 continue;
                             }
-                            if (studentsem.Percentage >= precntage.PercentageTotal)
+                            if (studentsem.Percentage <= precntage.PercentageTotal)
                             {
                                 newstudentSemester = await CreateNewStudentSemester(std, studentsem.Id, academyYearId);
                             }
@@ -410,9 +412,9 @@ namespace GraduationProject.Repository.Repository
             }
             var result = new GetScientificDegreesNextModel
             {
-                Id = studentSemester.Id,
+                Id = studentsem.Id,
                 Type = 1,
-                Percentage = studentSemester.ScientificDegree.SuccessPercentageSemester
+                Percentage = studentsem.SuccessPercentageSemester
             };
             return result;
         }
@@ -495,6 +497,7 @@ namespace GraduationProject.Repository.Repository
                 {
                     IsCurrent = true,
                     AcademyYearOrder = order,
+                    Description = $"the New Acdemy Year{utcNow}",
                     Start = utcNow,
                     End = utcNowNextYear,
                     FacultyId = academyYear.FacultyId,
