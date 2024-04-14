@@ -16,6 +16,8 @@ namespace GraduationProject.LogHandler.Models
 
         public string? Operation { get; set; }
 
+        public string? Event { get; set; }
+
         public T? OldData { get; set; }
 
         public T? NewData { get; set; }

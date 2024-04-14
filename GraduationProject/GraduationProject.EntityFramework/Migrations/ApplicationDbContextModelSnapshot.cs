@@ -61,6 +61,9 @@ namespace GraduationProject.EntityFramework.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Event")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("LogTime")
                         .HasColumnType("datetime2");
 
