@@ -17,6 +17,7 @@ namespace GraduationProject.Api.Controllers
             _controlService = controlService;
             _studentService = studentService;
         }
+
         [HttpPost("Add")]
         public async Task<IActionResult> AddControlMembers(AddStaffDto addControlMembersDto)
         {
@@ -32,6 +33,7 @@ namespace GraduationProject.Api.Controllers
             }
 
         }
+
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllControlMember()
         {
@@ -47,6 +49,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpPost("RaisingGradesCourse{courseId:int}")]
         public async Task<IActionResult> RaisingGradesCourse(int courseId)
         {
@@ -54,6 +57,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpPost("RaisingGradesSemester{semesterId:int}")]
         public async Task<IActionResult> RaisingGradesSemester(int semesterId)
         {
@@ -61,6 +65,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("GetAllSemester")]
         public async Task<IActionResult> GetAllSemester()
         {
@@ -71,6 +76,7 @@ namespace GraduationProject.Api.Controllers
             }
             return NotFound("Not Semester Exixt");
         }
+
         [HttpGet("GetAllCourse{semesterId:int}")]
         public async Task<IActionResult> GetAllCourseBySemesterId(int semesterId)
         {
@@ -81,16 +87,15 @@ namespace GraduationProject.Api.Controllers
             }
             return NotFound("Not Course in Semester Exixt");
         }
+
         [HttpPost("EndSemester{semesterId:int}")]
         public async Task<IActionResult> EndSemester([FromRoute] int semesterId)
         {
-            bool response = await _controlService.EndSemesterAsync(semesterId);
-            if (response)
-            {
-                return Ok("the End Semester Success");
-            }
-            return BadRequest();
+            var response = await _controlService.EndSemesterAsync(semesterId);
+            
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpPost("AssignCourses")]
         public async Task<IActionResult> AssignCoursesToStudents()
         {

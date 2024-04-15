@@ -9,7 +9,7 @@ namespace GraduationProject.Service.IService
         Task<Response<bool>> RaisingGradesSemesterAsync(int semesterId);
         Task<Response<bool>> RaisingGradesCourseAsync(int courseId);
         Task<Response<GetAllSemesterCurrentDto>> GetAllSemesterCurrentAsync();
-        Task<bool> EndSemesterAsync(int semesterId);
+        Task<Response<bool>> EndSemesterAsync(int semesterId);
         Task<Response<int>> AddControlMembersAsync(AddStaffDto addControlMembersDto);
         Task<Response<List<GetAllStaffsDto>>> GetAllControlMembersAsync();
         //Task Test();

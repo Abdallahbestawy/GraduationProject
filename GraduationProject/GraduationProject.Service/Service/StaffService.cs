@@ -344,19 +344,35 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<bool> DeleteStaffSemesterAsync(int staffSemesterId)
+        public async Task<Response<bool>> DeleteStaffSemesterAsync(int staffSemesterId)
         {
-            var oldStaffSemester = await _unitOfWork.StaffSemesters.GetByIdAsync(staffSemesterId);
-            if (oldStaffSemester != null)
+            try
             {
+                var oldStaffSemester = await _unitOfWork.StaffSemesters.GetByIdAsync(staffSemesterId);
+                if (oldStaffSemester == null)
+                    return Response<bool>.BadRequest("This user doesn't exist");
+
                 await _unitOfWork.StaffSemesters.Delete(oldStaffSemester);
                 int result = await _unitOfWork.SaveAsync();
                 if (result > 0)
-                {
-                    return true;
-                }
+                    return Response<bool>.Deleted("This user deleted successfully");
+
+                return Response<bool>.ServerError("Error occured while deleting user",
+                    "An unexpected error occurred while deleting user. Please try again later.");
             }
-            return false;
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StaffService",
+                    MethodName = "DeleteStaffSemesterAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while deleting user",
+                    "An unexpected error occurred while deleting user. Please try again later.");
+            }
         }
 
         //public async Task<GetCourseStaffSemester> Test(int staffId)

@@ -122,26 +122,35 @@ namespace GraduationProject.Service.Service
                      "An unexpected error occurred while retrieving semesters. Please try again later.");
             }
         }
-        public async Task<bool> EndSemesterAsync(int semesterId)
+
+        // the message value in the badRequest need to be specified
+        public async Task<Response<bool>> EndSemesterAsync(int semesterId)
         {
             try
             {
                 var std = await _unitOfWork.StudentSemesters.EndSemesterAsync(semesterId);
                 if (std == null)
-                {
-                    return false;
-                }
+                    return Response<bool>.BadRequest("This semseter doesn't have students");
                 await _unitOfWork.StudentSemesters.AddRangeAsync(std);
                 int result = await _unitOfWork.SaveAsync();
                 if (result > 0)
-                {
-                    return true;
-                }
-                return false;
+                    return Response<bool>.Success(true, "The semeseter ended successfully");
+
+                return Response<bool>.ServerError("Error occured while ending semester",
+                     "An unexpected error occurred while ending semester. Please try again later.");
             }
             catch (Exception ex)
             {
-                return false;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ControlService",
+                    MethodName = "EndSemesterAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while ending semester",
+                     "An unexpected error occurred while ending semester. Please try again later.");
             }
         }
 

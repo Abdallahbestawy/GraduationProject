@@ -11,9 +11,8 @@ namespace GraduationProject.Service.IService
         Task<Response<List<GetAllStudentsDto>>> GetAllStudentsAsync();
         Task<Response<int>> AssignCoursesToStudents();
         Task<Response<bool>> DeleteStudentAsync(int studentId);
-        Task<bool> DeleteStudentSemesterAsync(int studentSemesterId);
-        Task<int> UpdateStudentAsync(AddStudentDto updateStudentDto);
-        Task<GetStudentResultDto> GetStudentResultAsync(string userId);
-
+        Task<Response<bool>> DeleteStudentSemesterAsync(int studentSemesterId);
+        Task<Response<int>> UpdateStudentAsync(AddStudentDto updateStudentDto);
+        Task<Response<GetStudentResultDto>> GetStudentResultAsync(string userId);
     }
 }

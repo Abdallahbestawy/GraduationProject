@@ -376,23 +376,39 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<List<GetAllStudentsInSemesterDto>> GetAllStudentsInSemesterAsync(int semesterId)
+        public async Task<Response<List<GetAllStudentsInSemesterDto>>> GetAllStudentsInSemesterAsync(int semesterId)
         {
-            SqlParameter pSemesterId = new SqlParameter("@ScientificDegreeId", semesterId);
+            try
+            {
+                SqlParameter pSemesterId = new SqlParameter("@ScientificDegreeId", semesterId);
 
-            var getStudentInSems = await _unitOfWork.GetAllStudentsInSemesterModels.CallStoredProcedureAsync(
-                "EXECUTE SpGetAllStudentsInSemester", pSemesterId);
-            if (getStudentInSems == null || !getStudentInSems.Any())
-            {
-                return null;
+                var getStudentInSems = await _unitOfWork.GetAllStudentsInSemesterModels.CallStoredProcedureAsync(
+                    "EXECUTE SpGetAllStudentsInSemester", pSemesterId);
+                if (getStudentInSems == null || !getStudentInSems.Any())
+                    return Response<List<GetAllStudentsInSemesterDto>>.NoContent("No students are exist");
+
+                List<GetAllStudentsInSemesterDto> getAllStudentsInSemesterDtos = getStudentInSems.Select(ses => new GetAllStudentsInSemesterDto
+                {
+                    StudentSemesterId = ses.Id,
+                    StudentName = ses.NameEnglish,
+                    StudentCode = ses.Code
+                }).ToList();
+
+                return Response<List<GetAllStudentsInSemesterDto>>.Success(getAllStudentsInSemesterDtos, "Students retrieved successfully").WithCount();
             }
-            List<GetAllStudentsInSemesterDto> getAllStudentsInSemesterDtos = getStudentInSems.Select(ses => new GetAllStudentsInSemesterDto
+            catch (Exception ex)
             {
-                StudentSemesterId = ses.Id,
-                StudentName = ses.NameEnglish,
-                StudentCode = ses.Code
-            }).ToList();
-            return getAllStudentsInSemesterDtos;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ScientificDegreeService",
+                    MethodName = "GetAllStudentsInSemesterAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetAllStudentsInSemesterDto>>.ServerError("Error occured while retrieving students",
+                    "An unexpected error occurred while retrieving students. Please try again later.");
+            }
         }
     }
 }

@@ -237,20 +237,22 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<int> UpdateStaffAsync(AddStaffDto updateStaffDto)
+        //need to handle errors ocuuered during the updating process
+        public async Task<Response<int>> UpdateStaffAsync(AddStaffDto updateStaffDto)
         {
             try
             {
                 var existingStaff = await _unitOfWork.Staffs.GetByIdAsync(updateStaffDto.id ?? 0);
                 if (existingStaff == null)
-                {
-                    return -1;
-                }
+                    return Response<int>.BadRequest("This staff doesn't exist ");
+
                 SqlParameter pUserId = new SqlParameter("@UserId", existingStaff.UserId);
                 var getStaff = await _unitOfWork.GetStaffDetailsByUserIdModels.CallStoredProcedureAsync(
                     "EXECUTE SpGetStaffDetailsByUserId", pUserId);
+
                 if (!getStaff.Any() || getStaff == null)
-                    return 0;
+                    return Response<int>.NoContent("This user doesn't exist");
+
                 existingStaff.PlaceOfBirth = updateStaffDto.PlaceOfBirth;
                 existingStaff.Gender = updateStaffDto.Gender;
                 existingStaff.Nationality = updateStaffDto.Nationality;
@@ -303,17 +305,23 @@ namespace GraduationProject.Service.Service
                 }
                 int result = await _unitOfWork.SaveAsync();
                 if (result > 0)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return -1;
-                }
+                    return Response<int>.Updated("This staff updated successfully");
+
+                return Response<int>.ServerError("Error occured while updating user",
+                     "An unexpected error occurred while updating user. Please try again later.");
             }
             catch (Exception ex)
             {
-                return -1;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AdministrationService",
+                    MethodName = "UpdateStaffAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while updating user",
+                     "An unexpected error occurred while updating user. Please try again later.");
             }
         }
     }

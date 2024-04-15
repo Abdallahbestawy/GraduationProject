@@ -10,6 +10,6 @@ namespace GraduationProject.Service.IService
         Task<Response<GetCourseStaffSemesterDto>> GetCourseStaffSemesterAsync(int satffId);
         Task<Response<GetStaffDetailsByUserIdDto>> GetStaffByUserIdAsync(string userId);
         Task<Response<List<GetAllStaffsDto>>> GetAllStaffsAsync();
-        Task<bool> DeleteStaffSemesterAsync(int staffSemesterId);
+        Task<Response<bool>> DeleteStaffSemesterAsync(int staffSemesterId);
     }
 }

@@ -14,6 +14,6 @@ namespace GraduationProject.Service.IService
         Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeByBylawIdForSpecificTypeAsync(int bylawId, int type);
         Task<Response<GetDetailsByParentIdDto>> GetDetailsByParentIdAsync(int ParentId);
         Task<Response<List<GetSemesterNameDto>>> GetSemsetersByBylawIdAsync(int facultyId);
-        Task<List<GetAllStudentsInSemesterDto>> GetAllStudentsInSemesterAsync(int semesterId);
+        Task<Response<List<GetAllStudentsInSemesterDto>>> GetAllStudentsInSemesterAsync(int semesterId);
     }
 }

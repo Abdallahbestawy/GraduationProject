@@ -13,6 +13,7 @@ namespace GraduationProject.Api.Controllers
         {
             _administrationService = AdministrationService;
         }
+
         [HttpPost]
         public async Task<IActionResult> AddAdministration(AddStaffDto addAdministrationDto)
         {
@@ -28,6 +29,7 @@ namespace GraduationProject.Api.Controllers
             }
 
         }
+
         [HttpGet("GetAllAdministration")]
         public async Task<IActionResult> GetAllAdministration()
         {
@@ -36,6 +38,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpDelete("Delete{Id:int}")]
         public async Task<IActionResult> DeleteStaff(int Id)
         {
@@ -47,6 +50,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
+
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateStaff([FromBody] AddStaffDto updateStaffDto)
         {
@@ -54,16 +58,9 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("Please enter valid Model");
             }
-            int respone = await _administrationService.UpdateStaffAsync(updateStaffDto);
-            if (respone > 0)
-            {
-                return Ok("The Update Success");
-            }
-            else
-            {
-                return BadRequest("Please Try Again And Enter Valid Model");
+            var respone = await _administrationService.UpdateStaffAsync(updateStaffDto);
 
-            }
+            return StatusCode(respone.StatusCode, respone);
         }
     }
 }

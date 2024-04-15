@@ -672,45 +672,63 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<bool> DeleteStudentSemesterAsync(int studentSemesterId)
+        public async Task<Response<bool>> DeleteStudentSemesterAsync(int studentSemesterId)
         {
-            var oldstudentCourse = await _unitOfWork.StudentSemesterCourses.GetEntityByPropertyAsync(sdt => sdt.StudentSemesterId == studentSemesterId);
-            if (oldstudentCourse != null || oldstudentCourse.Any())
+            try
             {
-                await _unitOfWork.StudentSemesterCourses.DeleteRangeAsyn(oldstudentCourse);
-            }
-            var oldstudentSemesterAssessMethods = await _unitOfWork.StudentSemesterAssessMethods.GetEntityByPropertyAsync(sdt => sdt.StudentSemesterId == studentSemesterId);
-            if (oldstudentSemesterAssessMethods != null || oldstudentSemesterAssessMethods.Any())
-            {
-                await _unitOfWork.StudentSemesterAssessMethods.DeleteRangeAsyn(oldstudentSemesterAssessMethods);
-            }
-            var oldstudentSemester = await _unitOfWork.StudentSemesters.GetByIdAsync(studentSemesterId);
-            if (oldstudentSemester != null)
-            {
+                var oldstudentCourse = await _unitOfWork.StudentSemesterCourses.GetEntityByPropertyAsync(sdt => sdt.StudentSemesterId == studentSemesterId);
+                if (oldstudentCourse != null || oldstudentCourse.Any())
+                {
+                    await _unitOfWork.StudentSemesterCourses.DeleteRangeAsyn(oldstudentCourse);
+                }
+
+                var oldstudentSemesterAssessMethods = await _unitOfWork.StudentSemesterAssessMethods.GetEntityByPropertyAsync(sdt => sdt.StudentSemesterId == studentSemesterId);
+                if (oldstudentSemesterAssessMethods != null || oldstudentSemesterAssessMethods.Any())
+                {
+                    await _unitOfWork.StudentSemesterAssessMethods.DeleteRangeAsyn(oldstudentSemesterAssessMethods);
+                }
+
+                var oldstudentSemester = await _unitOfWork.StudentSemesters.GetByIdAsync(studentSemesterId);
+                if (oldstudentSemester == null)
+                    return Response<bool>.BadRequest("This student semseter doesn't exist");
+
                 await _unitOfWork.StudentSemesters.Delete(oldstudentSemester);
                 int result = await _unitOfWork.SaveAsync();
                 if (result > 0)
-                {
-                    return true;
-                }
+                    return Response<bool>.Deleted("This student semseter deleted successfully");
+
+                return Response<bool>.ServerError("Error occured while deleting student semseter",
+                        "An unexpected error occurred while deleting student semseter. Please try again later.");
             }
-            return false;
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StudentService",
+                    MethodName = "DeleteStudentSemesterAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while deleting student semseter",
+                        "An unexpected error occurred while deleting student semseter. Please try again later.");
+            }
         }
 
-        public async Task<int> UpdateStudentAsync(AddStudentDto updateStudentDto)
+        public async Task<Response<int>> UpdateStudentAsync(AddStudentDto updateStudentDto)
         {
             try
             {
                 var existingStudent = await _unitOfWork.Students.GetByIdAsync(updateStudentDto.id ?? 0);
                 if (existingStudent == null)
-                {
-                    return -1;
-                }
+                    return Response<int>.BadRequest("This student doesn't exist");
+
                 SqlParameter pUserId = new SqlParameter("@UserId", existingStudent.UserId);
                 var getStudent = await _unitOfWork.GetStudentDetailsByUserIdModels.CallStoredProcedureAsync(
                     "EXECUTE SpGetStudentDetailsByUserId", pUserId);
                 if (!getStudent.Any() || getStudent == null)
-                    return 0;
+                    return Response<int>.NoContent("This student doesn't exist");
+
                 existingStudent.PlaceOfBirth = updateStudentDto.PlaceOfBirth;
                 existingStudent.Gender = updateStudentDto.Gender;
                 existingStudent.Nationality = updateStudentDto.Nationality;
@@ -776,56 +794,79 @@ namespace GraduationProject.Service.Service
                 }
                 int result = await _unitOfWork.SaveAsync();
                 if (result > 0)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return -1;
-                }
+                    return Response<int>.Updated("This student updated successfully");
+
+                return Response<int>.ServerError("Error occured while updating student",
+                        "An unexpected error occurred while updating student. Please try again later.");
             }
             catch (Exception ex)
             {
-                return -1;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StudentService",
+                    MethodName = "UpdateStudentAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while updating student",
+                        "An unexpected error occurred while updating student. Please try again later.");
             }
         }
 
-        public async Task<GetStudentResultDto> GetStudentResultAsync(string userId)
+        public async Task<Response<GetStudentResultDto>> GetStudentResultAsync(string userId)
         {
-            SqlParameter pUserId = new SqlParameter("@UserId", userId);
+            try
+            {
+                SqlParameter pUserId = new SqlParameter("@UserId", userId);
 
-            var getStudentResult = await _unitOfWork.GetStudentResultModels.CallStoredProcedureAsync(
-                "EXECUTE SpGetStudentResult", pUserId);
-            if (getStudentResult == null || !getStudentResult.Any())
-            {
-                return null;
-            }
-            GetStudentResultDto getStudentResultDto = new GetStudentResultDto
-            {
-                StudentName = getStudentResult.FirstOrDefault().NameEnglish
-            };
+                var getStudentResult = await _unitOfWork.GetStudentResultModels.CallStoredProcedureAsync(
+                    "EXECUTE SpGetStudentResult", pUserId);
 
-            getStudentResultDto.StudentResultDeltiels = getStudentResult.DistinctBy(detiels => detiels.SemesterName).Select(detiels => new StudentResultDeltielsDto
-            {
-                SemesterName = detiels.SemesterName,
-                AcademyYearName = detiels.AcademyYear,
-                BandName = detiels.BandName,
-                SemesterStatus = detiels.SemesterStatus,
-                SemesterPercentage = detiels.SemesterPercentage,
-                SemesterChar = detiels.SemesterChar,
-                CumulativePercentage = detiels.CumulativePercentage,
-                CumulativeChar = detiels.CumulativeChar,
-                studentResultDeltielsSemester = getStudentResult.Where(semester => semester.SemesterName == detiels.SemesterName).Select(semester => new StudentResultDeltielsSemesterDto
+                if (getStudentResult == null || !getStudentResult.Any())
+                    return Response<GetStudentResultDto>.NoContent("There is no results available");
+
+                GetStudentResultDto getStudentResultDto = new GetStudentResultDto
                 {
-                    CourseName = semester.CourseName,
-                    CourseCode = semester.CourseCode,
-                    NumberOfPoint = semester.NumberOfPoints,
-                    CourseDegree = semester.CourseDegree,
-                    CourseChar = semester.CourseChar,
-                    CourseStatus = semester.CourseStatus
-                }).ToList()
-            }).ToList();
-            return getStudentResultDto;
+                    StudentName = getStudentResult.FirstOrDefault().NameEnglish
+                };
+
+                getStudentResultDto.StudentResultDeltiels = getStudentResult.DistinctBy(detiels => detiels.SemesterName).Select(detiels => new StudentResultDeltielsDto
+                {
+                    SemesterName = detiels.SemesterName,
+                    AcademyYearName = detiels.AcademyYear,
+                    BandName = detiels.BandName,
+                    SemesterStatus = detiels.SemesterStatus,
+                    SemesterPercentage = detiels.SemesterPercentage,
+                    SemesterChar = detiels.SemesterChar,
+                    CumulativePercentage = detiels.CumulativePercentage,
+                    CumulativeChar = detiels.CumulativeChar,
+                    studentResultDeltielsSemester = getStudentResult.Where(semester => semester.SemesterName == detiels.SemesterName).Select(semester => new StudentResultDeltielsSemesterDto
+                    {
+                        CourseName = semester.CourseName,
+                        CourseCode = semester.CourseCode,
+                        NumberOfPoint = semester.NumberOfPoints,
+                        CourseDegree = semester.CourseDegree,
+                        CourseChar = semester.CourseChar,
+                        CourseStatus = semester.CourseStatus
+                    }).ToList()
+                }).ToList();
+
+                return Response<GetStudentResultDto>.Success(getStudentResultDto, "Student's results retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StudentService",
+                    MethodName = "GetStudentResultAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetStudentResultDto>.ServerError("Error occured while retrieving student's results",
+                        "An unexpected error occurred while retrieving student's results. Please try again later.");
+            }
         }
     }
 }

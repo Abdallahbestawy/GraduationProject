@@ -82,12 +82,9 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("please enter valid staffSemesterId");
             }
-            bool respone = await _StaffService.DeleteStaffSemesterAsync(staffSemesterId);
-            if (respone)
-            {
-                return Ok("Delete Staff Semester Success");
-            }
-            return BadRequest("please enter vaild Staff Semester and Try again");
+            var respone = await _StaffService.DeleteStaffSemesterAsync(staffSemesterId);
+            
+            return StatusCode(respone.StatusCode, respone);
         }
     }
 }

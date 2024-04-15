@@ -204,20 +204,18 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<GetAcademyYearDto> GetCurrentAcademyYearAsync(int facultId)
+        public async Task<Response<GetAcademyYearDto>> GetCurrentAcademyYearAsync(int facultId)
         {
             try
             {
                 var result = await _unitOfWork.AcademyYears.FindWithIncludeIEnumerableAsync(d => d.Facultys);
                 if (result == null || !result.Any())
-                {
-                    return null;
-                }
+                    return Response<GetAcademyYearDto>.BadRequest("This fuculty doesn't have academic years");
+
                 var firstResult = result.Where(f => f.FacultyId == facultId && f.IsCurrent).FirstOrDefault();
                 if (firstResult == null)
-                {
-                    return null;
-                }
+                    return Response<GetAcademyYearDto>.NoContent("there is no current academic year");
+
                 GetAcademyYearDto academyYearDto = new GetAcademyYearDto
                 {
                     Id = firstResult.Id,
@@ -228,11 +226,20 @@ namespace GraduationProject.Service.Service
                     FacultyName = firstResult.Facultys.Name,
                     IsCurrent = firstResult.IsCurrent,
                 };
-                return academyYearDto;
+                return Response<GetAcademyYearDto>.Success(academyYearDto, "Academic year retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {
-                return null;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AcademyYearService",
+                    MethodName = "GetCurrentAcademyYearAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetAcademyYearDto>.ServerError("Error occured while retrieving current Academic year",
+                    "An unexpected error occurred while retrieving current Academic year. Please try again later.");
             }
         }
     }
