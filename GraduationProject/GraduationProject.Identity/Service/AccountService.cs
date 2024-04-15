@@ -1,6 +1,7 @@
 ﻿using GraduationProject.Identity.IService;
 using GraduationProject.Identity.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace GraduationProject.Identity.Service
 {
@@ -171,6 +172,16 @@ namespace GraduationProject.Identity.Service
             {
                 return null; // Return null or handle the failure case accordingly
             }
+        }
+
+        public async Task<string> GetUserIdByUser(ClaimsPrincipal user)
+        {
+            var userData = await _userManager.GetUserAsync(user);
+
+            if (userData == null)
+                return "00000";
+
+            return userData.Id;
         }
     }
 }

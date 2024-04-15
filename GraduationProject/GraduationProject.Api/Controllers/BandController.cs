@@ -45,7 +45,7 @@ namespace GraduationProject.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBand(BandDto addBandDto)
         {
-            var response = await _bandService.AddBandAsync(addBandDto);
+            var response = await _bandService.AddBandAsync(addBandDto, User);
 
             return StatusCode(response.StatusCode, response);
         }

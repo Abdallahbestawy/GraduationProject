@@ -1,4 +1,6 @@
-﻿namespace GraduationProject.Identity.IService
+﻿using System.Security.Claims;
+
+namespace GraduationProject.Identity.IService
 {
     public interface IAccountService
     {
@@ -9,6 +11,7 @@
         Task<string> AddTeacherAssistantAccount(string NameArabic, string NameEnglish, string NationalID, string Email, string Password);
         Task<string> AddControlMembers(string NameArabic, string NameEnglish, string NationalID, string Email, string Password);
         Task<bool> DeleteUser(string userId);
+        Task<string> GetUserIdByUser(ClaimsPrincipal user);
     }
 
 }

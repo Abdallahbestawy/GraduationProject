@@ -1,4 +1,5 @@
 ﻿using GraduationProject.Data.Entity;
+using GraduationProject.Identity.IService;
 using GraduationProject.LogHandler.Service;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
@@ -7,6 +8,7 @@ using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.BandDto;
 using GraduationProject.Service.IService;
+using System.Security.Claims;
 
 namespace GraduationProject.Service.Service
 {
@@ -14,16 +16,18 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
-        public LoggerHandler<Band> _logger;
+        private readonly LoggerHandler<Band> _logger;
+        private readonly IAccountService _accountService;
 
-        public BandService(UnitOfWork unitOfWork, IMailService mailService, LoggerHandler<Band> logger)
+        public BandService(UnitOfWork unitOfWork, IMailService mailService, LoggerHandler<Band> logger, IAccountService accountService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
             _logger = logger;
+            _accountService = accountService;
         }
 
-        public async Task<Response<int>> AddBandAsync(BandDto addBandDto)
+        public async Task<Response<int>> AddBandAsync(BandDto addBandDto, ClaimsPrincipal user)
         {
             try
             {
@@ -39,7 +43,8 @@ namespace GraduationProject.Service.Service
 
                 if (result > 0)
                 {
-                    await _logger.InsertLog("123", "Bands", newBand.Id.ToString(), null, newBand);
+                    var userId = await _accountService.GetUserIdByUser(user);
+                    await _logger.InsertLog(userId, "Bands", newBand.Id.ToString(), null, newBand);
                     return Response<int>.Created("Band added successfully");
                 }
 

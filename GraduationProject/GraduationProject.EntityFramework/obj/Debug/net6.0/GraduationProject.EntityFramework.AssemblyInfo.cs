@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GraduationProject.EntityFramework")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0d69d891b8c21592b627d7e50a0f2bc3a1ddf7fa")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9a4d422e9f46f5b57591007c80afcc73efde67e6")]
 [assembly: System.Reflection.AssemblyProductAttribute("GraduationProject.EntityFramework")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GraduationProject.EntityFramework")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
