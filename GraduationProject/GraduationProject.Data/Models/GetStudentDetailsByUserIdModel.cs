@@ -22,6 +22,7 @@ namespace GraduationProject.Data.Models
         public string? ReleasePlace { get; set; }
         public Religion Religion { get; set; }
         public string ParentName { get; set; }
+        public string Code { get; set; }
 
         public string ParentJob { get; set; }
         public string? PostalCodeOfParent { get; set; }
@@ -34,6 +35,8 @@ namespace GraduationProject.Data.Models
         public decimal? Degree { get; set; }
         public string? StudentPhoneNumber { get; set; }
         public PhoneType? PhoneType { get; set; }
+        public int? PhoneId { get; set; }
+
     }
 }
 

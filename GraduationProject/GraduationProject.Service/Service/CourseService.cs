@@ -351,6 +351,7 @@ namespace GraduationProject.Service.Service
                         .Select(group => new StudentDto
                         {
                             StudentName = group.Key.StudentName,
+                            StudentCode = group.FirstOrDefault().StudentCode,
                             AssesstMethodDtos = group.Select(s => new AssesstMethodDto
                             {
                                 StudentSemesterAssessMethodId = s.StudentSemesterAssessMethodsId,

@@ -27,6 +27,8 @@ namespace GraduationProject.Service.DataTransferObject.StudentDto
         public string PlaceOfBirth { get; set; }
 
         public Gender Gender { get; set; }
+        [Required, MaxLength(255)]
+        public string StudentCode { get; set; }
 
         public Nationality Nationality { get; set; }
 

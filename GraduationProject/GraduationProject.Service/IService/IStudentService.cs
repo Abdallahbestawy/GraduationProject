@@ -13,6 +13,7 @@ namespace GraduationProject.Service.IService
         Task<Response<bool>> DeleteStudentAsync(int studentId);
         Task<bool> DeleteStudentSemesterAsync(int studentSemesterId);
         Task<int> UpdateStudentAsync(AddStudentDto updateStudentDto);
+        Task<GetStudentResultDto> GetStudentResultAsync(string userId);
 
     }
 }

@@ -53,9 +53,9 @@ namespace GraduationProject.Api.Controllers
         }
 
         [HttpGet("GetStaff")]
-        public async Task<IActionResult> GetStaff()
+        public async Task<IActionResult> GetStaff(string? uId)
         {
-            string userId = "3ed1410b-286c-4064-9193-35b792b8aebf";
+            string userId = uId ?? "3ed1410b-286c-4064-9193-35b792b8aebf";
 
             var response = await _StaffService.GetStaffByUserIdAsync(userId);
 

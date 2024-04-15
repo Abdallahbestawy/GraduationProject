@@ -27,6 +27,8 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("Country")]
         public int CountryId { get; set; }
+        [Required, MaxLength(255)]
+        public string Code { get; set; }
         public Country Country { get; set; }
 
         [ForeignKey("Governorate")]

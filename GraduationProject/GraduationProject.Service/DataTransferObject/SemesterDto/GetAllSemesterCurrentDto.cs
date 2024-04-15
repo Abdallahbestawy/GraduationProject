@@ -2,7 +2,7 @@
 {
     public class GetAllSemesterCurrentDto
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public string AcademyYearName { get; set; }
+        public List<GetSemesterNameDto> semesterName { get; set; } = new List<GetSemesterNameDto>();
     }
 }

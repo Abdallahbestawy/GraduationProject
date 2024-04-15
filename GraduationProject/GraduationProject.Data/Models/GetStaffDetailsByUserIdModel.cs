@@ -23,5 +23,6 @@ namespace GraduationProject.Data.Models
         public decimal? Degree { get; set; }
         public string? StaffPhoneNumber { get; set; }
         public PhoneType? PhoneType { get; set; }
+        public int? PhoneId { get; set; }
     }
 }

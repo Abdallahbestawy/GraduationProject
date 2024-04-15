@@ -35,8 +35,10 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<StaffSemester> StaffSemesters { get; private set; }
         public IGeneralRepository<GetStudentDetailsByUserIdModel> GetStudentDetailsByUserIdModels { get; private set; }
         public IGeneralRepository<GetStaffDetailsByUserIdModel> GetStaffDetailsByUserIdModels { get; private set; }
+        public IGeneralRepository<GetStudentResultModel> GetStudentResultModels { get; private set; }
         public IGeneralRepository<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels { get; private set; }
         public IGeneralRepository<GetAllModel> GetAllModels { get; private set; }
+        public IGeneralRepository<GetAllStudentsInSemesterModel> GetAllStudentsInSemesterModels { get; private set; }
 
         public IGeneralRepository<City> Cities { get; private set; }
         public IGeneralRepository<Country> Countries { get; private set; }
@@ -74,8 +76,10 @@ namespace GraduationProject.Repository.Repository
             StaffSemesters = new GeneralRepository<StaffSemester>(_context);
             GetStudentDetailsByUserIdModels = new GeneralRepository<GetStudentDetailsByUserIdModel>(_context);
             GetStaffDetailsByUserIdModels = new GeneralRepository<GetStaffDetailsByUserIdModel>(_context);
+            GetStudentResultModels = new GeneralRepository<GetStudentResultModel>(_context);
             GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels = new GeneralRepository<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel>(_context);
             GetAllModels = new GeneralRepository<GetAllModel>(_context);
+            GetAllStudentsInSemesterModels = new GeneralRepository<GetAllStudentsInSemesterModel>(_context);
             Cities = new GeneralRepository<City>(_context);
             Countries = new GeneralRepository<Country>(_context);
             Governorates = new GeneralRepository<Governorate>(_context);

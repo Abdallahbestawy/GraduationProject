@@ -86,22 +86,27 @@ namespace GraduationProject.Service.Service
 
         }
 
-        public async Task<Response<List<GetAllSemesterCurrentDto>>> GetAllSemesterCurrentAsync()
+        public async Task<Response<GetAllSemesterCurrentDto>> GetAllSemesterCurrentAsync()
         {
             try
             {
                 var semesters = await _unitOfWork.StudentSemesters.GetAllSemesterCurrentAsync();
 
                 if (semesters == null)
-                    return Response<List<GetAllSemesterCurrentDto>>.NoContent("No semesters are exist");
+                    return Response<GetAllSemesterCurrentDto>.NoContent("No semesters are exist");
+                GetAllSemesterCurrentDto getAllSemesterCurrentDtos = new GetAllSemesterCurrentDto
+                {
+                    AcademyYearName = $"{semesters.FirstOrDefault().AcademyYear.Start} - {semesters.FirstOrDefault().AcademyYear.End}"
+                };
 
-                var getAllSemesterCurrentDtos = semesters.Select(semester => new GetAllSemesterCurrentDto
+                getAllSemesterCurrentDtos.semesterName = semesters.Select(semester => new GetSemesterNameDto
                 {
                     Id = semester.ScientificDegreeId,
                     Name = $"{semester.ScientificDegree.Parent.Name} - {semester.ScientificDegree.Name}"
                 }).ToList();
 
-                return Response<List<GetAllSemesterCurrentDto>>.Success(getAllSemesterCurrentDtos, "Semesters are retrieved successfully").WithCount();
+
+                return Response<GetAllSemesterCurrentDto>.Success(getAllSemesterCurrentDtos, "Semesters are retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {
@@ -113,7 +118,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<List<GetAllSemesterCurrentDto>>.ServerError("Error occured while retrieving semesters",
+                return Response<GetAllSemesterCurrentDto>.ServerError("Error occured while retrieving semesters",
                      "An unexpected error occurred while retrieving semesters. Please try again later.");
             }
         }

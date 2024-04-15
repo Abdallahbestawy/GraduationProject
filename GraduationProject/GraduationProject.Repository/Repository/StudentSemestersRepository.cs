@@ -21,6 +21,7 @@ namespace GraduationProject.Repository.Repository
             try
             {
                 var semesters = await _context.StudentSemesters
+                    .Include(ac => ac.AcademyYear)
                     .Include(s => s.ScientificDegree)
                         .ThenInclude(parent => parent.Parent)
                     .Where(sd => sd.AcademyYear.IsCurrent)

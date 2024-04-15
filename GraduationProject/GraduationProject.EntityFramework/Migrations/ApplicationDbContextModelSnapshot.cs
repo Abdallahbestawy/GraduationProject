@@ -888,6 +888,11 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<int>("CountryId")
                         .HasColumnType("int");
 

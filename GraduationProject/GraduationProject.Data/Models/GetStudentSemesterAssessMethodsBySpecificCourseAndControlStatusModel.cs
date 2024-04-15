@@ -4,6 +4,7 @@
     {
         public int StudentSemesterAssessMethodsId { get; set; }
         public string StudentName { get; set; }
+        public string StudentCode { get; set; }
         public string CourseName { get; set; }
         public string CourseCode { get; set; }
         public string AssessmentMethodName { get; set; }

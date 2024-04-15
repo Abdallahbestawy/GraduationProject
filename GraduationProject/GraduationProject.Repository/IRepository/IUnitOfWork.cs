@@ -30,10 +30,12 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<CourseAssessMethod> CourseAssessMethods { get; }
         IGeneralRepository<StaffSemester> StaffSemesters { get; }
         IGeneralRepository<GetStudentDetailsByUserIdModel> GetStudentDetailsByUserIdModels { get; }
+        IGeneralRepository<GetStudentResultModel> GetStudentResultModels { get; }
         IGeneralRepository<GetStaffDetailsByUserIdModel> GetStaffDetailsByUserIdModels { get; }
         IGeneralRepository<StudentSemesterAssessMethod> StudentSemesterAssessMethods { get; }
         IGeneralRepository<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels { get; }
         IGeneralRepository<GetAllModel> GetAllModels { get; }
+        IGeneralRepository<GetAllStudentsInSemesterModel> GetAllStudentsInSemesterModels { get; }
         IGeneralRepository<City> Cities { get; }
         IGeneralRepository<Country> Countries { get; }
         IGeneralRepository<Governorate> Governorates { get; }

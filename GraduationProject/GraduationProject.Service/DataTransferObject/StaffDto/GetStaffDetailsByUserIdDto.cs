@@ -32,6 +32,7 @@ namespace GraduationProject.Service.DataTransferObject.StaffDto
     {
         public string? StaffPhoneNumber { get; set; }
         public string? PhoneType { get; set; }
+        public int? PhoneId { get; set; }
 
     }
 }

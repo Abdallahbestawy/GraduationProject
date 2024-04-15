@@ -8,6 +8,7 @@ using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.ScientificDegreeDto;
 using GraduationProject.Service.DataTransferObject.SemesterDto;
 using GraduationProject.Service.IService;
+using Microsoft.Data.SqlClient;
 
 namespace GraduationProject.Service.Service
 {
@@ -334,30 +335,30 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<List<GetAllSemesterCurrentDto>>> GetSemsetersByBylawIdAsync(int facultyId)
+        public async Task<Response<List<GetSemesterNameDto>>> GetSemsetersByBylawIdAsync(int facultyId)
         {
             try
             {
                 var bylaws = await _unitOfWork.Bylaws.GetEntityByPropertyAsync(bylaw => bylaw.FacultyId == facultyId);
                 if (!bylaws.Any())
-                    return Response<List<GetAllSemesterCurrentDto>>.NoContent("No bylaws are exist");
+                    return Response<List<GetSemesterNameDto>>.NoContent("No bylaws are exist");
 
                 var scientificDegreeEntities = await _unitOfWork.ScientificDegrees
                     .GetEntityByPropertyAsync(scien => bylaws.Contains(scien.Bylaw) && scien.Type == ScientificDegreeType.Semester);
                 if (!scientificDegreeEntities.Any())
-                    return Response<List<GetAllSemesterCurrentDto>>.NoContent("No semseters are exist");
+                    return Response<List<GetSemesterNameDto>>.NoContent("No semseters are exist");
 
-                List<GetAllSemesterCurrentDto> result = new();
+                List<GetSemesterNameDto> result = new();
 
                 foreach (var semester in scientificDegreeEntities)
                 {
-                    var semesterObject = new GetAllSemesterCurrentDto();
+                    var semesterObject = new GetSemesterNameDto();
                     semesterObject.Id = semester.Id;
                     semesterObject.Name = $"{semester.Parent.Name} - {semester.Name}";
                     result.Add(semesterObject);
                 }
 
-                return Response<List<GetAllSemesterCurrentDto>>.Success(result, "Semesters retrieved successfully");
+                return Response<List<GetSemesterNameDto>>.Success(result, "Semesters retrieved successfully");
 
             }
             catch (Exception ex)
@@ -370,9 +371,28 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<List<GetAllSemesterCurrentDto>>.ServerError("Error occured while retrieving Semesters",
+                return Response<List<GetSemesterNameDto>>.ServerError("Error occured while retrieving Semesters",
                     "An unexpected error occurred while retrieving Semesters. Please try again later.");
             }
+        }
+
+        public async Task<List<GetAllStudentsInSemesterDto>> GetAllStudentsInSemesterAsync(int semesterId)
+        {
+            SqlParameter pSemesterId = new SqlParameter("@ScientificDegreeId", semesterId);
+
+            var getStudentInSems = await _unitOfWork.GetAllStudentsInSemesterModels.CallStoredProcedureAsync(
+                "EXECUTE SpGetAllStudentsInSemester", pSemesterId);
+            if (getStudentInSems == null || !getStudentInSems.Any())
+            {
+                return null;
+            }
+            List<GetAllStudentsInSemesterDto> getAllStudentsInSemesterDtos = getStudentInSems.Select(ses => new GetAllStudentsInSemesterDto
+            {
+                StudentSemesterId = ses.Id,
+                StudentName = ses.NameEnglish,
+                StudentCode = ses.Code
+            }).ToList();
+            return getAllStudentsInSemesterDtos;
         }
     }
 }

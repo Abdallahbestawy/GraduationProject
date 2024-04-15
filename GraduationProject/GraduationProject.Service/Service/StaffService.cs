@@ -276,6 +276,7 @@ namespace GraduationProject.Service.Service
                             .Where(s => !string.IsNullOrEmpty(s.StaffPhoneNumber))
                             .Select(s => new GetPhoneSafftDto
                             {
+                                PhoneId = s.PhoneId,
                                 StaffPhoneNumber = s.StaffPhoneNumber,
                                 PhoneType = Enum.GetName(typeof(PhoneType), s.PhoneType)
                             })

@@ -42,13 +42,14 @@ namespace GraduationProject.Api.Controllers
             }
         }
         [HttpGet("GetStudent")]
-        public async Task<IActionResult> GetStudent()
+        public async Task<IActionResult> GetStudent(string? uId)
         {
-            string userId = "af88e91d-7241-4149-bbd4-ebb2a30dd247";
+            string userId = uId ?? "af88e91d-7241-4149-bbd4-ebb2a30dd247";
 
             var response = await _studentService.GetStudentByUserId(userId);
 
             return StatusCode(response.StatusCode, response);
+
         }
         [HttpGet("GetAllStudents")]
         public async Task<IActionResult> GetAllStudents()
@@ -99,6 +100,13 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("Please Try Again And Enter Valid Model");
 
             }
+        }
+        [HttpGet("Result")]
+        public async Task<IActionResult> GetResultStudent()
+        {
+            string userId = "af88e91d-7241-4149-bbd4-ebb2a30dd247";
+            var respone = await _studentService.GetStudentResultAsync(userId);
+            return Ok(respone);
         }
     }
 }

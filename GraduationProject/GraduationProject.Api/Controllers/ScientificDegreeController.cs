@@ -85,5 +85,11 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        [HttpGet("as{semesterId:int}")]
+        public async Task<IActionResult> GetAllStudentsInSemester(int semesterId)
+        {
+            var respone = await _scientificDegreeService.GetAllStudentsInSemesterAsync(semesterId);
+            return Ok(respone);
+        }
     }
 }

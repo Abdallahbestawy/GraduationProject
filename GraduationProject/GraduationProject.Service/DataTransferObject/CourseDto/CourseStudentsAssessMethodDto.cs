@@ -11,6 +11,8 @@
     public class StudentDto
     {
         public string StudentName { get; set; }
+        public string StudentCode { get; set; }
+
         public List<AssesstMethodDto> AssesstMethodDtos { get; set; }
     }
 

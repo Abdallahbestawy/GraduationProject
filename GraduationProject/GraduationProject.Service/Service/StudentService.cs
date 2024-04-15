@@ -65,7 +65,8 @@ namespace GraduationProject.Service.Service
                     GovernorateId = addStudentDto.GovernorateId,
                     CityId = addStudentDto.CityId,
                     Street = addStudentDto.Street,
-                    PostalCode = addStudentDto.PostalCode
+                    PostalCode = addStudentDto.PostalCode,
+                    Code = addStudentDto.StudentCode
                 };
 
                 try
@@ -535,6 +536,7 @@ namespace GraduationProject.Service.Service
                     NameEnglish = getStudent.FirstOrDefault()?.NameEnglish,
                     NationalID = getStudent.FirstOrDefault()?.NationalID,
                     Email = getStudent.FirstOrDefault()?.Email,
+                    StudentCode = getStudent.FirstOrDefault().Code,
                     StudentId = getStudent.FirstOrDefault()?.StudentId ?? 0,
                     StudentAddress = getStudent.FirstOrDefault()?.StudentAddress,
                     DateOfBirth = getStudent.FirstOrDefault()?.DateOfBirth,
@@ -560,6 +562,7 @@ namespace GraduationProject.Service.Service
                         .Where(s => !string.IsNullOrEmpty(s.StudentPhoneNumber))
                         .Select(s => new GetPhoneStudentDto
                         {
+                            PhoneId = s.PhoneId,
                             StudentPhoneNumber = s.StudentPhoneNumber,
                             PhoneType = Enum.GetName(typeof(PhoneType), s.PhoneType)
                         })
@@ -595,11 +598,11 @@ namespace GraduationProject.Service.Service
                 {
                     StudentId = student.Id,
                     UserId = student.UserId,
-                    Nationality = Enum.GetName(typeof(Gender), student.Nationality),
+                    Nationality = Enum.GetName(typeof(Nationality), student.Nationality),
                     StudentNameArbic = student.NameArabic,
                     StudentNameEnglish = student.NameEnglish,
                     Gender = Enum.GetName(typeof(Gender), student.Gender),
-                    Religion = Enum.GetName(typeof(Gender), student.Religion),
+                    Religion = Enum.GetName(typeof(Religion), student.Religion),
                     Email = student.Email
                 }).ToList();
 
@@ -718,6 +721,7 @@ namespace GraduationProject.Service.Service
                 existingStudent.CityId = updateStudentDto.CityId;
                 existingStudent.Street = updateStudentDto.Street;
                 existingStudent.PostalCode = updateStudentDto.PostalCode;
+                existingStudent.Code = updateStudentDto.StudentCode;
                 _unitOfWork.Students.Update(existingStudent);
                 var qualicationData = await _unitOfWork.QualificationDatas.GetEntityByPropertyAsync(s => s.StudentId == existingStudent.Id);
                 if (qualicationData != null || qualicationData.Any())
@@ -786,5 +790,42 @@ namespace GraduationProject.Service.Service
             }
         }
 
+        public async Task<GetStudentResultDto> GetStudentResultAsync(string userId)
+        {
+            SqlParameter pUserId = new SqlParameter("@UserId", userId);
+
+            var getStudentResult = await _unitOfWork.GetStudentResultModels.CallStoredProcedureAsync(
+                "EXECUTE SpGetStudentResult", pUserId);
+            if (getStudentResult == null || !getStudentResult.Any())
+            {
+                return null;
+            }
+            GetStudentResultDto getStudentResultDto = new GetStudentResultDto
+            {
+                StudentName = getStudentResult.FirstOrDefault().NameEnglish
+            };
+
+            getStudentResultDto.StudentResultDeltiels = getStudentResult.DistinctBy(detiels => detiels.SemesterName).Select(detiels => new StudentResultDeltielsDto
+            {
+                SemesterName = detiels.SemesterName,
+                AcademyYearName = detiels.AcademyYear,
+                BandName = detiels.BandName,
+                SemesterStatus = detiels.SemesterStatus,
+                SemesterPercentage = detiels.SemesterPercentage,
+                SemesterChar = detiels.SemesterChar,
+                CumulativePercentage = detiels.CumulativePercentage,
+                CumulativeChar = detiels.CumulativeChar,
+                studentResultDeltielsSemester = getStudentResult.Where(semester => semester.SemesterName == detiels.SemesterName).Select(semester => new StudentResultDeltielsSemesterDto
+                {
+                    CourseName = semester.CourseName,
+                    CourseCode = semester.CourseCode,
+                    NumberOfPoint = semester.NumberOfPoints,
+                    CourseDegree = semester.CourseDegree,
+                    CourseChar = semester.CourseChar,
+                    CourseStatus = semester.CourseStatus
+                }).ToList()
+            }).ToList();
+            return getStudentResultDto;
+        }
     }
 }
