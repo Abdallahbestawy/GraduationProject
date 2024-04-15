@@ -22,6 +22,8 @@ namespace GraduationProject.Data.Entity
 
         public string? Operation { get; set; }
 
+        public string? Event { get; set; }
+
         public string? OldData { get; set; }
 
         public string? NewData { get; set; }

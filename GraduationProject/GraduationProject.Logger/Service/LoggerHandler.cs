@@ -37,7 +37,7 @@ namespace GraduationProject.LogHandler.Service
                 UserId = userId,
                 TableName = tableName,
                 RecordId = recordId,
-                Operation = "Insert",
+                Operation = LogOperation.Insert.Value,
                 OldData = oldData,
                 NewData = newData
             };
@@ -52,7 +52,7 @@ namespace GraduationProject.LogHandler.Service
                 UserId = userId,
                 TableName = tableName,
                 RecordId = recordId,
-                Operation = "Update",
+                Operation = LogOperation.Update.Value,
                 OldData = oldData,
                 NewData = newData
             };
@@ -67,9 +67,21 @@ namespace GraduationProject.LogHandler.Service
                 UserId = userId,
                 TableName = tableName,
                 RecordId = recordId,
-                Operation = "Delete",
+                Operation = LogOperation.Delete.Value,
                 OldData = oldData,
                 NewData = newData
+            };
+
+            await Log(activityLogModel);
+        }
+
+        public async Task EventtLog(string? userId, string? _event)
+        {
+            var activityLogModel = new ActivityLogModel<T>
+            {
+                UserId = userId,
+                Operation = LogOperation.Info.Value,
+                Event = _event
             };
 
             await Log(activityLogModel);
@@ -79,7 +91,7 @@ namespace GraduationProject.LogHandler.Service
         {
             try
             {
-                var newLog = await LogChanges(logModel);
+                var newLog = LogChanges(logModel);
                 if (newLog == null)
                     return;
                 await _unitOfWork.ActivityLogs.AddAsync(newLog);
@@ -98,44 +110,45 @@ namespace GraduationProject.LogHandler.Service
             }
         }
 
-        private async Task<ActivityLog?> LogChanges(ActivityLogModel<T> logModel)
+        private ActivityLog? LogChanges(ActivityLogModel<T> logModel)
         {
             var oldDataChanges = new List<string>();
             var newDataChanges = new List<string>();
-
-            // Get all properties of the entity using reflection
-            var properties = typeof(T).GetProperties()
-                .Where(prop => prop.CanRead && prop.CanWrite && !prop.IsDefined(typeof(IgnoreLoggingAttribute), true))
-                .ToList();
-
-            foreach (var property in properties)
+            if (logModel.Operation != LogOperation.Info.Value)
             {
-                object? originalValue = null;
-                object? updatedValue = null;
+                // Get all properties of the entity using reflection
+                var properties = typeof(T).GetProperties()
+                    .Where(prop => prop.CanRead && prop.CanWrite && !prop.IsDefined(typeof(IgnoreLoggingAttribute), true))
+                    .ToList();
 
-                if (logModel.OldData != null)
-                    originalValue = property.GetValue(logModel.OldData);
-
-                if (logModel.NewData != null)
-                    updatedValue = property.GetValue(logModel.NewData);
-
-                // Compare the values
-                if (!(logModel.OldData == null || logModel.NewData == null))
+                foreach (var property in properties)
                 {
-                    if (!object.Equals(originalValue, updatedValue))
-                    {
-                        oldDataChanges.Add($"{property.Name}: {originalValue}");
-                        newDataChanges.Add($"{property.Name}: {updatedValue}");
-                    }
-                }
-                else if(logModel.Operation == "Insert")
-                    newDataChanges.Add($"{property.Name}: {updatedValue}");
-                else if(logModel.Operation =="Delete")
-                    oldDataChanges.Add($"{property.Name}: {originalValue}");
-            }
+                    object? originalValue = null;
+                    object? updatedValue = null;
 
-            if (oldDataChanges.IsNullOrEmpty() && newDataChanges.IsNullOrEmpty())
-                return null;
+                    if (logModel.OldData != null)
+                        originalValue = property.GetValue(logModel.OldData);
+
+                    if (logModel.NewData != null)
+                        updatedValue = property.GetValue(logModel.NewData);
+
+                    // Compare the values
+                    if (!(logModel.OldData == null || logModel.NewData == null))
+                    {
+                        if (!object.Equals(originalValue, updatedValue))
+                        {
+                            oldDataChanges.Add($"{property.Name}: {originalValue}");
+                            newDataChanges.Add($"{property.Name}: {updatedValue}");
+                        }
+                    }
+                    else if (logModel.Operation == LogOperation.Insert.Value)
+                        newDataChanges.Add($"{property.Name}: {updatedValue}");
+                    else if (logModel.Operation == LogOperation.Delete.Value)
+                        oldDataChanges.Add($"{property.Name}: {originalValue}");
+                }
+                if (oldDataChanges.IsNullOrEmpty() && newDataChanges.IsNullOrEmpty())
+                    return null;
+            }
 
             var activityLog = new ActivityLog
             {
