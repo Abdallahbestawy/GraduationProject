@@ -14,6 +14,7 @@ namespace GraduationProject.Api.Controllers
         {
             _authService = authService;
         }
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginUserModel loginUserModel)
         {
@@ -27,6 +28,7 @@ namespace GraduationProject.Api.Controllers
 
             return Ok(result);
         }
+
         [HttpGet("refreshToken")]
         public async Task<IActionResult> RefreshToken()
         {
@@ -41,6 +43,7 @@ namespace GraduationProject.Api.Controllers
 
             return Ok(result);
         }
+
         [HttpPost("revokeToken")]
         public async Task<IActionResult> RevokeToken([FromBody] RevokeToken revokeToken)
         {
@@ -88,6 +91,24 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> ResetPassword([FromQuery] ResetPasswordModel model)
         {
             var response = await _authService.ResetPassword(model);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("ChangeUserRoles")]
+        public async Task<IActionResult> ChangeUserRoles([FromBody] UserRolesDto model)
+        {
+
+            var response = await _authService.ChangeUserRolesAsync(model);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("GetUserRoles/{userId}")]
+        public async Task<IActionResult> GetUserRoles(string userId)
+        {
+
+            var response = await _authService.GetUserRolesAsync(userId);
 
             return StatusCode(response.StatusCode, response);
         }

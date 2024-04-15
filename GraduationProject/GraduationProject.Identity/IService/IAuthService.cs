@@ -10,5 +10,7 @@ namespace GraduationProject.Identity.IService
         Task<bool> RevokeTokenAsync(string token);
         Task<Response<bool>> ForgotPassword(ForgotPasswordModel forgotPasswordModel, string baseURL);
         Task<Response<bool>> ResetPassword(ResetPasswordModel resetPasswordModel);
+        Task<Response<bool>> ChangeUserRolesAsync(UserRolesDto model);
+        Task<Response<UserRolesDto>> GetUserRolesAsync(string userId);
     }
 }

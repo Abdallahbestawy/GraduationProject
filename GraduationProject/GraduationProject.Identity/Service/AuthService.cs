@@ -205,5 +205,80 @@ namespace GraduationProject.Identity.Service
 
             return Response<bool>.BadRequest("Error occured while reseting password", result.Errors);
         }
+
+        public async Task<Response<bool>> ChangeUserRolesAsync(UserRolesDto model)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(model.UserId);
+
+                if (user == null)
+                    return Response<bool>.BadRequest("This user doesn't exist");
+
+                var userRoles = await _userManager.GetRolesAsync(user);
+
+                foreach (var role in model.Roles)
+                {
+                    if (userRoles.Any(r => r == role.Name) && !role.IsSelected)
+                        await _userManager.RemoveFromRoleAsync(user, role.Name);
+
+                    if (!userRoles.Any(r => r == role.Name) && role.IsSelected)
+                        await _userManager.AddToRoleAsync(user, role.Name);
+                }
+
+                return Response<bool>.Success(true, "User's roles changed successfully");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AuthService",
+                    MethodName = "ChangeUserRoles",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while changing user's roles",
+                        "An unexpected error occurred while changing user's roles. Please try again later.");
+            }
+        }
+
+        public async Task<Response<UserRolesDto>> GetUserRolesAsync(string userId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                    return Response<UserRolesDto>.BadRequest("This user doesn't exist");
+
+                var roles = await _roleManager.Roles.ToListAsync();
+
+                var result = new UserRolesDto
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    Roles = roles.Select(role => new RolesDto
+                    {
+                        Id = role.Id,
+                        Name = role.Name,
+                        IsSelected = _userManager.IsInRoleAsync(user, role.Name).Result
+                    }).ToList()
+                };
+                return Response<UserRolesDto>.Success(result, "User's roles retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AuthService",
+                    MethodName = "GetUserRolesAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<UserRolesDto>.ServerError("Error occured while retrieving user's roles",
+                        "An unexpected error occurred while retrieving user's roles. Please try again later.");
+            }
+        }
     }
 }
