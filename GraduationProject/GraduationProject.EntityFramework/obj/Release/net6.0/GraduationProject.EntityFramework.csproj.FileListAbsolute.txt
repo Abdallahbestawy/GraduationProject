@@ -22,3 +22,5 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.EntityFramework\obj\Release\net6.0\GraduationProject.EntityFramework.pdb
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.EntityFramework\obj\Release\net6.0\GraduationProject.EntityFramework.genruntimeconfig.cache
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.EntityFramework\obj\Release\net6.0\ref\GraduationProject.EntityFramework.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.EntityFramework\bin\Release\net6.0\GraduationProject.Shared.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.EntityFramework\bin\Release\net6.0\GraduationProject.Shared.pdb

@@ -1165,7 +1165,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
-          "GraduationProject.Identity": "1.0.0"
+          "GraduationProject.Identity": "1.0.0",
+          "GraduationProject.Shared": "1.0.0"
         },
         "compile": {
           "bin/placeholder/GraduationProject.Data.dll": {}
@@ -1207,6 +1208,20 @@
         },
         "runtime": {
           "bin/placeholder/GraduationProject.Identity.dll": {}
+        }
+      },
+      "GraduationProject.LogHandler/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "GraduationProject.Repository": "1.0.0",
+          "GraduationProject.Shared": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/GraduationProject.LogHandler.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/GraduationProject.LogHandler.dll": {}
         }
       },
       "GraduationProject.Mails/1.0.0": {
@@ -1253,6 +1268,7 @@
         "dependencies": {
           "AutoMapper": "13.0.1",
           "GraduationProject.Data": "1.0.0",
+          "GraduationProject.LogHandler": "1.0.0",
           "GraduationProject.Repository": "1.0.0"
         },
         "compile": {
@@ -1260,6 +1276,16 @@
         },
         "runtime": {
           "bin/placeholder/GraduationProject.Service.dll": {}
+        }
+      },
+      "GraduationProject.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/GraduationProject.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/GraduationProject.Shared.dll": {}
         }
       }
     },
@@ -2359,7 +2385,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
-          "GraduationProject.Identity": "1.0.0"
+          "GraduationProject.Identity": "1.0.0",
+          "GraduationProject.Shared": "1.0.0"
         },
         "compile": {
           "bin/placeholder/GraduationProject.Data.dll": {}
@@ -2401,6 +2428,20 @@
         },
         "runtime": {
           "bin/placeholder/GraduationProject.Identity.dll": {}
+        }
+      },
+      "GraduationProject.LogHandler/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "GraduationProject.Repository": "1.0.0",
+          "GraduationProject.Shared": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/GraduationProject.LogHandler.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/GraduationProject.LogHandler.dll": {}
         }
       },
       "GraduationProject.Mails/1.0.0": {
@@ -2447,6 +2488,7 @@
         "dependencies": {
           "AutoMapper": "13.0.1",
           "GraduationProject.Data": "1.0.0",
+          "GraduationProject.LogHandler": "1.0.0",
           "GraduationProject.Repository": "1.0.0"
         },
         "compile": {
@@ -2454,6 +2496,16 @@
         },
         "runtime": {
           "bin/placeholder/GraduationProject.Service.dll": {}
+        }
+      },
+      "GraduationProject.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/GraduationProject.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/GraduationProject.Shared.dll": {}
         }
       }
     }
@@ -4497,6 +4549,11 @@
       "path": "../GraduationProject.Identity/GraduationProject.Identity.csproj",
       "msbuildProject": "../GraduationProject.Identity/GraduationProject.Identity.csproj"
     },
+    "GraduationProject.LogHandler/1.0.0": {
+      "type": "project",
+      "path": "../GraduationProject.Logger/GraduationProject.LogHandler.csproj",
+      "msbuildProject": "../GraduationProject.Logger/GraduationProject.LogHandler.csproj"
+    },
     "GraduationProject.Mails/1.0.0": {
       "type": "project",
       "path": "../GraduationProject.Mails/GraduationProject.Mails.csproj",
@@ -4516,6 +4573,11 @@
       "type": "project",
       "path": "../GraduationProject.Service/GraduationProject.Service.csproj",
       "msbuildProject": "../GraduationProject.Service/GraduationProject.Service.csproj"
+    },
+    "GraduationProject.Shared/1.0.0": {
+      "type": "project",
+      "path": "../GraduationProject.Shared/GraduationProject.Shared.csproj",
+      "msbuildProject": "../GraduationProject.Shared/GraduationProject.Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {

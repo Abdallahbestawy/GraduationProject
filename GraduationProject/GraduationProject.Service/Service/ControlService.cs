@@ -94,9 +94,11 @@ namespace GraduationProject.Service.Service
 
                 if (semesters == null)
                     return Response<GetAllSemesterCurrentDto>.NoContent("No semesters are exist");
+                var startDate = semesters.FirstOrDefault().AcademyYear.Start;
+                var endDate = semesters.FirstOrDefault().AcademyYear.End;
                 GetAllSemesterCurrentDto getAllSemesterCurrentDtos = new GetAllSemesterCurrentDto
                 {
-                    AcademyYearName = $"{semesters.FirstOrDefault().AcademyYear.Start} - {semesters.FirstOrDefault().AcademyYear.End}"
+                    AcademyYearName = $"{startDate.Day}/{startDate.Month}/{startDate.Year} - {endDate.Day}/{endDate.Month}/{endDate.Year}"
                 };
 
                 getAllSemesterCurrentDtos.semesterName = semesters.Select(semester => new GetSemesterNameDto

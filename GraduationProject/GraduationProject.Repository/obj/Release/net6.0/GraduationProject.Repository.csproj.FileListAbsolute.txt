@@ -22,3 +22,5 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Repository\obj\Release\net6.0\refint\GraduationProject.Repository.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Repository\obj\Release\net6.0\GraduationProject.Repository.pdb
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Repository\obj\Release\net6.0\ref\GraduationProject.Repository.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Repository\bin\Release\net6.0\GraduationProject.Shared.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Repository\bin\Release\net6.0\GraduationProject.Shared.pdb

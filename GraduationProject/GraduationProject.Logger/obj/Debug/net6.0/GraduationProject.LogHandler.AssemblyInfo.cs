@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GraduationProject.LogHandler")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0a572334e7a34c6c24fe8cfd999c67bc4ce64139")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fd4ccb30305074455f089d8d9b6460b7954785b3")]
 [assembly: System.Reflection.AssemblyProductAttribute("GraduationProject.LogHandler")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GraduationProject.LogHandler")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

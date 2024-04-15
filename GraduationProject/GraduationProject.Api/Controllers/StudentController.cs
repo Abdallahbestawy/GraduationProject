@@ -1,5 +1,6 @@
 ﻿using GraduationProject.Service.DataTransferObject.StudentDto;
 using GraduationProject.Service.IService;
+using GraduationProject.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
@@ -9,9 +10,12 @@ namespace GraduationProject.Api.Controllers
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _studentService;
-        public StudentController(IStudentService studentService)
+        private readonly IScientificDegreeService _scientificDegreeService;
+
+        public StudentController(IStudentService studentService, IScientificDegreeService scientificDegreeService)
         {
             _studentService = studentService;
+            _scientificDegreeService = scientificDegreeService;
         }
         [HttpPost("AddStudent")]
         public async Task<IActionResult> AddStudent(AddStudentDto addStudentDto)
@@ -96,6 +100,14 @@ namespace GraduationProject.Api.Controllers
         {
             string userId = "af88e91d-7241-4149-bbd4-ebb2a30dd247";
             var respone = await _studentService.GetStudentResultAsync(userId);
+
+            return StatusCode(respone.StatusCode, respone);
+        }
+
+        [HttpGet("as{semesterId:int}")]
+        public async Task<IActionResult> GetAllStudentsInSemester(int semesterId)
+        {
+            var respone = await _scientificDegreeService.GetAllStudentsInSemesterAsync(semesterId);
 
             return StatusCode(respone.StatusCode, respone);
         }

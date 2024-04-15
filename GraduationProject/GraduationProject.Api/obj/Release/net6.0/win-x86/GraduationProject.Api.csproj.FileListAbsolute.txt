@@ -87,3 +87,7 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\GraduationProject.Api.pdb
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\GraduationProject.Api.genruntimeconfig.cache
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\ref\GraduationProject.Api.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\GraduationProject.LogHandler.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\GraduationProject.Shared.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\GraduationProject.LogHandler.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\GraduationProject.Shared.pdb

@@ -24,3 +24,7 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Service\obj\Release\net6.0\refint\GraduationProject.Service.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Service\obj\Release\net6.0\GraduationProject.Service.pdb
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Service\obj\Release\net6.0\ref\GraduationProject.Service.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Service\bin\Release\net6.0\GraduationProject.LogHandler.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Service\bin\Release\net6.0\GraduationProject.Shared.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Service\bin\Release\net6.0\GraduationProject.LogHandler.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Service\bin\Release\net6.0\GraduationProject.Shared.pdb

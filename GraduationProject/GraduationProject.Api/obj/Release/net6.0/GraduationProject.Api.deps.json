@@ -686,7 +686,8 @@
       },
       "GraduationProject.Data/1.0.0": {
         "dependencies": {
-          "GraduationProject.Identity": "1.0.0"
+          "GraduationProject.Identity": "1.0.0",
+          "GraduationProject.Shared": "1.0.0"
         },
         "runtime": {
           "GraduationProject.Data.dll": {}
@@ -717,6 +718,15 @@
           "GraduationProject.Identity.dll": {}
         }
       },
+      "GraduationProject.LogHandler/1.0.0": {
+        "dependencies": {
+          "GraduationProject.Repository": "1.0.0",
+          "GraduationProject.Shared": "1.0.0"
+        },
+        "runtime": {
+          "GraduationProject.LogHandler.dll": {}
+        }
+      },
       "GraduationProject.Mails/1.0.0": {
         "dependencies": {
           "MailKit": "4.4.0",
@@ -744,10 +754,16 @@
         "dependencies": {
           "AutoMapper": "13.0.1",
           "GraduationProject.Data": "1.0.0",
+          "GraduationProject.LogHandler": "1.0.0",
           "GraduationProject.Repository": "1.0.0"
         },
         "runtime": {
           "GraduationProject.Service.dll": {}
+        }
+      },
+      "GraduationProject.Shared/1.0.0": {
+        "runtime": {
+          "GraduationProject.Shared.dll": {}
         }
       }
     }
@@ -1242,6 +1258,11 @@
       "serviceable": false,
       "sha512": ""
     },
+    "GraduationProject.LogHandler/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
     "GraduationProject.Mails/1.0.0": {
       "type": "project",
       "serviceable": false,
@@ -1258,6 +1279,11 @@
       "sha512": ""
     },
     "GraduationProject.Service/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "GraduationProject.Shared/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
