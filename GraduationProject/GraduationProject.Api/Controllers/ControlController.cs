@@ -92,7 +92,7 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> EndSemester([FromRoute] int semesterId)
         {
             var response = await _controlService.EndSemesterAsync(semesterId);
-            
+
             return StatusCode(response.StatusCode, response);
         }
 
@@ -102,6 +102,12 @@ namespace GraduationProject.Api.Controllers
             var response = await _studentService.AssignCoursesToStudents();
 
             return StatusCode(response.StatusCode, response);
+        }
+        [HttpGet("SA")]
+        public async Task<IActionResult> GetAllSemesterActive()
+        {
+            var response = await _controlService.GetAllSemesterActiveAsync();
+            return Ok(response);
         }
 
     }

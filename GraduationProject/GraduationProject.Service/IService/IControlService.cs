@@ -12,6 +12,7 @@ namespace GraduationProject.Service.IService
         Task<Response<bool>> EndSemesterAsync(int semesterId);
         Task<Response<int>> AddControlMembersAsync(AddStaffDto addControlMembersDto);
         Task<Response<List<GetAllStaffsDto>>> GetAllControlMembersAsync();
+        Task<List<GetAllSemesterActiveDto>> GetAllSemesterActiveAsync();
         //Task Test();
     }
 }

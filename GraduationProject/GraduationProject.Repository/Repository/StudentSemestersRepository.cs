@@ -517,5 +517,28 @@ namespace GraduationProject.Repository.Repository
                 return -1;
             }
         }
+
+        public async Task<List<StudentSemester>> GetAllSemesterActiveAsync()
+        {
+            try
+            {
+                var semester = await _context.StudentSemesters
+                 .Include(a => a.AcademyYear)
+                .Include(s => s.ScientificDegree)
+                    .ThenInclude(parent => parent.Parent)
+                .GroupBy(d => d.ScientificDegreeId)
+                .Select(g => g.First())
+                .ToListAsync();
+                if (semester == null || !semester.Any())
+                {
+                    return null;
+                }
+                return semester;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

@@ -323,6 +323,22 @@ namespace GraduationProject.Service.Service
                      "An unexpected error occurred while retrieving ControlMembers. Please try again later.");
             }
         }
+
+        public async Task<List<GetAllSemesterActiveDto>> GetAllSemesterActiveAsync()
+        {
+            var distinctSemesters = await _unitOfWork.StudentSemesters.GetAllSemesterActiveAsync();
+            if (distinctSemesters == null)
+            {
+                return null;
+            }
+            var semesters = distinctSemesters.Select(se => new GetAllSemesterActiveDto
+            {
+                SemesterId = se.ScientificDegreeId,
+                AcademyYearId = se.AcademyYearId,
+                SemesterName = $"{se.ScientificDegree.Parent.Name} - {se.ScientificDegree.Name} {se.AcademyYear.Start.Year}/{se.AcademyYear.End.Year}"
+            }).ToList();
+            return semesters;
+        }
         //public async Task Test()
         //{
         //    var students = await _unitOfWork.StudentSemesters.GetTheCurrentSemesterWithStudents();
