@@ -8,7 +8,6 @@ using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.ScientificDegreeDto;
 using GraduationProject.Service.DataTransferObject.SemesterDto;
 using GraduationProject.Service.IService;
-using Microsoft.Data.SqlClient;
 
 namespace GraduationProject.Service.Service
 {
@@ -376,39 +375,6 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<List<GetAllStudentsInSemesterDto>>> GetAllStudentsInSemesterAsync(int semesterId)
-        {
-            try
-            {
-                SqlParameter pSemesterId = new SqlParameter("@ScientificDegreeId", semesterId);
 
-                var getStudentInSems = await _unitOfWork.GetAllStudentsInSemesterModels.CallStoredProcedureAsync(
-                    "EXECUTE SpGetAllStudentsInSemester", pSemesterId);
-                if (getStudentInSems == null || !getStudentInSems.Any())
-                    return Response<List<GetAllStudentsInSemesterDto>>.NoContent("No students are exist");
-
-                List<GetAllStudentsInSemesterDto> getAllStudentsInSemesterDtos = getStudentInSems.Select(ses => new GetAllStudentsInSemesterDto
-                {
-                    StudentSemesterId = ses.Id,
-                    StudentName = ses.NameEnglish,
-                    StudentCode = ses.Code
-                }).ToList();
-
-                return Response<List<GetAllStudentsInSemesterDto>>.Success(getAllStudentsInSemesterDtos, "Students retrieved successfully").WithCount();
-            }
-            catch (Exception ex)
-            {
-                await _mailService.SendExceptionEmail(new ExceptionEmailModel
-                {
-                    ClassName = "ScientificDegreeService",
-                    MethodName = "GetAllStudentsInSemesterAsync",
-                    ErrorMessage = ex.Message,
-                    StackTrace = ex.StackTrace,
-                    Time = DateTime.UtcNow
-                });
-                return Response<List<GetAllStudentsInSemesterDto>>.ServerError("Error occured while retrieving students",
-                    "An unexpected error occurred while retrieving students. Please try again later.");
-            }
-        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.ScientificDegreeDto;
 using GraduationProject.Service.DataTransferObject.StudentDto;
 
 namespace GraduationProject.Service.IService
@@ -14,5 +15,7 @@ namespace GraduationProject.Service.IService
         Task<Response<bool>> DeleteStudentSemesterAsync(int studentSemesterId);
         Task<Response<int>> UpdateStudentAsync(AddStudentDto updateStudentDto);
         Task<Response<GetStudentResultDto>> GetStudentResultAsync(string userId);
+        Task<Response<List<GetAllStudentsInSemesterDto>>> GetAllStudentsInSemesterAsync(int semesterId);
+
     }
 }
