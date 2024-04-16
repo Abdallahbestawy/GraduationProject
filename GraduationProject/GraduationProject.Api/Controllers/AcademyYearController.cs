@@ -1,11 +1,14 @@
-﻿using GraduationProject.Service.DataTransferObject.AcademyYearDto;
+﻿using GraduationProject.Identity.Models;
+using GraduationProject.Service.DataTransferObject.AcademyYearDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(Roles = $"{Roles.Administration}")]
     public class AcademyYearController : ControllerBase
     {
         private readonly IAcademyYearService _academyYearService;
@@ -37,7 +40,7 @@ namespace GraduationProject.Api.Controllers
         [HttpPost("Add")]
         public async Task<IActionResult> AddAcademyYear(AcademyYearDto addAcademyYearDto)
         {
-            var response = await _academyYearService.AddAcademyYearAsync(addAcademyYearDto);
+            var response = await _academyYearService.AddAcademyYearAsync(addAcademyYearDto, User);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -49,18 +52,19 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("please enter valid model");
             }
-            var response = await _academyYearService.UpdateAcademyYearAsync(updateAcademyYearDto);
+            var response = await _academyYearService.UpdateAcademyYearAsync(updateAcademyYearDto, User);
 
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete("Delete/{Id}")]
         public async Task<IActionResult> DeleteAcademyYear([FromRoute] int Id)
         {
-            var response = await _academyYearService.DeleteAcademyYearAsync(Id);
+            var response = await _academyYearService.DeleteAcademyYearAsync(Id, User);
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("GetCurrent{facultId:int}")]
         public async Task<IActionResult> GetCurrentAcademyYear(int facultId)
         {

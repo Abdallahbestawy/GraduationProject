@@ -36,7 +36,7 @@
 
         public static Response<T> Deleted(string? message = null)
         {
-            return CreateResponse(ResponseType.NoContent, message, null, default(T));
+            return CreateResponse(ResponseType.Success, message, null, default(T));
         }
 
         public static Response<T> Updated(string? message = null)
