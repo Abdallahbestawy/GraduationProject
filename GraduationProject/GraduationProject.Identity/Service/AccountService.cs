@@ -179,7 +179,7 @@ namespace GraduationProject.Identity.Service
             var userData = await _userManager.GetUserAsync(user);
 
             if (userData == null)
-                return "00000";
+                return "Anonymous";
 
             return userData.Id;
         }

@@ -1,11 +1,14 @@
-﻿using GraduationProject.Service.DataTransferObject.AcademyYearDto;
+﻿using GraduationProject.Identity.Models;
+using GraduationProject.Service.DataTransferObject.AcademyYearDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(Roles = $"{Roles.Administration}")]
     public class AcademyYearController : ControllerBase
     {
         private readonly IAcademyYearService _academyYearService;
