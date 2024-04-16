@@ -1,4 +1,6 @@
 ﻿using GraduationProject.Data.Entity;
+using GraduationProject.Identity.IService;
+using GraduationProject.LogHandler.Service;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.IRepository;
@@ -6,6 +8,7 @@ using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.AcademyYearDto;
 using GraduationProject.Service.IService;
+using System.Security.Claims;
 
 namespace GraduationProject.Service.Service
 {
@@ -13,14 +16,18 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+        private readonly LoggerHandler<AcademyYear> _logger;
+        private readonly IAccountService _accountService;
 
-        public AcademyYearService(UnitOfWork unitOfWork, IMailService mailService)
+        public AcademyYearService(UnitOfWork unitOfWork, IMailService mailService, LoggerHandler<AcademyYear> logger, IAccountService accountService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
+            _logger = logger;
+            _accountService = accountService;
         }
 
-        public async Task<Response<int>> AddAcademyYearAsync(AcademyYearDto addAcademyYearDto)
+        public async Task<Response<int>> AddAcademyYearAsync(AcademyYearDto addAcademyYearDto, ClaimsPrincipal user)
         {
             try
             {
@@ -36,7 +43,11 @@ namespace GraduationProject.Service.Service
                 await _unitOfWork.AcademyYears.AddAsync(newAcademyYear);
                 var result = await _unitOfWork.SaveAsync();
                 if (result > 0)
+                {
+                    var userId = await _accountService.GetUserIdByUser(user);
+                    await _logger.InsertLog(userId, "AcademyYear", newAcademyYear.Id.ToString(), null, newAcademyYear);
                     return Response<int>.Created("Academic year added successfully");
+                }
 
                 return Response<int>.ServerError("Error occured while adding Academic year",
                     "An unexpected error occurred while adding Academic year. Please try again later.");
@@ -132,7 +143,7 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<int>> UpdateAcademyYearAsync(AcademyYearDto updateAcademyYearDto)
+        public async Task<Response<int>> UpdateAcademyYearAsync(AcademyYearDto updateAcademyYearDto, ClaimsPrincipal user)
         {
             try
             {
@@ -141,6 +152,16 @@ namespace GraduationProject.Service.Service
                 if (existingAcademyYear == null)
                     return Response<int>.BadRequest("This Academic year doesn't exist");
 
+                var oldAcademyYear = new AcademyYear
+                {
+                    Start = existingAcademyYear.Start,
+                    End = existingAcademyYear.End,
+                    Description = existingAcademyYear.Description,
+                    AcademyYearOrder = existingAcademyYear.AcademyYearOrder,
+                    FacultyId = existingAcademyYear.FacultyId,
+                    IsCurrent = existingAcademyYear.IsCurrent
+                };
+                
                 existingAcademyYear.Start = updateAcademyYearDto.Start;
                 existingAcademyYear.End = updateAcademyYearDto.End;
                 existingAcademyYear.Description = updateAcademyYearDto.Description;
@@ -152,7 +173,11 @@ namespace GraduationProject.Service.Service
                 int result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
+                {
+                    var userId = await _accountService.GetUserIdByUser(user);
+                    await _logger.UpdateLog(userId, "AcademyYear", existingAcademyYear.Id.ToString(), oldAcademyYear, existingAcademyYear);
                     return Response<int>.Updated("Academic year updated successfully");
+                }
 
                 return Response<int>.ServerError("Error occured while updating Academic year",
                     "An unexpected error occurred while updating Academic year. Please try again later.");
@@ -173,7 +198,7 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<int>> DeleteAcademyYearAsync(int academyYearId)
+        public async Task<Response<int>> DeleteAcademyYearAsync(int academyYearId, ClaimsPrincipal user)
         {
             try
             {
@@ -183,8 +208,22 @@ namespace GraduationProject.Service.Service
                 await _unitOfWork.AcademyYears.Delete(existingAcademyYear);
                 var result = await _unitOfWork.SaveAsync();
 
+                var oldAcademyYear = new AcademyYear
+                {
+                    Start = existingAcademyYear.Start,
+                    End = existingAcademyYear.End,
+                    Description = existingAcademyYear.Description,
+                    AcademyYearOrder = existingAcademyYear.AcademyYearOrder,
+                    FacultyId = existingAcademyYear.FacultyId,
+                    IsCurrent = existingAcademyYear.IsCurrent
+                };
+
                 if (result > 0)
+                {
+                    var userId = await _accountService.GetUserIdByUser(user);
+                    await _logger.DeleteLog(userId, "AcademyYear", existingAcademyYear.Id.ToString(), oldAcademyYear, null);
                     return Response<int>.Deleted("Academic year deleted successfully");
+                }
 
                 return Response<int>.ServerError("Error occured while deleting Academic year",
                     "An unexpected error occurred while deleting Academic year. Please try again later.");
