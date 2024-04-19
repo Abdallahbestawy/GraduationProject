@@ -161,7 +161,7 @@ namespace GraduationProject.Service.Service
                     FacultyId = existingAcademyYear.FacultyId,
                     IsCurrent = existingAcademyYear.IsCurrent
                 };
-                
+
                 existingAcademyYear.Start = updateAcademyYearDto.Start;
                 existingAcademyYear.End = updateAcademyYearDto.End;
                 existingAcademyYear.Description = updateAcademyYearDto.Description;

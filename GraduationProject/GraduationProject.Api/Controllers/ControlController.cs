@@ -109,6 +109,17 @@ namespace GraduationProject.Api.Controllers
             var response = await _controlService.GetAllSemesterActiveAsync();
             return Ok(response);
         }
-
+        [HttpGet("SSR{semesterId:int},{acedemyYearId:int}")]
+        public async Task<IActionResult> GetStudentsSemesterResult(int semesterId, int acedemyYearId)
+        {
+            var response = await _controlService.GetStudentsSemesterResultAsync(semesterId, acedemyYearId);
+            return Ok(response);
+        }
+        [HttpGet("SISR{studentSemesterId:int}")]
+        public async Task<IActionResult> GetStudentInSemesterResul(int studentSemesterId)
+        {
+            var response = await _controlService.GetStudentInSemesterResulAsync(studentSemesterId);
+            return Ok(response);
+        }
     }
 }

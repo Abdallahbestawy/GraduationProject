@@ -540,5 +540,10 @@ namespace GraduationProject.Repository.Repository
                 return null;
             }
         }
+
+        public Task<List<StudentSemester>> GetAllCourseToStudent(int studentId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

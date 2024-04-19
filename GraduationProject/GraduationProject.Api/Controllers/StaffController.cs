@@ -44,10 +44,11 @@ namespace GraduationProject.Api.Controllers
             }
         }
 
-        [HttpGet("GetCourseStaffSemester{staffId:int}")]
-        public async Task<IActionResult> GetCourseStaffSemester(int staffId)
+        [HttpGet("CSS")]
+        public async Task<IActionResult> GetCourseStaffSemester()
         {
-            var response = await _StaffService.GetCourseStaffSemesterAsync(staffId);
+            string userId = "63d3ab54-6da1-429d-b8f7-7f9e56fa75fc";
+            var response = await _StaffService.GetCourseStaffSemesterAsync(userId);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -55,7 +56,7 @@ namespace GraduationProject.Api.Controllers
         [HttpGet("GetStaff")]
         public async Task<IActionResult> GetStaff(string? uId)
         {
-            string userId = uId ?? "3ed1410b-286c-4064-9193-35b792b8aebf";
+            string userId = uId ?? "63d3ab54-6da1-429d-b8f7-7f9e56fa75fc";
 
             var response = await _StaffService.GetStaffByUserIdAsync(userId);
 
@@ -83,7 +84,7 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter valid staffSemesterId");
             }
             var respone = await _StaffService.DeleteStaffSemesterAsync(staffSemesterId);
-            
+
             return StatusCode(respone.StatusCode, respone);
         }
     }

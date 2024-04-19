@@ -195,17 +195,22 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<GetCourseStaffSemesterDto>> GetCourseStaffSemesterAsync(int satffId)
+        public async Task<Response<GetCourseStaffSemesterDto>> GetCourseStaffSemesterAsync(string userId)
         {
             try
             {
+                var staff = await _unitOfWork.Staffs.GetEntityByPropertyAsync(u => u.UserId == userId);
+                if (staff == null || !staff.Any())
+                {
+                    return Response<GetCourseStaffSemesterDto>.BadRequest("This staff doesn't exist");
+                }
                 var staffSemesters = await _unitOfWork.StaffSemesters
                    .FindWithIncludeIQueryableAsync(d => d.AcademyYear, c => c.Course);
                 if (staffSemesters == null)
                     return Response<GetCourseStaffSemesterDto>.BadRequest("This staff doesn't exist");
 
                 var results = staffSemesters
-                    .Where(dc => dc.AcademyYear.IsCurrent && dc.StaffId == satffId)
+                    .Where(dc => dc.AcademyYear.IsCurrent && dc.StaffId == staff.FirstOrDefault().Id)
                     .ToList();
 
                 if (!results.Any())

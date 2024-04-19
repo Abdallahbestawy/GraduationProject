@@ -11,6 +11,7 @@ namespace GraduationProject.Repository.IRepository
         Task<List<StudentSemester>> GetAllSemesterActiveAsync();
         Task<List<StudentSemester>> EndSemesterAsync(int scientificDegreeId);
         Task<List<object>> GetTheCurrentSemesterWithStudents();
+        Task<List<StudentSemester>> GetAllCourseToStudent(int studentId);
 
     }
 }

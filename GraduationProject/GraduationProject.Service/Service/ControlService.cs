@@ -339,16 +339,82 @@ namespace GraduationProject.Service.Service
             }).ToList();
             return semesters;
         }
-        //public async Task Test()
-        //{
-        //    var students = await _unitOfWork.StudentSemesters.GetTheCurrentSemesterWithStudents();
 
-        //    var mappedResult = students.Select(group => new SemesterStudentsDTO
-        //    {
-        //        ScientificDegreeId = (int)group.GetType().GetProperty("ScientificDegreeId").GetValue(group, null),
-        //        Students = (List<StudentSemester>)group.GetType().GetProperty("Students").GetValue(group, null)
-        //    }).ToList();
+        public async Task<List<GetStudentsSemesterResultDto>> GetStudentsSemesterResultAsync(int semesterId, int acedemyYearId)
+        {
+            SqlParameter pSemesterId = new SqlParameter("@ScientificDegreeId", semesterId);
+            SqlParameter pAcedemyYearId = new SqlParameter("@AcademyYearId", acedemyYearId);
+            var getStudentInSemesters = await _unitOfWork.GetStudentsSemesterResultModels.CallStoredProcedureAsync(
+                    "EXECUTE SpGetStudentsSemesterResult", pAcedemyYearId, pSemesterId);
+            if (getStudentInSemesters == null || !getStudentInSemesters.Any())
+            {
+                return null;
+            }
+            List<GetStudentsSemesterResultDto> getStudentsSemesterResultDtos = new List<GetStudentsSemesterResultDto>();
+            getStudentsSemesterResultDtos = getStudentInSemesters.DistinctBy(student => student.StudentName).Select(student =>
+                new GetStudentsSemesterResultDto
+                {
+                    StudentCode = student.StudentCode,
+                    StudentName = student.StudentName,
+                    StudentSemesterPercentage = student.StudentSemesterPercentage,
+                    StudentSemesterChar = student.StudentSemesterChar,
+                    StudentCumulativePercentage = student.StudentCumulativePercentage,
+                    StudentCumulativeChar = student.StudentCumulativeChar,
+                    StudentSemesterStatus = student.SemesterStatus,
+                    StudentCourseDetiles = getStudentInSemesters.Where(course => course.StudentName == student.StudentName).DistinctBy(course => course.CourseName).Select(course => new StudentCourseDetilesDto
+                    {
+                        CourseCode = course.CourseCode,
+                        CourseName = course.CourseName,
+                        CourseDegree = course.CourseDegree,
+                        CourseChar = course.CourseChar,
+                        CourseStatus = course.CourseStatus,
+                        NumberOfPoints = course.NumberOfPoints,
+                        CourseDegreeDetiles = getStudentInSemesters.Where(detiles => detiles.CourseName == course.CourseName && detiles.StudentName == student.StudentName).Select(detiles => new CourseDegreeDetielsDto
+                        {
+                            AssessMethodsName = detiles.Name,
+                            Degree = detiles.Degree,
+                        }).ToList()
+                    }).ToList()
+                }).ToList();
+            return getStudentsSemesterResultDtos;
+        }
 
-        //}
+        public async Task<GetStudentInSemesterResultDto> GetStudentInSemesterResulAsync(int studentSemesterId)
+        {
+            SqlParameter pStudentSemesterId = new SqlParameter("@StudentSemesterId", studentSemesterId);
+            var getStudentInSemesters = await _unitOfWork.GetStudentInSemesterResultModels.CallStoredProcedureAsync(
+                    "EXECUTE SpGetStudentInSemesterResult", pStudentSemesterId);
+            if (getStudentInSemesters == null || !getStudentInSemesters.Any())
+            {
+                return null;
+            }
+            GetStudentInSemesterResultDto getStudentsSemesterResultDto = new GetStudentInSemesterResultDto
+            {
+                StudentName = getStudentInSemesters.FirstOrDefault().StudentName,
+                StudentCode = getStudentInSemesters.FirstOrDefault().StudentCode,
+                StudentSemesterPercentage = getStudentInSemesters.FirstOrDefault().StudentSemesterPercentage,
+                StudentSemesterChar = getStudentInSemesters.FirstOrDefault().StudentCumulativeChar,
+                StudentCumulativePercentage = getStudentInSemesters.FirstOrDefault().StudentCumulativePercentage,
+                StudentCumulativeChar = getStudentInSemesters.FirstOrDefault().StudentCumulativeChar,
+                StudentSemesterStatus = getStudentInSemesters.FirstOrDefault().SemesterStatus,
+                StudentCourseDetiles = getStudentInSemesters.DistinctBy(course => course.CourseName).Select(course => new StudentCourseDetilesDto
+                {
+                    CourseName = course.CourseName,
+                    CourseCode = course.CourseCode,
+                    CourseChar = course.CourseChar,
+                    CourseDegree = course.CourseDegree,
+                    CourseStatus = course.CourseStatus,
+                    NumberOfPoints = course.NumberOfPoints,
+                    CourseDegreeDetiles = getStudentInSemesters.Where(detiels => detiels.CourseName == course.CourseName).Select(detiels => new CourseDegreeDetielsDto
+                    {
+                        AssessMethodsName = detiels.AssessMethodsName,
+                        Degree = detiels.Degree
+                    }).ToList(),
+                }).ToList()
+
+            };
+
+            return getStudentsSemesterResultDto;
+        }
     }
 }

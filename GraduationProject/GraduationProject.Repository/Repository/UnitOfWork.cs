@@ -39,6 +39,8 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels { get; private set; }
         public IGeneralRepository<GetAllModel> GetAllModels { get; private set; }
         public IGeneralRepository<GetAllStudentsInSemesterModel> GetAllStudentsInSemesterModels { get; private set; }
+        public IGeneralRepository<GetStudentsSemesterResultModel> GetStudentsSemesterResultModels { get; private set; }
+        public IGeneralRepository<GetStudentInSemesterResultModel> GetStudentInSemesterResultModels { get; private set; }
 
         public IGeneralRepository<City> Cities { get; private set; }
         public IGeneralRepository<Country> Countries { get; private set; }
@@ -80,6 +82,8 @@ namespace GraduationProject.Repository.Repository
             GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels = new GeneralRepository<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel>(_context);
             GetAllModels = new GeneralRepository<GetAllModel>(_context);
             GetAllStudentsInSemesterModels = new GeneralRepository<GetAllStudentsInSemesterModel>(_context);
+            GetStudentsSemesterResultModels = new GeneralRepository<GetStudentsSemesterResultModel>(_context);
+            GetStudentInSemesterResultModels = new GeneralRepository<GetStudentInSemesterResultModel>(_context);
             Cities = new GeneralRepository<City>(_context);
             Countries = new GeneralRepository<Country>(_context);
             Governorates = new GeneralRepository<Governorate>(_context);
