@@ -12,6 +12,7 @@ namespace GraduationProject.Identity.IService
         Task<string> AddControlMembers(string NameArabic, string NameEnglish, string NationalID, string Email, string Password);
         Task<bool> DeleteUser(string userId);
         Task<string> GetUserIdByUser(ClaimsPrincipal user);
+        Task<bool> UpdateUser(string userId, string NameArabic, string NameEnglish, string NationalID);
     }
 
 }

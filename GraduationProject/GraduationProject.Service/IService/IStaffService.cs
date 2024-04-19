@@ -11,5 +11,7 @@ namespace GraduationProject.Service.IService
         Task<Response<GetStaffDetailsByUserIdDto>> GetStaffByUserIdAsync(string userId);
         Task<Response<List<GetAllStaffsDto>>> GetAllStaffsAsync();
         Task<Response<bool>> DeleteStaffSemesterAsync(int staffSemesterId);
+        Task<Response<bool>> DeleteAsync(int id);
+        Task<Response<int>> UpdateStaffAsync(UpdateStaffDto updateStaffDto);
     }
 }

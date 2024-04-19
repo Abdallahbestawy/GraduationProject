@@ -87,5 +87,28 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
+        [HttpDelete("Delete{Id:int}")]
+        public async Task<IActionResult> DeleteStaff(int Id)
+        {
+            if (Id == 0 || Id == null)
+            {
+                return BadRequest("please enter valid SatffId");
+            }
+            var respone = await _StaffService.DeleteAsync(Id);
+
+            return StatusCode(respone.StatusCode, respone);
+        }
+
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateStaff([FromBody] UpdateStaffDto updateStaffDto)
+        {
+            if (updateStaffDto == null)
+            {
+                return BadRequest("Please enter valid Model");
+            }
+            var respone = await _StaffService.UpdateStaffAsync(updateStaffDto);
+
+            return StatusCode(respone.StatusCode, respone);
+        }
     }
 }

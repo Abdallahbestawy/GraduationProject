@@ -380,10 +380,140 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        //public async Task<GetCourseStaffSemester> Test(int staffId)
-        //{
+        public async Task<Response<int>> UpdateStaffAsync(UpdateStaffDto updateStaffDto)
+        {
+            try
+            {
+                var existingStaff = await _unitOfWork.Staffs.GetByIdAsync(updateStaffDto.Id);
+                if (existingStaff == null)
+                    return Response<int>.BadRequest("This staff doesn't exist ");
 
-        //}
+                SqlParameter pUserId = new SqlParameter("@UserId", existingStaff.UserId);
+                var getStaff = await _unitOfWork.GetStaffDetailsByUserIdModels.CallStoredProcedureAsync(
+                    "EXECUTE SpGetStaffDetailsByUserId", pUserId);
+
+                if (!getStaff.Any() || getStaff == null)
+                    return Response<int>.NoContent("This user doesn't exist");
+                bool flag = await _accountService.UpdateUser(existingStaff.UserId, updateStaffDto.NameArabic, updateStaffDto.NameEnglish, updateStaffDto.NationalID);
+                if (!flag)
+                {
+                    return Response<int>.BadRequest("This student doesn't exist");
+                }
+
+                existingStaff.PlaceOfBirth = updateStaffDto.PlaceOfBirth;
+                existingStaff.Gender = updateStaffDto.Gender;
+                existingStaff.Nationality = updateStaffDto.Nationality;
+                existingStaff.Religion = updateStaffDto.Religion;
+                existingStaff.DateOfBirth = updateStaffDto.DateOfBirth;
+                existingStaff.CountryId = updateStaffDto.CountryId;
+                existingStaff.GovernorateId = updateStaffDto.GovernorateId;
+                existingStaff.CityId = updateStaffDto.CityId;
+                existingStaff.Street = updateStaffDto.Street;
+                existingStaff.PostalCode = updateStaffDto.PostalCode;
+                _unitOfWork.Staffs.Update(existingStaff);
+                var qualicationData = await _unitOfWork.QualificationDatas.GetEntityByPropertyAsync(s => s.StaffId == existingStaff.Id);
+                if (qualicationData != null || qualicationData.Any())
+                {
+                    var existingQualicationData = qualicationData.FirstOrDefault();
+                    existingQualicationData.PreQualification = updateStaffDto.PreQualification;
+                    existingQualicationData.SeatNumber = updateStaffDto.SeatNumber;
+                    existingQualicationData.QualificationYear = updateStaffDto.QualificationYear;
+                    existingQualicationData.Degree = updateStaffDto.Degree;
+                    _unitOfWork.QualificationDatas.Update(existingQualicationData);
+                }
+                var existingPhones = await _unitOfWork.Phones.GetEntityByPropertyAsync(s => s.StaffId == existingStaff.Id);
+                if (existingPhones != null || existingPhones.Any())
+                {
+                    foreach (var existingPhone in existingPhones)
+                    {
+                        var updateDtoPhone = updateStaffDto.PhoneNumbers.FirstOrDefault(ph => ph.Id == existingPhone.Id);
+                        if (updateDtoPhone != null)
+                        {
+                            existingPhone.PhoneNumber = updateDtoPhone.PhoneNumber;
+                            existingPhone.Type = updateDtoPhone.Type;
+                        }
+                    }
+                    _unitOfWork.Phones.UpdateRangeAsync(existingPhones);
+                }
+                else
+                {
+                    if (updateStaffDto.PhoneNumbers != null)
+                    {
+                        List<Phone> phones = updateStaffDto.PhoneNumbers.Select(ph =>
+                            new Phone
+                            {
+                                StaffId = existingStaff.Id,
+                                PhoneNumber = ph.PhoneNumber,
+                                Type = ph.Type,
+                            }).ToList();
+
+                        await _unitOfWork.Phones.AddRangeAsync(phones);
+                    }
+                }
+                int result = await _unitOfWork.SaveAsync();
+                if (result > 0)
+                    return Response<int>.Updated("This staff updated successfully");
+
+                return Response<int>.ServerError("Error occured while updating user",
+                     "An unexpected error occurred while updating user. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AdministrationService",
+                    MethodName = "UpdateStaffAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while updating user",
+                     "An unexpected error occurred while updating user. Please try again later.");
+            }
+        }
+        public async Task<Response<bool>> DeleteAsync(int id)
+        {
+            try
+            {
+                var qualificationDataEntity = await _unitOfWork.QualificationDatas.GetEntityByPropertyAsync(std => std.StaffId == id);
+                var qualificationData = qualificationDataEntity.FirstOrDefault();
+                if (qualificationData != null)
+                    await _unitOfWork.QualificationDatas.Delete(qualificationData);
+
+                var phones = await _unitOfWork.Phones.GetEntityByPropertyAsync(std => std.StaffId == id);
+                if (phones != null || phones.Any())
+                    await _unitOfWork.Phones.DeleteRangeAsyn(phones);
+
+                var oldstaff = await _unitOfWork.Staffs.GetByIdAsync(id);
+                if (oldstaff == null)
+                    return Response<bool>.BadRequest("This user doesn't exist");
+
+                await _unitOfWork.Staffs.Delete(oldstaff);
+                int result = await _unitOfWork.SaveAsync();
+                if (result > 0)
+                {
+                    bool flag = await _accountService.DeleteUser(oldstaff.UserId);
+                    if (flag)
+                        return Response<bool>.Deleted("This user Deleted successfully");
+                }
+
+                return Response<bool>.ServerError("Error occured while deleting this user",
+                    "An unexpected error occurred while deleting this user. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AdministrationService",
+                    MethodName = "DeleteAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while deleting this user",
+                    "An unexpected error occurred while deleting this user. Please try again later.");
+            }
+        }
 
     }
 }

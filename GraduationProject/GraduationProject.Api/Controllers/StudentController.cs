@@ -82,7 +82,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(respone.StatusCode, respone);
         }
         [HttpPut("Update")]
-        public async Task<IActionResult> UpdateStudent([FromBody] AddStudentDto updateStudentDto)
+        public async Task<IActionResult> UpdateStudent([FromBody] UpdateStudentDto updateStudentDto)
         {
             if (updateStudentDto == null)
             {

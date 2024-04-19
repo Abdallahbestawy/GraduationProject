@@ -183,5 +183,30 @@ namespace GraduationProject.Identity.Service
 
             return userData.Id;
         }
+
+        public async Task<bool> UpdateUser(string userId, string NameArabic, string NameEnglish, string NationalID)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user != null)
+            {
+                user.NameArabic = NameArabic;
+                user.NameEnglish = NameEnglish;
+                user.NationalID = NationalID;
+                user.UserName = NationalID;
+
+                var result = await _userManager.UpdateAsync(user);
+
+                if (!result.Succeeded)
+                {
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

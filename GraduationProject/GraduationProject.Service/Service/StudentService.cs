@@ -716,11 +716,11 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<int>> UpdateStudentAsync(AddStudentDto updateStudentDto)
+        public async Task<Response<int>> UpdateStudentAsync(UpdateStudentDto updateStudentDto)
         {
             try
             {
-                var existingStudent = await _unitOfWork.Students.GetByIdAsync(updateStudentDto.id ?? 0);
+                var existingStudent = await _unitOfWork.Students.GetByIdAsync(updateStudentDto.Id);
                 if (existingStudent == null)
                     return Response<int>.BadRequest("This student doesn't exist");
 
@@ -729,7 +729,11 @@ namespace GraduationProject.Service.Service
                     "EXECUTE SpGetStudentDetailsByUserId", pUserId);
                 if (!getStudent.Any() || getStudent == null)
                     return Response<int>.NoContent("This student doesn't exist");
-
+                bool flag = await _accountService.UpdateUser(existingStudent.UserId, updateStudentDto.NameArabic, updateStudentDto.NameEnglish, updateStudentDto.NationalID);
+                if (!flag)
+                {
+                    return Response<int>.BadRequest("This student doesn't exist");
+                }
                 existingStudent.PlaceOfBirth = updateStudentDto.PlaceOfBirth;
                 existingStudent.Gender = updateStudentDto.Gender;
                 existingStudent.Nationality = updateStudentDto.Nationality;
