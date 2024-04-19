@@ -3,7 +3,6 @@
     public class GetAllSemesterActiveDto
     {
         public int SemesterId { get; set; }
-        public int AcademyYearId { get; set; }
         public string SemesterName { get; set; }
     }
 }

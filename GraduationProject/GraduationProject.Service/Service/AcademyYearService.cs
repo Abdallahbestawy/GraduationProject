@@ -281,5 +281,24 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while retrieving current Academic year. Please try again later.");
             }
         }
+
+        public async Task<List<GetAcademyYearNameDto>> GetAcademyYearNameAsync()
+        {
+            var academyYearName = await _unitOfWork.AcademyYears.GetAll();
+            if (academyYearName == null)
+            {
+                return null;
+            }
+            List<GetAcademyYearNameDto> getAcademyYearNameDto = academyYearName
+                .Select(year => new GetAcademyYearNameDto
+                {
+                    Id = year.Id,
+                    AcademyYearName = $"{year.Start.Year}/{year.End.Year}"
+                })
+                .ToList();
+
+            return getAcademyYearNameDto;
+        }
+
     }
 }

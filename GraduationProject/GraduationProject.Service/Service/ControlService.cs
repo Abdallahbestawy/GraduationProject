@@ -324,9 +324,9 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<List<GetAllSemesterActiveDto>> GetAllSemesterActiveAsync()
+        public async Task<List<GetAllSemesterActiveDto>> GetAllSemesterActiveAsync(int academyYearId)
         {
-            var distinctSemesters = await _unitOfWork.StudentSemesters.GetAllSemesterActiveAsync();
+            var distinctSemesters = await _unitOfWork.StudentSemesters.GetAllSemesterActiveAsync(academyYearId);
             if (distinctSemesters == null)
             {
                 return null;
@@ -334,7 +334,6 @@ namespace GraduationProject.Service.Service
             var semesters = distinctSemesters.Select(se => new GetAllSemesterActiveDto
             {
                 SemesterId = se.ScientificDegreeId,
-                AcademyYearId = se.AcademyYearId,
                 SemesterName = $"{se.ScientificDegree.Parent.Name} - {se.ScientificDegree.Name} {se.AcademyYear.Start.Year}/{se.AcademyYear.End.Year}"
             }).ToList();
             return semesters;

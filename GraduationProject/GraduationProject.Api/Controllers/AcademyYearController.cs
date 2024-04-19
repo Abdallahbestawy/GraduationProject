@@ -1,7 +1,5 @@
-﻿using GraduationProject.Identity.Models;
-using GraduationProject.Service.DataTransferObject.AcademyYearDto;
+﻿using GraduationProject.Service.DataTransferObject.AcademyYearDto;
 using GraduationProject.Service.IService;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
@@ -74,6 +72,12 @@ namespace GraduationProject.Api.Controllers
                 return Ok(response);
             }
             return BadRequest("Not Get Current AcademyYear Exist");
+        }
+        [HttpGet("N")]
+        public async Task<IActionResult> GetAcademyYearName()
+        {
+            var response = await _academyYearService.GetAcademyYearNameAsync();
+            return Ok(response);
         }
     }
 }

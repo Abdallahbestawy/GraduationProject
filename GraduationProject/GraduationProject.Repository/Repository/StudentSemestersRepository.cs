@@ -518,7 +518,7 @@ namespace GraduationProject.Repository.Repository
             }
         }
 
-        public async Task<List<StudentSemester>> GetAllSemesterActiveAsync()
+        public async Task<List<StudentSemester>> GetAllSemesterActiveAsync(int academyYearId)
         {
             try
             {
@@ -526,6 +526,7 @@ namespace GraduationProject.Repository.Repository
                  .Include(a => a.AcademyYear)
                 .Include(s => s.ScientificDegree)
                     .ThenInclude(parent => parent.Parent)
+               .Where(a => a.AcademyYearId == academyYearId)
                 .GroupBy(d => d.ScientificDegreeId)
                 .Select(g => g.First())
                 .ToListAsync();
@@ -539,11 +540,6 @@ namespace GraduationProject.Repository.Repository
             {
                 return null;
             }
-        }
-
-        public Task<List<StudentSemester>> GetAllCourseToStudent(int studentId)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -103,10 +103,10 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [HttpGet("SA")]
-        public async Task<IActionResult> GetAllSemesterActive()
+        [HttpGet("SA{academyYearId:int}")]
+        public async Task<IActionResult> GetAllSemesterActive(int academyYearId)
         {
-            var response = await _controlService.GetAllSemesterActiveAsync();
+            var response = await _controlService.GetAllSemesterActiveAsync(academyYearId);
             return Ok(response);
         }
         [HttpGet("SSR{semesterId:int},{acedemyYearId:int}")]

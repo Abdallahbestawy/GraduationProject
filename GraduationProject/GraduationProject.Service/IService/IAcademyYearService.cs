@@ -12,5 +12,6 @@ namespace GraduationProject.Service.IService
         Task<Response<AcademyYearDto>> GetAcademyYearByIdAsync(int academyYearId);
         Task<Response<IQueryable<GetAcademyYearDto>>> GetAcademyYearAsync(int facultId);
         Task<Response<GetAcademyYearDto>> GetCurrentAcademyYearAsync(int facultId);
+        Task<List<GetAcademyYearNameDto>> GetAcademyYearNameAsync();
     }
 }
