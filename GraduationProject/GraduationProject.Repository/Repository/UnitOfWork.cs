@@ -41,6 +41,7 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<GetAllStudentsInSemesterModel> GetAllStudentsInSemesterModels { get; private set; }
         public IGeneralRepository<GetStudentsSemesterResultModel> GetStudentsSemesterResultModels { get; private set; }
         public IGeneralRepository<GetStudentInSemesterResultModel> GetStudentInSemesterResultModels { get; private set; }
+        public IGeneralRepository<GetAllStudentInCourseResultModel> GetAllStudentInCourseResultModels { get; private set; }
 
         public IGeneralRepository<City> Cities { get; private set; }
         public IGeneralRepository<Country> Countries { get; private set; }
@@ -84,6 +85,7 @@ namespace GraduationProject.Repository.Repository
             GetAllStudentsInSemesterModels = new GeneralRepository<GetAllStudentsInSemesterModel>(_context);
             GetStudentsSemesterResultModels = new GeneralRepository<GetStudentsSemesterResultModel>(_context);
             GetStudentInSemesterResultModels = new GeneralRepository<GetStudentInSemesterResultModel>(_context);
+            GetAllStudentInCourseResultModels = new GeneralRepository<GetAllStudentInCourseResultModel>(_context);
             Cities = new GeneralRepository<City>(_context);
             Countries = new GeneralRepository<Country>(_context);
             Governorates = new GeneralRepository<Governorate>(_context);

@@ -1,0 +1,16 @@
+﻿namespace GraduationProject.Data.Models
+{
+    public class GetAllStudentInCourseResultModel
+    {
+        public string StudentCode { get; set; }
+        public string StudentName { get; set; }
+        public string CourseName { get; set; }
+        public string CourseCode { get; set; }
+        public int NumberOfPoints { get; set; }
+        public string CourseDegree { get; set; }
+        public string CourseChar { get; set; }
+        public string CourseStatus { get; set; }
+        public string AssessMethodsName { get; set; }
+        public string Degree { get; set; }
+    }
+}

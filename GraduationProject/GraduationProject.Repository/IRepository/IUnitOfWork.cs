@@ -38,6 +38,7 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<GetStudentsSemesterResultModel> GetStudentsSemesterResultModels { get; }
         IGeneralRepository<GetAllStudentsInSemesterModel> GetAllStudentsInSemesterModels { get; }
         IGeneralRepository<GetStudentInSemesterResultModel> GetStudentInSemesterResultModels { get; }
+        IGeneralRepository<GetAllStudentInCourseResultModel> GetAllStudentInCourseResultModels { get; }
         IGeneralRepository<City> Cities { get; }
         IGeneralRepository<Country> Countries { get; }
         IGeneralRepository<Governorate> Governorates { get; }

@@ -415,5 +415,38 @@ namespace GraduationProject.Service.Service
 
             return getStudentsSemesterResultDto;
         }
+
+        public async Task<GetAllStudentInCourseResultDto> GetAllStudentInCourseResultAsync(int semesterId, int acedemyYearId, int courseId)
+        {
+            SqlParameter pSemesterId = new SqlParameter("@ScientificDegreeId", semesterId);
+            SqlParameter pAcedemyYearId = new SqlParameter("@AcademyYearId", acedemyYearId);
+            SqlParameter pCourseId = new SqlParameter("@CourseId", courseId);
+            var getStudentInCourse = await _unitOfWork.GetAllStudentInCourseResultModels.CallStoredProcedureAsync(
+                    "EXECUTE SpGetAllStudentInCourseResult", pAcedemyYearId, pSemesterId, pCourseId);
+            if (getStudentInCourse == null || !getStudentInCourse.Any())
+            {
+                return null;
+            }
+            var getAllStudentInCourseResultDto = new GetAllStudentInCourseResultDto
+            {
+                CourseCode = getStudentInCourse.FirstOrDefault().CourseCode,
+                CourseName = getStudentInCourse.FirstOrDefault().CourseName,
+                NumberOfPoints = getStudentInCourse.FirstOrDefault().NumberOfPoints,
+                CourseStudentCourseDetiles = getStudentInCourse.DistinctBy(s => s.StudentName).Select(s => new CourseStudentCourseDetilesDto
+                {
+                    StudentName = s.StudentName,
+                    StudentCode = s.StudentCode,
+                    CourseStatus = s.CourseStatus,
+                    CourseChar = s.CourseChar,
+                    CourseDegree = s.CourseDegree,
+                    CourseDegreeDetiles = getStudentInCourse.Where(course => course.CourseName == s.CourseName && course.StudentName == s.StudentName).Select(course => new CourseDegreeDetielsDto
+                    {
+                        AssessMethodsName = course.AssessMethodsName,
+                        Degree = course.Degree
+                    }).ToList()
+                }).ToList()
+            };
+            return getAllStudentInCourseResultDto;
+        }
     }
 }

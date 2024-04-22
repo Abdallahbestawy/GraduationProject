@@ -15,5 +15,6 @@ namespace GraduationProject.Service.IService
         Task<List<GetAllSemesterActiveDto>> GetAllSemesterActiveAsync(int academyYearId);
         Task<List<GetStudentsSemesterResultDto>> GetStudentsSemesterResultAsync(int semesterId, int acedemyYearId);
         Task<GetStudentInSemesterResultDto> GetStudentInSemesterResulAsync(int studentSemesterId);
+        Task<GetAllStudentInCourseResultDto> GetAllStudentInCourseResultAsync(int semesterId, int acedemyYearId, int courseId);
     }
 }
