@@ -42,10 +42,10 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter Vaild Model");
             }
         }
-        [HttpGet("GetStudent")]
-        public async Task<IActionResult> GetStudent(string? uId)
+        [HttpGet("BasicData")]
+        public async Task<IActionResult> GetStudent()
         {
-            string userId = uId ?? "af88e91d-7241-4149-bbd4-ebb2a30dd247";
+            string userId = "af88e91d-7241-4149-bbd4-ebb2a30dd247";
 
             var response = await _studentService.GetStudentByUserId(userId);
 
@@ -107,6 +107,16 @@ namespace GraduationProject.Api.Controllers
             var respone = await _studentService.GetAllStudentsInSemesterAsync(semesterId);
 
             return StatusCode(respone.StatusCode, respone);
+        }
+        [HttpGet("InfoData{studentId:int}")]
+        public async Task<IActionResult> GetStudentInfo(int studentId)
+        {
+
+            var response = await _studentService.GetStudentInfoByStudentIdAsync(studentId);
+            return Ok(response);
+
+            //return StatusCode(response.StatusCode, response);
+
         }
     }
 }

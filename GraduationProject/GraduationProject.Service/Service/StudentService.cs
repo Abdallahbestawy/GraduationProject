@@ -907,5 +907,63 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while retrieving students. Please try again later.");
             }
         }
+
+        public async Task<GetStudentInfoByStudentIdDto> GetStudentInfoByStudentIdAsync(int studentId)
+        {
+            SqlParameter pStudentId = new SqlParameter("@StudentId", studentId);
+
+            var getStudent = await _unitOfWork.GetStudentInfoByStudentIdModels.CallStoredProcedureAsync(
+                "EXECUTE SpGetStudentInfoByStudentId", pStudentId);
+            if (getStudent == null || !getStudent.Any())
+            {
+                return null;
+            }
+
+            GetStudentInfoByStudentIdDto getStudentInfo = new GetStudentInfoByStudentIdDto
+            {
+                NameArabic = getStudent.FirstOrDefault()?.NameArabic,
+                NameEnglish = getStudent.FirstOrDefault()?.NameEnglish,
+                NationalID = getStudent.FirstOrDefault()?.NationalID,
+                Email = getStudent.FirstOrDefault()?.Email,
+                StudentCode = getStudent.FirstOrDefault().Code,
+                StudentId = getStudent.FirstOrDefault()?.StudentId ?? 0,
+                StudentStreet = getStudent.FirstOrDefault().StudentsStreet,
+                StudentCountrysId = getStudent.FirstOrDefault().StudentsCountrysId,
+                StudentGovernoratesId = getStudent.FirstOrDefault()?.StudentsGovernoratesId,
+                StudentCitysId = getStudent.FirstOrDefault()?.StudentsCitysId,
+                DateOfBirth = getStudent.FirstOrDefault()?.DateOfBirth,
+                Gender = Enum.GetName(typeof(Gender), getStudent.FirstOrDefault()?.Gender),
+                Nationality = Enum.GetName(typeof(Nationality), getStudent.FirstOrDefault()?.Nationality),
+                PlaceOfBirth = getStudent.FirstOrDefault()?.PlaceOfBirth,
+                PostalCode = getStudent.FirstOrDefault()?.PostalCode,
+                ReleasePlace = getStudent.FirstOrDefault()?.ReleasePlace,
+                Religion = Enum.GetName(typeof(Religion), getStudent.FirstOrDefault()?.Religion),
+                ParentName = getStudent.FirstOrDefault()?.ParentName,
+                ParentJob = getStudent.FirstOrDefault()?.ParentJob,
+                PostalCodeOfParent = getStudent.FirstOrDefault()?.PostalCodeOfParent,
+                ParentStreet = getStudent.FirstOrDefault()?.ParentStreet,
+                ParentCountrysId = getStudent.FirstOrDefault()?.ParentCountrysId,
+                ParentGovernoratesId = getStudent.FirstOrDefault()?.ParentGovernoratesId,
+                ParentCitysId = getStudent?.FirstOrDefault()?.ParentCitysId,
+                PreQualification = getStudent.FirstOrDefault()?.PreQualification,
+                QualificationYear = getStudent.FirstOrDefault()?.QualificationYear,
+                SeatNumber = getStudent.FirstOrDefault()?.SeatNumber ?? 0,
+                Degree = getStudent.FirstOrDefault()?.Degree ?? 0.0m,
+            };
+
+            if (getStudent.Any(s => !string.IsNullOrEmpty(s.StudentPhoneNumber)))
+            {
+                getStudentInfo.GetPhoneStudentDtos = getStudent
+                    .Where(s => !string.IsNullOrEmpty(s.StudentPhoneNumber))
+                    .Select(s => new GetPhoneStudentDto
+                    {
+                        PhoneId = s.PhoneId,
+                        StudentPhoneNumber = s.StudentPhoneNumber,
+                        PhoneType = Enum.GetName(typeof(PhoneType), s.PhoneType)
+                    })
+                    .ToList();
+            }
+            return getStudentInfo;
+        }
     }
 }

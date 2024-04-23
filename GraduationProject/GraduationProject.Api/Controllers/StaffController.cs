@@ -53,10 +53,10 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("GetStaff")]
-        public async Task<IActionResult> GetStaff(string? uId)
+        [HttpGet("BasicData")]
+        public async Task<IActionResult> GetStaff()
         {
-            string userId = uId ?? "63d3ab54-6da1-429d-b8f7-7f9e56fa75fc";
+            string userId = "63d3ab54-6da1-429d-b8f7-7f9e56fa75fc";
 
             var response = await _StaffService.GetStaffByUserIdAsync(userId);
 
@@ -109,6 +109,16 @@ namespace GraduationProject.Api.Controllers
             var respone = await _StaffService.UpdateStaffAsync(updateStaffDto);
 
             return StatusCode(respone.StatusCode, respone);
+        }
+        [HttpGet("InfoData{staffId:int}")]
+        public async Task<IActionResult> GetStudentInfo(int staffId)
+        {
+
+            var response = await _StaffService.GetStaffInfoByStaffIdAsync(staffId);
+            return Ok(response);
+
+            //return StatusCode(response.StatusCode, response);
+
         }
     }
 }

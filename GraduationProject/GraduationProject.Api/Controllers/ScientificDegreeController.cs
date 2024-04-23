@@ -42,10 +42,10 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("GetSemestersByFaclutyId/{faculty:int}")]
-        public async Task<IActionResult> GetSemestersByFaclutyId(int faculty)
+        [HttpGet("GetAllSemesters")]
+        public async Task<IActionResult> GetAllSemesters()
         {
-            var response = await _scientificDegreeService.GetSemsetersByBylawIdAsync(faculty);
+            var response = await _scientificDegreeService.GetSemsetersByBylawIdAsync();
 
             return StatusCode(response.StatusCode, response);
         }

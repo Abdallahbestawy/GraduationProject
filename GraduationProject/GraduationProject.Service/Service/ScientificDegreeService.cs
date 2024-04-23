@@ -334,16 +334,13 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<List<GetSemesterNameDto>>> GetSemsetersByBylawIdAsync(int facultyId)
+        public async Task<Response<List<GetSemesterNameDto>>> GetSemsetersByBylawIdAsync()
         {
             try
             {
-                var bylaws = await _unitOfWork.Bylaws.GetEntityByPropertyAsync(bylaw => bylaw.FacultyId == facultyId);
-                if (!bylaws.Any())
-                    return Response<List<GetSemesterNameDto>>.NoContent("No bylaws are exist");
 
                 var scientificDegreeEntities = await _unitOfWork.ScientificDegrees
-                    .GetEntityByPropertyAsync(scien => bylaws.Contains(scien.Bylaw) && scien.Type == ScientificDegreeType.Semester);
+                    .GetEntityByPropertyAsync(scien => scien.Type == ScientificDegreeType.Semester);
                 if (!scientificDegreeEntities.Any())
                     return Response<List<GetSemesterNameDto>>.NoContent("No semseters are exist");
 
