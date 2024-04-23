@@ -1,5 +1,6 @@
 ﻿using GraduationProject.Identity.IService;
 using GraduationProject.Identity.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
@@ -23,8 +24,15 @@ namespace GraduationProject.Api.Controllers
             if (!result.IsAuthenticated)
                 return BadRequest(result.Message);
 
+            //this part gets the host of the request 
+            string? requestHost = HttpContext.Request.Headers["Referer"];
+            if (requestHost == null)
+                requestHost = "localhost";
+            Uri uri = new Uri(requestHost);
+            requestHost = uri.Host;
+
             if (!string.IsNullOrEmpty(result.RefreshToken))
-                SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
+            SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration, requestHost);
 
             return Ok(result);
         }
@@ -39,7 +47,14 @@ namespace GraduationProject.Api.Controllers
             if (!result.IsAuthenticated)
                 return BadRequest(result);
 
-            SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
+            //this part gets the host of the request 
+            string? requestHost = HttpContext.Request.Headers["Referer"];
+            if (requestHost == null)
+                requestHost = "localhost";
+            Uri uri = new Uri(requestHost);
+            requestHost = uri.Host;
+
+            SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration, requestHost);
 
             return Ok(result);
         }
@@ -59,12 +74,11 @@ namespace GraduationProject.Api.Controllers
 
             return Ok();
         }
-        private void SetRefreshTokenInCookie(string refreshToken, DateTime expires)
+        private void SetRefreshTokenInCookie(string refreshToken, DateTime expires,string domain)
         {
             var cookieOptions = new CookieOptions
             {
-                //Domain = "gladly-in-quagga.ngrok-free.app",
-                Domain = "localhost",
+                Domain = domain,
                 Path = "/",
                 HttpOnly = false,
                 Expires = expires.ToLocalTime(),
@@ -75,7 +89,6 @@ namespace GraduationProject.Api.Controllers
             Response.Headers.Add("Access-Control-Allow-Credentials", "true");
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
         }
-
 
         [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
