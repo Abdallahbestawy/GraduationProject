@@ -7,6 +7,7 @@
         Administration,
         Teacher,
         TeacherAssistant,
-        ControlMembers
+        ControlMembers,
+        Admin
     }
 }
