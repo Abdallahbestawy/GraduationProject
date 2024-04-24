@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GraduationProject.ResponseHandler")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dfdb45cbb7f99c5be64381739d99822eb0485cd4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+beb5feff1e781075f5029f0052491aeac105e730")]
 [assembly: System.Reflection.AssemblyProductAttribute("GraduationProject.ResponseHandler")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GraduationProject.ResponseHandler")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

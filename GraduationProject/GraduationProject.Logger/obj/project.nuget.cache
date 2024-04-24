@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "9ZDFVbeU/xpKxTKocwYYSmfCgAI1tqLjDCuBSyj9uW59CcvgLS1mua6AJNxVGx3Wv55TRIj4ylO34nH5iVQ6Qg==",
+  "dgSpecHash": "kECd2le6kJSREGbXIsceiHKRXROuwezHk3IaJ7FSkix+RSDiiKymgWJDwvT/4uP1WOYp3aNK1UtpYIjLVc1rHw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Logger\\GraduationProject.LogHandler.csproj",
   "expectedPackageFiles": [
@@ -41,12 +41,15 @@
     "C:\\Users\\Mohamed\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\Mohamed\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\Mohamed\\.nuget\\packages\\mimekit\\4.4.0\\mimekit.4.4.0.nupkg.sha512",
+    "C:\\Users\\Mohamed\\.nuget\\packages\\runtime.any.system.runtime\\4.3.0\\runtime.any.system.runtime.4.3.0.nupkg.sha512",
+    "C:\\Users\\Mohamed\\.nuget\\packages\\runtime.any.system.text.encoding\\4.3.0\\runtime.any.system.text.encoding.4.3.0.nupkg.sha512",
     "C:\\Users\\Mohamed\\.nuget\\packages\\system.collections.immutable\\6.0.0\\system.collections.immutable.6.0.0.nupkg.sha512",
     "C:\\Users\\Mohamed\\.nuget\\packages\\system.configuration.configurationmanager\\4.7.0\\system.configuration.configurationmanager.4.7.0.nupkg.sha512",
     "C:\\Users\\Mohamed\\.nuget\\packages\\system.diagnostics.diagnosticsource\\6.0.1\\system.diagnostics.diagnosticsource.6.0.1.nupkg.sha512",
     "C:\\Users\\Mohamed\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
     "C:\\Users\\Mohamed\\.nuget\\packages\\system.formats.asn1\\8.0.0\\system.formats.asn1.8.0.0.nupkg.sha512",
     "C:\\Users\\Mohamed\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.35.0\\system.identitymodel.tokens.jwt.6.35.0.nupkg.sha512",
+    "C:\\Users\\Mohamed\\.nuget\\packages\\system.private.uri\\4.3.0\\system.private.uri.4.3.0.nupkg.sha512",
     "C:\\Users\\Mohamed\\.nuget\\packages\\system.runtime\\4.3.0\\system.runtime.4.3.0.nupkg.sha512",
     "C:\\Users\\Mohamed\\.nuget\\packages\\system.runtime.caching\\4.7.0\\system.runtime.caching.4.7.0.nupkg.sha512",
     "C:\\Users\\Mohamed\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
