@@ -282,22 +282,37 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<List<GetAcademyYearNameDto>> GetAcademyYearNameAsync()
+        public async Task<Response<List<GetAcademyYearNameDto>>> GetAcademyYearNameAsync()
         {
-            var academyYearName = await _unitOfWork.AcademyYears.GetAll();
-            if (academyYearName == null)
+            try
             {
-                return null;
-            }
-            List<GetAcademyYearNameDto> getAcademyYearNameDto = academyYearName
-                .Select(year => new GetAcademyYearNameDto
-                {
-                    Id = year.Id,
-                    AcademyYearName = $"{year.Start.Year}/{year.End.Year}"
-                })
-                .ToList();
+                var academyYearName = await _unitOfWork.AcademyYears.GetAll();
+                if (academyYearName == null)
+                    return Response<List<GetAcademyYearNameDto>>.NoContent("No Academic years are exist");
 
-            return getAcademyYearNameDto;
+                List<GetAcademyYearNameDto> getAcademyYearNameDto = academyYearName
+                    .Select(year => new GetAcademyYearNameDto
+                    {
+                        Id = year.Id,
+                        AcademyYearName = $"{year.Start.Year}/{year.End.Year}"
+                    })
+                    .ToList();
+
+                return Response<List<GetAcademyYearNameDto>>.Success(getAcademyYearNameDto, "Academic years retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "AcademyYearService",
+                    MethodName = "GetAcademyYearNameAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetAcademyYearNameDto>>.ServerError("Error occured while retrieving Academic years",
+                    "An unexpected error occurred while retrieving Academic years. Please try again later.");
+            }
         }
 
     }

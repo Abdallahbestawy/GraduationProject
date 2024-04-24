@@ -73,11 +73,13 @@ namespace GraduationProject.Api.Controllers
             }
             return BadRequest("Not Get Current AcademyYear Exist");
         }
+
         [HttpGet("N")]
         public async Task<IActionResult> GetAcademyYearName()
         {
             var response = await _academyYearService.GetAcademyYearNameAsync();
-            return Ok(response);
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

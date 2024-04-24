@@ -169,7 +169,7 @@ namespace GraduationProject.Service.Service
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "ControlMembersService",
+                    ClassName = "ControlService",
                     MethodName = "AddControlMembersAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
@@ -207,7 +207,7 @@ namespace GraduationProject.Service.Service
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "ControlMembersService",
+                    ClassName = "ControlService",
                     MethodName = "AddControlMembersAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
@@ -237,8 +237,8 @@ namespace GraduationProject.Service.Service
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "ControlMembersService",
-                    MethodName = "ControlMembersAsync",
+                    ClassName = "ControlService",
+                    MethodName = "AddControlMembersAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
@@ -268,8 +268,8 @@ namespace GraduationProject.Service.Service
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "ControlMembersService",
-                    MethodName = "ControlMembersAsync",
+                    ClassName = "ControlService",
+                    MethodName = "AddControlMembersAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
@@ -313,7 +313,7 @@ namespace GraduationProject.Service.Service
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "ControlMembersService",
+                    ClassName = "ControlService",
                     MethodName = "GetAllControlMembersAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
@@ -324,133 +324,201 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<List<GetAllSemesterActiveDto>> GetAllSemesterActiveAsync(int academyYearId)
+        public async Task<Response<List<GetAllSemesterActiveDto>>> GetAllSemesterActiveAsync(int academyYearId)
         {
-            var distinctSemesters = await _unitOfWork.StudentSemesters.GetAllSemesterActiveAsync(academyYearId);
-            if (distinctSemesters == null)
+            try
             {
-                return null;
+                var distinctSemesters = await _unitOfWork.StudentSemesters.GetAllSemesterActiveAsync(academyYearId);
+                if (distinctSemesters == null)
+                    return Response<List<GetAllSemesterActiveDto>>.NoContent("No active semesters are exist");
+
+                var semesters = distinctSemesters.Select(se => new GetAllSemesterActiveDto
+                {
+                    SemesterId = se.ScientificDegreeId,
+                    SemesterName = $"{se.ScientificDegree.Parent.Name} - {se.ScientificDegree.Name} {se.AcademyYear.Start.Year}/{se.AcademyYear.End.Year}"
+                }).ToList();
+
+                return Response<List<GetAllSemesterActiveDto>>.Success(semesters, "Active semesters are retrieved successfully").WithCount();
             }
-            var semesters = distinctSemesters.Select(se => new GetAllSemesterActiveDto
+            catch (Exception ex)
             {
-                SemesterId = se.ScientificDegreeId,
-                SemesterName = $"{se.ScientificDegree.Parent.Name} - {se.ScientificDegree.Name} {se.AcademyYear.Start.Year}/{se.AcademyYear.End.Year}"
-            }).ToList();
-            return semesters;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ControlService",
+                    MethodName = "GetAllSemesterActiveAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetAllSemesterActiveDto>>.ServerError("Error occured while retrieving active semesters",
+                     "An unexpected error occurred while retrieving active semesters. Please try again later.");
+            }
         }
 
-        public async Task<GetStudentsSemesterResultDto> GetStudentsSemesterResultAsync(int semesterId, int acedemyYearId)
+        public async Task<Response<GetStudentsSemesterResultDto>> GetStudentsSemesterResultAsync(int semesterId, int acedemyYearId)
         {
-            SqlParameter pSemesterId = new SqlParameter("@ScientificDegreeId", semesterId);
-            SqlParameter pAcedemyYearId = new SqlParameter("@AcademyYearId", acedemyYearId);
-            var getStudentInSemesters = await _unitOfWork.GetStudentsSemesterResultModels.CallStoredProcedureAsync(
-                    "EXECUTE SpGetStudentsSemesterResult", pAcedemyYearId, pSemesterId);
-            if (getStudentInSemesters == null || !getStudentInSemesters.Any())
+            try
             {
-                return null;
-            }
-            GetStudentsSemesterResultDto getStudentsSemesterResultDtos = new GetStudentsSemesterResultDto
-            {
-                SemesterName = $"{getStudentInSemesters.FirstOrDefault().SemesterName} - {getStudentInSemesters.FirstOrDefault().BandName}",
-                AcademyYearName = getStudentInSemesters.FirstOrDefault().AcademyYear,
-                studentsDetiels = getStudentInSemesters.DistinctBy(student => student.StudentName).Select(student =>
-                     new StudentsDetielsDto
-                     {
-                         StudentCode = student.StudentCode,
-                         StudentName = student.StudentName,
-                         StudentSemesterPercentage = student.StudentSemesterPercentage,
-                         StudentSemesterChar = student.StudentSemesterChar,
-                         StudentCumulativePercentage = student.StudentCumulativePercentage,
-                         StudentCumulativeChar = student.StudentCumulativeChar,
-                         StudentSemesterStatus = student.SemesterStatus,
-                         StudentCourseDetiles = getStudentInSemesters.Where(course => course.StudentName == student.StudentName).DistinctBy(course => course.CourseName).Select(course => new StudentCourseDetilesDto
+                SqlParameter pSemesterId = new SqlParameter("@ScientificDegreeId", semesterId);
+                SqlParameter pAcedemyYearId = new SqlParameter("@AcademyYearId", acedemyYearId);
+                var getStudentInSemesters = await _unitOfWork.GetStudentsSemesterResultModels.CallStoredProcedureAsync(
+                        "EXECUTE SpGetStudentsSemesterResult", pAcedemyYearId, pSemesterId);
+
+                if (getStudentInSemesters == null || !getStudentInSemesters.Any())
+                    return Response<GetStudentsSemesterResultDto>.NoContent("No results are exist");
+
+                GetStudentsSemesterResultDto getStudentsSemesterResultDtos = new GetStudentsSemesterResultDto
+                {
+                    SemesterName = $"{getStudentInSemesters.FirstOrDefault().SemesterName} - {getStudentInSemesters.FirstOrDefault().BandName}",
+                    AcademyYearName = getStudentInSemesters.FirstOrDefault().AcademyYear,
+                    studentsDetiels = getStudentInSemesters.DistinctBy(student => student.StudentName).Select(student =>
+                         new StudentsDetielsDto
                          {
-                             CourseCode = course.CourseCode,
-                             CourseName = course.CourseName,
-                             CourseDegree = course.CourseDegree,
-                             CourseChar = course.CourseChar,
-                             CourseStatus = course.CourseStatus,
-                             NumberOfPoints = course.NumberOfPoints,
-                             CourseDegreeDetiles = getStudentInSemesters.Where(detiles => detiles.CourseName == course.CourseName && detiles.StudentName == student.StudentName).Select(detiles => new CourseDegreeDetielsDto
+                             StudentCode = student.StudentCode,
+                             StudentName = student.StudentName,
+                             StudentSemesterPercentage = student.StudentSemesterPercentage,
+                             StudentSemesterChar = student.StudentSemesterChar,
+                             StudentCumulativePercentage = student.StudentCumulativePercentage,
+                             StudentCumulativeChar = student.StudentCumulativeChar,
+                             StudentSemesterStatus = student.SemesterStatus,
+                             StudentCourseDetiles = getStudentInSemesters.Where(course => course.StudentName == student.StudentName).DistinctBy(course => course.CourseName).Select(course => new StudentCourseDetilesDto
                              {
-                                 AssessMethodsName = detiles.Name,
-                                 Degree = detiles.Degree,
+                                 CourseCode = course.CourseCode,
+                                 CourseName = course.CourseName,
+                                 CourseDegree = course.CourseDegree,
+                                 CourseChar = course.CourseChar,
+                                 CourseStatus = course.CourseStatus,
+                                 NumberOfPoints = course.NumberOfPoints,
+                                 CourseDegreeDetiles = getStudentInSemesters.Where(detiles => detiles.CourseName == course.CourseName && detiles.StudentName == student.StudentName).Select(detiles => new CourseDegreeDetielsDto
+                                 {
+                                     AssessMethodsName = detiles.Name,
+                                     Degree = detiles.Degree,
+                                 }).ToList()
                              }).ToList()
                          }).ToList()
-                     }).ToList()
-            };
-            return getStudentsSemesterResultDtos;
+                };
+
+                return Response<GetStudentsSemesterResultDto>.Success(getStudentsSemesterResultDtos, "Students semester result are retrieved successfully")
+                    .WithCount(getStudentsSemesterResultDtos.studentsDetiels.Count);
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ControlService",
+                    MethodName = "GetStudentsSemesterResultAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetStudentsSemesterResultDto>.ServerError("Error occured while retrieving students semester result",
+                     "An unexpected error occurred while retrieving students semester result. Please try again later.");
+            }
         }
 
-        public async Task<GetStudentInSemesterResultDto> GetStudentInSemesterResulAsync(int studentSemesterId)
+        public async Task<Response<GetStudentInSemesterResultDto>> GetStudentInSemesterResulAsync(int studentSemesterId)
         {
-            SqlParameter pStudentSemesterId = new SqlParameter("@StudentSemesterId", studentSemesterId);
-            var getStudentInSemesters = await _unitOfWork.GetStudentInSemesterResultModels.CallStoredProcedureAsync(
-                    "EXECUTE SpGetStudentInSemesterResult", pStudentSemesterId);
-            if (getStudentInSemesters == null || !getStudentInSemesters.Any())
+            try
             {
-                return null;
-            }
-            GetStudentInSemesterResultDto getStudentsSemesterResultDto = new GetStudentInSemesterResultDto
-            {
-                StudentName = getStudentInSemesters.FirstOrDefault().StudentName,
-                StudentCode = getStudentInSemesters.FirstOrDefault().StudentCode,
-                StudentSemesterPercentage = getStudentInSemesters.FirstOrDefault().StudentSemesterPercentage,
-                StudentSemesterChar = getStudentInSemesters.FirstOrDefault().StudentCumulativeChar,
-                StudentCumulativePercentage = getStudentInSemesters.FirstOrDefault().StudentCumulativePercentage,
-                StudentCumulativeChar = getStudentInSemesters.FirstOrDefault().StudentCumulativeChar,
-                StudentSemesterStatus = getStudentInSemesters.FirstOrDefault().SemesterStatus,
-                StudentCourseDetiles = getStudentInSemesters.DistinctBy(course => course.CourseName).Select(course => new StudentCourseDetilesDto
+                SqlParameter pStudentSemesterId = new SqlParameter("@StudentSemesterId", studentSemesterId);
+                var getStudentInSemesters = await _unitOfWork.GetStudentInSemesterResultModels.CallStoredProcedureAsync(
+                        "EXECUTE SpGetStudentInSemesterResult", pStudentSemesterId);
+
+                if (getStudentInSemesters == null || !getStudentInSemesters.Any())
+                    return Response<GetStudentInSemesterResultDto>.NoContent("No results are exist");
+
+                GetStudentInSemesterResultDto getStudentsSemesterResultDto = new GetStudentInSemesterResultDto
                 {
-                    CourseName = course.CourseName,
-                    CourseCode = course.CourseCode,
-                    CourseChar = course.CourseChar,
-                    CourseDegree = course.CourseDegree,
-                    CourseStatus = course.CourseStatus,
-                    NumberOfPoints = course.NumberOfPoints,
-                    CourseDegreeDetiles = getStudentInSemesters.Where(detiels => detiels.CourseName == course.CourseName).Select(detiels => new CourseDegreeDetielsDto
+                    StudentName = getStudentInSemesters.FirstOrDefault().StudentName,
+                    StudentCode = getStudentInSemesters.FirstOrDefault().StudentCode,
+                    StudentSemesterPercentage = getStudentInSemesters.FirstOrDefault().StudentSemesterPercentage,
+                    StudentSemesterChar = getStudentInSemesters.FirstOrDefault().StudentCumulativeChar,
+                    StudentCumulativePercentage = getStudentInSemesters.FirstOrDefault().StudentCumulativePercentage,
+                    StudentCumulativeChar = getStudentInSemesters.FirstOrDefault().StudentCumulativeChar,
+                    StudentSemesterStatus = getStudentInSemesters.FirstOrDefault().SemesterStatus,
+                    StudentCourseDetiles = getStudentInSemesters.DistinctBy(course => course.CourseName).Select(course => new StudentCourseDetilesDto
                     {
-                        AssessMethodsName = detiels.AssessMethodsName,
-                        Degree = detiels.Degree
-                    }).ToList(),
-                }).ToList()
-
-            };
-
-            return getStudentsSemesterResultDto;
-        }
-
-        public async Task<GetAllStudentInCourseResultDto> GetAllStudentInCourseResultAsync(int semesterId, int acedemyYearId, int courseId)
-        {
-            SqlParameter pSemesterId = new SqlParameter("@ScientificDegreeId", semesterId);
-            SqlParameter pAcedemyYearId = new SqlParameter("@AcademyYearId", acedemyYearId);
-            SqlParameter pCourseId = new SqlParameter("@CourseId", courseId);
-            var getStudentInCourse = await _unitOfWork.GetAllStudentInCourseResultModels.CallStoredProcedureAsync(
-                    "EXECUTE SpGetAllStudentInCourseResult", pAcedemyYearId, pSemesterId, pCourseId);
-            if (getStudentInCourse == null || !getStudentInCourse.Any())
-            {
-                return null;
-            }
-            var getAllStudentInCourseResultDto = new GetAllStudentInCourseResultDto
-            {
-                CourseCode = getStudentInCourse.FirstOrDefault().CourseCode,
-                CourseName = getStudentInCourse.FirstOrDefault().CourseName,
-                NumberOfPoints = getStudentInCourse.FirstOrDefault().NumberOfPoints,
-                CourseStudentCourseDetiles = getStudentInCourse.DistinctBy(s => s.StudentName).Select(s => new CourseStudentCourseDetilesDto
-                {
-                    StudentName = s.StudentName,
-                    StudentCode = s.StudentCode,
-                    CourseStatus = s.CourseStatus,
-                    CourseChar = s.CourseChar,
-                    CourseDegree = s.CourseDegree,
-                    CourseDegreeDetiles = getStudentInCourse.Where(course => course.CourseName == s.CourseName && course.StudentName == s.StudentName).Select(course => new CourseDegreeDetielsDto
-                    {
-                        AssessMethodsName = course.AssessMethodsName,
-                        Degree = course.Degree
+                        CourseName = course.CourseName,
+                        CourseCode = course.CourseCode,
+                        CourseChar = course.CourseChar,
+                        CourseDegree = course.CourseDegree,
+                        CourseStatus = course.CourseStatus,
+                        NumberOfPoints = course.NumberOfPoints,
+                        CourseDegreeDetiles = getStudentInSemesters.Where(detiels => detiels.CourseName == course.CourseName).Select(detiels => new CourseDegreeDetielsDto
+                        {
+                            AssessMethodsName = detiels.AssessMethodsName,
+                            Degree = detiels.Degree
+                        }).ToList(),
                     }).ToList()
-                }).ToList()
-            };
-            return getAllStudentInCourseResultDto;
+
+                };
+
+                return Response<GetStudentInSemesterResultDto>.Success(getStudentsSemesterResultDto, "Student's results are retrieved successfully")
+                    .WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ControlService",
+                    MethodName = "GetStudentInSemesterResulAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetStudentInSemesterResultDto>.ServerError("Error occured while retrieving student's result",
+                     "An unexpected error occurred while retrieving student's result. Please try again later.");
+            }
+        }
+
+        public async Task<Response<GetAllStudentInCourseResultDto>> GetAllStudentInCourseResultAsync(int semesterId, int acedemyYearId, int courseId)
+        {
+            try
+            {
+                SqlParameter pSemesterId = new SqlParameter("@ScientificDegreeId", semesterId);
+                SqlParameter pAcedemyYearId = new SqlParameter("@AcademyYearId", acedemyYearId);
+                SqlParameter pCourseId = new SqlParameter("@CourseId", courseId);
+                var getStudentInCourse = await _unitOfWork.GetAllStudentInCourseResultModels.CallStoredProcedureAsync(
+                        "EXECUTE SpGetAllStudentInCourseResult", pAcedemyYearId, pSemesterId, pCourseId);
+
+                if (getStudentInCourse == null || !getStudentInCourse.Any())
+                    return Response<GetAllStudentInCourseResultDto>.NoContent();
+
+                var getAllStudentInCourseResultDto = new GetAllStudentInCourseResultDto
+                {
+                    CourseCode = getStudentInCourse.FirstOrDefault().CourseCode,
+                    CourseName = getStudentInCourse.FirstOrDefault().CourseName,
+                    NumberOfPoints = getStudentInCourse.FirstOrDefault().NumberOfPoints,
+                    CourseStudentCourseDetiles = getStudentInCourse.DistinctBy(s => s.StudentName).Select(s => new CourseStudentCourseDetilesDto
+                    {
+                        StudentName = s.StudentName,
+                        StudentCode = s.StudentCode,
+                        CourseStatus = s.CourseStatus,
+                        CourseChar = s.CourseChar,
+                        CourseDegree = s.CourseDegree,
+                        CourseDegreeDetiles = getStudentInCourse.Where(course => course.CourseName == s.CourseName && course.StudentName == s.StudentName).Select(course => new CourseDegreeDetielsDto
+                        {
+                            AssessMethodsName = course.AssessMethodsName,
+                            Degree = course.Degree
+                        }).ToList()
+                    }).ToList()
+                };
+                return Response<GetAllStudentInCourseResultDto>.Success(getAllStudentInCourseResultDto, "Students results are retrieved successfully")
+                    .WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ControlService",
+                    MethodName = "GetAllStudentInCourseResultAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetAllStudentInCourseResultDto>.ServerError("Error occured while retrieving students results",
+                     "An unexpected error occurred while retrieving students results. Please try again later.");
+            }
         }
     }
 }

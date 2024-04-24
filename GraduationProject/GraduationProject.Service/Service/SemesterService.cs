@@ -222,7 +222,7 @@ namespace GraduationProject.Service.Service
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
                     ClassName = "SemesterService",
-                    MethodName = "GetSemesterAsync",
+                    MethodName = "GetSemesterByFacultyIdAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow

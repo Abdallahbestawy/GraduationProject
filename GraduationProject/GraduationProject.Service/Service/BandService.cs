@@ -258,7 +258,7 @@ namespace GraduationProject.Service.Service
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
                     ClassName = "BandService",
-                    MethodName = "GetBandAsync",
+                    MethodName = "GetBandByFacultyIdAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow

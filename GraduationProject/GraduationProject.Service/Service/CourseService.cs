@@ -512,67 +512,96 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<GetStudentCourseInfoDto> GetStudentCourseInfoAsync(int courseId)
+        public async Task<Response<GetStudentCourseInfoDto>> GetStudentCourseInfoAsync(int courseId)
         {
+            try
+            {
+                SqlParameter pCourseId = new SqlParameter("@CourseId", courseId);
+                var studentSemesterCourse = await _unitOfWork.GetStudentCourseInfoModels.CallStoredProcedureAsync(
+                        "EXECUTE SpGetStudentCourseInfo", pCourseId);
 
-            SqlParameter pCourseId = new SqlParameter("@CourseId", courseId);
-            var studentSemesterCourse = await _unitOfWork.GetStudentCourseInfoModels.CallStoredProcedureAsync(
-                    "EXECUTE SpGetStudentCourseInfo", pCourseId);
-            if (studentSemesterCourse == null)
-            {
-                return null;
-            }
-            var getStudentSemesterCoursesDtos = new GetStudentCourseInfoDto
-            {
-                CourseName = studentSemesterCourse.FirstOrDefault().CourseName,
-                CourseCode = studentSemesterCourse.FirstOrDefault().CourseCode,
-                studentCourseInfoDetials = studentSemesterCourse.Select(sc => new StudentCourseInfoDetialsDto
+                if (studentSemesterCourse == null)
+                    return Response<GetStudentCourseInfoDto>.NoContent();
+
+                var getStudentSemesterCoursesDtos = new GetStudentCourseInfoDto
                 {
-                    StudentSemesterCourseId = sc.StudentSemesterCourseId,
-                    StudentCode = sc.StudentCode,
-                    StudentName = sc.StudentName,
-                    Notes = sc.Notes
-                }).ToList(),
-            };
-            return getStudentSemesterCoursesDtos;
+                    CourseName = studentSemesterCourse.FirstOrDefault().CourseName,
+                    CourseCode = studentSemesterCourse.FirstOrDefault().CourseCode,
+                    studentCourseInfoDetials = studentSemesterCourse.Select(sc => new StudentCourseInfoDetialsDto
+                    {
+                        StudentSemesterCourseId = sc.StudentSemesterCourseId,
+                        StudentCode = sc.StudentCode,
+                        StudentName = sc.StudentName,
+                        Notes = sc.Notes
+                    }).ToList(),
+                };
+
+                return Response<GetStudentCourseInfoDto>.Success(getStudentSemesterCoursesDtos, "Students course info are retrieved successfully")
+                    .WithCount(getStudentSemesterCoursesDtos.studentCourseInfoDetials.Count);
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "CourseService",
+                    MethodName = "GetStudentCourseInfoAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetStudentCourseInfoDto>.ServerError("Error occured while retrieving students course info",
+                    "An unexpected error occurred while retrieving students course info. Please try again later.");
+            }
         }
 
-        public async Task<bool> UpdateStudentCourseInfoAsync(List<UpdateStudentCourseInfoDto> updateStudentCourseInfoDtos)
+        public async Task<Response<bool>> UpdateStudentCourseInfoAsync(List<UpdateStudentCourseInfoDto> updateStudentCourseInfoDtos)
         {
-            if (updateStudentCourseInfoDtos == null || !updateStudentCourseInfoDtos.Any())
+            try
             {
-                return false;
-            }
-            var entitiesToUpdate = new List<StudentSemesterCourse>();
+                if (updateStudentCourseInfoDtos == null || !updateStudentCourseInfoDtos.Any())
+                    return Response<bool>.BadRequest("Invalid input");
 
-            foreach (var asDto in updateStudentCourseInfoDtos)
-            {
-                var old = await _unitOfWork.StudentSemesterCourses.GetByIdAsync(asDto.studentSemesterCourseId);
-                if (old != null)
+                var entitiesToUpdate = new List<StudentSemesterCourse>();
+
+                foreach (var asDto in updateStudentCourseInfoDtos)
                 {
-                    old.Notes = asDto.Notes;
-                    entitiesToUpdate.Add(old);
+                    var old = await _unitOfWork.StudentSemesterCourses.GetByIdAsync(asDto.studentSemesterCourseId);
+                    if (old != null)
+                    {
+                        old.Notes = asDto.Notes;
+                        entitiesToUpdate.Add(old);
+                    }
                 }
-            }
 
-            if (!entitiesToUpdate.Any())
+                if (!entitiesToUpdate.Any())
+                    return Response<bool>.NoContent("There is no updates to do");
+
+                bool result = await _unitOfWork.StudentSemesterCourses.UpdateRangeAsync(entitiesToUpdate);
+
+                if (!result)
+                    return Response<bool>.ServerError("Error occured while updating student course info",
+                        "An unexpected error occurred while updating student course info. Please try again later.");
+
+                int respons = await _unitOfWork.SaveAsync();
+                if (respons < 0)
+                    return Response<bool>.ServerError("Error occured while updating student course info",
+                        "An unexpected error occurred while updating student course info. Please try again later.");
+
+                return Response<bool>.Updated("The student course info is updated successfully");
+            }
+            catch (Exception ex)
             {
-                return false;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "CourseService",
+                    MethodName = "UpdateStudentCourseInfoAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while updating student course info",
+                    "An unexpected error occurred while updating student course info. Please try again later.");
             }
-
-            bool result = await _unitOfWork.StudentSemesterCourses.UpdateRangeAsync(entitiesToUpdate);
-
-            if (!result)
-            {
-                return false;
-            }
-
-            int respons = await _unitOfWork.SaveAsync();
-            if (respons < 0)
-            {
-                return false;
-            }
-            return true;
         }
     }
 }

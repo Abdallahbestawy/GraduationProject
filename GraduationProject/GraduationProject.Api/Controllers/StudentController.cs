@@ -14,6 +14,7 @@ namespace GraduationProject.Api.Controllers
         {
             _studentService = studentService;
         }
+        
         [HttpPost("AddStudent")]
         public async Task<IActionResult> AddStudent(AddStudentDto addStudentDto)
         {
@@ -28,6 +29,7 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter valid Model");
             }
         }
+        
         [HttpPost("AddStudentSemester")]
         public async Task<IActionResult> AddStudentSemester([FromBody] AddStudentSemesterDto addStudentSemesterDto)
         {
@@ -42,6 +44,7 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter Vaild Model");
             }
         }
+        
         [HttpGet("BasicData")]
         public async Task<IActionResult> GetStudent()
         {
@@ -52,6 +55,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
 
         }
+        
         [HttpGet("GetAllStudents")]
         public async Task<IActionResult> GetAllStudents()
         {
@@ -59,6 +63,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        
         [HttpDelete("student{studentId:int}")]
         public async Task<IActionResult> DeleteStudent(int studentId)
         {
@@ -70,6 +75,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
+        
         [HttpDelete("studentSemesters{studentSemesterId:int}")]
         public async Task<IActionResult> DeleteStudentSemester(int studentSemesterId)
         {
@@ -81,6 +87,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
+        
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateStudent([FromBody] UpdateStudentDto updateStudentDto)
         {
@@ -92,6 +99,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
+
         [HttpGet("Result")]
         public async Task<IActionResult> GetResultStudent()
         {
@@ -108,15 +116,13 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
+
         [HttpGet("InfoData{studentId:int}")]
         public async Task<IActionResult> GetStudentInfo(int studentId)
         {
-
             var response = await _studentService.GetStudentInfoByStudentIdAsync(studentId);
-            return Ok(response);
 
-            //return StatusCode(response.StatusCode, response);
-
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

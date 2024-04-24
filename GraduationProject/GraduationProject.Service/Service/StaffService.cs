@@ -139,7 +139,7 @@ namespace GraduationProject.Service.Service
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
                     ClassName = "StaffService",
-                    MethodName = "StaffService",
+                    MethodName = "AddStAffAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
@@ -461,7 +461,7 @@ namespace GraduationProject.Service.Service
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "AdministrationService",
+                    ClassName = "StaffService",
                     MethodName = "UpdateStaffAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
@@ -504,7 +504,7 @@ namespace GraduationProject.Service.Service
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "AdministrationService",
+                    ClassName = "StaffService",
                     MethodName = "DeleteAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
@@ -515,53 +515,68 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<GetStaffInfoByStaffIdDto> GetStaffInfoByStaffIdAsync(int staffId)
+        public async Task<Response<GetStaffInfoByStaffIdDto>> GetStaffInfoByStaffIdAsync(int staffId)
         {
-            SqlParameter pStaffId = new SqlParameter("@StaffId", staffId);
-
-            var getStaff = await _unitOfWork.GetStaffInfoByStaffIdModels.CallStoredProcedureAsync(
-                "EXECUTE SpGetStaffInfoByStaffId", pStaffId);
-            if (getStaff == null || !getStaff.Any())
+            try
             {
-                return null;
+                SqlParameter pStaffId = new SqlParameter("@StaffId", staffId);
+
+                var getStaff = await _unitOfWork.GetStaffInfoByStaffIdModels.CallStoredProcedureAsync(
+                    "EXECUTE SpGetStaffInfoByStaffId", pStaffId);
+
+                if (getStaff == null || !getStaff.Any())
+                    return Response<GetStaffInfoByStaffIdDto>.NoContent("This staff doesn't exist");
+
+                GetStaffInfoByStaffIdDto getStaffInfo = new GetStaffInfoByStaffIdDto
+                {
+                    NameArabic = getStaff.FirstOrDefault()?.NameArabic,
+                    NameEnglish = getStaff.FirstOrDefault()?.NameEnglish,
+                    NationalID = getStaff.FirstOrDefault()?.NationalID,
+                    Email = getStaff.FirstOrDefault()?.Email,
+                    StaffId = getStaff.FirstOrDefault()?.StaffId ?? 0,
+                    StaffStreet = getStaff.FirstOrDefault().StaffStreet,
+                    StaffCountryId = getStaff.FirstOrDefault().StaffCountrysId,
+                    StaffGovernorateId = getStaff.FirstOrDefault()?.StaffGovernoratesId,
+                    StaffCityId = getStaff.FirstOrDefault()?.StaffCitysId,
+                    DateOfBirth = getStaff.FirstOrDefault()?.DateOfBirth,
+                    Gender = Enum.GetName(typeof(Gender), getStaff.FirstOrDefault()?.Gender),
+                    Nationality = Enum.GetName(typeof(Nationality), getStaff.FirstOrDefault()?.Nationality),
+                    PlaceOfBirth = getStaff.FirstOrDefault()?.PlaceOfBirth,
+                    PostalCode = getStaff.FirstOrDefault()?.PostalCode,
+                    ReleasePlace = getStaff.FirstOrDefault()?.ReleasePlace,
+                    Religion = Enum.GetName(typeof(Religion), getStaff.FirstOrDefault()?.Religion),
+                    PreQualification = getStaff.FirstOrDefault()?.PreQualification,
+                    QualificationYear = getStaff.FirstOrDefault()?.QualificationYear,
+                    SeatNumber = getStaff.FirstOrDefault()?.SeatNumber ?? 0,
+                    Degree = getStaff.FirstOrDefault()?.Degree ?? 0.0m,
+                };
+
+                if (getStaff.Any(s => !string.IsNullOrEmpty(s.StaffPhoneNumber)))
+                {
+                    getStaffInfo.GetPhoneStaffDtos = getStaff
+                        .Where(s => !string.IsNullOrEmpty(s.StaffPhoneNumber))
+                        .Select(s => new GetPhoneSafftDto
+                        {
+                            PhoneId = s.PhoneId,
+                            StaffPhoneNumber = s.StaffPhoneNumber,
+                            PhoneType = Enum.GetName(typeof(PhoneType), s.PhoneType)
+                        }).ToList();
+                }
+                return Response<GetStaffInfoByStaffIdDto>.Success(getStaffInfo, "Staff info retrieved successfully").WithCount();
             }
-
-            GetStaffInfoByStaffIdDto getStaffInfo = new GetStaffInfoByStaffIdDto
+            catch (Exception ex)
             {
-                NameArabic = getStaff.FirstOrDefault()?.NameArabic,
-                NameEnglish = getStaff.FirstOrDefault()?.NameEnglish,
-                NationalID = getStaff.FirstOrDefault()?.NationalID,
-                Email = getStaff.FirstOrDefault()?.Email,
-                StaffId = getStaff.FirstOrDefault()?.StaffId ?? 0,
-                StaffStreet = getStaff.FirstOrDefault().StaffStreet,
-                StaffCountryId = getStaff.FirstOrDefault().StaffCountrysId,
-                StaffGovernorateId = getStaff.FirstOrDefault()?.StaffGovernoratesId,
-                StaffCityId = getStaff.FirstOrDefault()?.StaffCitysId,
-                DateOfBirth = getStaff.FirstOrDefault()?.DateOfBirth,
-                Gender = Enum.GetName(typeof(Gender), getStaff.FirstOrDefault()?.Gender),
-                Nationality = Enum.GetName(typeof(Nationality), getStaff.FirstOrDefault()?.Nationality),
-                PlaceOfBirth = getStaff.FirstOrDefault()?.PlaceOfBirth,
-                PostalCode = getStaff.FirstOrDefault()?.PostalCode,
-                ReleasePlace = getStaff.FirstOrDefault()?.ReleasePlace,
-                Religion = Enum.GetName(typeof(Religion), getStaff.FirstOrDefault()?.Religion),
-                PreQualification = getStaff.FirstOrDefault()?.PreQualification,
-                QualificationYear = getStaff.FirstOrDefault()?.QualificationYear,
-                SeatNumber = getStaff.FirstOrDefault()?.SeatNumber ?? 0,
-                Degree = getStaff.FirstOrDefault()?.Degree ?? 0.0m,
-            };
-
-            if (getStaff.Any(s => !string.IsNullOrEmpty(s.StaffPhoneNumber)))
-            {
-                getStaffInfo.GetPhoneStaffDtos = getStaff
-                    .Where(s => !string.IsNullOrEmpty(s.StaffPhoneNumber))
-                    .Select(s => new GetPhoneSafftDto
-                    {
-                        PhoneId = s.PhoneId,
-                        StaffPhoneNumber = s.StaffPhoneNumber,
-                        PhoneType = Enum.GetName(typeof(PhoneType), s.PhoneType)
-                    }).ToList();
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StaffService",
+                    MethodName = "GetStaffInfoByStaffIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetStaffInfoByStaffIdDto>.ServerError("Error occured while retrieving staff's info",
+                    "An unexpected error occurred while retrieving staff's info. Please try again later.");
             }
-            return getStaffInfo;
         }
     }
 }

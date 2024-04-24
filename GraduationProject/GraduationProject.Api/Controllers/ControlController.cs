@@ -103,30 +103,37 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("SA{academyYearId:int}")]
         public async Task<IActionResult> GetAllSemesterActive(int academyYearId)
         {
             var response = await _controlService.GetAllSemesterActiveAsync(academyYearId);
-            return Ok(response);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("SSR{semesterId:int},{acedemyYearId:int}")]
         public async Task<IActionResult> GetStudentsSemesterResult(int semesterId, int acedemyYearId)
         {
             var response = await _controlService.GetStudentsSemesterResultAsync(semesterId, acedemyYearId);
-            return Ok(response);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("SISR{studentSemesterId:int}")]
         public async Task<IActionResult> GetStudentInSemesterResul(int studentSemesterId)
         {
             var response = await _controlService.GetStudentInSemesterResulAsync(studentSemesterId);
-            return Ok(response);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("SISC{semesterId:int},{acedemyYearId:int},{courseId:int}")]
         public async Task<IActionResult> GetAllStudentInCourseResult(int semesterId, int acedemyYearId, int courseId)
         {
             var response = await _controlService.GetAllStudentInCourseResultAsync(semesterId, acedemyYearId, courseId);
 
-            return Ok(response);
+            return StatusCode(response.StatusCode, response);
         }
 
     }

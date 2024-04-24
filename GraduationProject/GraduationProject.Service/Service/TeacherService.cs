@@ -85,15 +85,6 @@ namespace GraduationProject.Service.Service
                     Time = DateTime.UtcNow
                 });
                 await _accountService.DeleteUser(userId);
-                await _mailService.SendExceptionEmail(new ExceptionEmailModel
-                {
-                    ClassName = "TeacherService",
-                    MethodName = "AddTeacheAsync",
-                    ErrorMessage = ex.Message,
-                    StackTrace = ex.StackTrace,
-                    Time = DateTime.UtcNow
-                });
-                await _accountService.DeleteUser(userId);
                 return Response<int>.ServerError("Error occured while adding Teacher",
                          "An unexpected error occurred while adding Teacher. Please try again later.");
             }
@@ -149,7 +140,7 @@ namespace GraduationProject.Service.Service
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
                     ClassName = "TeacherService",
-                    MethodName = "AddTeacherAsync",
+                    MethodName = "AddTeacheAsync",
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow

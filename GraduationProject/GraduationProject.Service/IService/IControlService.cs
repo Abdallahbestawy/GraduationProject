@@ -12,9 +12,9 @@ namespace GraduationProject.Service.IService
         Task<Response<bool>> EndSemesterAsync(int semesterId);
         Task<Response<int>> AddControlMembersAsync(AddStaffDto addControlMembersDto);
         Task<Response<List<GetAllStaffsDto>>> GetAllControlMembersAsync();
-        Task<List<GetAllSemesterActiveDto>> GetAllSemesterActiveAsync(int academyYearId);
-        Task<GetStudentsSemesterResultDto> GetStudentsSemesterResultAsync(int semesterId, int acedemyYearId);
-        Task<GetStudentInSemesterResultDto> GetStudentInSemesterResulAsync(int studentSemesterId);
-        Task<GetAllStudentInCourseResultDto> GetAllStudentInCourseResultAsync(int semesterId, int acedemyYearId, int courseId);
+        Task<Response<List<GetAllSemesterActiveDto>>> GetAllSemesterActiveAsync(int academyYearId);
+        Task<Response<GetStudentsSemesterResultDto>> GetStudentsSemesterResultAsync(int semesterId, int acedemyYearId);
+        Task<Response<GetStudentInSemesterResultDto>> GetStudentInSemesterResulAsync(int studentSemesterId);
+        Task<Response<GetAllStudentInCourseResultDto>> GetAllStudentInCourseResultAsync(int semesterId, int acedemyYearId, int courseId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using GraduationProject.Service.DataTransferObject.CourseDto;
+﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.CourseDto;
 using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,7 @@ namespace GraduationProject.Api.Controllers
         {
             _courseService = courseService;
         }
+        
         [HttpGet("{Id:int}")]
         public async Task<IActionResult> GetCourseById([FromRoute] int Id)
         {
@@ -24,6 +26,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        
         [HttpGet]
         public async Task<IActionResult> GetCourses()
         {
@@ -31,6 +34,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        
         [HttpPost("AddCourse")]
         public async Task<IActionResult> AddCourse(CourseDto addCourseDto)
         {
@@ -38,6 +42,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateCourse([FromBody] CourseDto updateCourseDto)
         {
@@ -49,6 +54,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        
         [HttpDelete]
         public async Task<IActionResult> DeleteCourse([FromRoute] int Id)
         {
@@ -56,6 +62,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        
         [HttpPost("AddCourseAssessMethod")]
         public async Task<IActionResult> AddCourseAssessMethod(CourseAssessMethodDto addCourseAssessMethodDto)
         {
@@ -63,6 +70,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("GetStudentSemesterAssessMethodsBySpecificCourse{courseId:int}")]
         public async Task<IActionResult> GetStudentSemesterAssessMethodsBySpecificCourse(int courseId)
         {
@@ -70,6 +78,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("CoursePrerequisite{courseId:int}")]
         public async Task<IActionResult> GetCoursePrerequisite(int courseId)
         {
@@ -85,21 +94,21 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("SCInfo{courseId:int}")]
         public async Task<IActionResult> GetStudentCourseInfo(int courseId)
         {
             var response = await _courseService.GetStudentCourseInfoAsync(courseId);
-            return Ok(response);
+
+            return StatusCode(response.StatusCode, response);
         }
+
         [HttpPut("UCInfo")]
         public async Task<IActionResult> UpdateStudentCourseInfo(List<UpdateStudentCourseInfoDto> updateStudentCourseInfoDtos)
         {
-            bool respone = await _courseService.UpdateStudentCourseInfoAsync(updateStudentCourseInfoDtos);
-            if (!respone)
-            {
-                return BadRequest();
-            }
-            return Ok();
+            var response = await _courseService.UpdateStudentCourseInfoAsync(updateStudentCourseInfoDtos);
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

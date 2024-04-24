@@ -62,6 +62,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpGet("GetAllStaff")]
         public async Task<IActionResult> GetAllStaff()
         {
@@ -76,6 +77,7 @@ namespace GraduationProject.Api.Controllers
                 return NotFound("There are not Staff");
             }
         }
+
         [HttpDelete("staffSemester{staffSemesterId:int}")]
         public async Task<IActionResult> DeleteStaffSemester(int staffSemesterId)
         {
@@ -87,6 +89,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
+
         [HttpDelete("Delete{Id:int}")]
         public async Task<IActionResult> DeleteStaff(int Id)
         {
@@ -110,15 +113,13 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
+
         [HttpGet("InfoData{staffId:int}")]
         public async Task<IActionResult> GetStudentInfo(int staffId)
         {
-
             var response = await _StaffService.GetStaffInfoByStaffIdAsync(staffId);
-            return Ok(response);
 
-            //return StatusCode(response.StatusCode, response);
-
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
