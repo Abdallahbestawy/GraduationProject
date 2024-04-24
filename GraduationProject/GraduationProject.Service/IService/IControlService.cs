@@ -13,7 +13,7 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> AddControlMembersAsync(AddStaffDto addControlMembersDto);
         Task<Response<List<GetAllStaffsDto>>> GetAllControlMembersAsync();
         Task<List<GetAllSemesterActiveDto>> GetAllSemesterActiveAsync(int academyYearId);
-        Task<List<GetStudentsSemesterResultDto>> GetStudentsSemesterResultAsync(int semesterId, int acedemyYearId);
+        Task<GetStudentsSemesterResultDto> GetStudentsSemesterResultAsync(int semesterId, int acedemyYearId);
         Task<GetStudentInSemesterResultDto> GetStudentInSemesterResulAsync(int studentSemesterId);
         Task<GetAllStudentInCourseResultDto> GetAllStudentInCourseResultAsync(int semesterId, int acedemyYearId, int courseId);
     }

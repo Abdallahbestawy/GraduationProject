@@ -3,6 +3,9 @@
     public class GetStudentsSemesterResultModel
     {
         public string StudentCode { get; set; }
+        public string SemesterName { get; set; }
+        public string AcademyYear { get; set; }
+        public string BandName { get; set; }
         public string StudentName { get; set; }
         public string CourseCode { get; set; }
         public string CourseName { get; set; }

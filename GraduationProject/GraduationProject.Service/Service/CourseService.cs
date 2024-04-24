@@ -488,7 +488,12 @@ namespace GraduationProject.Service.Service
                     return Response<bool>.ServerError("Error occured while updating Student Semester Assess Methods",
                     "An unexpected error occurred while updating Student Semester Assess Methods. Please try again later.");
 
-                await _unitOfWork.SaveAsync();
+                int respons = await _unitOfWork.SaveAsync();
+                if (respons < 0)
+                {
+                    return Response<bool>.ServerError("Error occured while updating Student Semester Assess Methods",
+                  "An unexpected error occurred while updating Student Semester Assess Methods. Please try again later.");
+                }
 
                 return Response<bool>.Updated("Student Semester Assess Methods updated successfully");
             }
@@ -507,9 +512,67 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        //public async Task GetTest()
-        //{
-        //    await _unitOfWork.StudentSemesterAssessMethod.GetStudentSemesterAssessMethods(1, false);
-        //}
+        public async Task<GetStudentCourseInfoDto> GetStudentCourseInfoAsync(int courseId)
+        {
+
+            SqlParameter pCourseId = new SqlParameter("@CourseId", courseId);
+            var studentSemesterCourse = await _unitOfWork.GetStudentCourseInfoModels.CallStoredProcedureAsync(
+                    "EXECUTE SpGetStudentCourseInfo", pCourseId);
+            if (studentSemesterCourse == null)
+            {
+                return null;
+            }
+            var getStudentSemesterCoursesDtos = new GetStudentCourseInfoDto
+            {
+                CourseName = studentSemesterCourse.FirstOrDefault().CourseName,
+                CourseCode = studentSemesterCourse.FirstOrDefault().CourseCode,
+                studentCourseInfoDetials = studentSemesterCourse.Select(sc => new StudentCourseInfoDetialsDto
+                {
+                    StudentSemesterCourseId = sc.StudentSemesterCourseId,
+                    StudentCode = sc.StudentCode,
+                    StudentName = sc.StudentName,
+                    Notes = sc.Notes
+                }).ToList(),
+            };
+            return getStudentSemesterCoursesDtos;
+        }
+
+        public async Task<bool> UpdateStudentCourseInfoAsync(List<UpdateStudentCourseInfoDto> updateStudentCourseInfoDtos)
+        {
+            if (updateStudentCourseInfoDtos == null || !updateStudentCourseInfoDtos.Any())
+            {
+                return false;
+            }
+            var entitiesToUpdate = new List<StudentSemesterCourse>();
+
+            foreach (var asDto in updateStudentCourseInfoDtos)
+            {
+                var old = await _unitOfWork.StudentSemesterCourses.GetByIdAsync(asDto.studentSemesterCourseId);
+                if (old != null)
+                {
+                    old.Notes = asDto.Notes;
+                    entitiesToUpdate.Add(old);
+                }
+            }
+
+            if (!entitiesToUpdate.Any())
+            {
+                return false;
+            }
+
+            bool result = await _unitOfWork.StudentSemesterCourses.UpdateRangeAsync(entitiesToUpdate);
+
+            if (!result)
+            {
+                return false;
+            }
+
+            int respons = await _unitOfWork.SaveAsync();
+            if (respons < 0)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

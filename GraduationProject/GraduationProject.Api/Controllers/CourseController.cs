@@ -85,5 +85,21 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        [HttpGet("SCInfo{courseId:int}")]
+        public async Task<IActionResult> GetStudentCourseInfo(int courseId)
+        {
+            var response = await _courseService.GetStudentCourseInfoAsync(courseId);
+            return Ok(response);
+        }
+        [HttpPut("UCInfo")]
+        public async Task<IActionResult> UpdateStudentCourseInfo(List<UpdateStudentCourseInfoDto> updateStudentCourseInfoDtos)
+        {
+            bool respone = await _courseService.UpdateStudentCourseInfoAsync(updateStudentCourseInfoDtos);
+            if (!respone)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
     }
 }

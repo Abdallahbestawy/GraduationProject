@@ -121,7 +121,7 @@ namespace GraduationProject.Api.Controllers
             var response = await _controlService.GetStudentInSemesterResulAsync(studentSemesterId);
             return Ok(response);
         }
-        [HttpGet("SISc{semesterId:int},{acedemyYearId:int},{courseId:int}")]
+        [HttpGet("SISC{semesterId:int},{acedemyYearId:int},{courseId:int}")]
         public async Task<IActionResult> GetAllStudentInCourseResult(int semesterId, int acedemyYearId, int courseId)
         {
             var response = await _controlService.GetAllStudentInCourseResultAsync(semesterId, acedemyYearId, courseId);

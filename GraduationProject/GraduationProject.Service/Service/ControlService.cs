@@ -339,7 +339,7 @@ namespace GraduationProject.Service.Service
             return semesters;
         }
 
-        public async Task<List<GetStudentsSemesterResultDto>> GetStudentsSemesterResultAsync(int semesterId, int acedemyYearId)
+        public async Task<GetStudentsSemesterResultDto> GetStudentsSemesterResultAsync(int semesterId, int acedemyYearId)
         {
             SqlParameter pSemesterId = new SqlParameter("@ScientificDegreeId", semesterId);
             SqlParameter pAcedemyYearId = new SqlParameter("@AcademyYearId", acedemyYearId);
@@ -349,32 +349,36 @@ namespace GraduationProject.Service.Service
             {
                 return null;
             }
-            List<GetStudentsSemesterResultDto> getStudentsSemesterResultDtos = new List<GetStudentsSemesterResultDto>();
-            getStudentsSemesterResultDtos = getStudentInSemesters.DistinctBy(student => student.StudentName).Select(student =>
-                new GetStudentsSemesterResultDto
-                {
-                    StudentCode = student.StudentCode,
-                    StudentName = student.StudentName,
-                    StudentSemesterPercentage = student.StudentSemesterPercentage,
-                    StudentSemesterChar = student.StudentSemesterChar,
-                    StudentCumulativePercentage = student.StudentCumulativePercentage,
-                    StudentCumulativeChar = student.StudentCumulativeChar,
-                    StudentSemesterStatus = student.SemesterStatus,
-                    StudentCourseDetiles = getStudentInSemesters.Where(course => course.StudentName == student.StudentName).DistinctBy(course => course.CourseName).Select(course => new StudentCourseDetilesDto
-                    {
-                        CourseCode = course.CourseCode,
-                        CourseName = course.CourseName,
-                        CourseDegree = course.CourseDegree,
-                        CourseChar = course.CourseChar,
-                        CourseStatus = course.CourseStatus,
-                        NumberOfPoints = course.NumberOfPoints,
-                        CourseDegreeDetiles = getStudentInSemesters.Where(detiles => detiles.CourseName == course.CourseName && detiles.StudentName == student.StudentName).Select(detiles => new CourseDegreeDetielsDto
-                        {
-                            AssessMethodsName = detiles.Name,
-                            Degree = detiles.Degree,
-                        }).ToList()
-                    }).ToList()
-                }).ToList();
+            GetStudentsSemesterResultDto getStudentsSemesterResultDtos = new GetStudentsSemesterResultDto
+            {
+                SemesterName = $"{getStudentInSemesters.FirstOrDefault().SemesterName} - {getStudentInSemesters.FirstOrDefault().BandName}",
+                AcademyYearName = getStudentInSemesters.FirstOrDefault().AcademyYear,
+                studentsDetiels = getStudentInSemesters.DistinctBy(student => student.StudentName).Select(student =>
+                     new StudentsDetielsDto
+                     {
+                         StudentCode = student.StudentCode,
+                         StudentName = student.StudentName,
+                         StudentSemesterPercentage = student.StudentSemesterPercentage,
+                         StudentSemesterChar = student.StudentSemesterChar,
+                         StudentCumulativePercentage = student.StudentCumulativePercentage,
+                         StudentCumulativeChar = student.StudentCumulativeChar,
+                         StudentSemesterStatus = student.SemesterStatus,
+                         StudentCourseDetiles = getStudentInSemesters.Where(course => course.StudentName == student.StudentName).DistinctBy(course => course.CourseName).Select(course => new StudentCourseDetilesDto
+                         {
+                             CourseCode = course.CourseCode,
+                             CourseName = course.CourseName,
+                             CourseDegree = course.CourseDegree,
+                             CourseChar = course.CourseChar,
+                             CourseStatus = course.CourseStatus,
+                             NumberOfPoints = course.NumberOfPoints,
+                             CourseDegreeDetiles = getStudentInSemesters.Where(detiles => detiles.CourseName == course.CourseName && detiles.StudentName == student.StudentName).Select(detiles => new CourseDegreeDetielsDto
+                             {
+                                 AssessMethodsName = detiles.Name,
+                                 Degree = detiles.Degree,
+                             }).ToList()
+                         }).ToList()
+                     }).ToList()
+            };
             return getStudentsSemesterResultDtos;
         }
 
