@@ -186,7 +186,7 @@ namespace GraduationProject.Service.Service
                 }
                 if (count == addStaffSemesterDto.Count() && !newStaffSemesterList.Any())
                 {
-                    return Response<int>.Created($"There are {count} Assign Course Staff already registered");
+                    return Response<int>.BadRequest($"This staff already assigned to these {count} courses");
                 }
                 await _unitOfWork.StaffSemesters.AddRangeAsync(newStaffSemesterList);
                 var result = await _unitOfWork.SaveAsync();
@@ -197,7 +197,8 @@ namespace GraduationProject.Service.Service
                 }
                 else if (result > 0 && count != 0)
                 {
-                    return Response<int>.Created($"Staff assigned to course in semester successfully And There are {count} Assign Course Staff already registered");
+                    return Response<int>.Created($"This staff already assigned to {count} out of {addStaffSemesterDto.Count} courses," +
+                        $" The remaining courses have been added successfully.");
                 }
                 else
                 {

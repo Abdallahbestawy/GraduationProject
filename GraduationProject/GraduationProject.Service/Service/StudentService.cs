@@ -211,7 +211,7 @@ namespace GraduationProject.Service.Service
             && ss.DepartmentId == addStudentSemesterDto.DepartmentId);
             if (studentsem.Any())
             {
-                return Response<int>.Created($"There are Assign Student In Semester already registered");
+                return Response<int>.BadRequest($"This student already assigned in this semester");
             }
             StudentSemester newStudentSemester = new StudentSemester
             {
