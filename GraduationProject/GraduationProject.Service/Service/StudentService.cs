@@ -205,12 +205,20 @@ namespace GraduationProject.Service.Service
                 return Response<int>.ServerError("Error Academy Years",
                  "There Is No Active Academic Year.");
             }
+            int acdemyYearAssignt = academyYear.FirstOrDefault().Id;
+            var studentsem = await _unitOfWork.StudentSemesters.GetEntityByPropertyAsync(ss => ss.StudentId == addStudentSemesterDto.StudentId
+            && ss.AcademyYearId == acdemyYearAssignt && ss.ScientificDegreeId == addStudentSemesterDto.ScientificDegreeId
+            && ss.DepartmentId == addStudentSemesterDto.DepartmentId);
+            if (studentsem.Any())
+            {
+                return Response<int>.Created($"There are Assign Student In Semester already registered");
+            }
             StudentSemester newStudentSemester = new StudentSemester
             {
                 StudentId = addStudentSemesterDto.StudentId,
                 DepartmentId = addStudentSemesterDto.DepartmentId,
                 ScientificDegreeId = addStudentSemesterDto.ScientificDegreeId,
-                AcademyYearId = academyYear.FirstOrDefault().Id
+                AcademyYearId = acdemyYearAssignt
             };
 
             try

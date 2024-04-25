@@ -164,21 +164,46 @@ namespace GraduationProject.Service.Service
                     return Response<int>.ServerError("Error Academy Years",
                      "There Is No Active Academic Year.");
                 }
-                List<StaffSemester> newStaffSemester = addStaffSemesterDto.Select(sc =>
-                    new StaffSemester
+                int acedemyYearAssignt = academyYear.FirstOrDefault().Id;
+                List<StaffSemester> newStaffSemesterList = new List<StaffSemester>();
+                int count = 0;
+                foreach (var addStaffSemester in addStaffSemesterDto)
+                {
+                    var staffSeme = await _unitOfWork.StaffSemesters.GetEntityByPropertyAsync(ss => ss.StaffId == addStaffSemester.StaffId
+                    && ss.CourseId == addStaffSemester.CourseId && ss.AcademyYearId == acedemyYearAssignt);
+                    if (staffSeme.Any())
                     {
-                        StaffId = sc.StaffId,
-                        CourseId = sc.CourseId,
-                        AcademyYearId = academyYear.FirstOrDefault().Id
-                    }).ToList();
-                await _unitOfWork.StaffSemesters.AddRangeAsync(newStaffSemester);
+                        count++;
+                        continue;
+                    }
+                    StaffSemester newStaffSemester = new StaffSemester
+                    {
+                        StaffId = addStaffSemester.StaffId,
+                        CourseId = addStaffSemester.CourseId,
+                        AcademyYearId = acedemyYearAssignt
+                    };
+                    newStaffSemesterList.Add(newStaffSemester);
+                }
+                if (count == addStaffSemesterDto.Count() && !newStaffSemesterList.Any())
+                {
+                    return Response<int>.Created($"There are {count} Assign Course Staff already registered");
+                }
+                await _unitOfWork.StaffSemesters.AddRangeAsync(newStaffSemesterList);
                 var result = await _unitOfWork.SaveAsync();
 
-                if (result > 0)
+                if (result > 0 && count == 0)
+                {
                     return Response<int>.Created("Staff assigned to course in semester successfully");
-
-                return Response<int>.ServerError("Error occured while assigning to course in semester",
-                    "An unexpected error occurred while assigning to course in semester. Please try again later.");
+                }
+                else if (result > 0 && count != 0)
+                {
+                    return Response<int>.Created($"Staff assigned to course in semester successfully And There are {count} Assign Course Staff already registered");
+                }
+                else
+                {
+                    return Response<int>.ServerError("Error occured while assigning to course in semester",
+                        "An unexpected error occurred while assigning to course in semester. Please try again later.");
+                }
             }
             catch (Exception ex)
             {

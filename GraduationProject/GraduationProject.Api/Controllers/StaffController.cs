@@ -32,6 +32,10 @@ namespace GraduationProject.Api.Controllers
         [HttpPost("AssignCourseStaff")]
         public async Task<IActionResult> AddStaffSemester([FromBody] List<AddStaffSemesterDto> addStaffSemesterDto)
         {
+            if (!addStaffSemesterDto.Any())
+            {
+                return BadRequest("please enter Vaild Model");
+            }
             if (ModelState.IsValid)
             {
                 var response = await _StaffService.AddStaffSemesterAsync(addStaffSemesterDto);
