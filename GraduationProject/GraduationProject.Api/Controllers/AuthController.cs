@@ -1,6 +1,6 @@
 ﻿using GraduationProject.Identity.IService;
 using GraduationProject.Identity.Models;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
@@ -28,8 +28,11 @@ namespace GraduationProject.Api.Controllers
             string? requestHost = HttpContext.Request.Headers["Referer"];
             if (requestHost == null)
                 requestHost = "localhost";
-            Uri uri = new Uri(requestHost);
-            requestHost = uri.Host;
+            else
+            {
+                Uri uri = new Uri(requestHost);
+                requestHost = uri.Host;
+            }
 
             if (!string.IsNullOrEmpty(result.RefreshToken))
             SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration, requestHost);
@@ -111,7 +114,6 @@ namespace GraduationProject.Api.Controllers
         [HttpPost("ChangeUserRoles")]
         public async Task<IActionResult> ChangeUserRoles([FromBody] UserRolesDto model)
         {
-
             var response = await _authService.ChangeUserRolesAsync(model);
 
             return StatusCode(response.StatusCode, response);
@@ -120,8 +122,15 @@ namespace GraduationProject.Api.Controllers
         [HttpGet("GetUserRoles/{userId}")]
         public async Task<IActionResult> GetUserRoles(string userId)
         {
-
             var response = await _authService.GetUserRolesAsync(userId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
+        {
+            var response = await _authService.ChangePassword(model, User);
 
             return StatusCode(response.StatusCode, response);
         }

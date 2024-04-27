@@ -1,5 +1,6 @@
 ﻿using GraduationProject.Identity.Models;
 using GraduationProject.ResponseHandler.Model;
+using System.Security.Claims;
 
 namespace GraduationProject.Identity.IService
 {
@@ -12,5 +13,6 @@ namespace GraduationProject.Identity.IService
         Task<Response<bool>> ResetPassword(ResetPasswordModel resetPasswordModel);
         Task<Response<bool>> ChangeUserRolesAsync(UserRolesDto model);
         Task<Response<UserRolesDto>> GetUserRolesAsync(string userId);
+        Task<Response<bool>> ChangePassword(ChangePasswordModel changePasswordModel, ClaimsPrincipal userOBJ);
     }
 }
