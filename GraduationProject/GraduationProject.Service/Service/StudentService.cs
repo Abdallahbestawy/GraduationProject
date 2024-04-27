@@ -135,7 +135,8 @@ namespace GraduationProject.Service.Service
                     CountryId = addStudentDto.ParentCountryId,
                     GovernorateId = addStudentDto.ParentGovernorateId,
                     CityId = addStudentDto.ParentCityId,
-                    Street = addStudentDto.ParentStreet
+                    Street = addStudentDto.ParentStreet,
+                    PostalCode=addStudentDto.PostalCodeOfParent
                 };
 
                 try

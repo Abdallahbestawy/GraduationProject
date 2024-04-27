@@ -79,6 +79,7 @@ namespace GraduationProject.Service.DataTransferObject.StudentDto
         public int ParentCityId { get; set; }
 
         public string? ParentStreet { get; set; }
+        public string? PostalCodeOfParent { get; set; }
 
         [IgnoreFromExcelFIle]
         public List<PhoneNumberDto>? PhoneNumbers { get; set; }
