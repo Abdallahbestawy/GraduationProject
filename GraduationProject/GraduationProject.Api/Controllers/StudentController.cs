@@ -1,4 +1,5 @@
 ﻿using GraduationProject.Identity.IService;
+using GraduationProject.Service.DataTransferObject.FilesDto;
 using GraduationProject.Service.DataTransferObject.StudentDto;
 using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Authorization;
@@ -129,6 +130,19 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> GetStudentInfo(int studentId)
         {
             var response = await _studentService.GetStudentInfoByStudentIdAsync(studentId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("AddListOfStudentsFromExcel")]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> AddStudentsListFromExcel(IFormFile file)
+        {
+            if (Request.Form.Files.Count == 0) return BadRequest("No files are uploaded");
+
+            //var file = Request.Form.Files[0];
+
+            var response = await _studentService.AddStudentsListFromExcelFileAsync(file, User);
 
             return StatusCode(response.StatusCode, response);
         }

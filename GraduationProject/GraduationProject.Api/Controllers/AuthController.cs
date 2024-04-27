@@ -1,5 +1,6 @@
 ﻿using GraduationProject.Identity.IService;
 using GraduationProject.Identity.Models;
+using GraduationProject.Identity.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace GraduationProject.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IAccountService _accountService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IAccountService accountService)
         {
             _authService = authService;
+            _accountService = accountService;
         }
 
         [HttpPost("Login")]
@@ -130,7 +133,13 @@ namespace GraduationProject.Api.Controllers
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
         {
-            var response = await _authService.ChangePassword(model, User);
+            var currentUser = await _accountService.GetUser(User);
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+
+            var response = await _authService.ChangePassword(model, currentUser);
 
             return StatusCode(response.StatusCode, response);
         }

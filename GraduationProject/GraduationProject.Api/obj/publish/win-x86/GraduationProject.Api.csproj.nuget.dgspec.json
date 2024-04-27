@@ -690,6 +690,10 @@
             "AutoMapper": {
               "target": "Package",
               "version": "[13.0.1, )"
+            },
+            "NPOI": {
+              "target": "Package",
+              "version": "[2.7.0, )"
             }
           },
           "imports": [

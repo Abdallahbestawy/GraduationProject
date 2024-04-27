@@ -1,6 +1,9 @@
 ﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.FilesDto;
 using GraduationProject.Service.DataTransferObject.ScientificDegreeDto;
 using GraduationProject.Service.DataTransferObject.StudentDto;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace GraduationProject.Service.IService
 {
@@ -17,5 +20,6 @@ namespace GraduationProject.Service.IService
         Task<Response<GetStudentResultDto>> GetStudentResultAsync(string userId);
         Task<Response<List<GetAllStudentsInSemesterDto>>> GetAllStudentsInSemesterAsync(int semesterId);
         Task<Response<GetStudentInfoByStudentIdDto>> GetStudentInfoByStudentIdAsync(int studentId);
+        Task<Response<int>> AddStudentsListFromExcelFileAsync(IFormFile file, ClaimsPrincipal user);
     }
 }

@@ -76,6 +76,7 @@ builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<IControlService, ControlService>();
 builder.Services.AddTransient<ILocationsService, LocationsService>();
 builder.Services.AddTransient(typeof(LoggerHandler<>));
+builder.Services.AddTransient<IExcelHelper, ExcelHelper>();
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 

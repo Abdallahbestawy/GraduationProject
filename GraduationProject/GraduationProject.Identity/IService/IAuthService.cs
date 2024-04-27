@@ -13,6 +13,6 @@ namespace GraduationProject.Identity.IService
         Task<Response<bool>> ResetPassword(ResetPasswordModel resetPasswordModel);
         Task<Response<bool>> ChangeUserRolesAsync(UserRolesDto model);
         Task<Response<UserRolesDto>> GetUserRolesAsync(string userId);
-        Task<Response<bool>> ChangePassword(ChangePasswordModel changePasswordModel, ClaimsPrincipal userOBJ);
+        Task<Response<bool>> ChangePassword(ChangePasswordModel changePasswordModel, ApplicationUser user);
     }
 }

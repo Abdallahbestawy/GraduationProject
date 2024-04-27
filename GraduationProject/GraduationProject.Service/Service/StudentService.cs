@@ -6,11 +6,15 @@ using GraduationProject.Mails.Models;
 using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.CourseDto;
+using GraduationProject.Service.DataTransferObject.FilesDto;
 using GraduationProject.Service.DataTransferObject.ScientificDegreeDto;
 using GraduationProject.Service.DataTransferObject.StudentDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Security.Claims;
 
 namespace GraduationProject.Service.Service
 {
@@ -20,13 +24,15 @@ namespace GraduationProject.Service.Service
         private readonly IAccountService _accountService;
         private readonly ICourseService _courseService;
         private readonly IMailService _mailService;
+        private readonly IExcelHelper _excelHelper;
 
-        public StudentService(UnitOfWork unitOfWork, IAccountService accountService, ICourseService courseService, IMailService mailService)
+        public StudentService(UnitOfWork unitOfWork, IAccountService accountService, ICourseService courseService, IMailService mailService, IExcelHelper excelHelper)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _accountService = accountService ?? throw new ArgumentNullException(nameof(accountService));
             _courseService = courseService ?? throw new ArgumentNullException(nameof(courseService));
             _mailService = mailService;
+            _excelHelper = excelHelper;
         }
 
         public async Task<Response<int>> AddStudentAsync(AddStudentDto addStudentDto)
@@ -987,6 +993,61 @@ namespace GraduationProject.Service.Service
                 });
                 return Response<GetStudentInfoByStudentIdDto>.ServerError("Error occured while retrieving student's info",
                     "An unexpected error occurred while retrieving student's info. Please try again later.");
+            }
+        }
+
+        public async Task<Response<int>> AddStudentsListFromExcelFileAsync(IFormFile file, ClaimsPrincipal user)
+        {
+            try
+            {
+                List<object>? errors = new();
+                int counter = 0;
+                int totalStudents = 0;
+
+                if (file != null && file.Length > 0)
+                {
+                    var filePath = _excelHelper.SaveFile(file);
+
+                    var studentsList = _excelHelper.Import<AddStudentDto>(filePath);
+
+                    if (studentsList.ValidationErrors.Count > 0)
+                        return Response<int>.BadRequest("One or more validation errors occured", studentsList.ValidationErrors);
+
+                    if (studentsList.MappedData.Count == 0)
+                        return Response<int>.BadRequest("No data in the file to add");
+
+                    totalStudents = studentsList.MappedData.Count;
+                    foreach (var student in studentsList.MappedData)
+                    {
+                        var result = await AddStudentAsync(student);
+                        if (result.StatusCode != 201)
+                        {
+                            if(result.Errors != null)
+                                errors.Add(result.Errors);
+                        }
+                        counter++;
+                    }
+                }
+                else
+                {
+                    // Handle case when no file is uploaded
+                    return Response<int>.BadRequest("No file is uploaded");
+                }
+
+                return Response<int>.Created($"The students list added successfully, done {counter} out of {totalStudents}");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StudentService",
+                    MethodName = "AddStudentsListFromExcelFileAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while adding students list",
+                    "An unexpected error occurred while adding students list. Please try again later.");
             }
         }
     }

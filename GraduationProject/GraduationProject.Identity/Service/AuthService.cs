@@ -281,13 +281,8 @@ namespace GraduationProject.Identity.Service
             }
         }
 
-        public async Task<Response<bool>> ChangePassword(ChangePasswordModel changePasswordModel, ClaimsPrincipal userOBJ)
+        public async Task<Response<bool>> ChangePassword(ChangePasswordModel changePasswordModel, ApplicationUser user)
         {
-            var userId = _userManager.GetUserId(userOBJ);
-            var user = await _userManager.FindByNameAsync(userId);
-            if (user == null)
-                return Response<bool>.BadRequest($"Unable to load user with ID '{_userManager.GetUserId(userOBJ)}'.");
-
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, changePasswordModel.OldPassword, changePasswordModel.NewPassword);
 
             if (!changePasswordResult.Succeeded)

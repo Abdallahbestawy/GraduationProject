@@ -6,7 +6,10 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\GraduationProject.Api.pdb
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\AutoMapper.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\BouncyCastle.Cryptography.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Enums.NET.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\ExtendedNumerics.BigDecimal.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\MailKit.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\MathNet.Numerics.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.Cryptography.Internal.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
@@ -30,9 +33,17 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.IdentityModel.Protocols.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.IO.RecyclableMemoryStream.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.OpenApi.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Win32.SystemEvents.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\MimeKit.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\NPOI.Core.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\NPOI.OOXML.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\NPOI.OpenXml4Net.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\NPOI.OpenXmlFormats.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\ICSharpCode.SharpZipLib.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\SixLabors.Fonts.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\SixLabors.ImageSharp.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -44,6 +55,7 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\System.Runtime.Caching.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\System.Security.Cryptography.Pkcs.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\System.Security.Cryptography.Xml.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\System.Security.Permissions.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\System.Text.Encoding.CodePages.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\System.Windows.Extensions.dll
