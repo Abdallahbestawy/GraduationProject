@@ -6,6 +6,7 @@ using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.PhoneDto;
 using GraduationProject.Service.DataTransferObject.StaffDto;
 using GraduationProject.Service.IService;
 using Microsoft.Data.SqlClient;
@@ -565,12 +566,12 @@ namespace GraduationProject.Service.Service
                     StaffGovernorateId = getStaff.FirstOrDefault()?.StaffGovernoratesId,
                     StaffCityId = getStaff.FirstOrDefault()?.StaffCitysId,
                     DateOfBirth = getStaff.FirstOrDefault()?.DateOfBirth,
-                    Gender = Enum.GetName(typeof(Gender), getStaff.FirstOrDefault()?.Gender),
-                    Nationality = Enum.GetName(typeof(Nationality), getStaff.FirstOrDefault()?.Nationality),
+                    Gender = getStaff.FirstOrDefault().Gender,
+                    Nationality = getStaff.FirstOrDefault().Nationality,
                     PlaceOfBirth = getStaff.FirstOrDefault()?.PlaceOfBirth,
                     PostalCode = getStaff.FirstOrDefault()?.PostalCode,
                     ReleasePlace = getStaff.FirstOrDefault()?.ReleasePlace,
-                    Religion = Enum.GetName(typeof(Religion), getStaff.FirstOrDefault()?.Religion),
+                    Religion = getStaff.FirstOrDefault().Religion,
                     PreQualification = getStaff.FirstOrDefault()?.PreQualification,
                     QualificationYear = getStaff.FirstOrDefault()?.QualificationYear,
                     SeatNumber = getStaff.FirstOrDefault()?.SeatNumber ?? 0,
@@ -581,11 +582,11 @@ namespace GraduationProject.Service.Service
                 {
                     getStaffInfo.GetPhoneStaffDtos = getStaff
                         .Where(s => !string.IsNullOrEmpty(s.StaffPhoneNumber))
-                        .Select(s => new GetPhoneSafftDto
+                        .Select(s => new GetPhoneTypeDto
                         {
                             PhoneId = s.PhoneId,
-                            StaffPhoneNumber = s.StaffPhoneNumber,
-                            PhoneType = Enum.GetName(typeof(PhoneType), s.PhoneType)
+                            PhoneNumber = s.StaffPhoneNumber,
+                            PhoneType = s.PhoneType
                         }).ToList();
                 }
                 return Response<GetStaffInfoByStaffIdDto>.Success(getStaffInfo, "Staff info retrieved successfully").WithCount();

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GraduationProject.Data.Enum;
+using GraduationProject.Service.DataTransferObject.PhoneDto;
+using System.ComponentModel.DataAnnotations;
 
 namespace GraduationProject.Service.DataTransferObject.StudentDto
 {
@@ -17,12 +19,12 @@ namespace GraduationProject.Service.DataTransferObject.StudentDto
 
         public DateTime? DateOfBirth { get; set; }
         public string StudentCode { get; set; }
-        public string Gender { get; set; }
-        public string Nationality { get; set; }
+        public Gender Gender { get; set; }
+        public Nationality Nationality { get; set; }
         public string PlaceOfBirth { get; set; }
         public string? PostalCode { get; set; }
         public string? ReleasePlace { get; set; }
-        public string Religion { get; set; }
+        public Religion Religion { get; set; }
         public string ParentName { get; set; }
 
         public string ParentJob { get; set; }
@@ -37,7 +39,7 @@ namespace GraduationProject.Service.DataTransferObject.StudentDto
         public DateTime? QualificationYear { get; set; }
         public int? SeatNumber { get; set; }
         public decimal? Degree { get; set; }
-        public List<GetPhoneStudentDto>? GetPhoneStudentDtos { get; set; } = new List<GetPhoneStudentDto>();
+        public List<GetPhoneTypeDto>? GetPhoneStudentDtos { get; set; } = new List<GetPhoneTypeDto>();
     }
 
 }

@@ -6,13 +6,12 @@ using GraduationProject.Mails.Models;
 using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.CourseDto;
-using GraduationProject.Service.DataTransferObject.FilesDto;
+using GraduationProject.Service.DataTransferObject.PhoneDto;
 using GraduationProject.Service.DataTransferObject.ScientificDegreeDto;
 using GraduationProject.Service.DataTransferObject.StudentDto;
 using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Security.Claims;
 
@@ -947,12 +946,12 @@ namespace GraduationProject.Service.Service
                     StudentGovernoratesId = getStudent.FirstOrDefault()?.StudentsGovernoratesId,
                     StudentCitysId = getStudent.FirstOrDefault()?.StudentsCitysId,
                     DateOfBirth = getStudent.FirstOrDefault()?.DateOfBirth,
-                    Gender = Enum.GetName(typeof(Gender), getStudent.FirstOrDefault()?.Gender),
-                    Nationality = Enum.GetName(typeof(Nationality), getStudent.FirstOrDefault()?.Nationality),
+                    Gender = getStudent.FirstOrDefault().Gender,
+                    Nationality = getStudent.FirstOrDefault().Nationality,
                     PlaceOfBirth = getStudent.FirstOrDefault()?.PlaceOfBirth,
                     PostalCode = getStudent.FirstOrDefault()?.PostalCode,
                     ReleasePlace = getStudent.FirstOrDefault()?.ReleasePlace,
-                    Religion = Enum.GetName(typeof(Religion), getStudent.FirstOrDefault()?.Religion),
+                    Religion = getStudent.FirstOrDefault().Religion,
                     ParentName = getStudent.FirstOrDefault()?.ParentName,
                     ParentJob = getStudent.FirstOrDefault()?.ParentJob,
                     PostalCodeOfParent = getStudent.FirstOrDefault()?.PostalCodeOfParent,
@@ -970,11 +969,11 @@ namespace GraduationProject.Service.Service
                 {
                     getStudentInfo.GetPhoneStudentDtos = getStudent
                         .Where(s => !string.IsNullOrEmpty(s.StudentPhoneNumber))
-                        .Select(s => new GetPhoneStudentDto
+                        .Select(s => new GetPhoneTypeDto
                         {
                             PhoneId = s.PhoneId,
-                            StudentPhoneNumber = s.StudentPhoneNumber,
-                            PhoneType = Enum.GetName(typeof(PhoneType), s.PhoneType)
+                            PhoneNumber = s.StudentPhoneNumber,
+                            PhoneType = s.PhoneType
                         })
                         .ToList();
                 }
@@ -1022,7 +1021,7 @@ namespace GraduationProject.Service.Service
                         var result = await AddStudentAsync(student);
                         if (result.StatusCode != 201)
                         {
-                            if(result.Errors != null)
+                            if (result.Errors != null)
                                 errors.Add(result.Errors);
                         }
                         counter++;

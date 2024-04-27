@@ -11,3 +11,15 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\obj\Release\net6.0\refint\GraduationProject.Mails.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\obj\Release\net6.0\GraduationProject.Mails.pdb
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Mails\obj\Release\net6.0\ref\GraduationProject.Mails.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Mails\bin\Release\net6.0\GraduationProject.Mails.deps.json
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Mails\bin\Release\net6.0\GraduationProject.Mails.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Mails\bin\Release\net6.0\GraduationProject.Mails.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Mails\obj\Release\net6.0\GraduationProject.Mails.csproj.AssemblyReference.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Mails\obj\Release\net6.0\GraduationProject.Mails.GeneratedMSBuildEditorConfig.editorconfig
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Mails\obj\Release\net6.0\GraduationProject.Mails.AssemblyInfoInputs.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Mails\obj\Release\net6.0\GraduationProject.Mails.AssemblyInfo.cs
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Mails\obj\Release\net6.0\GraduationProject.Mails.csproj.CoreCompileInputs.cache
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Mails\obj\Release\net6.0\GraduationProject.Mails.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Mails\obj\Release\net6.0\refint\GraduationProject.Mails.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Mails\obj\Release\net6.0\GraduationProject.Mails.pdb
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Mails\obj\Release\net6.0\ref\GraduationProject.Mails.dll
