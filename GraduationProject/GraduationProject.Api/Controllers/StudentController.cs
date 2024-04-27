@@ -1,5 +1,7 @@
-﻿using GraduationProject.Service.DataTransferObject.StudentDto;
+﻿using GraduationProject.Identity.IService;
+using GraduationProject.Service.DataTransferObject.StudentDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
@@ -9,12 +11,14 @@ namespace GraduationProject.Api.Controllers
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _studentService;
+        private readonly IAccountService _accountService;
 
-        public StudentController(IStudentService studentService, IScientificDegreeService scientificDegreeService)
+        public StudentController(IStudentService studentService, IAccountService accountService)
         {
             _studentService = studentService;
+            _accountService = accountService;
         }
-        
+
         [HttpPost("AddStudent")]
         public async Task<IActionResult> AddStudent(AddStudentDto addStudentDto)
         {
@@ -29,7 +33,7 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter valid Model");
             }
         }
-        
+
         [HttpPost("AddStudentSemester")]
         public async Task<IActionResult> AddStudentSemester([FromBody] AddStudentSemesterDto addStudentSemesterDto)
         {
@@ -44,18 +48,22 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter Vaild Model");
             }
         }
-        
+        [Authorize(Roles = "Student")]
         [HttpGet("BasicData")]
         public async Task<IActionResult> GetStudent()
         {
-            string userId = "af88e91d-7241-4149-bbd4-ebb2a30dd247";
+            var currentUser = await _accountService.GetUser(User);
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
 
-            var response = await _studentService.GetStudentByUserId(userId);
+            var response = await _studentService.GetStudentByUserId(currentUser.Id);
 
             return StatusCode(response.StatusCode, response);
 
         }
-        
+
         [HttpGet("GetAllStudents")]
         public async Task<IActionResult> GetAllStudents()
         {
@@ -63,7 +71,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        
+
         [HttpDelete("student{studentId:int}")]
         public async Task<IActionResult> DeleteStudent(int studentId)
         {
@@ -75,7 +83,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
-        
+
         [HttpDelete("studentSemesters{studentSemesterId:int}")]
         public async Task<IActionResult> DeleteStudentSemester(int studentSemesterId)
         {
@@ -87,7 +95,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
-        
+
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateStudent([FromBody] UpdateStudentDto updateStudentDto)
         {

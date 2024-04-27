@@ -1,5 +1,7 @@
-﻿using GraduationProject.Service.DataTransferObject.StaffDto;
+﻿using GraduationProject.Identity.IService;
+using GraduationProject.Service.DataTransferObject.StaffDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
@@ -9,9 +11,11 @@ namespace GraduationProject.Api.Controllers
     public class StaffController : ControllerBase
     {
         private readonly IStaffService _StaffService;
-        public StaffController(IStaffService StaffService)
+        private readonly IAccountService _accountService;
+        public StaffController(IStaffService StaffService, IAccountService accountService)
         {
             _StaffService = StaffService;
+            _accountService = accountService;
         }
 
         [HttpPost("AddStaff")]
@@ -47,12 +51,16 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter Vaild Model");
             }
         }
-
+        [Authorize(Roles = "Teacher, TeacherAssistant")]
         [HttpGet("CSS")]
         public async Task<IActionResult> GetCourseStaffSemester()
         {
-            string userId = "63d3ab54-6da1-429d-b8f7-7f9e56fa75fc";
-            var response = await _StaffService.GetCourseStaffSemesterAsync(userId);
+            var currentUser = await _accountService.GetUser(User);
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+            var response = await _StaffService.GetCourseStaffSemesterAsync(currentUser.Id);
 
             return StatusCode(response.StatusCode, response);
         }

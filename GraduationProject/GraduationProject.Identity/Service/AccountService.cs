@@ -208,5 +208,18 @@ namespace GraduationProject.Identity.Service
                 return false;
             }
         }
+
+        public async Task<ApplicationUser> GetUser(ClaimsPrincipal user)
+        {
+            var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUser = await _userManager.FindByNameAsync(userId);
+
+            if (currentUser == null)
+            {
+                return null;
+            }
+
+            return currentUser;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using GraduationProject.Identity.Models;
+using System.Security.Claims;
 
 namespace GraduationProject.Identity.IService
 {
@@ -13,6 +14,7 @@ namespace GraduationProject.Identity.IService
         Task<bool> DeleteUser(string userId);
         Task<string> GetUserIdByUser(ClaimsPrincipal user);
         Task<bool> UpdateUser(string userId, string NameArabic, string NameEnglish, string NationalID);
+        Task<ApplicationUser> GetUser(ClaimsPrincipal user);
     }
 
 }

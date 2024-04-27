@@ -1,9 +1,11 @@
 ﻿using GraduationProject.Identity.IService;
 using GraduationProject.Identity.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class RoleController : ControllerBase
@@ -27,9 +29,9 @@ namespace GraduationProject.Api.Controllers
             {
                 var response = await _roleService.AddRole(model);
 
-                return StatusCode(response.StatusCode,response);
+                return StatusCode(response.StatusCode, response);
             }
-            else 
+            else
                 return BadRequest("please enter Valid Model");
         }
     }
