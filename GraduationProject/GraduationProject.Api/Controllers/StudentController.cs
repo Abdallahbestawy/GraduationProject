@@ -1,4 +1,5 @@
-﻿using GraduationProject.Identity.IService;
+﻿using GraduationProject.Identity.Enum;
+using GraduationProject.Identity.IService;
 using GraduationProject.Service.DataTransferObject.StudentDto;
 using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Authorization;
@@ -13,12 +14,13 @@ namespace GraduationProject.Api.Controllers
         private readonly IStudentService _studentService;
         private readonly IAccountService _accountService;
 
+
         public StudentController(IStudentService studentService, IAccountService accountService)
         {
             _studentService = studentService;
             _accountService = accountService;
         }
-
+        [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.Staff))]
         [HttpPost("AddStudent")]
         public async Task<IActionResult> AddStudent(AddStudentDto addStudentDto)
         {
@@ -33,7 +35,7 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter valid Model");
             }
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPost("AddStudentSemester")]
         public async Task<IActionResult> AddStudentSemester([FromBody] AddStudentSemesterDto addStudentSemesterDto)
         {
@@ -48,7 +50,7 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter Vaild Model");
             }
         }
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = nameof(UserType.Student))]
         [HttpGet("BasicData")]
         public async Task<IActionResult> GetStudent()
         {
@@ -63,7 +65,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
 
         }
-
+        [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.Staff))]
         [HttpGet("GetAllStudents")]
         public async Task<IActionResult> GetAllStudents()
         {
@@ -71,8 +73,8 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
-        [HttpDelete("student{studentId:int}")]
+        [Authorize(Roles = nameof(UserType.Administration))]
+        [HttpDelete("{studentId:int}")]
         public async Task<IActionResult> DeleteStudent(int studentId)
         {
             if (studentId == 0 || studentId == null)
@@ -83,7 +85,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpDelete("studentSemesters{studentSemesterId:int}")]
         public async Task<IActionResult> DeleteStudentSemester(int studentSemesterId)
         {
@@ -95,7 +97,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateStudent([FromBody] UpdateStudentDto updateStudentDto)
         {
@@ -107,7 +109,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
-
+        [Authorize(Roles = nameof(UserType.Student))]
         [HttpGet("Result")]
         public async Task<IActionResult> GetResultStudent()
         {
@@ -116,7 +118,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpGet("as{semesterId:int}")]
         public async Task<IActionResult> GetAllStudentsInSemester(int semesterId)
         {
@@ -124,7 +126,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpGet("InfoData{studentId:int}")]
         public async Task<IActionResult> GetStudentInfo(int studentId)
         {

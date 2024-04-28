@@ -15,6 +15,7 @@ namespace GraduationProject.Identity.IService
         Task<string> GetUserIdByUser(ClaimsPrincipal user);
         Task<bool> UpdateUser(string userId, string NameArabic, string NameEnglish, string NationalID);
         Task<ApplicationUser> GetUser(ClaimsPrincipal user);
+
     }
 
 }

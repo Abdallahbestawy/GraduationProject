@@ -20,15 +20,17 @@ namespace GraduationProject.Identity.Service
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JWT _jwt;
         private readonly IMailService _mailService;
         public AuthService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
-            IOptions<JWT> jwt, IMailService mailService)
+            IOptions<JWT> jwt, IMailService mailService, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _jwt = jwt.Value;
             _mailService = mailService;
+            _signInManager = signInManager;
         }
         public async Task<AuthModel> LoginAsync(LoginUserModel loginUserModel)
         {
@@ -37,6 +39,12 @@ namespace GraduationProject.Identity.Service
             if (user is null || !await _userManager.CheckPasswordAsync(user, loginUserModel.Password))
             {
                 authModel.Message = "Email or Password is incorrect!";
+                return authModel;
+            }
+            var result = await _signInManager.PasswordSignInAsync(user, loginUserModel.Password, false, false);
+            if (!result.Succeeded)
+            {
+                authModel.Message = "Failed To Login Please Try Again";
                 return authModel;
             }
             var jwtSecurityToken = await CreateJwtToken(user);
@@ -289,6 +297,11 @@ namespace GraduationProject.Identity.Service
                 return Response<bool>.BadRequest("Errors occured", changePasswordResult.Errors);
 
             return Response<bool>.Success(true, "The Password changed successfully");
+        }
+
+        public async Task Logout()
+        {
+            await _signInManager.SignOutAsync();
         }
     }
 }

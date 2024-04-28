@@ -1,4 +1,5 @@
-﻿using GraduationProject.Identity.IService;
+﻿using GraduationProject.Identity.Enum;
+using GraduationProject.Identity.IService;
 using GraduationProject.Service.DataTransferObject.StaffDto;
 using GraduationProject.Service.IService;
 using Microsoft.AspNetCore.Authorization;
@@ -17,7 +18,7 @@ namespace GraduationProject.Api.Controllers
             _StaffService = StaffService;
             _accountService = accountService;
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPost("AddStaff")]
         public async Task<IActionResult> AddStaff(AddStaffDto addStaffDto)
         {
@@ -32,7 +33,7 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter valid Model");
             }
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPost("AssignCourseStaff")]
         public async Task<IActionResult> AddStaffSemester([FromBody] List<AddStaffSemesterDto> addStaffSemesterDto)
         {
@@ -51,7 +52,7 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter Vaild Model");
             }
         }
-        [Authorize(Roles = "Teacher, TeacherAssistant")]
+        [Authorize(Roles = nameof(UserType.Teacher) + "," + nameof(UserType.TeacherAssistant))]
         [HttpGet("CSS")]
         public async Task<IActionResult> GetCourseStaffSemester()
         {
@@ -64,7 +65,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.TeacherAssistant) + "," + nameof(UserType.Teacher))]
         [HttpGet("BasicData")]
         public async Task<IActionResult> GetStaff()
         {

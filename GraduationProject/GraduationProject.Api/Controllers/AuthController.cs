@@ -1,6 +1,5 @@
 ﻿using GraduationProject.Identity.IService;
 using GraduationProject.Identity.Models;
-using GraduationProject.Identity.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +11,6 @@ namespace GraduationProject.Api.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IAccountService _accountService;
-
         public AuthController(IAuthService authService, IAccountService accountService)
         {
             _authService = authService;
@@ -38,7 +36,7 @@ namespace GraduationProject.Api.Controllers
             }
 
             if (!string.IsNullOrEmpty(result.RefreshToken))
-            SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration, requestHost);
+                SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration, requestHost);
 
             return Ok(result);
         }
@@ -80,7 +78,7 @@ namespace GraduationProject.Api.Controllers
 
             return Ok();
         }
-        private void SetRefreshTokenInCookie(string refreshToken, DateTime expires,string domain)
+        private void SetRefreshTokenInCookie(string refreshToken, DateTime expires, string domain)
         {
             var cookieOptions = new CookieOptions
             {
@@ -101,7 +99,7 @@ namespace GraduationProject.Api.Controllers
         {
             string baseURL = $"{Request.Scheme}://{Request.Host}";
 
-            var response = await _authService.ForgotPassword(model,baseURL);
+            var response = await _authService.ForgotPassword(model, baseURL);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -142,6 +140,13 @@ namespace GraduationProject.Api.Controllers
             var response = await _authService.ChangePassword(model, currentUser);
 
             return StatusCode(response.StatusCode, response);
+        }
+        [Authorize]
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _authService.Logout();
+            return Ok("Logout Success..");
         }
     }
 }

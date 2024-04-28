@@ -136,7 +136,7 @@ namespace GraduationProject.Service.Service
                     GovernorateId = addStudentDto.ParentGovernorateId,
                     CityId = addStudentDto.ParentCityId,
                     Street = addStudentDto.ParentStreet,
-                    PostalCode=addStudentDto.PostalCodeOfParent
+                    PostalCode = addStudentDto.PostalCodeOfParent
                 };
 
                 try
@@ -658,7 +658,7 @@ namespace GraduationProject.Service.Service
                     await _unitOfWork.Phones.DeleteRangeAsyn(phones);
 
                 var oldstd = await _unitOfWork.Students.GetByIdAsync(studentId);
-                if (oldstd != null)
+                if (oldstd == null)
                     return Response<bool>.BadRequest("This student doesn't exist");
 
                 await _unitOfWork.Students.Delete(oldstd);
