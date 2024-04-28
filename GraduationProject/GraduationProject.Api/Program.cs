@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+JwtTokenLifetimeManager jwtTokenLifetimeManager = new JwtTokenLifetimeManager();
 
 // Add services to the container.
 
@@ -77,6 +78,10 @@ builder.Services.AddTransient<IControlService, ControlService>();
 builder.Services.AddTransient<ILocationsService, LocationsService>();
 builder.Services.AddTransient(typeof(LoggerHandler<>));
 builder.Services.AddTransient<IExcelHelper, ExcelHelper>();
+builder.Services.AddTransient<IJwtTokenLifetimeManager, JwtTokenLifetimeManager>();
+
+builder.Services.AddSingleton<IJwtTokenLifetimeManager>(jwtTokenLifetimeManager);
+
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
@@ -113,6 +118,7 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
+            LifetimeValidator = jwtTokenLifetimeManager.ValidateTokenLifetime,
             ValidIssuer = builder.Configuration["JWT:Issuer"],
             ValidAudience = builder.Configuration["JWT:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),

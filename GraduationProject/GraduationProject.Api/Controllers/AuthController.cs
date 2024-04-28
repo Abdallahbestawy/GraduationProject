@@ -2,6 +2,8 @@
 using GraduationProject.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 
 namespace GraduationProject.Api.Controllers
 {
@@ -11,10 +13,12 @@ namespace GraduationProject.Api.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IAccountService _accountService;
-        public AuthController(IAuthService authService, IAccountService accountService)
+        private readonly IJwtTokenLifetimeManager _jwtTokenLifetimeManager;
+        public AuthController(IAuthService authService, IAccountService accountService, IJwtTokenLifetimeManager jwtTokenLifetimeManager)
         {
             _authService = authService;
             _accountService = accountService;
+            _jwtTokenLifetimeManager = jwtTokenLifetimeManager;
         }
 
         [HttpPost("Login")]
@@ -141,12 +145,18 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [Authorize]
         [HttpPost("Logout")]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout([FromHeader(Name = "Authorization")] string authorization)
         {
-            await _authService.Logout();
-            return Ok("Logout Success..");
+            if (string.IsNullOrWhiteSpace(authorization)) return Ok();
+            string bearerToken =
+               authorization.Replace("Bearer ", string.Empty, StringComparison.InvariantCultureIgnoreCase);
+
+            _jwtTokenLifetimeManager.SignOut(new JwtSecurityToken(bearerToken));
+
+            return Ok();
         }
     }
 }
