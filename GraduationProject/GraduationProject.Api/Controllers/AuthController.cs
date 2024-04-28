@@ -1,9 +1,9 @@
-﻿using GraduationProject.Identity.IService;
+﻿using GraduationProject.Identity.Enum;
+using GraduationProject.Identity.IService;
 using GraduationProject.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 
 namespace GraduationProject.Api.Controllers
 {
@@ -44,7 +44,7 @@ namespace GraduationProject.Api.Controllers
 
             return Ok(result);
         }
-
+        [Authorize]
         [HttpGet("refreshToken")]
         public async Task<IActionResult> RefreshToken()
         {
@@ -66,7 +66,7 @@ namespace GraduationProject.Api.Controllers
 
             return Ok(result);
         }
-
+        [Authorize]
         [HttpPost("revokeToken")]
         public async Task<IActionResult> RevokeToken([FromBody] RevokeToken revokeToken)
         {
@@ -97,7 +97,7 @@ namespace GraduationProject.Api.Controllers
             Response.Headers.Add("Access-Control-Allow-Credentials", "true");
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
         }
-
+        [Authorize]
         [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
         {
@@ -107,7 +107,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize]
         [HttpGet("ResetPassword")]
         public async Task<IActionResult> ResetPassword([FromQuery] ResetPasswordModel model)
         {
@@ -115,7 +115,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPost("ChangeUserRoles")]
         public async Task<IActionResult> ChangeUserRoles([FromBody] UserRolesDto model)
         {
@@ -123,7 +123,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpGet("GetUserRoles/{userId}")]
         public async Task<IActionResult> GetUserRoles(string userId)
         {
@@ -131,7 +131,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize]
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
         {

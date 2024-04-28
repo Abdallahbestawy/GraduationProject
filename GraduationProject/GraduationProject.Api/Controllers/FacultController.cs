@@ -1,23 +1,34 @@
-﻿using GraduationProject.Service.DataTransferObject.FacultyDto;
+﻿using GraduationProject.Identity.Enum;
+using GraduationProject.Identity.IService;
+using GraduationProject.Service.DataTransferObject.FacultyDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
 {
+    [Authorize(Roles = nameof(UserType.Administration))]
     [Route("api/[controller]")]
     [ApiController]
     public class FacultController : ControllerBase
     {
         private IFacultService _facultService;
-        public FacultController(IFacultService facultService)
+        private readonly IAccountService _accountService;
+        public FacultController(IFacultService facultService, IAccountService accountService)
         {
             _facultService = facultService;
+            accountService = _accountService;
         }
 
         [HttpPost]
         public async Task<IActionResult> AddFacult(FacultyDto facultyDto)
         {
-            var response = await _facultService.AddFacultAsync(facultyDto);
+            var currentUser = await _accountService.GetUser(User);
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+            var response = await _facultService.AddFacultAsync(facultyDto, currentUser.Id);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -25,8 +36,12 @@ namespace GraduationProject.Api.Controllers
         [HttpGet("Faculty")]
         public async Task<IActionResult> GetFaculty()
         {
-            string userId = "3ed1410b-286c-4064-9193-35b792b8aebf";
-            var response = await _facultService.GetFacultByUserIdAsync(userId);
+            var currentUser = await _accountService.GetUser(User);
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+            var response = await _facultService.GetFacultByUserIdAsync(currentUser.Id);
 
             return StatusCode(response.StatusCode, response);
         }

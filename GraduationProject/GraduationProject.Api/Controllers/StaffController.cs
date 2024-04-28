@@ -75,7 +75,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpGet("GetAllStaff")]
         public async Task<IActionResult> GetAllStaff()
         {
@@ -90,7 +90,7 @@ namespace GraduationProject.Api.Controllers
                 return NotFound("There are not Staff");
             }
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpDelete("staffSemester{staffSemesterId:int}")]
         public async Task<IActionResult> DeleteStaffSemester(int staffSemesterId)
         {
@@ -102,7 +102,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpDelete("Delete{Id:int}")]
         public async Task<IActionResult> DeleteStaff(int Id)
         {
@@ -114,7 +114,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateStaff([FromBody] UpdateStaffDto updateStaffDto)
         {
@@ -126,9 +126,9 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpGet("InfoData{staffId:int}")]
-        public async Task<IActionResult> GetStudentInfo(int staffId)
+        public async Task<IActionResult> GetStafftInfo(int staffId)
         {
             var response = await _StaffService.GetStaffInfoByStaffIdAsync(staffId);
 

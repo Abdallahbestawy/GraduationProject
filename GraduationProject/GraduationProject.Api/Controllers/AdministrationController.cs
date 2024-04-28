@@ -1,9 +1,12 @@
-﻿using GraduationProject.Service.DataTransferObject.StaffDto;
+﻿using GraduationProject.Identity.Enum;
+using GraduationProject.Service.DataTransferObject.StaffDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
 {
+    [Authorize(Roles = nameof(UserType.Administration))]
     [Route("api/[controller]")]
     [ApiController]
     public class AdministrationController : ControllerBase

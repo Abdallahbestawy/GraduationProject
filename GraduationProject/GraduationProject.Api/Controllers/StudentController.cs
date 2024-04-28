@@ -113,8 +113,12 @@ namespace GraduationProject.Api.Controllers
         [HttpGet("Result")]
         public async Task<IActionResult> GetResultStudent()
         {
-            string userId = "af88e91d-7241-4149-bbd4-ebb2a30dd247";
-            var respone = await _studentService.GetStudentResultAsync(userId);
+            var currentUser = await _accountService.GetUser(User);
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+            var respone = await _studentService.GetStudentResultAsync(currentUser.Id);
 
             return StatusCode(respone.StatusCode, respone);
         }

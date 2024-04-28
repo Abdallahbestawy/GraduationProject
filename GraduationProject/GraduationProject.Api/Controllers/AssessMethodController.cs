@@ -1,9 +1,12 @@
-﻿using GraduationProject.Service.DataTransferObject.AssessMethodDto;
+﻿using GraduationProject.Identity.Enum;
+using GraduationProject.Service.DataTransferObject.AssessMethodDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
 {
+    [Authorize(Roles = nameof(UserType.Administration))]
     [Route("api/[controller]")]
     [ApiController]
     public class AssessMethodController : ControllerBase
@@ -35,7 +38,7 @@ namespace GraduationProject.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddBand(AssessMethodDto addAssessMethodDto)
+        public async Task<IActionResult> AddAssessMethods(AssessMethodDto addAssessMethodDto)
         {
             var response = await _assessMethodService.AddAssessMethodAsync(addAssessMethodDto);
 

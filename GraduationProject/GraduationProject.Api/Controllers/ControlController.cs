@@ -1,5 +1,7 @@
-﻿using GraduationProject.Service.DataTransferObject.StaffDto;
+﻿using GraduationProject.Identity.Enum;
+using GraduationProject.Service.DataTransferObject.StaffDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
@@ -17,7 +19,7 @@ namespace GraduationProject.Api.Controllers
             _controlService = controlService;
             _studentService = studentService;
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPost("Add")]
         public async Task<IActionResult> AddControlMembers(AddStaffDto addControlMembersDto)
         {
@@ -33,7 +35,7 @@ namespace GraduationProject.Api.Controllers
             }
 
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllControlMember()
         {
@@ -41,7 +43,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.ControlMembers))]
         [HttpGet("GetStudentSemesterAssessMethodsBySpecificCourseControlMembers{courseId:int}")]
         public async Task<IActionResult> GetStudentSemesterAssessMethodsBySpecificCourseControlMembers(int courseId)
         {
@@ -49,7 +51,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.ControlMembers))]
         [HttpPost("RaisingGradesCourse{courseId:int}")]
         public async Task<IActionResult> RaisingGradesCourse(int courseId)
         {
@@ -57,7 +59,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.ControlMembers))]
         [HttpPost("RaisingGradesSemester{semesterId:int}")]
         public async Task<IActionResult> RaisingGradesSemester(int semesterId)
         {
@@ -65,7 +67,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.ControlMembers))]
         [HttpGet("GetAllSemester")]
         public async Task<IActionResult> GetAllSemester()
         {
@@ -76,7 +78,7 @@ namespace GraduationProject.Api.Controllers
             }
             return NotFound("Not Semester Exixt");
         }
-
+        [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.ControlMembers))]
         [HttpGet("GetAllCourse{semesterId:int}")]
         public async Task<IActionResult> GetAllCourseBySemesterId(int semesterId)
         {
@@ -87,7 +89,7 @@ namespace GraduationProject.Api.Controllers
             }
             return NotFound("Not Course in Semester Exixt");
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPost("EndSemester{semesterId:int}")]
         public async Task<IActionResult> EndSemester([FromRoute] int semesterId)
         {
@@ -95,7 +97,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPost("AssignCourses")]
         public async Task<IActionResult> AssignCoursesToStudents()
         {
@@ -103,7 +105,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.ControlMembers))]
         [HttpGet("SA{academyYearId:int}")]
         public async Task<IActionResult> GetAllSemesterActive(int academyYearId)
         {
@@ -111,7 +113,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.ControlMembers))]
         [HttpGet("SSR{semesterId:int},{acedemyYearId:int}")]
         public async Task<IActionResult> GetStudentsSemesterResult(int semesterId, int acedemyYearId)
         {
@@ -119,7 +121,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.ControlMembers))]
         [HttpGet("SISR{studentSemesterId:int}")]
         public async Task<IActionResult> GetStudentInSemesterResul(int studentSemesterId)
         {
@@ -127,7 +129,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.ControlMembers))]
         [HttpGet("SISC{semesterId:int},{acedemyYearId:int},{courseId:int}")]
         public async Task<IActionResult> GetAllStudentInCourseResult(int semesterId, int acedemyYearId, int courseId)
         {

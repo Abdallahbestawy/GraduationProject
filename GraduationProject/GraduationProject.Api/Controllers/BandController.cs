@@ -1,9 +1,12 @@
-﻿using GraduationProject.Service.DataTransferObject.BandDto;
+﻿using GraduationProject.Identity.Enum;
+using GraduationProject.Service.DataTransferObject.BandDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
 {
+    [Authorize(Roles = nameof(UserType.Administration))]
     [Route("api/[controller]")]
     [ApiController]
     public class BandController : ControllerBase
@@ -41,12 +44,11 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
         [HttpPost]
         public async Task<IActionResult> AddBand(BandDto addBandDto)
         {
-            var response = await _bandService.AddBandAsync(addBandDto, User);
 
+            var response = await _bandService.AddBandAsync(addBandDto, User);
             return StatusCode(response.StatusCode, response);
         }
 

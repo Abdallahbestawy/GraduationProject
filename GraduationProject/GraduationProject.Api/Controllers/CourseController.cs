@@ -1,6 +1,7 @@
-﻿using GraduationProject.ResponseHandler.Model;
+﻿using GraduationProject.Identity.Enum;
 using GraduationProject.Service.DataTransferObject.CourseDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
@@ -14,7 +15,7 @@ namespace GraduationProject.Api.Controllers
         {
             _courseService = courseService;
         }
-        
+        [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.Teacher) + "," + nameof(UserType.TeacherAssistant) + "," + nameof(UserType.ControlMembers))]
         [HttpGet("{Id:int}")]
         public async Task<IActionResult> GetCourseById([FromRoute] int Id)
         {
@@ -26,7 +27,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpGet]
         public async Task<IActionResult> GetCourses()
         {
@@ -34,7 +35,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPost("AddCourse")]
         public async Task<IActionResult> AddCourse(CourseDto addCourseDto)
         {
@@ -42,7 +43,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateCourse([FromBody] CourseDto updateCourseDto)
         {
@@ -54,7 +55,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpDelete]
         public async Task<IActionResult> DeleteCourse([FromRoute] int Id)
         {
@@ -62,7 +63,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPost("AddCourseAssessMethod")]
         public async Task<IActionResult> AddCourseAssessMethod(CourseAssessMethodDto addCourseAssessMethodDto)
         {
@@ -70,7 +71,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Teacher) + "," + nameof(UserType.TeacherAssistant))]
         [HttpGet("GetStudentSemesterAssessMethodsBySpecificCourse{courseId:int}")]
         public async Task<IActionResult> GetStudentSemesterAssessMethodsBySpecificCourse(int courseId)
         {
@@ -78,7 +79,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpGet("CoursePrerequisite{courseId:int}")]
         public async Task<IActionResult> GetCoursePrerequisite(int courseId)
         {
@@ -86,7 +87,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Teacher) + "," + nameof(UserType.TeacherAssistant))]
         [HttpPut("EditDegree")]
         public async Task<IActionResult> UpdateCourseStudentsAssessMethod(List<UpdateCourseStudentsAssessMethodDto> updateCourseStudentsAssessMethodDto)
         {
@@ -94,7 +95,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Teacher) + "," + nameof(UserType.TeacherAssistant))]
         [HttpGet("SCInfo{courseId:int}")]
         public async Task<IActionResult> GetStudentCourseInfo(int courseId)
         {
@@ -102,7 +103,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Teacher) + "," + nameof(UserType.TeacherAssistant))]
         [HttpPut("UCInfo")]
         public async Task<IActionResult> UpdateStudentCourseInfo(List<UpdateStudentCourseInfoDto> updateStudentCourseInfoDtos)
         {

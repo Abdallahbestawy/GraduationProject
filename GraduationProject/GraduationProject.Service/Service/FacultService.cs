@@ -19,7 +19,7 @@ namespace GraduationProject.Service.Service
             _mailService = mailService;
         }
 
-        public async Task<Response<int>> AddFacultAsync(FacultyDto facultyDto)
+        public async Task<Response<int>> AddFacultAsync(FacultyDto facultyDto, string userId)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace GraduationProject.Service.Service
                 {
                     Name = facultyDto.Name,
                     Description = facultyDto.Description,
-                    UserId = "3ed1410b-286c-4064-9193-35b792b8aebf"
+                    UserId = userId
                 };
                 await _unitOfWork.Facultys.AddAsync(newFaculty);
                 var result = await _unitOfWork.SaveAsync();
@@ -73,7 +73,7 @@ namespace GraduationProject.Service.Service
                     GetFacultyDtos = facultys,
                 };
 
-                return Response<GetFacultyByUserIdDto>.Success(getFacultyByUserIdDto,"Faculties retrieved successfully")
+                return Response<GetFacultyByUserIdDto>.Success(getFacultyByUserIdDto, "Faculties retrieved successfully")
                     .WithCount(getFacultyByUserIdDto.GetFacultyDtos.Count);
             }
             catch (Exception ex)
@@ -128,7 +128,7 @@ namespace GraduationProject.Service.Service
                     FacultyDepatmentDtos = facultyDepartments
                 };
 
-                return Response<GetFacultyDetailsDto>.Success(facultyDetailsDto,"Faculty's details retrieved successfully").WithCount();
+                return Response<GetFacultyDetailsDto>.Success(facultyDetailsDto, "Faculty's details retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {

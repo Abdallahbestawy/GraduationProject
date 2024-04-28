@@ -1,11 +1,12 @@
-﻿using GraduationProject.Identity.IService;
+﻿using GraduationProject.Identity.Enum;
+using GraduationProject.Identity.IService;
 using GraduationProject.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserType.Administration))]
     [Route("api/[controller]")]
     [ApiController]
     public class RoleController : ControllerBase

@@ -1,9 +1,12 @@
-﻿using GraduationProject.Service.DataTransferObject.LocationsDto;
+﻿using GraduationProject.Identity.Enum;
+using GraduationProject.Service.DataTransferObject.LocationsDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
 {
+    [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.Staff))]
     [Route("api/[controller]")]
     [ApiController]
     public class LocationsController : ControllerBase
