@@ -89,17 +89,18 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<CourseDto>> GetCourseByIdAsync(int CourseId)
+        public async Task<Response<GetCourseByIdDto>> GetCourseByIdAsync(int CourseId)
         {
             try
             {
                 var courseEntity = await _unitOfWork.Courses.GetByIdAsync(CourseId);
 
                 if (courseEntity == null)
-                    return Response<CourseDto>.BadRequest("This course doesn't exist");
+                    return Response<GetCourseByIdDto>.BadRequest("This course doesn't exist");
 
-                CourseDto courseDto = new CourseDto
+                GetCourseByIdDto courseDto = new GetCourseByIdDto
                 {
+                    Id = courseEntity.Id,
                     Name = courseEntity.Name,
                     Code = courseEntity.Code,
                     Description = courseEntity.Description,
@@ -112,8 +113,22 @@ namespace GraduationProject.Service.Service
                     ScientificDegreeId = courseEntity.ScientificDegreeId,
                     DepartmentId = courseEntity.DepartmentId
                 };
+                var coursePrerequisites = await _unitOfWork.CoursePrerequisites.GetEntityByPropertyAsync(c => c.CourseId == courseEntity.Id);
+                if (coursePrerequisites.Any())
+                {
+                    var preCourse = await _unitOfWork.CoursePrerequisites
+                   .FindWithIncludeIEnumerableAsync(
+                       c => c.Course,
+                       c => c.Prerequisite
+                   );
+                    courseDto.CoursePrerequisites = preCourse.Where(c => c.CourseId == courseEntity.Id).Select(pc => new GetCoursePrerequisiteDto
+                    {
+                        CoursePrerequisiteId = pc.Id,
+                        CoursePrerequisiteName = pc.Prerequisite.Name
+                    }).ToList();
+                }
 
-                return Response<CourseDto>.Success(courseDto, "Course retrieved successfully").WithCount();
+                return Response<GetCourseByIdDto>.Success(courseDto, "Course retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {
@@ -125,7 +140,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<CourseDto>.ServerError("Error occured while retrieving course",
+                return Response<GetCourseByIdDto>.ServerError("Error occured while retrieving course",
                     "An unexpected error occurred while retrieving course. Please try again later.");
             }
         }

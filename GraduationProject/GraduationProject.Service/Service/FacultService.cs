@@ -144,6 +144,38 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while retrieving faculty's details. Please try again later.");
             }
         }
+        public async Task<Response<int>> DeleteFacultyAsync(int facultyId)
+        {
+            try
+            {
+                var existingFaculty = await _unitOfWork.Facultys.GetByIdAsync(facultyId);
+
+                if (existingFaculty == null)
+                    return Response<int>.BadRequest("This Faculty doesn't exist");
+
+                await _unitOfWork.Facultys.Delete(existingFaculty);
+                var result = await _unitOfWork.SaveAsync();
+
+                if (result > 0)
+                    return Response<int>.Deleted("Faculty deleted successfully");
+
+                return Response<int>.ServerError("Error occured while deleting Faculty",
+                    "An unexpected error occurred while deleting Faculty. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "FacultService",
+                    MethodName = "DeleteFacultyAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while deleting Faculty",
+                    "An unexpected error occurred while deleting Faculty. Please try again later.");
+            }
+        }
 
     }
 }

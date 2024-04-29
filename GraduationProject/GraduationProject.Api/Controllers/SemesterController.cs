@@ -66,7 +66,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpDelete]
+        [HttpDelete("{Id:int}")]
         public async Task<IActionResult> DeleteSemester(int Id)
         {
             var response = await _semesterService.DeleteSemesterAsync(Id);

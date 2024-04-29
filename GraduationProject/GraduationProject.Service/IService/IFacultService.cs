@@ -9,5 +9,6 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> AddFacultAsync(FacultyDto facultyDto, string userId);
         Task<Response<GetFacultyDetailsDto>> GetFacultyDetailsAsync(int facultyId);
         Task<Response<GetFacultyByUserIdDto>> GetFacultByUserIdAsync(string userId);
+        Task<Response<int>> DeleteFacultyAsync(int facultyId);
     }
 }

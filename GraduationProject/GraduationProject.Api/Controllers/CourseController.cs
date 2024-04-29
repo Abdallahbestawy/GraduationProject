@@ -56,8 +56,8 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
         [Authorize(Roles = nameof(UserType.Administration))]
-        [HttpDelete]
-        public async Task<IActionResult> DeleteCourse([FromRoute] int Id)
+        [HttpDelete("{Id:int}")]
+        public async Task<IActionResult> DeleteCourse(int Id)
         {
             var response = await _courseService.DeleteCourseAsync(Id);
 

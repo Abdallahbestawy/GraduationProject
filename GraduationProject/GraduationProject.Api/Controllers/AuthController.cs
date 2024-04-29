@@ -150,13 +150,14 @@ namespace GraduationProject.Api.Controllers
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout([FromHeader(Name = "Authorization")] string authorization)
         {
-            if (string.IsNullOrWhiteSpace(authorization)) return Ok();
+            if (string.IsNullOrWhiteSpace(authorization))
+                return BadRequest();
             string bearerToken =
                authorization.Replace("Bearer ", string.Empty, StringComparison.InvariantCultureIgnoreCase);
 
             _jwtTokenLifetimeManager.SignOut(new JwtSecurityToken(bearerToken));
 
-            return Ok();
+            return Ok("Logout Successful..");
         }
     }
 }

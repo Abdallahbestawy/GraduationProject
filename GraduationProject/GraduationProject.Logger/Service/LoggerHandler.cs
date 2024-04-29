@@ -13,7 +13,6 @@ namespace GraduationProject.LogHandler.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
-
         public string? UserId { get; set; }
 
         public string? TableName { get; set; }
@@ -30,7 +29,7 @@ namespace GraduationProject.LogHandler.Service
             _mailService = mailService;
         }
 
-        public async Task InsertLog(string? userId,string? tableName,string? recordId,T? oldData,T? newData)
+        public async Task InsertLog(string? userId, string? tableName, string? recordId, T? oldData, T? newData)
         {
             var activityLogModel = new ActivityLogModel<T>
             {

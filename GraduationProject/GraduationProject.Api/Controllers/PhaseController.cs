@@ -65,7 +65,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpDelete]
+        [HttpDelete("{Id:int}")]
         public async Task<IActionResult> DeletePhase([FromRoute] int Id)
         {
             var response = await _phaseService.DeletePhaseAsync(Id);

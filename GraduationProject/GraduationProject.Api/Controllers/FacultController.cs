@@ -17,7 +17,7 @@ namespace GraduationProject.Api.Controllers
         public FacultController(IFacultService facultService, IAccountService accountService)
         {
             _facultService = facultService;
-            accountService = _accountService;
+            _accountService = accountService;
         }
 
         [HttpPost]
@@ -50,6 +50,13 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> GetFacultyDetails(int facultyId)
         {
             var response = await _facultService.GetFacultyDetailsAsync(facultyId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+        [HttpDelete("{Id:int}")]
+        public async Task<IActionResult> DeleteFaculty(int Id)
+        {
+            var response = await _facultService.DeleteFacultyAsync(Id);
 
             return StatusCode(response.StatusCode, response);
         }
