@@ -17,7 +17,7 @@ namespace GraduationProject.Api.Controllers
             _academyYearService = academyYearService;
         }
 
-        [HttpGet("Get{Id:int}")]
+        [HttpGet("Get/{Id:int}")]
         public async Task<IActionResult> GetAcademyYearById([FromRoute] int Id)
         {
             if (Id.Equals(null))
@@ -29,7 +29,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("All{facultId:int}")]
+        [HttpGet("All/{facultId:int}")]
         public async Task<IActionResult> GetAcademyYears(int facultId)
         {
             var response = await _academyYearService.GetAcademyYearAsync(facultId);
@@ -65,7 +65,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("GetCurrent{facultId:int}")]
+        [HttpGet("GetCurrent/{facultId:int}")]
         public async Task<IActionResult> GetCurrentAcademyYear(int facultId)
         {
             var response = await _academyYearService.GetCurrentAcademyYearAsync(facultId);

@@ -29,7 +29,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("All{facultyId:int}")]
+        [HttpGet("All/{facultyId:int}")]
         public async Task<IActionResult> GetAssessMethods(int facultyId)
         {
             var response = await _assessMethodService.GetAssessMethodAsync(facultyId);

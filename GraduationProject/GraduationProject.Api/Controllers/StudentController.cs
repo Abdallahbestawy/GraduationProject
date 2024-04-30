@@ -86,7 +86,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(respone.StatusCode, respone);
         }
         [Authorize(Roles = nameof(UserType.Administration))]
-        [HttpDelete("studentSemesters{studentSemesterId:int}")]
+        [HttpDelete("studentSemesters/{studentSemesterId:int}")]
         public async Task<IActionResult> DeleteStudentSemester(int studentSemesterId)
         {
             if (studentSemesterId == 0 || studentSemesterId == null)
@@ -123,7 +123,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(respone.StatusCode, respone);
         }
         [Authorize(Roles = nameof(UserType.Administration))]
-        [HttpGet("as{semesterId:int}")]
+        [HttpGet("as/{semesterId:int}")]
         public async Task<IActionResult> GetAllStudentsInSemester(int semesterId)
         {
             var respone = await _studentService.GetAllStudentsInSemesterAsync(semesterId);
@@ -131,7 +131,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(respone.StatusCode, respone);
         }
         [Authorize(Roles = nameof(UserType.Administration))]
-        [HttpGet("InfoData{studentId:int}")]
+        [HttpGet("InfoData/{studentId:int}")]
         public async Task<IActionResult> GetStudentInfo(int studentId)
         {
             var response = await _studentService.GetStudentInfoByStudentIdAsync(studentId);

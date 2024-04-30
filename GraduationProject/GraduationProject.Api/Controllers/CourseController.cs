@@ -72,7 +72,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
         [Authorize(Roles = nameof(UserType.Teacher) + "," + nameof(UserType.TeacherAssistant))]
-        [HttpGet("GetStudentSemesterAssessMethodsBySpecificCourse{courseId:int}")]
+        [HttpGet("GetStudentSemesterAssessMethodsBySpecificCourse/{courseId:int}")]
         public async Task<IActionResult> GetStudentSemesterAssessMethodsBySpecificCourse(int courseId)
         {
             var response = await _courseService.GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(courseId, false);
@@ -80,7 +80,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
         [Authorize(Roles = nameof(UserType.Administration))]
-        [HttpGet("CoursePrerequisite{courseId:int}")]
+        [HttpGet("CoursePrerequisite/{courseId:int}")]
         public async Task<IActionResult> GetCoursePrerequisite(int courseId)
         {
             var response = await _courseService.GetCoursePrerequisiteAsync(courseId);
@@ -96,7 +96,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
         [Authorize(Roles = nameof(UserType.Teacher) + "," + nameof(UserType.TeacherAssistant))]
-        [HttpGet("SCInfo{courseId:int}")]
+        [HttpGet("SCInfo/{courseId:int}")]
         public async Task<IActionResult> GetStudentCourseInfo(int courseId)
         {
             var response = await _courseService.GetStudentCourseInfoAsync(courseId);

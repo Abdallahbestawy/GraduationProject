@@ -44,7 +44,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [HttpGet("Get{Id:int}")]
+        [HttpGet("Get/{Id:int}")]
         public async Task<IActionResult> GetDepartmentById([FromRoute] int Id)
         {
             var response = await _departmentService.GetDepartmentByIdAsync(Id);
@@ -54,7 +54,7 @@ namespace GraduationProject.Api.Controllers
             }
             return NotFound("There are not Department");
         }
-        [HttpDelete("Delete{Id:int}")]
+        [HttpDelete("Delete/{Id:int}")]
         public async Task<IActionResult> DeleteDepartment(int Id)
         {
             var response = await _departmentService.DeleteDepartmentAsync(Id);

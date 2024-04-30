@@ -46,7 +46,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("GetFacultyDetails{facultyId:int}")]
+        [HttpGet("GetFacultyDetails/{facultyId:int}")]
         public async Task<IActionResult> GetFacultyDetails(int facultyId)
         {
             var response = await _facultService.GetFacultyDetailsAsync(facultyId);

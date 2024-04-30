@@ -44,7 +44,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
         [Authorize(Roles = nameof(UserType.ControlMembers))]
-        [HttpGet("GetStudentSemesterAssessMethodsBySpecificCourseControlMembers{courseId:int}")]
+        [HttpGet("GetStudentSemesterAssessMethodsBySpecificCourseControlMembers/{courseId:int}")]
         public async Task<IActionResult> GetStudentSemesterAssessMethodsBySpecificCourseControlMembers(int courseId)
         {
             var response = await _courseService.GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(courseId, true);
@@ -52,7 +52,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
         [Authorize(Roles = nameof(UserType.ControlMembers))]
-        [HttpPost("RaisingGradesCourse{courseId:int}")]
+        [HttpPost("RaisingGradesCourse/{courseId:int}")]
         public async Task<IActionResult> RaisingGradesCourse(int courseId)
         {
             var response = await _controlService.RaisingGradesCourseAsync(courseId);
@@ -60,7 +60,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
         [Authorize(Roles = nameof(UserType.ControlMembers))]
-        [HttpPost("RaisingGradesSemester{semesterId:int}")]
+        [HttpPost("RaisingGradesSemester/{semesterId:int}")]
         public async Task<IActionResult> RaisingGradesSemester(int semesterId)
         {
             var response = await _controlService.RaisingGradesSemesterAsync(semesterId);
@@ -79,7 +79,7 @@ namespace GraduationProject.Api.Controllers
             return NotFound("Not Semester Exixt");
         }
         [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.ControlMembers))]
-        [HttpGet("GetAllCourse{semesterId:int}")]
+        [HttpGet("GetAllCourse/{semesterId:int}")]
         public async Task<IActionResult> GetAllCourseBySemesterId(int semesterId)
         {
             var response = await _courseService.GetCourseBySemesterIdAsync(semesterId);
@@ -90,7 +90,7 @@ namespace GraduationProject.Api.Controllers
             return NotFound("Not Course in Semester Exixt");
         }
         [Authorize(Roles = nameof(UserType.Administration))]
-        [HttpPost("EndSemester{semesterId:int}")]
+        [HttpPost("EndSemester/{semesterId:int}")]
         public async Task<IActionResult> EndSemester([FromRoute] int semesterId)
         {
             var response = await _controlService.EndSemesterAsync(semesterId);
@@ -106,7 +106,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
         [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.ControlMembers))]
-        [HttpGet("SA{academyYearId:int}")]
+        [HttpGet("SA/{academyYearId:int}")]
         public async Task<IActionResult> GetAllSemesterActive(int academyYearId)
         {
             var response = await _controlService.GetAllSemesterActiveAsync(academyYearId);
@@ -114,7 +114,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
         [Authorize(Roles = nameof(UserType.ControlMembers))]
-        [HttpGet("SSR{semesterId:int},{acedemyYearId:int}")]
+        [HttpGet("SSR/{semesterId:int}/{acedemyYearId:int}")]
         public async Task<IActionResult> GetStudentsSemesterResult(int semesterId, int acedemyYearId)
         {
             var response = await _controlService.GetStudentsSemesterResultAsync(semesterId, acedemyYearId);
@@ -122,7 +122,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
         [Authorize(Roles = nameof(UserType.ControlMembers))]
-        [HttpGet("SISR{studentSemesterId:int}")]
+        [HttpGet("SISR/{studentSemesterId:int}")]
         public async Task<IActionResult> GetStudentInSemesterResul(int studentSemesterId)
         {
             var response = await _controlService.GetStudentInSemesterResulAsync(studentSemesterId);
@@ -130,7 +130,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
         [Authorize(Roles = nameof(UserType.ControlMembers))]
-        [HttpGet("SISC{semesterId:int},{acedemyYearId:int},{courseId:int}")]
+        [HttpGet("SISC/{semesterId:int}/{acedemyYearId:int}/{courseId:int}")]
         public async Task<IActionResult> GetAllStudentInCourseResult(int semesterId, int acedemyYearId, int courseId)
         {
             var response = await _controlService.GetAllStudentInCourseResultAsync(semesterId, acedemyYearId, courseId);

@@ -38,7 +38,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("GetCountry{Id:int}")]
+        [HttpGet("GetCountry/{Id:int}")]
         public async Task<IActionResult> GetCountryById(int Id)
         {
             var response = await _locationsService.GetCountryByIdAsync(Id);
