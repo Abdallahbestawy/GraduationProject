@@ -44,7 +44,6 @@ namespace GraduationProject.Api.Controllers
 
             return Ok(result);
         }
-        [Authorize]
         [HttpGet("refreshToken")]
         public async Task<IActionResult> RefreshToken()
         {
@@ -131,7 +130,6 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [Authorize]
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
         {
