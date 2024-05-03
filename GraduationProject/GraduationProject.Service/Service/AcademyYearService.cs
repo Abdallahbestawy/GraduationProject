@@ -31,8 +31,8 @@ namespace GraduationProject.Service.Service
         {
             try
             {
-                var oldAcademyYear = await _unitOfWork.AcademyYears.GetEntityByPropertyAsync(c => c.IsCurrent);
-                if (oldAcademyYear != null)
+                var oldAcademyYear = await _unitOfWork.AcademyYears.GetEntityByPropertyAsync(c => c.IsCurrent && c.FacultyId == addAcademyYearDto.FacultyId);
+                if (oldAcademyYear.Any())
                 {
                     var academyYear = oldAcademyYear.FirstOrDefault();
                     academyYear.IsCurrent = false;
