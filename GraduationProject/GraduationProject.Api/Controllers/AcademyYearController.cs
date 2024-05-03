@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
 {
-    [Authorize(Roles = nameof(UserType.Administration))]
+
     [Route("api/[controller]")]
     [ApiController]
     public class AcademyYearController : ControllerBase
@@ -16,7 +16,7 @@ namespace GraduationProject.Api.Controllers
         {
             _academyYearService = academyYearService;
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpGet("Get/{Id:int}")]
         public async Task<IActionResult> GetAcademyYearById([FromRoute] int Id)
         {
@@ -28,7 +28,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpGet("All/{facultId:int}")]
         public async Task<IActionResult> GetAcademyYears(int facultId)
         {
@@ -36,7 +36,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPost("Add")]
         public async Task<IActionResult> AddAcademyYear(AcademyYearDto addAcademyYearDto)
         {
@@ -44,7 +44,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateAcademyYear([FromBody] AcademyYearDto updateAcademyYearDto)
         {
@@ -56,7 +56,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpDelete("Delete/{Id}")]
         public async Task<IActionResult> DeleteAcademyYear([FromRoute] int Id)
         {
@@ -64,7 +64,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpGet("GetCurrent/{facultId:int}")]
         public async Task<IActionResult> GetCurrentAcademyYear(int facultId)
         {
@@ -75,7 +75,7 @@ namespace GraduationProject.Api.Controllers
             }
             return BadRequest("Not Get Current AcademyYear Exist");
         }
-
+        [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.ControlMembers))]
         [HttpGet("N")]
         public async Task<IActionResult> GetAcademyYearName()
         {

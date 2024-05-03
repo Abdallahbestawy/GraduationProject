@@ -31,6 +31,14 @@ namespace GraduationProject.Service.Service
         {
             try
             {
+                var oldAcademyYear = await _unitOfWork.AcademyYears.GetEntityByPropertyAsync(c => c.IsCurrent);
+                if (oldAcademyYear != null)
+                {
+                    var academyYear = oldAcademyYear.FirstOrDefault();
+                    academyYear.IsCurrent = false;
+                    academyYear.End = DateTime.UtcNow;
+                    await _unitOfWork.AcademyYears.Update(academyYear);
+                }
                 AcademyYear newAcademyYear = new AcademyYear
                 {
                     Start = addAcademyYearDto.Start,
