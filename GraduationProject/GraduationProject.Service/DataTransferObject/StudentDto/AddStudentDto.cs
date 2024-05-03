@@ -16,7 +16,7 @@ namespace GraduationProject.Service.DataTransferObject.StudentDto
         [Required, MaxLength(500)]
         public string NameEnglish { get; set; }
 
-        [Required, MaxLength(14)]
+        [Required, MaxLength(14), MinLength(14)]
         [RegularExpression(@"^\d+$", ErrorMessage = "NationalID must be number of 14 digit")]
         public string NationalID { get; set; }
 

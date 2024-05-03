@@ -1,4 +1,5 @@
 ﻿using GraduationProject.Service.DataTransferObject.FilesDto;
+using GraduationProject.Service.DataTransferObject.PhoneDto;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,6 @@ namespace GraduationProject.Service.IService
     {
         ImportedData<T> Import<T>(string filePath) where T : new();
         string SaveFile(IFormFile file);
+        ImportedData<List<PhoneNumberDto>> ImportFromSpecificColumn(string filePath, string colName);
     }
 }

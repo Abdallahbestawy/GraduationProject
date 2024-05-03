@@ -1,19 +1,14 @@
-﻿using GraduationProject.Data.Entity;
+﻿using GraduationProject.Data.Enum;
 using GraduationProject.Service.DataTransferObject.FilesDto;
-using GraduationProject.Service.DataTransferObject.StudentDto;
+using GraduationProject.Service.DataTransferObject.PhoneDto;
 using GraduationProject.Service.IService;
 using GraduationProject.Shared.Attributes;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.VisualBasic;
+using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GraduationProject.Service.Service
 {
@@ -218,9 +213,10 @@ namespace GraduationProject.Service.Service
                 }
                 else if (validationResult.Count > 0)
                 {
+                    var index = currentRow;
                     finalResult.ValidationErrors.Add(new ValidationErrorsModel
                     {
-                        Inedx = ++currentRow,
+                        Inedx = ++index,
                         Errors = validationResult
                     });
                     currentRow++;
@@ -228,6 +224,87 @@ namespace GraduationProject.Service.Service
             }
 
             finalResult.MappedData = listResult;
+            return finalResult;
+        }
+
+        public ImportedData<List<PhoneNumberDto>> ImportFromSpecificColumn(string filePath, string colName)
+        {
+            ImportedData<List<PhoneNumberDto>> finalResult = new ImportedData<List<PhoneNumberDto>>();
+            finalResult.ValidationErrors = new();
+            finalResult.MappedData = new();
+            XSSFWorkbook workbook;
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                workbook = new XSSFWorkbook(stream);
+            }
+
+            var sheet = workbook.GetSheetAt(0);
+
+            var rowHeader = sheet.GetRow(0);
+            var colIndex = -1;
+            foreach (var cell in rowHeader.Cells)
+            {
+                var headerColName = cell.StringCellValue;
+                if (headerColName == colName)
+                {
+                    colIndex = cell.ColumnIndex;
+                    break;
+                }
+            }
+
+            if (colIndex == -1)
+            {
+                throw new Exception($"Column '{colName}' not found in the Excel sheet.");
+            }
+
+            var currentRow = 1;
+            while (currentRow <= sheet.LastRowNum)
+            {
+                var listResult = new List<PhoneNumberDto>();
+                var row = sheet.GetRow(currentRow);
+                if (row == null) break;
+
+                var cell = row.GetCell(colIndex);
+
+                if (cell != null)
+                {
+                    var phoneNumber = typeof(PhoneNumberDto).GetProperty("PhoneNumber");
+                    var type = typeof(PhoneNumberDto).GetProperty("Type");
+
+                    string cellVal = cell.StringCellValue;
+                    string[] phones = cellVal.Split(", ");
+                    foreach (string phone in phones)
+                    {
+                        PhoneNumberDto obj = new PhoneNumberDto();
+                        if (phone.Length == 0) continue;
+
+                        if(phone.Length > 1)
+                        {
+                            var phoneType = phone.Substring(0, 1);
+                            if (phoneType == "P")
+                                type.SetValue(obj, PhoneType.Phone);
+                            else if (phoneType == "M")
+                                type.SetValue(obj, PhoneType.Mobile);
+                            string phoneNum = phone.Substring(1, phone.Length - 1);
+                            phoneNumber.SetValue(obj,phoneNum);
+
+                            var validationResult = Validate(obj);
+                            if (validationResult.Count > 0)
+                            {
+                                var index = currentRow;
+                                finalResult.ValidationErrors.Add(new ValidationErrorsModel
+                                {
+                                    Inedx = ++index,
+                                    Errors = validationResult
+                                });
+                            }
+                        }
+                        listResult.Add(obj);
+                    }
+                }
+                currentRow++;
+                finalResult.MappedData.Add(listResult);
+            }
             return finalResult;
         }
 
