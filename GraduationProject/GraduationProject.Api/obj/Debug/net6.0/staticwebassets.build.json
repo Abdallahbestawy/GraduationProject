@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "goBn0uVmqhB62/67yXYK55hjmOXiH5kewre7RHE8mZQ=",
+  "Hash": "gzdJ9nkbRzZUpLwvt/BThdQmSTYsu61rPbHc7KAgzEY=",
   "Source": "GraduationProject.Api",
   "BasePath": "_content/GraduationProject.Api",
   "Mode": "Default",
@@ -224,6 +224,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\2feae72a-4224-49bf-bcc1-b5d042277082..xlsx"
+    },
+    {
+      "Identity": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Api\\wwwroot\\uploads\\31f6c04b-f088-4bed-9dd5-2311a2e01905..xlsx",
+      "SourceId": "GraduationProject.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Api\\wwwroot\\",
+      "BasePath": "_content/GraduationProject.Api",
+      "RelativePath": "uploads/31f6c04b-f088-4bed-9dd5-2311a2e01905..xlsx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\31f6c04b-f088-4bed-9dd5-2311a2e01905..xlsx"
     },
     {
       "Identity": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Api\\wwwroot\\uploads\\32ed82ec-0c04-439f-adc0-0af0cc65e4e6..xlsx",

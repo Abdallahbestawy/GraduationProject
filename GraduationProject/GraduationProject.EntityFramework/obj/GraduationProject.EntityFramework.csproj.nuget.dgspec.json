@@ -69,6 +69,11 @@
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
+      },
+      "runtimes": {
+        "win-x86": {
+          "#import": []
+        }
       }
     },
     "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj": {
@@ -151,6 +156,11 @@
             }
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x86": {
+          "#import": []
         }
       }
     },
@@ -241,6 +251,11 @@
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
+      },
+      "runtimes": {
+        "win-x86": {
+          "#import": []
+        }
       }
     },
     "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Mails\\GraduationProject.Mails.csproj": {
@@ -315,6 +330,11 @@
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
+      },
+      "runtimes": {
+        "win-x86": {
+          "#import": []
+        }
       }
     },
     "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.ResponseHandler\\GraduationProject.ResponseHandler.csproj": {
@@ -375,6 +395,11 @@
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
+      },
+      "runtimes": {
+        "win-x86": {
+          "#import": []
+        }
       }
     },
     "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Shared\\GraduationProject.Shared.csproj": {
@@ -434,6 +459,11 @@
             }
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x86": {
+          "#import": []
         }
       }
     }
