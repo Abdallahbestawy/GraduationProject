@@ -173,6 +173,9 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Property<int>("FacultyId")
                         .HasColumnType("int");
 
+                    b.Property<int>("GraduateValuerRequired")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -958,6 +961,9 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsGraduate")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("Passing")
                         .HasColumnType("bit");
 
@@ -1288,6 +1294,33 @@ namespace GraduationProject.EntityFramework.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.ToTable("GetStaffInfoByStaffId");
+                });
+
+            modelBuilder.Entity("GraduationProject.Data.Models.GetStudentCourseInfoModel", b =>
+                {
+                    b.Property<string>("CourseCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CourseName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StudentSemesterCourseId")
+                        .HasColumnType("int");
+
+                    b.ToTable("GetStudentCourseInfo");
                 });
 
             modelBuilder.Entity("GraduationProject.Data.Models.GetStudentDetailsByUserIdModel", b =>
@@ -1641,6 +1674,14 @@ namespace GraduationProject.EntityFramework.Migrations
 
             modelBuilder.Entity("GraduationProject.Data.Models.GetStudentsSemesterResultModel", b =>
                 {
+                    b.Property<string>("AcademyYear")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BandName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CourseChar")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1671,6 +1712,10 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     b.Property<int>("NumberOfPoints")
                         .HasColumnType("int");
+
+                    b.Property<string>("SemesterName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SemesterStatus")
                         .IsRequired()

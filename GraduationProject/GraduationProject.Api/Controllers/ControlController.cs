@@ -59,7 +59,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [Authorize(Roles = nameof(UserType.ControlMembers))]
+        //[Authorize(Roles = nameof(UserType.ControlMembers))]
         [HttpPost("RaisingGradesSemester/{semesterId:int}")]
         public async Task<IActionResult> RaisingGradesSemester(int semesterId)
         {
@@ -129,12 +129,19 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [Authorize(Roles = nameof(UserType.ControlMembers))]
-        [HttpGet("SISC/{semesterId:int}/{acedemyYearId:int}/{courseId:int}")]
-        public async Task<IActionResult> GetAllStudentInCourseResult(int semesterId, int acedemyYearId, int courseId)
+        [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.ControlMembers))]
+        [HttpGet("AG")]
+        public async Task<IActionResult> GetAllAcdemyYearGraduates()
         {
-            var response = await _controlService.GetAllStudentInCourseResultAsync(semesterId, acedemyYearId, courseId);
+            var response = await _controlService.GetAllAcdemyYearGraduatesAsync();
 
+            return StatusCode(response.StatusCode, response);
+        }
+        [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.ControlMembers))]
+        [HttpGet("SG/{acedemyYearId:int}")]
+        public async Task<IActionResult> GetGraduateStudentsByAcademyYearId(int acedemyYearId)
+        {
+            var response = await _controlService.GetGraduateStudentsByAcademyYearIdAsync(acedemyYearId);
             return StatusCode(response.StatusCode, response);
         }
 

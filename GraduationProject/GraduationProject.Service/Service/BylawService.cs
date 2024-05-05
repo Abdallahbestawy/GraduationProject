@@ -26,6 +26,7 @@ namespace GraduationProject.Service.Service
             {
                 Name = addBylawDto.Name,
                 Description = addBylawDto.Description,
+                GraduateValuerRequired = addBylawDto.GraduateValuerRequired,
                 Type = addBylawDto.Type,
                 Start = addBylawDto.Start,
                 End = addBylawDto.End,
@@ -99,7 +100,7 @@ namespace GraduationProject.Service.Service
             {
                 await _unitOfWork.EstimatesCourses.AddRangeAsync(estimatesCourses);
                 var result = await _unitOfWork.SaveAsync();
-                if(result >0)
+                if (result > 0)
                     return Response<int>.Created("Bylaw added successfully");
 
                 return Response<int>.ServerError("Error occured while adding Bylaw",
@@ -136,6 +137,7 @@ namespace GraduationProject.Service.Service
                 {
                     Id = entity.Id,
                     Name = entity.Name,
+                    GraduateValuerRequired = entity.GraduateValuerRequired,
                     Description = entity.Description,
                     Start = entity.Start,
                     End = entity.End,
@@ -173,6 +175,7 @@ namespace GraduationProject.Service.Service
                     Id = bylawEntity.Id,
                     Name = bylawEntity.Name,
                     Description = bylawEntity.Description,
+                    GraduateValuerRequired = bylawEntity.GraduateValuerRequired,
                     Type = bylawEntity.Type,
                     Start = bylawEntity.Start,
                     End = bylawEntity.End,
@@ -208,6 +211,7 @@ namespace GraduationProject.Service.Service
                 existingBylaw.Name = updateBylawDto.Name;
                 existingBylaw.Description = updateBylawDto.Description;
                 existingBylaw.Type = updateBylawDto.Type;
+                existingBylaw.GraduateValuerRequired = updateBylawDto.GraduateValuerRequired;
                 existingBylaw.Start = updateBylawDto.Start;
                 existingBylaw.End = updateBylawDto.End;
                 existingBylaw.FacultyId = updateBylawDto.FacultyId;
@@ -273,7 +277,7 @@ namespace GraduationProject.Service.Service
         {
             try
             {
-                var bylawEntities = await _unitOfWork.Bylaws.GetEntityByPropertyAsync(bylaw=>bylaw.FacultyId == facultyId);
+                var bylawEntities = await _unitOfWork.Bylaws.GetEntityByPropertyAsync(bylaw => bylaw.FacultyId == facultyId);
 
                 if (!bylawEntities.Any())
                     return Response<IQueryable<BylawDto>>.NoContent("No Bylaws are exist");
@@ -283,6 +287,7 @@ namespace GraduationProject.Service.Service
                     Id = entity.Id,
                     Name = entity.Name,
                     Description = entity.Description,
+                    GraduateValuerRequired = entity.GraduateValuerRequired,
                     Start = entity.Start,
                     End = entity.End,
                     FacultyId = entity.FacultyId

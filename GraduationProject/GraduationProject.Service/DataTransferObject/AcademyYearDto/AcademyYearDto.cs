@@ -13,6 +13,6 @@ namespace GraduationProject.Service.DataTransferObject.AcademyYearDto
         public int AcademyYearOrder { get; set; }
         public int FacultyId { get; set; }
 
-        public bool IsCurrent { get; set; }
+        public bool IsCurrent { get; set; } = false;
     }
 }

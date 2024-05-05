@@ -1,4 +1,5 @@
 ﻿using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.AcademyYearDto;
 using GraduationProject.Service.DataTransferObject.SemesterDto;
 using GraduationProject.Service.DataTransferObject.StaffDto;
 
@@ -16,5 +17,7 @@ namespace GraduationProject.Service.IService
         Task<Response<GetStudentsSemesterResultDto>> GetStudentsSemesterResultAsync(int semesterId, int acedemyYearId);
         Task<Response<GetStudentInSemesterResultDto>> GetStudentInSemesterResulAsync(int studentSemesterId);
         Task<Response<GetAllStudentInCourseResultDto>> GetAllStudentInCourseResultAsync(int semesterId, int acedemyYearId, int courseId);
+        Task<Response<List<GetAllAcdemyYearGraduatesDto>>> GetAllAcdemyYearGraduatesAsync();
+        Task<Response<GetGraduateStudentsByAcademyYearIdDto>> GetGraduateStudentsByAcademyYearIdAsync(int acedemyYearId);
     }
 }

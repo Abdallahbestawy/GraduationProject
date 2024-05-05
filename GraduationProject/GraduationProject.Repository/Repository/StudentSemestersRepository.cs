@@ -222,11 +222,12 @@ namespace GraduationProject.Repository.Repository
             }
             return null;
         }
-        public async Task<List<StudentSemester>> EndSemesterAsync(int scientificDegreeId)
+        public async Task<(List<StudentSemester>, List<StudentSemester>, bool)> EndSemesterAsync(int scientificDegreeId)
         {
             try
             {
                 List<StudentSemester> listStudentSemesters = new List<StudentSemester>();
+                List<StudentSemester> updatelistStudentSemesters = new List<StudentSemester>();
                 var studentSemestersComplete = await _context.StudentSemesters
                      .Include(d => d.ScientificDegree)
                      .Include(d => d.AcademyYear)
@@ -235,37 +236,71 @@ namespace GraduationProject.Repository.Repository
 
                 if (studentSemestersComplete == null || !studentSemestersComplete.Any())
                 {
-                    return null;
+                    return (null, null, false);
+
                 }
                 var studentSemesters = studentSemestersComplete.Where(s => s.ScientificDegreeId == scientificDegreeId && s.AcademyYear.IsCurrent).ToList();
                 if (studentSemesters == null || !studentSemesters.Any())
                 {
-                    return null;
+                    return (null, null, false);
                 }
                 var studentSemestersOperation = studentSemesters.FirstOrDefault();
                 if (studentSemestersOperation == null)
                 {
-                    return null;
-                }
-                var studentsem = await GetNextScientificDegrees(studentSemestersOperation);
-                if (studentsem == null)
-                {
-                    return null;
+                    return (null, null, false);
                 }
                 var studentSemestersNew = studentSemesters.FirstOrDefault();
                 // check acdimy year
-                int academyYearId;
-                DateTime utcNow = DateTime.UtcNow.Date;
-                bool flag = utcNow >= studentSemestersOperation.AcademyYear.End;
-                if (flag)
+                var academyYear = await _context.AcademyYears.OrderByDescending(o => o.AcademyYearOrder).FirstOrDefaultAsync();
+                int academyYearId = academyYear.Id;
+                var studentsem = await GetNextScientificDegrees(studentSemestersOperation);
+                if (studentsem.Type == 4)
                 {
-                    academyYearId = await AcademyYearOperation(studentSemestersOperation.AcademyYear);
+                    foreach (var std in studentSemesters)
+                    {
+                        StudentSemester updateStudentSemester = new StudentSemester();
+                        StudentSemester newstudentSemester = new StudentSemester();
+                        if (studentsem.Percentage != null)
+                        {
+
+                            if (std.Passing)
+                            {
+                                bool graduate = await IsGraduate(std);
+                                if (graduate)
+                                {
+                                    updateStudentSemester = await UpdateStudentSemester(std);
+                                    updatelistStudentSemesters.Add(updateStudentSemester);
+                                }
+                                else
+                                {
+
+                                }
+                            }
+                            else
+                            {
+                                newstudentSemester = await CreateNewStudentSemester(std, std.ScientificDegreeId, academyYearId);
+                                listStudentSemesters.Add(newstudentSemester);
+                            }
+                        }
+                        else
+                        {
+                            bool graduate = await IsGraduate(std);
+                            if (graduate)
+                            {
+                                updateStudentSemester = await UpdateStudentSemester(std);
+                                updatelistStudentSemesters.Add(updateStudentSemester);
+                            }
+                            else
+                            {
+                                newstudentSemester = await CreateNewStudentSemester(std, std.ScientificDegreeId, academyYearId);
+                                listStudentSemesters.Add(newstudentSemester);
+                            }
+                        }
+
+                    }
+                    return (listStudentSemesters, updatelistStudentSemesters, true);
                 }
-                else
-                {
-                    academyYearId = studentSemestersOperation.AcademyYearId;
-                }
-                if (studentsem.Type == 1)
+                else if (studentsem.Type == 1)
                 {
                     foreach (var std in studentSemesters)
                     {
@@ -348,11 +383,11 @@ namespace GraduationProject.Repository.Repository
                         listStudentSemesters.Add(newstudentSemester);
                     }
                 }
-                return listStudentSemesters;
+                return (listStudentSemesters, null, false);
             }
             catch (Exception ex)
             {
-                return null;
+                return (null, null, false);
             }
         }
         private async Task<StudentSemester> CreateNewStudentSemester(StudentSemester s, int ScientificDegreeId, int academyYearId)
@@ -366,6 +401,47 @@ namespace GraduationProject.Repository.Repository
             };
             return newstudentSemester;
         }
+        private async Task<StudentSemester> UpdateStudentSemester(StudentSemester s)
+        {
+            var updatestudentSemester = new StudentSemester
+            {
+                Id = s.Id,
+                ScientificDegreeId = s.ScientificDegreeId,
+                AcademyYearId = s.AcademyYearId,
+                DepartmentId = s.DepartmentId,
+                StudentId = s.StudentId,
+                Passing = s.Passing,
+                Total = s.Total,
+                TotalCourses = s.TotalCourses,
+                IsGraduate = true
+            };
+            return updatestudentSemester;
+        }
+        private async Task<bool> IsGraduate(StudentSemester s)
+        {
+            var graduateValuerRequired = await _context.Bylaws.Where(d => d.Id == s.ScientificDegree.BylawId).FirstOrDefaultAsync();
+            int Totalearnedpointa = await CalculationTotalearnedpointa(s.StudentId);
+            if (graduateValuerRequired.GraduateValuerRequired == Totalearnedpointa)
+            {
+                return true;
+            }
+            return false;
+        }
+        private async Task<int> CalculationTotalearnedpointa(int studentId)
+        {
+            int totalPoints = 0;
+            var studentSemAll = await _context.StudentSemesters.Where(s => s.StudentId == studentId).ToListAsync();
+            foreach (var std in studentSemAll)
+            {
+                var studentCourse = await _context.StudentSemesterCourses.Include(c => c.Course).Where(s => s.StudentSemesterId == std.Id && s.Passing).ToListAsync();
+                foreach (var po in studentCourse)
+                {
+                    totalPoints += po.Course.NumberOfCreditHours ?? 0;
+                }
+            }
+            return totalPoints;
+        }
+
         private async Task<decimal?> RatioCalculation(int studentId)
         {
             var studentSemester = await _context.StudentSemesters.Where(sd => sd.StudentId == studentId).ToListAsync();
@@ -406,17 +482,22 @@ namespace GraduationProject.Repository.Repository
         {
             int Index = studentSemester.ScientificDegree.Order + 1;
             var studentsem = await _context.ScientificDegrees.Where(s => s.Order == Index && s.ParentId == studentSemester.ScientificDegree.ParentId).FirstOrDefaultAsync();
+            GetScientificDegreesNextModel result = new GetScientificDegreesNextModel();
             if (studentsem == null)
             {
                 var respone = await GetSemesterByParentId(studentSemester.ScientificDegree);
-                return respone ?? null;
+                if (respone == null)
+                {
+                    result.Id = 0;
+                    result.Type = 4;
+                    result.Percentage = studentSemester.ScientificDegree.SuccessPercentageSemester;
+                    return result;
+                }
+                return respone;
             }
-            var result = new GetScientificDegreesNextModel
-            {
-                Id = studentsem.Id,
-                Type = 1,
-                Percentage = studentsem.SuccessPercentageSemester
-            };
+            result.Id = studentsem.Id;
+            result.Type = 1;
+            result.Percentage = studentsem.SuccessPercentageSemester;
             return result;
         }
         private async Task<GetScientificDegreesNextModel?> GetSemesterByParentId(ScientificDegree scientificDegrees)
@@ -426,7 +507,7 @@ namespace GraduationProject.Repository.Repository
             var studentBand = await _context.ScientificDegrees.Where(s => s.Order == Index && s.Type == ScientificDegreeType.Band).FirstOrDefaultAsync();
             if (studentBand == null)
             {
-                var respone = await GetBandByPhaseId(studentBand);
+                var respone = await GetBandByPhaseId(semesterNext);
                 if (respone == null)
                 {
                     return null;
@@ -482,42 +563,6 @@ namespace GraduationProject.Repository.Repository
 
         }
 
-        private async Task<int> AcademyYearOperation(AcademyYear academyYear)
-        {
-            try
-            {
-                if (academyYear == null)
-                {
-                    return -1;
-                }
-                academyYear.IsCurrent = false;
-                DateTime utcNow = DateTime.UtcNow.Date;
-                DateTime utcNowNextYear = utcNow.AddYears(1);
-                var order = academyYear.AcademyYearOrder + 1;
-                AcademyYear newAcademyYear = new AcademyYear
-                {
-                    IsCurrent = true,
-                    AcademyYearOrder = order,
-                    Description = $"the New Acdemy Year{utcNow}",
-                    Start = utcNow,
-                    End = utcNowNextYear,
-                    FacultyId = academyYear.FacultyId,
-                };
-                _context.AcademyYears.Update(academyYear);
-                _context.AcademyYears.Add(newAcademyYear);
-                int result = await _context.SaveChangesAsync();
-                if (result > 0)
-                {
-                    return newAcademyYear.Id;
-                }
-                return -1;
-            }
-            catch (Exception ex)
-            {
-                return -1;
-            }
-        }
-
         public async Task<List<StudentSemester>> GetAllSemesterActiveAsync(int academyYearId)
         {
             try
@@ -528,6 +573,27 @@ namespace GraduationProject.Repository.Repository
                     .ThenInclude(parent => parent.Parent)
                .Where(a => a.AcademyYearId == academyYearId)
                 .GroupBy(d => d.ScientificDegreeId)
+                .Select(g => g.First())
+                .ToListAsync();
+                if (semester == null || !semester.Any())
+                {
+                    return null;
+                }
+                return semester;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public async Task<List<StudentSemester>> GetAllAcdemyYearGraduatesAsync()
+        {
+            try
+            {
+                var semester = await _context.StudentSemesters
+                 .Include(a => a.AcademyYear)
+               .Where(a => a.IsGraduate)
+                .GroupBy(d => d.AcademyYearId)
                 .Select(g => g.First())
                 .ToListAsync();
                 if (semester == null || !semester.Any())

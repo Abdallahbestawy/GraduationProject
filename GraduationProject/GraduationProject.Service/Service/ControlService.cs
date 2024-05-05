@@ -6,6 +6,7 @@ using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
+using GraduationProject.Service.DataTransferObject.AcademyYearDto;
 using GraduationProject.Service.DataTransferObject.SemesterDto;
 using GraduationProject.Service.DataTransferObject.StaffDto;
 using GraduationProject.Service.IService;
@@ -131,12 +132,31 @@ namespace GraduationProject.Service.Service
             try
             {
                 var std = await _unitOfWork.StudentSemesters.EndSemesterAsync(semesterId);
-                if (std == null)
+                if (std.Item1 == null && std.Item2 == null && !std.Item3)
                     return Response<bool>.BadRequest("This semseter doesn't have students");
-                await _unitOfWork.StudentSemesters.AddRangeAsync(std);
-                int result = await _unitOfWork.SaveAsync();
-                if (result > 0)
-                    return Response<bool>.Success(true, "The semeseter ended successfully");
+                if (!std.Item3 && std.Item1 != null)
+                {
+                    await _unitOfWork.StudentSemesters.AddRangeAsync(std.Item1);
+                    int result = await _unitOfWork.SaveAsync();
+                    if (result > 0)
+                        return Response<bool>.Success(true, "The semeseter ended successfully");
+                }
+                else
+                {
+                    if (std.Item1 == null && std.Item2 == null && std.Item3)
+                        return Response<bool>.BadRequest("This semseter doesn't have students");
+                    if (std.Item2 != null)
+                    {
+                        await _unitOfWork.StudentSemesters.UpdateRangeAsync(std.Item2);
+                        if (std.Item1 != null)
+                        {
+                            await _unitOfWork.StudentSemesters.AddRangeAsync(std.Item1);
+                        }
+                        int result = await _unitOfWork.SaveAsync();
+                        if (result > 0)
+                            return Response<bool>.Success(true, "The semeseter ended successfully");
+                    }
+                }
 
                 return Response<bool>.ServerError("Error occured while ending semester",
                      "An unexpected error occurred while ending semester. Please try again later.");
@@ -364,7 +384,7 @@ namespace GraduationProject.Service.Service
                 var getStudentInSemesters = await _unitOfWork.GetStudentsSemesterResultModels.CallStoredProcedureAsync(
                         "EXECUTE SpGetStudentsSemesterResult", pAcedemyYearId, pSemesterId);
 
-                if (getStudentInSemesters == null || !getStudentInSemesters.Any())
+                if (!getStudentInSemesters.Any())
                     return Response<GetStudentsSemesterResultDto>.NoContent("No results are exist");
 
                 GetStudentsSemesterResultDto getStudentsSemesterResultDtos = new GetStudentsSemesterResultDto
@@ -518,6 +538,81 @@ namespace GraduationProject.Service.Service
                 });
                 return Response<GetAllStudentInCourseResultDto>.ServerError("Error occured while retrieving students results",
                      "An unexpected error occurred while retrieving students results. Please try again later.");
+            }
+        }
+
+        public async Task<Response<List<GetAllAcdemyYearGraduatesDto>>> GetAllAcdemyYearGraduatesAsync()
+        {
+            try
+            {
+                var distinctSemesters = await _unitOfWork.StudentSemesters.GetAllAcdemyYearGraduatesAsync();
+                if (distinctSemesters == null)
+                    return Response<List<GetAllAcdemyYearGraduatesDto>>.NoContent("No AcdemyYear Graduates are exist");
+                int number = 0;
+
+                var acdemeyGraduates = distinctSemesters
+                         .Select((se, index) => new GetAllAcdemyYearGraduatesDto
+                         {
+                             AcdemyYearId = se.AcademyYearId,
+                             NumberGraduate = index + 1,
+                             NameGraduate = $"{se.AcademyYear.Start.Year} / {se.AcademyYear.End.Year}"
+                         })
+                         .ToList();
+
+                return Response<List<GetAllAcdemyYearGraduatesDto>>.Success(acdemeyGraduates, "AcdemyYear Graduates are retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ControlService",
+                    MethodName = "GetAllAcdemyYearGraduatesAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetAllAcdemyYearGraduatesDto>>.ServerError("Error occured while retrieving AcdemyYear Graduates",
+                     "An unexpected error occurred while retrieving AcdemyYear Graduates. Please try again later.");
+            }
+        }
+
+        public async Task<Response<GetGraduateStudentsByAcademyYearIdDto>> GetGraduateStudentsByAcademyYearIdAsync(int acedemyYearId)
+        {
+            try
+            {
+                SqlParameter pAcedemyYearId = new SqlParameter("@AcademyYearId", acedemyYearId);
+                var getGraduateStudent = await _unitOfWork.GetGraduateStudentsByAcademyYearIdModels.CallStoredProcedureAsync(
+                        "EXECUTE SpGetGraduateStudentsByAcademyYearId", pAcedemyYearId);
+                if (!getGraduateStudent.Any())
+                {
+                    return Response<GetGraduateStudentsByAcademyYearIdDto>.NoContent("No Graduate Student are exist");
+                }
+                GetGraduateStudentsByAcademyYearIdDto getGraduateStudentsByAcademyYearIdDto = new GetGraduateStudentsByAcademyYearIdDto
+                {
+                    AcademyYearName = getGraduateStudent.FirstOrDefault().AcademyYear,
+                    GraduateStudentDetiels = getGraduateStudent.Select(sd => new GraduateStudentDetielsDto
+                    {
+                        StudentName = sd.StudentName,
+                        StudentCode = sd.StudentCode,
+                        Percentage = sd.PercentageTotal,
+                        Char = sd.CharTotal
+                    }).ToList()
+                };
+                return Response<GetGraduateStudentsByAcademyYearIdDto>.Success(getGraduateStudentsByAcademyYearIdDto, "Graduate Students are retrieved successfully")
+                        .WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ControlService",
+                    MethodName = "GetGraduateStudentsByAcademyYearIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetGraduateStudentsByAcademyYearIdDto>.ServerError("Error occured while retrieving Graduate Students",
+                     "An unexpected error occurred while retrieving Graduate Students. Please try again later.");
             }
         }
     }

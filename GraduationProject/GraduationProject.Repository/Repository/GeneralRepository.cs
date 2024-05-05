@@ -119,5 +119,11 @@ namespace GraduationProject.Repository.Repository
             }
 
         }
+
+        public async Task<T> GetEntityByOrderDescendingAsync(Expression<Func<T, int>> predicate)
+        {
+            var entities = _context.Set<T>().OrderByDescending(predicate).FirstOrDefault();
+            return entities;
+        }
     }
 }

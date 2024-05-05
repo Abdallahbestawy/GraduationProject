@@ -13,6 +13,7 @@ namespace GraduationProject.Data.Entity
         public string Name { get; set; }
 
         public string? Description { get; set; }
+        public int GraduateValuerRequired { get; set; }
 
         public CourseCategory Type { get; set; }
         [DataType(DataType.Date)]

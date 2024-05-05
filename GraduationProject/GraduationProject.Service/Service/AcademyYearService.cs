@@ -31,20 +31,25 @@ namespace GraduationProject.Service.Service
         {
             try
             {
-                var oldAcademyYear = await _unitOfWork.AcademyYears.GetEntityByPropertyAsync(c => c.IsCurrent && c.FacultyId == addAcademyYearDto.FacultyId);
-                if (oldAcademyYear.Any())
+                if (addAcademyYearDto.IsCurrent)
                 {
-                    var academyYear = oldAcademyYear.FirstOrDefault();
-                    academyYear.IsCurrent = false;
-                    academyYear.End = DateTime.UtcNow;
-                    await _unitOfWork.AcademyYears.Update(academyYear);
+                    var oldAcademyYear = await _unitOfWork.AcademyYears.GetEntityByPropertyAsync(c => c.IsCurrent && c.FacultyId == addAcademyYearDto.FacultyId);
+                    if (oldAcademyYear.Any())
+                    {
+                        var academyYear = oldAcademyYear.FirstOrDefault();
+                        academyYear.IsCurrent = false;
+                        academyYear.End = DateTime.UtcNow;
+                        await _unitOfWork.AcademyYears.Update(academyYear);
+                    }
                 }
+                var academyYearOrder = await _unitOfWork.AcademyYears.GetEntityByOrderDescendingAsync(o => o.AcademyYearOrder);
+                int academyYearOrderValue = (academyYearOrder?.AcademyYearOrder + 1) ?? 1;
                 AcademyYear newAcademyYear = new AcademyYear
                 {
                     Start = addAcademyYearDto.Start,
                     End = addAcademyYearDto.End,
                     Description = addAcademyYearDto.Description,
-                    AcademyYearOrder = addAcademyYearDto.AcademyYearOrder,
+                    AcademyYearOrder = academyYearOrderValue,
                     FacultyId = addAcademyYearDto.FacultyId,
                     IsCurrent = addAcademyYearDto.IsCurrent
                 };
@@ -159,13 +164,22 @@ namespace GraduationProject.Service.Service
 
                 if (existingAcademyYear == null)
                     return Response<int>.BadRequest("This Academic year doesn't exist");
-
+                if (updateAcademyYearDto.IsCurrent)
+                {
+                    var academyYearEx = await _unitOfWork.AcademyYears.GetEntityByPropertyAsync(c => c.IsCurrent && c.FacultyId == updateAcademyYearDto.FacultyId);
+                    if (academyYearEx.Any())
+                    {
+                        var academyYear = academyYearEx.FirstOrDefault();
+                        academyYear.IsCurrent = false;
+                        academyYear.End = DateTime.UtcNow;
+                        await _unitOfWork.AcademyYears.Update(academyYear);
+                    }
+                }
                 var oldAcademyYear = new AcademyYear
                 {
                     Start = existingAcademyYear.Start,
                     End = existingAcademyYear.End,
                     Description = existingAcademyYear.Description,
-                    AcademyYearOrder = existingAcademyYear.AcademyYearOrder,
                     FacultyId = existingAcademyYear.FacultyId,
                     IsCurrent = existingAcademyYear.IsCurrent
                 };
@@ -173,7 +187,6 @@ namespace GraduationProject.Service.Service
                 existingAcademyYear.Start = updateAcademyYearDto.Start;
                 existingAcademyYear.End = updateAcademyYearDto.End;
                 existingAcademyYear.Description = updateAcademyYearDto.Description;
-                existingAcademyYear.AcademyYearOrder = updateAcademyYearDto.AcademyYearOrder;
                 existingAcademyYear.FacultyId = updateAcademyYearDto.FacultyId;
                 existingAcademyYear.IsCurrent = updateAcademyYearDto.IsCurrent;
 
@@ -186,7 +199,6 @@ namespace GraduationProject.Service.Service
                     await _logger.UpdateLog(userId, "AcademyYear", existingAcademyYear.Id.ToString(), oldAcademyYear, existingAcademyYear);
                     return Response<int>.Updated("Academic year updated successfully");
                 }
-
                 return Response<int>.ServerError("Error occured while updating Academic year",
                     "An unexpected error occurred while updating Academic year. Please try again later.");
 
