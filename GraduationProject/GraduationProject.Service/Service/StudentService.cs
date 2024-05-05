@@ -1009,12 +1009,22 @@ namespace GraduationProject.Service.Service
                     var filePath = _excelHelper.SaveFile(file);
 
                     var studentsList = _excelHelper.Import<AddStudentDto>(filePath);
+                    var studentsPhonesList = _excelHelper.ImportFromSpecificColumn(filePath, "PhoneNumbers");
 
-                    if (studentsList.ValidationErrors.Count > 0)
-                        return Response<int>.BadRequest("One or more validation errors occured", studentsList.ValidationErrors);
+                    var validationErrors = studentsList.ValidationErrors;
+                    validationErrors.AddRange(studentsPhonesList.ValidationErrors);
+
+                    if (validationErrors.Count > 0)
+                        return Response<int>.BadRequest("One or more validation errors occured", validationErrors);
 
                     if (studentsList.MappedData.Count == 0)
                         return Response<int>.BadRequest("No data in the file to add");
+
+                    foreach (var student in studentsList.MappedData)
+                    {
+                        var stdIndex = studentsList.MappedData.FindIndex(std => std.NationalID == student.NationalID);
+                        student.PhoneNumbers = studentsPhonesList.MappedData[stdIndex];
+                    }
 
                     totalStudents = studentsList.MappedData.Count;
                     foreach (var student in studentsList.MappedData)

@@ -1,19 +1,19 @@
 {
   "version": 2,
-  "dgSpecHash": "EwRVeZwpL9ZioI8RrRIu/kJtsIoKhuUF8sSuAfAWKqG+57keRkih0GmfV/0LJdjxe7ispfyGZtdkVQWK3kbUUw==",
+  "dgSpecHash": "FQzrflyxH4aBPxRYXwptPQflHXjXMPS/2b6iP4xZQF0JGOlY4cg2bQw+6TLTjzNgPR5ZSBZRHhFKtn/7xc2BMg==",
   "success": true,
-  "projectFilePath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Mails\\GraduationProject.Mails.csproj",
+  "projectFilePath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Mails\\GraduationProject.Mails.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\ABDAL\\.nuget\\packages\\bouncycastle.cryptography\\2.3.0\\bouncycastle.cryptography.2.3.0.nupkg.sha512",
-    "C:\\Users\\ABDAL\\.nuget\\packages\\mailkit\\4.4.0\\mailkit.4.4.0.nupkg.sha512",
-    "C:\\Users\\ABDAL\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
-    "C:\\Users\\ABDAL\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
-    "C:\\Users\\ABDAL\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
-    "C:\\Users\\ABDAL\\.nuget\\packages\\mimekit\\4.4.0\\mimekit.4.4.0.nupkg.sha512",
-    "C:\\Users\\ABDAL\\.nuget\\packages\\system.formats.asn1\\8.0.0\\system.formats.asn1.8.0.0.nupkg.sha512",
-    "C:\\Users\\ABDAL\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
-    "C:\\Users\\ABDAL\\.nuget\\packages\\system.security.cryptography.pkcs\\8.0.0\\system.security.cryptography.pkcs.8.0.0.nupkg.sha512",
-    "C:\\Users\\ABDAL\\.nuget\\packages\\system.text.encoding.codepages\\8.0.0\\system.text.encoding.codepages.8.0.0.nupkg.sha512"
+    "C:\\Users\\Mohamed\\.nuget\\packages\\bouncycastle.cryptography\\2.3.0\\bouncycastle.cryptography.2.3.0.nupkg.sha512",
+    "C:\\Users\\Mohamed\\.nuget\\packages\\mailkit\\4.4.0\\mailkit.4.4.0.nupkg.sha512",
+    "C:\\Users\\Mohamed\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\Mohamed\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
+    "C:\\Users\\Mohamed\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "C:\\Users\\Mohamed\\.nuget\\packages\\mimekit\\4.4.0\\mimekit.4.4.0.nupkg.sha512",
+    "C:\\Users\\Mohamed\\.nuget\\packages\\system.formats.asn1\\8.0.0\\system.formats.asn1.8.0.0.nupkg.sha512",
+    "C:\\Users\\Mohamed\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "C:\\Users\\Mohamed\\.nuget\\packages\\system.security.cryptography.pkcs\\8.0.0\\system.security.cryptography.pkcs.8.0.0.nupkg.sha512",
+    "C:\\Users\\Mohamed\\.nuget\\packages\\system.text.encoding.codepages\\8.0.0\\system.text.encoding.codepages.8.0.0.nupkg.sha512"
   ],
   "logs": []
 }

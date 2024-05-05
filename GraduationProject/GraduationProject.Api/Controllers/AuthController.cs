@@ -14,11 +14,13 @@ namespace GraduationProject.Api.Controllers
         private readonly IAuthService _authService;
         private readonly IAccountService _accountService;
         private readonly IJwtTokenLifetimeManager _jwtTokenLifetimeManager;
-        public AuthController(IAuthService authService, IAccountService accountService, IJwtTokenLifetimeManager jwtTokenLifetimeManager)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public AuthController(IAuthService authService, IAccountService accountService, IJwtTokenLifetimeManager jwtTokenLifetimeManager, IHttpContextAccessor httpContextAccessor)
         {
             _authService = authService;
             _accountService = accountService;
             _jwtTokenLifetimeManager = jwtTokenLifetimeManager;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpPost("Login")]
@@ -29,21 +31,26 @@ namespace GraduationProject.Api.Controllers
             if (!result.IsAuthenticated)
                 return BadRequest(result.Message);
 
+            var request = _httpContextAccessor.HttpContext.Request;
+
+            string hostName = request.Host.Host;
+
             //this part gets the host of the request 
-            string? requestHost = HttpContext.Request.Headers["Referer"];
-            if (requestHost == null)
-                requestHost = "localhost";
-            else
-            {
-                Uri uri = new Uri(requestHost);
-                requestHost = uri.Host;
-            }
+            //string? requestHost = HttpContext.Request.Headers["Referer"];
+            //if (requestHost == null)
+            //    requestHost = "localhost";
+            //else
+            //{
+            //    Uri uri = new Uri(requestHost);
+            //    requestHost = uri.Host;
+            //}
 
             if (!string.IsNullOrEmpty(result.RefreshToken))
-                SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration, requestHost);
+                SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration, hostName);
 
             return Ok(result);
         }
+
         [HttpGet("refreshToken")]
         public async Task<IActionResult> RefreshToken()
         {
@@ -54,18 +61,21 @@ namespace GraduationProject.Api.Controllers
             if (!result.IsAuthenticated)
                 return BadRequest(result);
 
-            //this part gets the host of the request 
-            string? requestHost = HttpContext.Request.Headers["Referer"];
-            if (requestHost == null)
-                requestHost = "localhost";
-            Uri uri = new Uri(requestHost);
-            requestHost = uri.Host;
+            var request = _httpContextAccessor.HttpContext.Request;
 
-            SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration, requestHost);
+            string hostName = request.Host.Host;
+
+            //this part gets the host of the request 
+            //string? requestHost = HttpContext.Request.Headers["Referer"];
+            //if (requestHost == null)
+            //    requestHost = "localhost";
+            //Uri uri = new Uri(requestHost);
+            //requestHost = uri.Host;
+
+            SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration, hostName);
 
             return Ok(result);
         }
-        [Authorize]
         [HttpPost("revokeToken")]
         public async Task<IActionResult> RevokeToken([FromBody] RevokeToken revokeToken)
         {
@@ -79,6 +89,7 @@ namespace GraduationProject.Api.Controllers
             if (!result)
                 return BadRequest("Token is invalid!");
 
+            Response.Cookies.Delete("refreshToken");
             return Ok();
         }
         private void SetRefreshTokenInCookie(string refreshToken, DateTime expires, string domain)
@@ -87,7 +98,7 @@ namespace GraduationProject.Api.Controllers
             {
                 Domain = domain,
                 Path = "/",
-                HttpOnly = false,
+                HttpOnly = true,
                 Expires = expires.ToLocalTime(),
                 Secure = true,
                 IsEssential = true,
@@ -154,6 +165,8 @@ namespace GraduationProject.Api.Controllers
                authorization.Replace("Bearer ", string.Empty, StringComparison.InvariantCultureIgnoreCase);
 
             _jwtTokenLifetimeManager.SignOut(new JwtSecurityToken(bearerToken));
+
+            Response.Cookies.Delete("refreshToken");
 
             return Ok("Logout Successful..");
         }
