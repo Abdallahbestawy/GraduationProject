@@ -65,13 +65,30 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [Authorize(Roles = nameof(UserType.TeacherAssistant) + "," + nameof(UserType.Teacher))]
+        [Authorize(Roles = nameof(UserType.Administration))]
+        [HttpGet("CSSA/{staffId:int}")]
+        public async Task<IActionResult> GetCourseStaffSemesterAdministration(int staffId)
+        {
+            if (staffId == 0 || staffId == null)
+            {
+                return BadRequest("Please Enter Valid StaffId");
+            }
+
+            var response = await _StaffService.GetCourseStaffSemesterAdministrationAsync(staffId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+        [Authorize(Roles = nameof(UserType.TeacherAssistant) + "," + nameof(UserType.Teacher) + "," + nameof(UserType.Administration) + "," + nameof(UserType.Staff) + "," + nameof(UserType.ControlMembers))]
         [HttpGet("BasicData")]
         public async Task<IActionResult> GetStaff()
         {
-            string userId = "63d3ab54-6da1-429d-b8f7-7f9e56fa75fc";
+            var currentUser = await _accountService.GetUser(User);
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
 
-            var response = await _StaffService.GetStaffByUserIdAsync(userId);
+            var response = await _StaffService.GetStaffByUserIdAsync(currentUser.Id);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -96,7 +113,7 @@ namespace GraduationProject.Api.Controllers
         {
             if (staffSemesterId == 0 || staffSemesterId == null)
             {
-                return BadRequest("please enter valid staffSemesterId");
+                return BadRequest("Please Enter Valid StaffSemesterId");
             }
             var respone = await _StaffService.DeleteStaffSemesterAsync(staffSemesterId);
 

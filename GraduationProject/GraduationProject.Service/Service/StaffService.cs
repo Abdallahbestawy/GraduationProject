@@ -387,7 +387,7 @@ namespace GraduationProject.Service.Service
                 await _unitOfWork.StaffSemesters.Delete(oldStaffSemester);
                 int result = await _unitOfWork.SaveAsync();
                 if (result > 0)
-                    return Response<bool>.Deleted("This user deleted successfully");
+                    return Response<bool>.Deleted("This Course Deleted Successfully");
 
                 return Response<bool>.ServerError("Error occured while deleting user",
                     "An unexpected error occurred while deleting user. Please try again later.");
@@ -603,6 +603,56 @@ namespace GraduationProject.Service.Service
                 });
                 return Response<GetStaffInfoByStaffIdDto>.ServerError("Error occured while retrieving staff's info",
                     "An unexpected error occurred while retrieving staff's info. Please try again later.");
+            }
+        }
+
+        public async Task<Response<GetCourseStaffSemesterDto>> GetCourseStaffSemesterAdministrationAsync(int staffId)
+        {
+            try
+            {
+                var staff = await _unitOfWork.Staffs.GetEntityByPropertyAsync(u => u.Id == staffId);
+                if (staff == null || !staff.Any())
+                {
+                    return Response<GetCourseStaffSemesterDto>.BadRequest("This staff doesn't exist");
+                }
+                var staffSemesters = await _unitOfWork.StaffSemesters
+                   .FindWithIncludeIQueryableAsync(d => d.AcademyYear, c => c.Course);
+                if (staffSemesters == null)
+                    return Response<GetCourseStaffSemesterDto>.BadRequest("This staff doesn't exist");
+
+                var results = staffSemesters
+                    .Where(dc => dc.AcademyYear.IsCurrent && dc.StaffId == staff.FirstOrDefault().Id)
+                    .ToList();
+
+                if (!results.Any())
+                    return Response<GetCourseStaffSemesterDto>.NoContent("This staff doesn't have courses");
+
+                var staffSemesterDto = new GetCourseStaffSemesterDto
+                {
+                    StaffId = results.First().StaffId,
+                    AcademyYearId = results.First().AcademyYearId,
+                    CourseDoctorDtos = results.Select(result => new CourseDoctorDto
+                    {
+                        CourseId = result.Id,
+                        CourseName = result.Course.Name
+                    }).ToList()
+                };
+
+                return Response<GetCourseStaffSemesterDto>.Success(staffSemesterDto, "Staff's courses retrieved successfully")
+                    .WithCount(staffSemesterDto.CourseDoctorDtos.Count());
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StaffService",
+                    MethodName = "GetCourseStaffSemesterAdministrationAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetCourseStaffSemesterDto>.ServerError("Error occured while retrieving staff's courses",
+                     "An unexpected error occurred while retrieving staff's courses. Please try again later.");
             }
         }
     }
