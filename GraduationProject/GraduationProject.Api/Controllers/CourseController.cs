@@ -111,5 +111,13 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        [Authorize(Roles = nameof(UserType.Administration))]
+        [HttpDelete("CoursePrerequisites/{Id:int}")]
+        public async Task<IActionResult> DeleteCoursePrerequisites(int Id)
+        {
+            var response = await _courseService.DeleteCoursePrerequisitesAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

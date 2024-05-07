@@ -163,6 +163,7 @@ namespace GraduationProject.Service.Service
                     Type = entity.Type,
                     Category = entity.Category,
                     MaxDegree = entity.MaxDegree,
+                    MinDegree = entity.MinDegree,
                     NumberOfCreditHours = entity.NumberOfCreditHours,
                     NumberOfPoints = entity.NumberOfPoints,
                     Prerequisite = entity.Prerequisite,
@@ -616,6 +617,39 @@ namespace GraduationProject.Service.Service
                 });
                 return Response<bool>.ServerError("Error occured while updating student course info",
                     "An unexpected error occurred while updating student course info. Please try again later.");
+            }
+        }
+
+        public async Task<Response<int>> DeleteCoursePrerequisitesAsync(int coursePrerequisitesId)
+        {
+            try
+            {
+                var existingCourse = await _unitOfWork.CoursePrerequisites.GetByIdAsync(coursePrerequisitesId);
+
+                if (existingCourse == null)
+                    return Response<int>.BadRequest("This Course Prerequisites doesn't exist");
+
+                await _unitOfWork.CoursePrerequisites.Delete(existingCourse);
+                var result = await _unitOfWork.SaveAsync();
+
+                if (result > 0)
+                    return Response<int>.Deleted("Course Prerequisites deleted successfully");
+
+                return Response<int>.ServerError("Error occured while deleting Course Prerequisites",
+                        "An unexpected error occurred while deleting Course Prerequisites. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "CourseService",
+                    MethodName = "DeleteCoursePrerequisitesAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while deleting Course Prerequisites",
+                        "An unexpected error occurred while deleting Course Prerequisites. Please try again later.");
             }
         }
     }
