@@ -31,11 +31,11 @@ namespace GraduationProject.Api.Controllers
             }
 
         }
-        [HttpGet("GetAllTeacher")]
-        public async Task<IActionResult> GetAllTeacher()
+        [HttpGet("GetAllTeacher/{FacultyId:int}")]
+        public async Task<IActionResult> GetAllTeacher(int FacultyId)
         {
 
-            var response = await _teacherService.GetAllTeachersAsync();
+            var response = await _teacherService.GetAllTeachersAsync(FacultyId);
 
             return StatusCode(response.StatusCode, response);
         }

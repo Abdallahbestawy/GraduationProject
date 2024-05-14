@@ -84,8 +84,7 @@ namespace GraduationProject.Service.Service
         {
             try
             {
-                var academyYearEntities = await _unitOfWork.AcademyYears.FindWithIncludeIEnumerableAsync(d => d.Facultys);
-
+                var academyYearEntities = await _unitOfWork.AcademyYears.GetEntityByPropertyWithIncludeAsync(d => d.FacultyId == facultId, f => f.Facultys);
                 if (academyYearEntities == null || !academyYearEntities.Any())
                     return Response<IQueryable<GetAcademyYearDto>>.NoContent("No Academic years are exist");
                 var academyYearEntitiesFilter = academyYearEntities.Where(f => f.FacultyId == facultId).ToList();
@@ -267,11 +266,11 @@ namespace GraduationProject.Service.Service
         {
             try
             {
-                var result = await _unitOfWork.AcademyYears.FindWithIncludeIEnumerableAsync(d => d.Facultys);
+                var result = await _unitOfWork.AcademyYears.GetEntityByPropertyWithIncludeAsync(f => f.FacultyId == facultId && f.IsCurrent, d => d.Facultys);
                 if (result == null || !result.Any())
                     return Response<GetAcademyYearDto>.BadRequest("This fuculty doesn't have academic years");
 
-                var firstResult = result.Where(f => f.FacultyId == facultId && f.IsCurrent).FirstOrDefault();
+                var firstResult = result.FirstOrDefault();
                 if (firstResult == null)
                     return Response<GetAcademyYearDto>.NoContent("there is no current academic year");
 
@@ -302,12 +301,12 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<List<GetAcademyYearNameDto>>> GetAcademyYearNameAsync()
+        public async Task<Response<List<GetAcademyYearNameDto>>> GetAcademyYearNameAsync(int facultId)
         {
             try
             {
-                var academyYearName = await _unitOfWork.AcademyYears.GetAll();
-                if (academyYearName == null)
+                var academyYearName = await _unitOfWork.AcademyYears.GetEntityByPropertyAsync(f => f.FacultyId == facultId);
+                if (!academyYearName.Any())
                     return Response<List<GetAcademyYearNameDto>>.NoContent("No Academic years are exist");
 
                 List<GetAcademyYearNameDto> getAcademyYearNameDto = academyYearName

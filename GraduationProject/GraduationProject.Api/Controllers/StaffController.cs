@@ -92,12 +92,12 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [Authorize(Roles = nameof(UserType.Administration))]
-        [HttpGet("GetAllStaff")]
-        public async Task<IActionResult> GetAllStaff()
+        //[Authorize(Roles = nameof(UserType.Administration))]
+        [HttpGet("GetAllStaff/{FacultyId:int}")]
+        public async Task<IActionResult> GetAllStaff(int FacultyId)
         {
 
-            var response = await _StaffService.GetAllStaffsAsync();
+            var response = await _StaffService.GetAllStaffsAsync(FacultyId);
             if (response != null)
             {
                 return Ok(response);

@@ -53,7 +53,7 @@ namespace GraduationProject.Identity.Service
             authModel.IsAuthenticated = true;
             authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
             authModel.Email = user.Email;
-            authModel.Username = user.UserName;
+            authModel.Username = user.NameEnglish;
             authModel.ExpiresOn = jwtSecurityToken.ValidTo;
             authModel.Roles = rolesList.ToList();
             if (user.RefreshTokens.Any(t => t.IsActive))

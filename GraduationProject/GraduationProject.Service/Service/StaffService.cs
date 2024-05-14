@@ -66,6 +66,7 @@ namespace GraduationProject.Service.Service
                 GovernorateId = addSaffDto.GovernorateId,
                 CityId = addSaffDto.CityId,
                 Street = addSaffDto.Street,
+                FacultyId = addSaffDto.FacultyId,
                 PostalCode = addSaffDto.PostalCode
             };
 
@@ -294,6 +295,7 @@ namespace GraduationProject.Service.Service
                         Gender = Enum.GetName(typeof(Gender), getStaff.FirstOrDefault()?.Gender),
                         Nationality = Enum.GetName(typeof(Nationality), getStaff.FirstOrDefault()?.Nationality),
                         PlaceOfBirth = getStaff.FirstOrDefault()?.PlaceOfBirth,
+                        FacultyName = getStaff.FirstOrDefault().FacultysName,
                         PostalCode = getStaff.FirstOrDefault()?.PostalCode,
                         ReleasePlace = getStaff.FirstOrDefault()?.ReleasePlace,
                         Religion = Enum.GetName(typeof(Religion), getStaff.FirstOrDefault()?.Religion),
@@ -337,13 +339,14 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<List<GetAllStaffsDto>>> GetAllStaffsAsync()
+        public async Task<Response<List<GetAllStaffsDto>>> GetAllStaffsAsync(int FacultyId)
         {
             try
             {
                 var userType = UserType.Staff;
                 SqlParameter pUserType = new SqlParameter("@UserType", userType);
-                var staffs = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
+                SqlParameter pFacultyId = new SqlParameter("@FacultyId", FacultyId);
+                var staffs = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType, pFacultyId);
                 if (!staffs.Any())
                     return Response<List<GetAllStaffsDto>>.NoContent("No staffs are exist");
 
@@ -432,6 +435,7 @@ namespace GraduationProject.Service.Service
                 existingStaff.Nationality = updateStaffDto.Nationality;
                 existingStaff.Religion = updateStaffDto.Religion;
                 existingStaff.DateOfBirth = updateStaffDto.DateOfBirth;
+                existingStaff.FacultyId = updateStaffDto.FacultyId;
                 existingStaff.CountryId = updateStaffDto.CountryId;
                 existingStaff.GovernorateId = updateStaffDto.GovernorateId;
                 existingStaff.CityId = updateStaffDto.CityId;

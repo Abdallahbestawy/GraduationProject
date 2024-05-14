@@ -1,5 +1,4 @@
 ﻿using GraduationProject.ResponseHandler.Model;
-using GraduationProject.Service.DataTransferObject.FilesDto;
 using GraduationProject.Service.DataTransferObject.ScientificDegreeDto;
 using GraduationProject.Service.DataTransferObject.StudentDto;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +11,7 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> AddStudentAsync(AddStudentDto addStudentDto);
         Task<Response<int>> AddStudentSemesterAsync(AddStudentSemesterDto addStudentSemesterDto);
         Task<Response<GetStudentDetailsByUserIdDto>> GetStudentByUserId(string userId);
-        Task<Response<List<GetAllStudentsDto>>> GetAllStudentsAsync();
+        Task<Response<List<GetAllStudentsDto>>> GetAllStudentsAsync(int facultyId);
         Task<Response<int>> AssignCoursesToStudents();
         Task<Response<bool>> DeleteStudentAsync(int studentId);
         Task<Response<bool>> DeleteStudentSemesterAsync(int studentSemesterId);

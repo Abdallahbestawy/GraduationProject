@@ -10,9 +10,10 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> UpdateScientificDegreeAsync(ScientificDegreeDto updateScientificDegreeDto);
         Task<Response<int>> DeleteScientificDegreeAsync(int ScientificDegreeId);
         Task<Response<ScientificDegreeDto>> GetScientificDegreeByIdAsync(int ScientificDegreeId);
-        Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeAsync();
+        Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeAsync(int bylawId);
+        Task<Response<List<GetSemesterNameDto>>> GetSemsetersByfacultIdAsyncByfacultIdAsync(int facultId);
         Task<Response<IQueryable<ScientificDegreeDto>>> GetScientificDegreeByBylawIdForSpecificTypeAsync(int bylawId, int type);
         Task<Response<GetDetailsByParentIdDto>> GetDetailsByParentIdAsync(int ParentId);
-        Task<Response<List<GetSemesterNameDto>>> GetSemsetersByBylawIdAsync();
+        Task<Response<List<GetSemesterNameDto>>> GetSemsetersByBylawIdAsync(int bylawId);
     }
 }

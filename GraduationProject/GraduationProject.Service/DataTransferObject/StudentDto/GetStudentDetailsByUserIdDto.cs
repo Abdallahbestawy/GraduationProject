@@ -16,6 +16,7 @@ namespace GraduationProject.Service.DataTransferObject.StudentDto
         public string StudentCode { get; set; }
         public string Gender { get; set; }
         public string Nationality { get; set; }
+        public string FacultyName { get; set; }
         public string PlaceOfBirth { get; set; }
         public string? PostalCode { get; set; }
         public string? ReleasePlace { get; set; }

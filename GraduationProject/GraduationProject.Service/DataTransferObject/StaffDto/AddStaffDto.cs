@@ -31,6 +31,7 @@ namespace GraduationProject.Service.DataTransferObject.StaffDto
         public Nationality Nationality { get; set; }
 
         public Religion Religion { get; set; }
+        public int FacultyId { get; set; }
 
         public string? ReleasePlace { get; set; }
         [DataType(DataType.Date)]

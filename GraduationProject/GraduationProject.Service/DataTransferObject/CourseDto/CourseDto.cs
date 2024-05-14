@@ -25,6 +25,7 @@ namespace GraduationProject.Service.DataTransferObject.CourseDto
         public int? NumberOfCreditHours { get; set; }
 
         public bool Prerequisite { get; set; }
+        public int FacultyId { get; set; }
 
         public int ScientificDegreeId { get; set; }
 

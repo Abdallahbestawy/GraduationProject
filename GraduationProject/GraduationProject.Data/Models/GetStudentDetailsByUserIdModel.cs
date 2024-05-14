@@ -33,6 +33,7 @@ namespace GraduationProject.Data.Models
         public DateTime? QualificationYear { get; set; }
         public int? SeatNumber { get; set; }
         public decimal? Degree { get; set; }
+        public string FacultysName { get; set; }
         public string? StudentPhoneNumber { get; set; }
         public PhoneType? PhoneType { get; set; }
         public int? PhoneId { get; set; }

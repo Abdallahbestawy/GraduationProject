@@ -72,6 +72,7 @@ namespace GraduationProject.Service.Service
                     CityId = addStudentDto.CityId,
                     Street = addStudentDto.Street,
                     PostalCode = addStudentDto.PostalCode,
+                    FacultyId = addStudentDto.FacultyId,
                     Code = addStudentDto.StudentCode
                 };
 
@@ -557,6 +558,7 @@ namespace GraduationProject.Service.Service
                     DateOfBirth = getStudent.FirstOrDefault()?.DateOfBirth,
                     Gender = Enum.GetName(typeof(Gender), getStudent.FirstOrDefault()?.Gender),
                     Nationality = Enum.GetName(typeof(Nationality), getStudent.FirstOrDefault()?.Nationality),
+                    FacultyName = getStudent.FirstOrDefault().FacultysName,
                     PlaceOfBirth = getStudent.FirstOrDefault()?.PlaceOfBirth,
                     PostalCode = getStudent.FirstOrDefault()?.PostalCode,
                     ReleasePlace = getStudent.FirstOrDefault()?.ReleasePlace,
@@ -601,11 +603,12 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<List<GetAllStudentsDto>>> GetAllStudentsAsync()
+        public async Task<Response<List<GetAllStudentsDto>>> GetAllStudentsAsync(int facultyId)
         {
             try
             {
-                var students = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStudents");
+                SqlParameter pFacultyId = new SqlParameter("@FacultyId", facultyId);
+                var students = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStudents", pFacultyId);
                 if (!students.Any())
                     return Response<List<GetAllStudentsDto>>.BadRequest("This Student doesn't exists");
 
@@ -752,6 +755,7 @@ namespace GraduationProject.Service.Service
                 existingStudent.Gender = updateStudentDto.Gender;
                 existingStudent.Nationality = updateStudentDto.Nationality;
                 existingStudent.Religion = updateStudentDto.Religion;
+                existingStudent.FacultyId = updateStudentDto.FacultyId;
                 existingStudent.DateOfBirth = updateStudentDto.DateOfBirth;
                 existingStudent.CountryId = updateStudentDto.CountryId;
                 existingStudent.GovernorateId = updateStudentDto.GovernorateId;
@@ -953,6 +957,7 @@ namespace GraduationProject.Service.Service
                     PostalCode = getStudent.FirstOrDefault()?.PostalCode,
                     ReleasePlace = getStudent.FirstOrDefault()?.ReleasePlace,
                     Religion = getStudent.FirstOrDefault().Religion,
+                    FacultyId = getStudent.FirstOrDefault().FacultyId,
                     ParentName = getStudent.FirstOrDefault()?.ParentName,
                     ParentJob = getStudent.FirstOrDefault()?.ParentJob,
                     PostalCodeOfParent = getStudent.FirstOrDefault()?.PostalCodeOfParent,

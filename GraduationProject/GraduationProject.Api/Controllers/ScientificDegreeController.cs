@@ -1,10 +1,12 @@
-﻿using GraduationProject.Service.DataTransferObject.ScientificDegreeDto;
+﻿using GraduationProject.Identity.Enum;
+using GraduationProject.Service.DataTransferObject.ScientificDegreeDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
 {
-    //[Authorize(Roles = nameof(UserType.Administration))]
+    [Authorize(Roles = nameof(UserType.Administration))]
     [Route("api/[controller]")]
     [ApiController]
     public class ScientificDegreeController : ControllerBase
@@ -27,10 +29,17 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetScientificDegrees()
+        [HttpGet("All/{bylawId:int}")]
+        public async Task<IActionResult> GetScientificDegrees(int bylawId)
         {
-            var response = await _scientificDegreeService.GetScientificDegreeAsync();
+            var response = await _scientificDegreeService.GetScientificDegreeAsync(bylawId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+        [HttpGet("GetAllSemestersFd/{facultId:int}")]
+        public async Task<IActionResult> GetScientificDegreesByfacultId(int facultId)
+        {
+            var response = await _scientificDegreeService.GetSemsetersByfacultIdAsyncByfacultIdAsync(facultId);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -43,10 +52,10 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("GetAllSemesters")]
-        public async Task<IActionResult> GetAllSemesters()
+        [HttpGet("GetAllSemesters/{bylawId:int}")]
+        public async Task<IActionResult> GetAllSemesters(int bylawId)
         {
-            var response = await _scientificDegreeService.GetSemsetersByBylawIdAsync();
+            var response = await _scientificDegreeService.GetSemsetersByBylawIdAsync(bylawId);
 
             return StatusCode(response.StatusCode, response);
         }

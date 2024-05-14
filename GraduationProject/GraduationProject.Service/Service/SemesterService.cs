@@ -198,15 +198,12 @@ namespace GraduationProject.Service.Service
         {
             try
             {
-                var semesterEntities = await _unitOfWork.Semesters.FindWithIncludeIEnumerableAsync(f => f.Faculty);
+                var semesterEntities = await _unitOfWork.Semesters.GetEntityByPropertyWithIncludeAsync(f => f.FacultyId == facultyId, d => d.Faculty);
 
-                if (semesterEntities == null || !semesterEntities.Any())
-                    return Response<IQueryable<GetSemesterDto>>.NoContent("No semesters are exist");
-                var semesterEntitiesFilter = semesterEntities.Where(f => f.FacultyId == facultyId).ToList();
-                if (semesterEntitiesFilter == null || !semesterEntitiesFilter.Any())
+                if (!semesterEntities.Any())
                     return Response<IQueryable<GetSemesterDto>>.NoContent("No semesters are exist");
 
-                var semesterDtos = semesterEntitiesFilter.Select(entity => new GetSemesterDto
+                var semesterDtos = semesterEntities.Select(entity => new GetSemesterDto
                 {
                     Id = entity.Id,
                     Name = entity.Name,

@@ -33,7 +33,6 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> GetAcademyYears(int facultId)
         {
             var response = await _academyYearService.GetAcademyYearAsync(facultId);
-
             return StatusCode(response.StatusCode, response);
         }
         [Authorize(Roles = nameof(UserType.Administration))]
@@ -76,10 +75,10 @@ namespace GraduationProject.Api.Controllers
             return BadRequest("Not Get Current AcademyYear Exist");
         }
         [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.ControlMembers))]
-        [HttpGet("N")]
-        public async Task<IActionResult> GetAcademyYearName()
+        [HttpGet("N/{facultId:int}")]
+        public async Task<IActionResult> GetAcademyYearName(int facultId)
         {
-            var response = await _academyYearService.GetAcademyYearNameAsync();
+            var response = await _academyYearService.GetAcademyYearNameAsync(facultId);
 
             return StatusCode(response.StatusCode, response);
         }

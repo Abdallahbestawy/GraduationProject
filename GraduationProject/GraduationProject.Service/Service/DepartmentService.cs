@@ -58,11 +58,11 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<List<GetDepartmentDto>>> GetAllDepartmentsAsync()
+        public async Task<Response<List<GetDepartmentDto>>> GetAllDepartmentsAsync(int facultId)
         {
             try
             {
-                var departments = await _unitOfWork.Departments.GetAll();
+                var departments = await _unitOfWork.Departments.GetEntityByPropertyAsync(f => f.FacultyId == facultId);
 
                 if (departments == null || !departments.Any())
                     return Response<List<GetDepartmentDto>>.NoContent("No departments are exist");
@@ -76,7 +76,7 @@ namespace GraduationProject.Service.Service
                     .ToList();
                 return Response<List<GetDepartmentDto>>.Success(result, "Departments are retrieved successfully").WithCount();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
@@ -116,7 +116,7 @@ namespace GraduationProject.Service.Service
                     FacultyName = department.Faculty.Name,
                 };
 
-                return Response<GetDeDepartmentByIdDto>.Success(departmentDto,"Department retrieved successfully").WithCount();
+                return Response<GetDeDepartmentByIdDto>.Success(departmentDto, "Department retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {
@@ -155,7 +155,7 @@ namespace GraduationProject.Service.Service
                 return Response<bool>.ServerError("Error occured while updating department",
                     "An unexpected error occurred while updating department. Please try again later.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
@@ -188,7 +188,7 @@ namespace GraduationProject.Service.Service
                 return Response<bool>.ServerError("Error occured while deleting department",
                     "An unexpected error occurred while deleting department. Please try again later.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {

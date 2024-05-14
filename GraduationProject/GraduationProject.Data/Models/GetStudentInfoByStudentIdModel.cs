@@ -24,6 +24,7 @@ namespace GraduationProject.Data.Models
         public string? PostalCode { get; set; }
         public string? ReleasePlace { get; set; }
         public Religion Religion { get; set; }
+        public int FacultyId { get; set; }
         public string ParentName { get; set; }
         public string Code { get; set; }
 

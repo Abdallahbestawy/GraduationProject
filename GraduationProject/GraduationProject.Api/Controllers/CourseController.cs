@@ -28,10 +28,10 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
         [Authorize(Roles = nameof(UserType.Administration))]
-        [HttpGet]
-        public async Task<IActionResult> GetCourses()
+        [HttpGet("All/{facultId:int}")]
+        public async Task<IActionResult> GetCourses(int facultId)
         {
-            var response = await _courseService.GetCoursesAsync();
+            var response = await _courseService.GetCoursesAsync(facultId);
 
             return StatusCode(response.StatusCode, response);
         }

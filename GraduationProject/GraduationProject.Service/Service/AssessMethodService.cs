@@ -60,15 +60,12 @@ namespace GraduationProject.Service.Service
         {
             try
             {
-                var assessMethodEntities = await _unitOfWork.AssessMethods.FindWithIncludeIEnumerableAsync(d => d.Faculty);
+                var assessMethodEntities = await _unitOfWork.AssessMethods.GetEntityByPropertyWithIncludeAsync(f => f.FacultyId == facultyId, d => d.Faculty);
 
-                if (assessMethodEntities == null || !assessMethodEntities.Any())
-                    return Response<IQueryable<GetAssessMethodDto>>.NoContent("No Assess Methods are exist");
-                var assessMethodEntitiesFilter = assessMethodEntities.Where(f => f.FacultyId == facultyId).ToList();
-                if (assessMethodEntitiesFilter == null || !assessMethodEntitiesFilter.Any())
+                if (!assessMethodEntities.Any())
                     return Response<IQueryable<GetAssessMethodDto>>.NoContent("No Assess Methods are exist");
 
-                var assessMethodDto = assessMethodEntitiesFilter.Select(entity => new GetAssessMethodDto
+                var assessMethodDto = assessMethodEntities.Select(entity => new GetAssessMethodDto
                 {
                     Id = entity.Id,
                     Name = entity.Name,

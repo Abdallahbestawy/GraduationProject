@@ -17,6 +17,7 @@ namespace GraduationProject.Data.Models
         public string? PostalCode { get; set; }
         public string? ReleasePlace { get; set; }
         public Religion Religion { get; set; }
+        public string FacultysName { get; set; }
         public string? PreQualification { get; set; }
         public DateTime? QualificationYear { get; set; }
         public int? SeatNumber { get; set; }

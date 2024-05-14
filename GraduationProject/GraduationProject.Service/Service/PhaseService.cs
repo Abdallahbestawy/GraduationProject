@@ -200,14 +200,11 @@ namespace GraduationProject.Service.Service
         {
             try
             {
-                var phaseEntities = await _unitOfWork.Phases.FindWithIncludeIEnumerableAsync(f => f.Faculty);
+                var phaseEntities = await _unitOfWork.Phases.GetEntityByPropertyWithIncludeAsync(f => f.FacultyId == facultyId, d => d.Faculty);
 
-                if (phaseEntities == null || !phaseEntities.Any())
+                if (!phaseEntities.Any())
                     return Response<IQueryable<GetPhaseDto>>.NoContent("No phases are exist");
-                var phaseEntitiesFilter = phaseEntities.Where(f => f.FacultyId == facultyId).ToList();
-                if (phaseEntitiesFilter == null || !phaseEntitiesFilter.Any())
-                    return Response<IQueryable<GetPhaseDto>>.NoContent("No phases are exist");
-                var phaseDtos = phaseEntitiesFilter.Select(entity => new GetPhaseDto
+                var phaseDtos = phaseEntities.Select(entity => new GetPhaseDto
                 {
                     Id = entity.Id,
                     Name = entity.Name,

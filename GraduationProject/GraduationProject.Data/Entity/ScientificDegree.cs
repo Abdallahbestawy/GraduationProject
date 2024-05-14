@@ -26,7 +26,7 @@ namespace GraduationProject.Data.Entity
 
         [ForeignKey("Bylaw")]
         public int BylawId { get; set; }
-        public Bylaw? Bylaw { get; set; }
+        public Bylaw Bylaw { get; set; }
 
         [ForeignKey("Band")]
         public int? BandId { get; set; } = null;

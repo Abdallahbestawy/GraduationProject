@@ -10,6 +10,6 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> DeleteBylawAsync(int BylawId);
         Task<Response<BylawDto>> GetBylawByIdAsync(int BylawId);
         Task<Response<IQueryable<BylawDto>>> GetBylawAsync();
-        Task<Response<IQueryable<BylawDto>>> GetBylawByFacultyIdAsync(int facultyId);
+        Task<Response<IQueryable<GetBylawDto>>> GetBylawByFacultyIdAsync(int facultyId);
     }
 }

@@ -14,6 +14,9 @@ namespace GraduationProject.Repository.IRepository
         Task DeleteRangeAsyn(IEnumerable<T> entities);
         Task Delete(T entity);
         Task<IEnumerable<T>> GetEntityByPropertyAsync(Func<T, bool> predicate);
+        Task<IEnumerable<T>> GetEntityByPropertyWithIncludeAsync(
+           Func<T, bool> attributeSelector,
+            params Expression<Func<T, object>>[] includes);
         Task<T> GetEntityByOrderDescendingAsync(Expression<Func<T, int>> predicate);
         Task<IQueryable<T>> FindWithIncludeIQueryableAsync(params Expression<Func<T, object>>[] includes);
         Task<IQueryable<T>> FindAllByForeignKeyAsync<TProperty>(Expression<Func<T, TProperty>> foreignKeySelector, TProperty foreignKey);

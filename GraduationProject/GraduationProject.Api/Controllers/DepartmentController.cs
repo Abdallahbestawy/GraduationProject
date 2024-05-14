@@ -23,10 +23,10 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [HttpGet("All")]
-        public async Task<IActionResult> GetAllDepartment()
+        [HttpGet("All/{facultId:int}")]
+        public async Task<IActionResult> GetAllDepartment(int facultId)
         {
-            var response = await _departmentService.GetAllDepartmentsAsync();
+            var response = await _departmentService.GetAllDepartmentsAsync(facultId);
             if (response != null)
             {
                 return Ok(response);

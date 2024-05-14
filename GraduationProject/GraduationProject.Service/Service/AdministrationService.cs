@@ -62,6 +62,7 @@ namespace GraduationProject.Service.Service
                 DateOfBirth = addSaffDto.DateOfBirth,
                 CountryId = addSaffDto.CountryId,
                 GovernorateId = addSaffDto.GovernorateId,
+                FacultyId = addSaffDto.FacultyId,
                 CityId = addSaffDto.CityId,
                 Street = addSaffDto.Street,
                 PostalCode = addSaffDto.PostalCode
@@ -155,13 +156,14 @@ namespace GraduationProject.Service.Service
 
 
 
-        public async Task<Response<List<GetAllStaffsDto>>> GetAllAdministrationsAsync()
+        public async Task<Response<List<GetAllStaffsDto>>> GetAllAdministrationsAsync(int FacultyId)
         {
             try
             {
                 var userType = UserType.Administration;
                 SqlParameter pUserType = new SqlParameter("@UserType", userType);
-                var administrations = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
+                SqlParameter pFacultyId = new SqlParameter("@FacultyId", FacultyId);
+                var administrations = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType, pFacultyId);
 
                 if (!administrations.Any())
                     return Response<List<GetAllStaffsDto>>.NoContent("No AddAdministrations are exist");

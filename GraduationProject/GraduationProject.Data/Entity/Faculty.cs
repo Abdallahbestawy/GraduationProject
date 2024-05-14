@@ -24,5 +24,8 @@ namespace GraduationProject.Data.Entity
         public virtual ICollection<ExamRole> ExamRoles { get; set; } = new List<ExamRole>();
         public virtual ICollection<AssessMethod> AssessMethods { get; set; } = new List<AssessMethod>();
         public virtual ICollection<AcademyYear> AcademyYears { get; set; } = new List<AcademyYear>();
+        public virtual ICollection<Student> Students { get; set; } = new List<Student>();
+        public virtual ICollection<Staff> Staffs { get; set; } = new List<Staff>();
+        public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
     }
 }

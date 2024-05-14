@@ -29,16 +29,8 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetBands()
-        {
-            var response = await _bandService.GetBandAsync();
-
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpGet("ByFacultyId/{facultyId:int}")]
-        public async Task<IActionResult> GetBandsByFacultyId(int facultyId)
+        [HttpGet("All/{facultyId:int}")]
+        public async Task<IActionResult> GetBands(int facultyId)
         {
             var response = await _bandService.GetBandByFacultyIdAsync(facultyId);
 

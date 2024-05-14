@@ -30,15 +30,15 @@ namespace GraduationProject.Api.Controllers
 
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetSemesters()
-        {
-            var response = await _semesterService.GetSemesterAsync();
+        //[HttpGet]
+        //public async Task<IActionResult> GetSemesters()
+        //{
+        //    var response = await _semesterService.GetSemesterAsync();
 
-            return StatusCode(response.StatusCode, response);
-        }
+        //    return StatusCode(response.StatusCode, response);
+        //}
 
-        [HttpGet("ByFacultyId/{facultyId:int}")]
+        [HttpGet("All/{facultyId:int}")]
         public async Task<IActionResult> GetSemestersByFacultyId(int facultyId)
         {
             var response = await _semesterService.GetSemesterByFacultyIdAsync(facultyId);

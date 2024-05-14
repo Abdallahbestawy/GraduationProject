@@ -30,15 +30,15 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetExamRoles()
-        {
-            var response = await _examRoleService.GetExamRoleAsync();
+        //[HttpGet("All/{facultId:int}")]
+        //public async Task<IActionResult> GetExamRoles(int facultId)
+        //{
+        //    var response = await _examRoleService.GetExamRoleAsync();
 
-            return StatusCode(response.StatusCode, response);
-        }
+        //    return StatusCode(response.StatusCode, response);
+        //}
 
-        [HttpGet("ByFacultyId/{facultyId:int}")]
+        [HttpGet("All/{facultyId:int}")]
         public async Task<IActionResult> GetExamByFacultyIdRoles(int facultyId)
         {
             var response = await _examRoleService.GetExamRoleByFacultyIdAsync(facultyId);

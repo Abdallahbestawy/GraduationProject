@@ -32,6 +32,7 @@ namespace GraduationProject.Service.Service
                 Category = addCourseDto.Category,
                 MaxDegree = addCourseDto.MaxDegree,
                 MinDegree = addCourseDto.MinDegree,
+                FacultyId = addCourseDto.FacultyId,
                 NumberOfCreditHours = addCourseDto.NumberOfCreditHours,
                 NumberOfPoints = addCourseDto.NumberOfPoints,
                 Prerequisite = addCourseDto.Prerequisite,
@@ -110,6 +111,7 @@ namespace GraduationProject.Service.Service
                     NumberOfCreditHours = courseEntity.NumberOfCreditHours,
                     NumberOfPoints = courseEntity.NumberOfPoints,
                     Prerequisite = courseEntity.Prerequisite,
+                    FacultyId = courseEntity.FacultyId ?? 0,
                     ScientificDegreeId = courseEntity.ScientificDegreeId,
                     DepartmentId = courseEntity.DepartmentId
                 };
@@ -145,12 +147,11 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<IQueryable<CourseDto>>> GetCoursesAsync()
+        public async Task<Response<IQueryable<CourseDto>>> GetCoursesAsync(int facultId)
         {
             try
             {
-                var bandEntities = await _unitOfWork.Courses.GetAll();
-
+                var bandEntities = await _unitOfWork.Courses.GetEntityByPropertyAsync(f => f.FacultyId == facultId);
                 if (!bandEntities.Any())
                     return Response<IQueryable<CourseDto>>.NoContent("No courses are exist");
 
@@ -167,6 +168,7 @@ namespace GraduationProject.Service.Service
                     NumberOfCreditHours = entity.NumberOfCreditHours,
                     NumberOfPoints = entity.NumberOfPoints,
                     Prerequisite = entity.Prerequisite,
+                    FacultyId = entity.FacultyId ?? 0,
                     ScientificDegreeId = entity.ScientificDegreeId,
                     DepartmentId = entity.DepartmentId
                 });
@@ -203,6 +205,7 @@ namespace GraduationProject.Service.Service
                 existingCourse.Type = updateCourseDto.Type;
                 existingCourse.Category = updateCourseDto.Category;
                 existingCourse.MaxDegree = updateCourseDto.MaxDegree;
+                existingCourse.FacultyId = updateCourseDto.FacultyId;
                 existingCourse.NumberOfCreditHours = updateCourseDto.NumberOfCreditHours;
                 existingCourse.NumberOfPoints = updateCourseDto.NumberOfPoints;
                 existingCourse.Prerequisite = updateCourseDto.Prerequisite;
@@ -361,6 +364,7 @@ namespace GraduationProject.Service.Service
                 {
                     CourseName = courseStudentAssessMethods.FirstOrDefault()?.CourseName,
                     CourseCode = courseStudentAssessMethods.FirstOrDefault()?.CourseCode,
+                    CourseId = courseStudentAssessMethods.FirstOrDefault().CourseId,
                     StudentDtos = courseStudentAssessMethods
                         .AsEnumerable()
                         .GroupBy(s => new { s.StudentName })
@@ -371,6 +375,7 @@ namespace GraduationProject.Service.Service
                             AssesstMethodDtos = group.Select(s => new AssesstMethodDto
                             {
                                 StudentSemesterAssessMethodId = s.StudentSemesterAssessMethodsId,
+                                AssessmentMethodId = s.AssessmentMethodId,
                                 AssessName = s.AssessmentMethodName,
                                 AssessDegree = s.Degree
                             }).ToList()

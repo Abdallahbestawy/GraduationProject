@@ -234,15 +234,12 @@ namespace GraduationProject.Service.Service
         {
             try
             {
-                var bandEntities = await _unitOfWork.Bands.FindWithIncludeIEnumerableAsync(f => f.Faculty);
+                var bandEntities = await _unitOfWork.Bands.GetEntityByPropertyWithIncludeAsync(f => f.FacultyId == facultyId, d => d.Faculty);
 
-                if (bandEntities == null || !bandEntities.Any())
-                    return Response<IQueryable<GetBandDto>>.NoContent("No Bands are exist");
-                var bandEntitiesFilter = bandEntities.Where(f => f.FacultyId == facultyId).ToList();
-                if (bandEntitiesFilter == null || !bandEntitiesFilter.Any())
+                if (!bandEntities.Any())
                     return Response<IQueryable<GetBandDto>>.NoContent("No Bands are exist");
 
-                var bandDto = bandEntitiesFilter.Select(entity => new GetBandDto
+                var bandDto = bandEntities.Select(entity => new GetBandDto
                 {
                     Id = entity.Id,
                     Name = entity.Name,

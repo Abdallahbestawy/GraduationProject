@@ -43,6 +43,7 @@ namespace GraduationProject.Service.DataTransferObject.StudentDto
         public Nationality Nationality { get; set; }
 
         public Religion Religion { get; set; }
+        public int FacultyId { get; set; }
 
         public string? ReleasePlace { get; set; }
 

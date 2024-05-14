@@ -66,6 +66,7 @@ namespace GraduationProject.Service.Service
                 GovernorateId = addSaffDto.GovernorateId,
                 CityId = addSaffDto.CityId,
                 Street = addSaffDto.Street,
+                FacultyId = addSaffDto.FacultyId,
                 PostalCode = addSaffDto.PostalCode
             };
 
@@ -155,13 +156,14 @@ namespace GraduationProject.Service.Service
 
         }
 
-        public async Task<Response<List<GetAllStaffsDto>>> GetAllTeachersAsync()
+        public async Task<Response<List<GetAllStaffsDto>>> GetAllTeachersAsync(int FacultyId)
         {
             try
             {
                 var userType = UserType.Teacher;
                 SqlParameter pUserType = new SqlParameter("@UserType", userType);
-                var teachers = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
+                SqlParameter pFacultyId = new SqlParameter("@FacultyId", FacultyId);
+                var teachers = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType, pFacultyId);
 
                 if (!teachers.Any())
                     return Response<List<GetAllStaffsDto>>.NoContent("No Teachers are exist");

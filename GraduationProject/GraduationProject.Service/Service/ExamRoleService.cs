@@ -200,15 +200,12 @@ namespace GraduationProject.Service.Service
         {
             try
             {
-                var examRolesEntities = await _unitOfWork.ExamRoles.FindWithIncludeIEnumerableAsync(f => f.Faculty);
+                var examRolesEntities = await _unitOfWork.ExamRoles.GetEntityByPropertyWithIncludeAsync(f => f.FacultyId == facultyId, d => d.Faculty);
 
-                if (examRolesEntities == null || !examRolesEntities.Any())
-                    return Response<IQueryable<GetExamRolesDto>>.NoContent("No Exam Roles are exist");
-                var examRolesEntitiesFilter = examRolesEntities.Where(f => f.FacultyId == facultyId).ToList();
-                if (examRolesEntitiesFilter == null || !examRolesEntitiesFilter.Any())
+                if (!examRolesEntities.Any())
                     return Response<IQueryable<GetExamRolesDto>>.NoContent("No Exam Roles are exist");
 
-                var examRolesDtos = examRolesEntitiesFilter.Select(entity => new GetExamRolesDto
+                var examRolesDtos = examRolesEntities.Select(entity => new GetExamRolesDto
                 {
                     Id = entity.Id,
                     Name = entity.Name,

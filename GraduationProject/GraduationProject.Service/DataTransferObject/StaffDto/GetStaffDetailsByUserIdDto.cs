@@ -20,6 +20,7 @@ namespace GraduationProject.Service.DataTransferObject.StaffDto
         public string? PostalCode { get; set; }
         public string? ReleasePlace { get; set; }
         public string Religion { get; set; }
+        public string FacultyName { get; set; }
         public string? PreQualification { get; set; }
         [DataType(DataType.Date)]
 

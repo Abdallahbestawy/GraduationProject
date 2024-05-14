@@ -33,11 +33,11 @@ namespace GraduationProject.Api.Controllers
 
         }
 
-        [HttpGet("GetAllAdministration")]
-        public async Task<IActionResult> GetAllAdministration()
+        [HttpGet("GetAllAdministration/{FacultyId:int}")]
+        public async Task<IActionResult> GetAllAdministration(int FacultyId)
         {
 
-            var response = await _administrationService.GetAllAdministrationsAsync();
+            var response = await _administrationService.GetAllAdministrationsAsync(FacultyId);
 
             return StatusCode(response.StatusCode, response);
         }

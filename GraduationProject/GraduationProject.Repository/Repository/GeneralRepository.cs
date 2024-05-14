@@ -125,5 +125,19 @@ namespace GraduationProject.Repository.Repository
             var entities = _context.Set<T>().OrderByDescending(predicate).FirstOrDefault();
             return entities;
         }
+
+        public async Task<IEnumerable<T>> GetEntityByPropertyWithIncludeAsync(Func<T, bool> attributeSelector, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _context.Set<T>();
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            // Apply attribute selector
+            var filteredEntities = query.Where(attributeSelector).ToList();
+
+            return filteredEntities;
+        }
     }
 }

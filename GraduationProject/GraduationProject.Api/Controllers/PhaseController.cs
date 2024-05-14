@@ -29,15 +29,15 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetPhases()
-        {
-            var response = await _phaseService.GetPhaseAsync();
+        //[HttpGet]
+        //public async Task<IActionResult> GetPhases()
+        //{
+        //    var response = await _phaseService.GetPhaseAsync();
 
-            return StatusCode(response.StatusCode, response);
-        }
+        //    return StatusCode(response.StatusCode, response);
+        //}
 
-        [HttpGet("ByFacultyId/{facultyId:int}")]
+        [HttpGet("All/{facultyId:int}")]
         public async Task<IActionResult> GetPhasesByFacultyId(int facultyId)
         {
             var response = await _phaseService.GetPhaseByFacultyIdAsync(facultyId);

@@ -42,6 +42,9 @@ namespace GraduationProject.Data.Entity
         public string? Street { get; set; }
 
         public string? PostalCode { get; set; }
+        [ForeignKey("Faculty")]
+        public int? FacultyId { get; set; }
+        public Faculty? Faculty { get; set; }
 
         public virtual ICollection<StudentSemester> StudentSemesters { get; set; } = new List<StudentSemester>();
         public virtual FamilyData FamilyDatas { get; set; }

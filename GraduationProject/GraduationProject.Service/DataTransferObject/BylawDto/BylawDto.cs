@@ -25,6 +25,7 @@ namespace GraduationProject.Service.DataTransferObject.BylawDto
     }
     public class EstimateDto
     {
+        public int? Id { get; set; }
         [Required, MaxLength(500)]
         public string NameEstimates { get; set; }
         [Required]
@@ -37,6 +38,7 @@ namespace GraduationProject.Service.DataTransferObject.BylawDto
 
     public class EstimateCourseDto
     {
+        public int? Id { get; set; }
         [Required, MaxLength(500)]
         public string NameEstimatesCourse { get; set; }
         [Required]

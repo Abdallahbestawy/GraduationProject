@@ -1,4 +1,5 @@
 ﻿using GraduationProject.Data.Entity;
+using GraduationProject.Data.Enum;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.IRepository;
@@ -165,25 +166,57 @@ namespace GraduationProject.Service.Service
         {
             try
             {
-                var bylawEntity = await _unitOfWork.Bylaws.GetByIdAsync(BylawId);
-
-                if (bylawEntity == null)
+                var bylawEntity = await _unitOfWork.Bylaws.GetEntityByPropertyWithIncludeAsync(
+                    b => b.Id == BylawId,
+                    e => e.Estimatess,
+                    e => e.EstimatesCourses
+                    );
+                if (!bylawEntity.Any())
                     return Response<BylawDto>.BadRequest("This bylaw doesn't exist");
 
                 BylawDto bylawDto = new BylawDto
                 {
-                    Id = bylawEntity.Id,
-                    Name = bylawEntity.Name,
-                    Description = bylawEntity.Description,
-                    GraduateValuerRequired = bylawEntity.GraduateValuerRequired,
-                    Type = bylawEntity.Type,
-                    Start = bylawEntity.Start,
-                    End = bylawEntity.End,
-                    FacultyId = bylawEntity.FacultyId
+                    Id = bylawEntity.FirstOrDefault().Id,
+                    Name = bylawEntity.FirstOrDefault().Name,
+                    Description = bylawEntity.FirstOrDefault().Description,
+                    GraduateValuerRequired = bylawEntity.FirstOrDefault().GraduateValuerRequired,
+                    Type = bylawEntity.FirstOrDefault().Type,
+                    Start = bylawEntity.FirstOrDefault().Start,
+                    End = bylawEntity.FirstOrDefault().End,
+                    FacultyId = bylawEntity.FirstOrDefault().FacultyId,
                 };
+                if (bylawEntity.Any(s => s.Estimatess != null && s.Estimatess.Any()))
+                {
+                    bylawDto.Estimates = bylawEntity
+                        .Where(s => s.Estimatess != null && s.Estimatess.Any())
+                        .SelectMany(s => s.Estimatess.Select(e => new EstimateDto
+                        {
+                            Id = e.Id,
+                            NameEstimates = e.Name,
+                            CharEstimates = e.Char,
+                            MaxGpaEstimates = e.MaxGpa,
+                            MinGpaEstimates = e.MinGpa,
+                            MaxPercentageEstimates = e.MaxPercentage,
+                            MinPercentageEstimates = e.MinPercentage
+                        })).ToList();
+                }
+                if (bylawEntity.Any(s => s.EstimatesCourses != null && s.EstimatesCourses.Any()))
+                {
+                    bylawDto.EstimatesCourses = bylawEntity
+                        .Where(s => s.EstimatesCourses != null && s.EstimatesCourses.Any())
+                        .SelectMany(s => s.EstimatesCourses.Select(e => new EstimateCourseDto
+                        {
+                            Id = e.Id,
+                            NameEstimatesCourse = e.Name,
+                            CharEstimatesCourse = e.Char,
+                            MaxPercentageEstimatesCourse = e.MaxPercentage,
+                            MinPercentageEstimatesCourse = e.MinPercentage
+                        })).ToList();
+                }
 
                 return Response<BylawDto>.Success(bylawDto, "Bylaw retrieved successfully").WithCount();
             }
+
             catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
@@ -273,27 +306,28 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<IQueryable<BylawDto>>> GetBylawByFacultyIdAsync(int facultyId)
+        public async Task<Response<IQueryable<GetBylawDto>>> GetBylawByFacultyIdAsync(int facultyId)
         {
             try
             {
-                var bylawEntities = await _unitOfWork.Bylaws.GetEntityByPropertyAsync(bylaw => bylaw.FacultyId == facultyId);
+                var bylawEntities = await _unitOfWork.Bylaws.GetEntityByPropertyWithIncludeAsync(bylaw => bylaw.FacultyId == facultyId, f => f.Faculty);
 
                 if (!bylawEntities.Any())
-                    return Response<IQueryable<BylawDto>>.NoContent("No Bylaws are exist");
+                    return Response<IQueryable<GetBylawDto>>.NoContent("No Bylaws are exist");
 
-                var bylawDtos = bylawEntities.Select(entity => new BylawDto
+                var bylawDtos = bylawEntities.Select(entity => new GetBylawDto
                 {
                     Id = entity.Id,
                     Name = entity.Name,
                     Description = entity.Description,
+                    Type = Enum.GetName(typeof(CourseCategory), entity.Type),
                     GraduateValuerRequired = entity.GraduateValuerRequired,
                     Start = entity.Start,
                     End = entity.End,
-                    FacultyId = entity.FacultyId
+                    FacultyName = entity.Faculty.Name
                 });
 
-                return Response<IQueryable<BylawDto>>.Success(bylawDtos.AsQueryable(), "Bylaws retrieved successfully").WithCount();
+                return Response<IQueryable<GetBylawDto>>.Success(bylawDtos.AsQueryable(), "Bylaws retrieved successfully").WithCount();
             }
             catch (Exception ex)
             {
@@ -305,7 +339,7 @@ namespace GraduationProject.Service.Service
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
                 });
-                return Response<IQueryable<BylawDto>>.ServerError("Error occured while retrieving bylaws",
+                return Response<IQueryable<GetBylawDto>>.ServerError("Error occured while retrieving bylaws",
                     "An unexpected error occurred while retrieving bylaws. Please try again later.");
             }
         }

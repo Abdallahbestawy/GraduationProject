@@ -9,7 +9,7 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> UpdateCourseAsync(CourseDto updateCourseDto);
         Task<Response<int>> DeleteCourseAsync(int CourseId);
         Task<Response<GetCourseByIdDto>> GetCourseByIdAsync(int CourseId);
-        Task<Response<IQueryable<CourseDto>>> GetCoursesAsync();
+        Task<Response<IQueryable<CourseDto>>> GetCoursesAsync(int facultId);
         Task<Response<int>> AddCourseAssessMethodAsync(CourseAssessMethodDto addCourseAssessMethodDto);
         Task<IQueryable<CourseDto>> GetCoursesByScientificDegreeIdAsync(int scientificDegreeId);
         Task<CourseAssessMethodDto> GetAssessMethodsByCoursesIdAsync(int courseId);

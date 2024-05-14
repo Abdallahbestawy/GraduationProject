@@ -304,13 +304,14 @@ namespace GraduationProject.Service.Service
             return Response<int>.Created("ControlMembers added successfully");
         }
 
-        public async Task<Response<List<GetAllStaffsDto>>> GetAllControlMembersAsync()
+        public async Task<Response<List<GetAllStaffsDto>>> GetAllControlMembersAsync(int FacultyId)
         {
             try
             {
                 var userType = UserType.ControlMembers;
                 SqlParameter pUserType = new SqlParameter("@UserType", userType);
-                var controlMembers = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType);
+                SqlParameter pFacultyId = new SqlParameter("@FacultyId", FacultyId);
+                var controlMembers = await _unitOfWork.GetAllModels.CallStoredProcedureAsync("EXECUTE SpGetAllStaffs", pUserType, pFacultyId);
 
                 if (!controlMembers.Any())
                     return Response<List<GetAllStaffsDto>>.NoContent("No ControlMembers are exist");
