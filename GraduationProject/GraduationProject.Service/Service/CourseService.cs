@@ -111,7 +111,7 @@ namespace GraduationProject.Service.Service
                     NumberOfCreditHours = courseEntity.NumberOfCreditHours,
                     NumberOfPoints = courseEntity.NumberOfPoints,
                     Prerequisite = courseEntity.Prerequisite,
-                    FacultyId = courseEntity.FacultyId ?? 0,
+                    FacultyId = courseEntity.FacultyId,
                     ScientificDegreeId = courseEntity.ScientificDegreeId,
                     DepartmentId = courseEntity.DepartmentId
                 };
@@ -168,7 +168,7 @@ namespace GraduationProject.Service.Service
                     NumberOfCreditHours = entity.NumberOfCreditHours,
                     NumberOfPoints = entity.NumberOfPoints,
                     Prerequisite = entity.Prerequisite,
-                    FacultyId = entity.FacultyId ?? 0,
+                    FacultyId = entity.FacultyId,
                     ScientificDegreeId = entity.ScientificDegreeId,
                     DepartmentId = entity.DepartmentId
                 });

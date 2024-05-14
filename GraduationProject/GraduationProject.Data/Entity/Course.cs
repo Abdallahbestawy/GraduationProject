@@ -38,8 +38,8 @@ namespace GraduationProject.Data.Entity
         public int DepartmentId { get; set; }
         public Department Department { get; set; }
         [ForeignKey("Faculty")]
-        public int? FacultyId { get; set; }
-        public Faculty? Faculty { get; set; }
+        public int FacultyId { get; set; }
+        public Faculty Faculty { get; set; }
 
         public virtual ICollection<CoursePrerequisite> DependentCourses { get; set; } = new List<CoursePrerequisite>();
         public virtual ICollection<CourseAssessMethod> CourseAssessMethods { get; set; } = new List<CourseAssessMethod>();
