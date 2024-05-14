@@ -10,6 +10,7 @@ namespace GraduationProject.Identity.Migrations
         {
             migrationBuilder.Sql(@"
                 CREATE PROCEDURE [dbo].[SpGetAllStudents]
+                    @FacultyId INT
                 AS
                 BEGIN
                     SELECT 
@@ -25,7 +26,9 @@ namespace GraduationProject.Identity.Migrations
                         Students
                     JOIN
                         AspNetUsers ON Students.UserId = AspNetUsers.Id
-                END
+                    WHERE
+                        Students.FacultyId = @FacultyId;
+                END;
             ");
         }
 

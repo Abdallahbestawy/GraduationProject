@@ -13,7 +13,7 @@ namespace GraduationProject.Identity.Migrations
                     @UserId NVARCHAR(450)
                 AS
                 BEGIN
-                    SELECT 
+                   SELECT 
                         AspNetUsers.NameEnglish,
                         AspNetUsers.NameArabic,
                         AspNetUsers.NationalID,
@@ -31,11 +31,12 @@ namespace GraduationProject.Identity.Migrations
                         FamilyDatas.ParentName,
                         FamilyDatas.Job as 'ParentJob',
                         FamilyDatas.PostalCode as 'PostalCodeOfParent',
-                        CONCAT(Countrys.Name, ',', Governorates.Name, ',', Citys.Name, ',',FamilyDatas.Street) as 'ParentAddress',
+                        CONCAT(Countrys.Name, ',', Governorates.Name, ',', Citys.Name, ',', FamilyDatas.Street) as 'ParentAddress',
                         QualificationDatas.PreQualification,
                         QualificationDatas.QualificationYear AS 'QualificationYear',
                         QualificationDatas.SeatNumber,
                         QualificationDatas.Degree,
+                        Facultys.Name as FacultysName,
                         Phones.PhoneNumber as 'StudentPhoneNumber',
                         Phones.Type as 'PhoneType',
                         Phones.Id as PhoneId
@@ -43,6 +44,8 @@ namespace GraduationProject.Identity.Migrations
                         AspNetUsers
                     JOIN
                         Students ON AspNetUsers.Id = Students.UserId
+                    JOIN 
+                        Facultys ON Facultys.Id = Students.FacultyId
                     JOIN
                         Citys ON Citys.Id = Students.CityId
                     JOIN
@@ -57,7 +60,7 @@ namespace GraduationProject.Identity.Migrations
                         Phones ON Phones.StudentId = Students.Id
                     WHERE
                         AspNetUsers.Id = @UserId;
-                END
+                END;
             ");
         }
 

@@ -10,7 +10,7 @@ namespace GraduationProject.Identity.Migrations
         {
             migrationBuilder.Sql(@"
                 CREATE PROCEDURE [dbo].[SpGetStudentResult]
-                    @UserId nvarchar(450)
+                    @UserId NVARCHAR(450)
                 AS
                 BEGIN
                     SELECT 
@@ -63,7 +63,7 @@ namespace GraduationProject.Identity.Migrations
                         Results AS R ON R.StudentSemesterId = ss.Id
                     WHERE 
                         u.Id = @UserId;
-                END
+                END;
             ");
         }
 

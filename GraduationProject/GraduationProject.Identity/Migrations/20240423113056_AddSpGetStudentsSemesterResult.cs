@@ -10,46 +10,46 @@ namespace GraduationProject.Identity.Migrations
         {
             migrationBuilder.Sql(@"
                 CREATE PROCEDURE [dbo].[SpGetStudentsSemesterResult]
-                @AcademyYearId INT,
-                @ScientificDegreeId INT
+                    @AcademyYearId INT,
+                    @ScientificDegreeId INT
                 AS
                 BEGIN
                     SELECT 
-                            s.Code as StudentCode,
-		                sd.Name AS SemesterName,
+                        s.Code AS StudentCode,
+                        sd.Name AS SemesterName,
                         CONCAT(YEAR(ay.Start), '-', YEAR(ay.[End])) AS AcademyYear,
                         parent.Name AS BandName,
-                        ui.NameEnglish as StudentName,
-                        cs.Code as CourseCode,
-                        cs.Name as CourseName,
-                            CASE
-                                WHEN ssc.CourseDegree IS NOT NULL THEN CAST(ssc.CourseDegree AS VARCHAR(50))
-                                ELSE 'Waiting'
-                            END AS CourseDegree,
+                        ui.NameEnglish AS StudentName,
+                        cs.Code AS CourseCode,
+                        cs.Name AS CourseName,
                         CASE
-                                WHEN ssc.Char IS NOT NULL THEN ssc.Char
-                                ELSE 'Waiting'
-                            END AS CourseChar,
+                            WHEN ssc.CourseDegree IS NOT NULL THEN CAST(ssc.CourseDegree AS VARCHAR(50))
+                            ELSE 'Waiting'
+                        END AS CourseDegree,
+                        CASE
+                            WHEN ssc.Char IS NOT NULL THEN ssc.Char
+                            ELSE 'Waiting'
+                        END AS CourseChar,
                         COALESCE(cs.NumberOfPoints, cs.NumberOfCreditHours) AS NumberOfPoints,
-                        AssessMethods.Name,
-                            CASE
-                                WHEN StudentSemesterAssessMethods.Degree IS NOT NULL THEN CAST(StudentSemesterAssessMethods.Degree  AS VARCHAR(50))
-                                ELSE 'Waiting'
-                            END AS Degree,
-                            CASE
-                                WHEN ss.Passing = 1 AND ss.Total IS NOT NULL THEN 'Succeed'
-                                WHEN ss.Passing = 0 AND ss.Total IS NOT NULL THEN 'Failed'
-                                ELSE 'Waiting'
-                            END AS SemesterStatus,
-                                CASE
-                                WHEN ssc.Passing = 1 THEN 'Succeed'
+                        AssessMethods.Name AS AssessmentMethodName,
+                        CASE
+                            WHEN StudentSemesterAssessMethods.Degree IS NOT NULL THEN CAST(StudentSemesterAssessMethods.Degree AS VARCHAR(50))
+                            ELSE 'Waiting'
+                        END AS Degree,
+                        CASE
+                            WHEN ss.Passing = 1 AND ss.Total IS NOT NULL THEN 'Succeed'
+                            WHEN ss.Passing = 0 AND ss.Total IS NOT NULL THEN 'Failed'
+                            ELSE 'Waiting'
+                        END AS SemesterStatus,
+                        CASE
+                            WHEN ssc.Passing = 1 THEN 'Succeed'
                             WHEN ssc.Passing = 0 AND ssc.CourseDegree IS NOT NULL THEN 'Failed'
-                                ELSE 'Waiting'
-                            END AS CourseStatus,
-                                R.Percentage AS StudentSemesterPercentage,
-                            R.Char AS StudentSemesterChar,
-                            R.PercentageTotal AS StudentCumulativePercentage,
-                            R.CharTotal AS StudentCumulativeChar
+                            ELSE 'Waiting'
+                        END AS CourseStatus,
+                        R.Percentage AS StudentSemesterPercentage,
+                        R.Char AS StudentSemesterChar,
+                        R.PercentageTotal AS StudentCumulativePercentage,
+                        R.CharTotal AS StudentCumulativeChar
                     FROM 
                         StudentSemesters AS ss
                     JOIN
@@ -58,22 +58,22 @@ namespace GraduationProject.Identity.Migrations
                         ScientificDegrees AS sd ON ss.ScientificDegreeId = sd.Id
                     LEFT JOIN 
                         ScientificDegrees AS parent ON sd.ParentId = parent.Id
-		                join
+                    JOIN 
                         Students AS s ON s.Id = ss.StudentId
                     JOIN 
                         AspNetUsers AS ui ON ui.Id = s.UserId
                     JOIN 
-                        StudentSemesterCourses as ssc ON ssc.StudentSemesterId = ss.Id
+                        StudentSemesterCourses AS ssc ON ssc.StudentSemesterId = ss.Id
                     JOIN 
-                        Courses as cs ON cs.Id = ssc.CourseId
-                    join 
-                    CourseAssessMethods as cam on cam.CourseId=cs.Id
-                    join 
-                    AssessMethods on AssessMethods.Id=cam.AssessMethodId
-                    join 
-                    StudentSemesterAssessMethods on StudentSemesterAssessMethods.CourseAssessMethodId = cam.Id
-                    left join 
-                    Results as R on R.StudentSemesterId=ss.Id
+                        Courses AS cs ON cs.Id = ssc.CourseId
+                    JOIN 
+                        CourseAssessMethods AS cam ON cam.CourseId = cs.Id
+                    JOIN 
+                        AssessMethods ON AssessMethods.Id = cam.AssessMethodId
+                    JOIN 
+                        StudentSemesterAssessMethods ON StudentSemesterAssessMethods.CourseAssessMethodId = cam.Id
+                    LEFT JOIN 
+                        Results AS R ON R.StudentSemesterId = ss.Id
                     WHERE 
                         (ss.AcademyYearId = @AcademyYearId AND ss.ScientificDegreeId = @ScientificDegreeId) AND
                         (ss.Id = StudentSemesterAssessMethods.StudentSemesterId)
