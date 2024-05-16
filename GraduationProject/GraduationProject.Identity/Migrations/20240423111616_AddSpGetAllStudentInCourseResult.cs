@@ -36,7 +36,7 @@ namespace GraduationProject.Identity.Migrations
                         END AS CourseStatus,
                         AssessMethods.Name AS AssessMethodsName,
                         CASE
-                            WHEN StudentSemesterAssessMethods.Degree IS NOT NULL THEN CAST(StudentSemesterAssessMethods.Degree  AS VARCHAR(50))
+                            WHEN StudentSemesterAssessMethods.Degree IS NOT NULL THEN CAST(StudentSemesterAssessMethods.Degree AS VARCHAR(50))
                             ELSE 'Waiting'
                         END AS Degree
                     FROM
@@ -60,7 +60,7 @@ namespace GraduationProject.Identity.Migrations
                         ss.ScientificDegreeId = @ScientificDegreeId AND 
                         ssc.CourseId = @CourseId) AND
                         (ss.Id = StudentSemesterAssessMethods.StudentSemesterId);
-                END
+                END;
             ");
         }
 

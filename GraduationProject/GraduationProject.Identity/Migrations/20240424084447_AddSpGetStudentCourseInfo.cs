@@ -10,7 +10,7 @@ namespace GraduationProject.Identity.Migrations
         {
             migrationBuilder.Sql(@"
                 CREATE PROCEDURE [dbo].[SpGetStudentCourseInfo]
-                @CourseId INT
+                    @CourseId INT
                 AS
                 BEGIN
                     SELECT
@@ -35,13 +35,13 @@ namespace GraduationProject.Identity.Migrations
                     WHERE
                         StudentSemesterCourses.CourseId = @CourseId
                         AND AcademyYears.IsCurrent = 1;
-                END
+                END;
             ");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.Sql("DROP PROCEDURE [dbo].[SpGetStudentCourseInfo]");
         }
     }
 }

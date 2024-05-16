@@ -27,6 +27,7 @@ namespace GraduationProject.Identity.Migrations
                         Staffs.PostalCode,
                         Staffs.ReleasePlace,
                         Staffs.Religion,
+                        Facultys.Name As FacultysName, 
                         QualificationDatas.PreQualification,
                         QualificationDatas.QualificationYear,
                         QualificationDatas.SeatNumber,
@@ -38,6 +39,8 @@ namespace GraduationProject.Identity.Migrations
                         AspNetUsers
                     JOIN
                         Staffs ON AspNetUsers.Id = Staffs.UserId
+                    JOIN 
+                        Facultys ON Facultys.Id = Staffs.FacultyId
                     JOIN
                         Citys ON Citys.Id = Staffs.CityId
                     JOIN
@@ -50,7 +53,7 @@ namespace GraduationProject.Identity.Migrations
                         Phones ON Phones.StaffId = Staffs.Id
                     WHERE
                         AspNetUsers.Id = @UserId;
-                END
+                END;
             ");
         }
 

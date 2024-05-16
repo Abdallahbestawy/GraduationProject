@@ -10,7 +10,8 @@ namespace GraduationProject.Identity.Migrations
         {
             migrationBuilder.Sql(@"
                 CREATE PROCEDURE [dbo].[SpGetAllStaffs]
-                    @UserType smallint
+                    @UserType smallint,
+                    @FacultyId INT
                 AS
                 BEGIN
                     SELECT
@@ -26,8 +27,11 @@ namespace GraduationProject.Identity.Migrations
                         Staffs
                     JOIN
                         AspNetUsers ON Staffs.UserId = AspNetUsers.Id AND AspNetUsers.UserType = @UserType
-                END
+                    WHERE
+                        Staffs.FacultyId = @FacultyId;
+                END;
             ");
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

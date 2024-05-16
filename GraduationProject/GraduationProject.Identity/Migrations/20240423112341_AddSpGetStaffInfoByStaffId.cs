@@ -10,9 +10,7 @@ namespace GraduationProject.Identity.Migrations
         {
             migrationBuilder.Sql(@"
                 CREATE PROCEDURE [dbo].[SpGetStaffInfoByStaffId]
-                (
                     @StaffId INT
-                )
                 AS
                 BEGIN
                     SELECT 
@@ -55,7 +53,7 @@ namespace GraduationProject.Identity.Migrations
                         Phones ON Phones.StaffId = Staffs.Id
                     WHERE
                         Staffs.Id = @StaffId;
-                END
+                END;
             ");
         }
 

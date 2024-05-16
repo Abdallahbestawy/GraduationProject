@@ -31,6 +31,7 @@ namespace GraduationProject.Identity.Migrations
                         Students.PostalCode,
                         Students.ReleasePlace,
                         Students.Religion,
+                        Students.FacultyId as FacultyId,
                         FamilyDatas.ParentName,
                         FamilyDatas.Job as ParentJob,
                         FamilyDatas.PostalCode as PostalCodeOfParent,
@@ -63,7 +64,7 @@ namespace GraduationProject.Identity.Migrations
                         Phones ON Phones.StudentId = Students.Id
                     WHERE
                         Students.Id = @StudentId;
-                END
+                END;
             ");
         }
 

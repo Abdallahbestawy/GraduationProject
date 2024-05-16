@@ -25,7 +25,7 @@ namespace GraduationProject.Identity.Migrations
                         AspNetUsers ON AspNetUsers.Id = Students.UserId
                     WHERE
                         StudentSemesters.ScientificDegreeId = @ScientificDegreeId;
-                END
+                END;
             ");
         }
 
