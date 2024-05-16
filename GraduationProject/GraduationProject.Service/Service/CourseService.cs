@@ -483,25 +483,35 @@ namespace GraduationProject.Service.Service
 
         public async Task<Response<bool>> UpdateCourseStudentsAssessMethodAsync(List<UpdateCourseStudentsAssessMethodDto> updateCourseStudentsAssessMethodDto)
         {
-            if (updateCourseStudentsAssessMethodDto == null || !updateCourseStudentsAssessMethodDto.Any())
+            if (!updateCourseStudentsAssessMethodDto.Any())
                 return Response<bool>.BadRequest("Please enter valid degrees");
-
+            var courseAssessMethod = await _unitOfWork.CourseAssessMethods.GetEntityByPropertyWithIncludeAsync(c => c.CourseId == updateCourseStudentsAssessMethodDto.FirstOrDefault().CourseId, a => a.AssessMethod);
+            if (!courseAssessMethod.Any())
+                return Response<bool>.BadRequest("Please enter valid Course");
             try
             {
                 var entitiesToUpdate = new List<StudentSemesterAssessMethod>();
-
+                int count = 0;
                 foreach (var asDto in updateCourseStudentsAssessMethodDto)
                 {
                     var old = await _unitOfWork.StudentSemesterAssessMethods.GetByIdAsync(asDto.StudentSemesterAssessMethodId);
                     if (old != null)
                     {
+                        var assessMethod = courseAssessMethod.Where(x => x.AssessMethodId == asDto.AssessmentMethodId).FirstOrDefault();
+                        if (asDto.Degree > assessMethod.AssessMethod.MaxDegree)
+                        {
+                            count++;
+                            continue;
+                        }
                         old.Degree = asDto.Degree;
                         entitiesToUpdate.Add(old);
                     }
                 }
-
+                if (!entitiesToUpdate.Any() && count == updateCourseStudentsAssessMethodDto.Count())
+                    return Response<bool>.BadRequest("Please Enter Valid Degree");
                 if (!entitiesToUpdate.Any())
                     return Response<bool>.BadRequest("Student Semester Assess Methods doesn't exist");
+
 
                 bool result = await _unitOfWork.StudentSemesterAssessMethods.UpdateRangeAsync(entitiesToUpdate);
 
@@ -515,8 +525,14 @@ namespace GraduationProject.Service.Service
                     return Response<bool>.ServerError("Error occured while updating Student Semester Assess Methods",
                   "An unexpected error occurred while updating Student Semester Assess Methods. Please try again later.");
                 }
-
-                return Response<bool>.Updated("Student Semester Assess Methods updated successfully");
+                else if (respons > 0 && count != 0)
+                {
+                    return Response<bool>.Updated($"Student Semester Assess Methods updated successfully And {count} Student Degree Not Valid,Please Enter Valid Degree");
+                }
+                else
+                {
+                    return Response<bool>.Updated("Student Semester Assess Methods updated successfully");
+                }
             }
             catch (Exception ex)
             {
