@@ -673,5 +673,83 @@ namespace GraduationProject.Service.Service
                         "An unexpected error occurred while deleting Course Prerequisites. Please try again later.");
             }
         }
+
+        public async Task<Response<GetCourseAssessMethodDto>> GetCourseAssessMethodAsync(int courseId)
+        {
+            try
+            {
+                var course = await _unitOfWork.Courses.GetByIdAsync(courseId);
+                if (course == null)
+                {
+                    return Response<GetCourseAssessMethodDto>.BadRequest("Course Doesn't Exist");
+                }
+                var courseAssessMethod = await _unitOfWork.CourseAssessMethods.GetEntityByPropertyWithIncludeAsync(c => c.CourseId == courseId, d => d.AssessMethod);
+                if (!courseAssessMethod.Any())
+                {
+                    return Response<GetCourseAssessMethodDto>.BadRequest("Course Doesn't Have AssessMethod");
+                }
+                GetCourseAssessMethodDto getCourseAssessMethodDto = new GetCourseAssessMethodDto
+                {
+                    CourseName = course.Name,
+                    CourseCode = course.Code,
+                    AssessMethodDetiels = courseAssessMethod.Select(ac => new AssessMethodDetielsDto
+                    {
+                        AssessMethodId = ac.Id,
+                        AssessMethodName = ac.AssessMethod.Name,
+                        Description = ac.AssessMethod.Description,
+                        MaxDegree = ac.AssessMethod.MaxDegree,
+                        MinDegree = ac.AssessMethod.MinDegree
+                    }).ToList()
+                };
+                return Response<GetCourseAssessMethodDto>.Success(getCourseAssessMethodDto, "AssessMethod Course are retrieved Successfully")
+                    .WithCount(getCourseAssessMethodDto.AssessMethodDetiels.Count);
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "CourseService",
+                    MethodName = "GetCourseAssessMethodAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetCourseAssessMethodDto>.ServerError("Error occured while Get Course CourseAssessMethod",
+                        "An unexpected error occurred while Get Course CourseAssessMethod. Please try again later.");
+            }
+        }
+
+        public async Task<Response<bool>> DeleteCourseAssessMethodAsync(int AssessMethodId)
+        {
+            try
+            {
+                var existingCourseAssessMethod = await _unitOfWork.CourseAssessMethods.GetByIdAsync(AssessMethodId);
+                if (existingCourseAssessMethod == null)
+                {
+                    return Response<bool>.BadRequest("This Course AssessMethod doesn't exist");
+                }
+                await _unitOfWork.CourseAssessMethods.Delete(existingCourseAssessMethod);
+                var result = await _unitOfWork.SaveAsync();
+
+                if (result > 0)
+                    return Response<bool>.Deleted("Course AssessMethod Deleted Successfully");
+
+                return Response<bool>.ServerError("Error occured while Deleting Course AssessMethod",
+                        "An unexpected error occurred while deleting Course AssessMethod. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "CourseService",
+                    MethodName = "DeleteCourseAssessMethodAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while deleting Course CourseAssessMethod",
+                        "An unexpected error occurred while deleting Course CourseAssessMethod. Please try again later.");
+            }
+        }
     }
 }

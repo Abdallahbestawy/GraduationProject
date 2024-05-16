@@ -119,5 +119,21 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        [Authorize(Roles = nameof(UserType.Administration))]
+        [HttpGet("CourseAssessMethod/{courseId:int}")]
+        public async Task<IActionResult> GetCourseAssessMethod(int courseId)
+        {
+            var response = await _courseService.GetCourseAssessMethodAsync(courseId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+        [Authorize(Roles = nameof(UserType.Administration))]
+        [HttpDelete("CourseAssessMethod/{AssessMethodId:int}")]
+        public async Task<IActionResult> DeleteCourseAssessMethod(int AssessMethodId)
+        {
+            var response = await _courseService.DeleteCourseAssessMethodAsync(AssessMethodId);
+
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

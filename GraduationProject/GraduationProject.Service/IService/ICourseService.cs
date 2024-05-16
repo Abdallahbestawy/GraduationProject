@@ -20,5 +20,7 @@ namespace GraduationProject.Service.IService
         Task<Response<GetStudentCourseInfoDto>> GetStudentCourseInfoAsync(int courseId);
         Task<Response<bool>> UpdateStudentCourseInfoAsync(List<UpdateStudentCourseInfoDto> updateStudentCourseInfoDtos);
         Task<Response<int>> DeleteCoursePrerequisitesAsync(int coursePrerequisitesId);
+        Task<Response<GetCourseAssessMethodDto>> GetCourseAssessMethodAsync(int courseId);
+        Task<Response<bool>> DeleteCourseAssessMethodAsync(int AssessMethodId);
     }
 }

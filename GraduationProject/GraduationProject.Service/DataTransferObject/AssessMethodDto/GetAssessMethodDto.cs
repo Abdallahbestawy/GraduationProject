@@ -9,6 +9,7 @@
         public decimal MinDegree { get; set; }
 
         public decimal MaxDegree { get; set; }
+        public bool IsControlStatus { get; set; }
 
         public string FacultyName { get; set; }
     }

@@ -5,8 +5,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Release\net6.0\publish\</_PublishTargetUrl>
-    <History>True|2024-03-25T03:34:04.6235821Z;</History>
+    <_PublishTargetUrl>E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Release\net6.0\publish\</_PublishTargetUrl>
+    <History>True|2024-05-16T17:45:12.4393008Z;True|2024-03-25T05:34:04.6235821+02:00;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>

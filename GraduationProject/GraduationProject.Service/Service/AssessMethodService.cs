@@ -30,6 +30,7 @@ namespace GraduationProject.Service.Service
                     Description = addAssessMethodDto.Description,
                     MinDegree = addAssessMethodDto.MinDegree,
                     MaxDegree = addAssessMethodDto.MaxDegree,
+                    IsControlStatus = addAssessMethodDto.IsControlStatus,
                     FacultyId = addAssessMethodDto.FacultyId
                 };
                 await _unitOfWork.AssessMethods.AddAsync(newAssessMethod);
@@ -72,6 +73,7 @@ namespace GraduationProject.Service.Service
                     Description = entity.Description,
                     MaxDegree = entity.MaxDegree,
                     MinDegree = entity.MinDegree,
+                    IsControlStatus = entity.IsControlStatus,
                     FacultyName = entity.Faculty.Name
                 });
 
@@ -109,6 +111,7 @@ namespace GraduationProject.Service.Service
                     Description = assessMethodEntities.Description,
                     MinDegree = assessMethodEntities.MinDegree,
                     MaxDegree = assessMethodEntities.MaxDegree,
+                    IsControlStatus = assessMethodEntities.IsControlStatus,
                     FacultyId = assessMethodEntities.FacultyId
                 };
 
@@ -142,6 +145,7 @@ namespace GraduationProject.Service.Service
                 existingAssessMethod.Description = updateAssessMethodDto.Description;
                 existingAssessMethod.MinDegree = updateAssessMethodDto.MinDegree;
                 existingAssessMethod.MaxDegree = updateAssessMethodDto.MaxDegree;
+                existingAssessMethod.IsControlStatus = updateAssessMethodDto.IsControlStatus;
                 existingAssessMethod.FacultyId = updateAssessMethodDto.FacultyId;
 
                 await _unitOfWork.AssessMethods.Update(existingAssessMethod);
