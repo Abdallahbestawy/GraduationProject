@@ -17,6 +17,7 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<Band> Bands { get; private set; }
         public IGeneralRepository<Bylaw> Bylaws { get; private set; }
         public IGeneralRepository<Semester> Semesters { get; private set; }
+        public IGeneralRepository<FormatStudentCode> FormatStudentCodes { get; private set; }
         public IGeneralRepository<Phase> Phases { get; private set; }
         public IGeneralRepository<ExamRole> ExamRoles { get; private set; }
         public IGeneralRepository<ScientificDegree> ScientificDegrees { get; private set; }
@@ -81,6 +82,7 @@ namespace GraduationProject.Repository.Repository
             CourseAssessMethods = new GeneralRepository<CourseAssessMethod>(_context);
             StudentSemesterAssessMethods = new GeneralRepository<StudentSemesterAssessMethod>(_context);
             StaffSemesters = new GeneralRepository<StaffSemester>(_context);
+            FormatStudentCodes = new GeneralRepository<FormatStudentCode>(_context);
             GetStudentDetailsByUserIdModels = new GeneralRepository<GetStudentDetailsByUserIdModel>(_context);
             GetStaffDetailsByUserIdModels = new GeneralRepository<GetStaffDetailsByUserIdModel>(_context);
             GetStudentResultModels = new GeneralRepository<GetStudentResultModel>(_context);

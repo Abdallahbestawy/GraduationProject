@@ -27,5 +27,6 @@ namespace GraduationProject.Data.Entity
         public virtual ICollection<Student> Students { get; set; } = new List<Student>();
         public virtual ICollection<Staff> Staffs { get; set; } = new List<Staff>();
         public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
+        public virtual ICollection<FormatStudentCode> FormatStudentCodes { get; set; } = new List<FormatStudentCode>();
     }
 }

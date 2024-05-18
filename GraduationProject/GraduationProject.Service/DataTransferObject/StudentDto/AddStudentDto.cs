@@ -37,14 +37,10 @@ namespace GraduationProject.Service.DataTransferObject.StudentDto
 
         public Gender Gender { get; set; }
 
-        [Required, MaxLength(255)]
-        public string StudentCode { get; set; }
-
         public Nationality Nationality { get; set; }
 
         public Religion Religion { get; set; }
         public int FacultyId { get; set; }
-
         public string? ReleasePlace { get; set; }
 
         [DataType(DataType.Date)]

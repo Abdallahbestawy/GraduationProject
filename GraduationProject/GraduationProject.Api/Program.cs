@@ -69,6 +69,7 @@ builder.Services.AddTransient<IExamRoleService, ExamRoleService>();
 builder.Services.AddTransient<IPhaseService, PhaseService>();
 builder.Services.AddTransient<ISemesterService, SemesterService>();
 builder.Services.AddTransient<IScientificDegreeService, ScientificDegreeService>();
+builder.Services.AddTransient<IFormatStudentCodeService, FormatStudentCodeService>();
 builder.Services.AddTransient<ICourseService, CourseService>();
 builder.Services.AddTransient<UnitOfWork>();
 builder.Services.AddTransient<IRoleService, RoleService>();

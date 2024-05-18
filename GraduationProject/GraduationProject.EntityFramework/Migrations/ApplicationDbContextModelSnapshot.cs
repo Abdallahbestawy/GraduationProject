@@ -553,6 +553,27 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.ToTable("FamilyDatas");
                 });
 
+            modelBuilder.Entity("GraduationProject.Data.Entity.FormatStudentCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("FacultyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FormatStudentCodeName")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacultyId");
+
+                    b.ToTable("FormatStudentCodes");
+                });
+
             modelBuilder.Entity("GraduationProject.Data.Entity.Governorate", b =>
                 {
                     b.Property<int>("Id")
@@ -2080,6 +2101,17 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("GraduationProject.Data.Entity.FormatStudentCode", b =>
+                {
+                    b.HasOne("GraduationProject.Data.Entity.Faculty", "Faculty")
+                        .WithMany("FormatStudentCodes")
+                        .HasForeignKey("FacultyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Faculty");
+                });
+
             modelBuilder.Entity("GraduationProject.Data.Entity.Governorate", b =>
                 {
                     b.HasOne("GraduationProject.Data.Entity.Country", "Country")
@@ -2505,6 +2537,8 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Navigation("Departments");
 
                     b.Navigation("ExamRoles");
+
+                    b.Navigation("FormatStudentCodes");
 
                     b.Navigation("Phases");
 

@@ -36,8 +36,14 @@ namespace GraduationProject.Service.Service
 
         public async Task<Response<int>> AddStudentAsync(AddStudentDto addStudentDto)
         {
+            var studentCode = await _unitOfWork.FormatStudentCodes.GetEntityByPropertyAsync(f => f.FacultyId == addStudentDto.FacultyId);
+            if (!studentCode.Any())
+            {
+                return Response<int>.BadRequest("Error occured while adding",
+                        "Please make sure that the faculty has a student code format and try again.");
+            }
+            var formatStudentCode = studentCode.FirstOrDefault();
             string userId = "";
-
             try
             {
                 userId = await _accountService.AddStudentAccount(addStudentDto.NameArabic, addStudentDto.NameEnglish,
@@ -56,7 +62,14 @@ namespace GraduationProject.Service.Service
                 return Response<int>.ServerError("Error occured while adding student",
                      "An unexpected error occurred while adding student. Please try again later.");
             }
-
+            string studentCodeE;
+            studentCodeE = await ForamtStudentCodeFunc(formatStudentCode.FormatStudentCodeName, addStudentDto.FacultyId, addStudentDto.NationalID);
+            if (studentCodeE == null)
+            {
+                await _accountService.DeleteUser(userId);
+                return Response<int>.BadRequest("Error occured while adding student",
+                     "An unexpected error occurred while adding student in student code. Please try again later.");
+            }
             if (!string.IsNullOrEmpty(userId))
             {
                 Student newStudent = new Student
@@ -73,7 +86,7 @@ namespace GraduationProject.Service.Service
                     Street = addStudentDto.Street,
                     PostalCode = addStudentDto.PostalCode,
                     FacultyId = addStudentDto.FacultyId,
-                    Code = addStudentDto.StudentCode
+                    Code = studentCodeE
                 };
 
                 try
@@ -202,7 +215,49 @@ namespace GraduationProject.Service.Service
             return Response<int>.ServerError("Error occured while adding student",
                          "An unexpected error occurred while adding student. Please try again later.");
         }
-
+        private async Task<string> ForamtStudentCodeFunc(FormatStudentCodeEnum formatStudentCodeEnum, int FacultyId, string nId)
+        {
+            FormatStudentCodeClass formatStudentCoudeService = new FormatStudentCodeClass(_unitOfWork);
+            switch (formatStudentCodeEnum)
+            {
+                case FormatStudentCodeEnum.AcademyYear_FacultyId_Increment:
+                    return await formatStudentCoudeService.AcademyYear_FacultyId_Increment(FacultyId);
+                case FormatStudentCodeEnum.FacultyId_AcademyYear_Increment:
+                    return await formatStudentCoudeService.FacultyId_AcademyYear_Increment(FacultyId);
+                case FormatStudentCodeEnum.FacultyId_AcademyYear_NaID_Increment:
+                    return await formatStudentCoudeService.FacultyId_AcademyYear_NaID_Increment(FacultyId, nId);
+                case FormatStudentCodeEnum.AcademyYear_FacultyId_NaID_Increment:
+                    return await formatStudentCoudeService.AcademyYear_FacultyId_NaID_Increment(FacultyId, nId);
+                case FormatStudentCodeEnum.AcademyYear_NaID_FacultyId_Increment:
+                    return await formatStudentCoudeService.AcademyYear_NaID_FacultyId_Increment(FacultyId, nId);
+                case FormatStudentCodeEnum.NaID_AcademyYear_FacultyId_Increment:
+                    return await formatStudentCoudeService.NaID_AcademyYear_FacultyId_Increment(FacultyId, nId);
+                case FormatStudentCodeEnum.NaID_FacultyId_AcademyYear_Increment:
+                    return await formatStudentCoudeService.NaID_FacultyId_AcademyYear_Increment(FacultyId, nId);
+                case FormatStudentCodeEnum.FacultyId_NaID_AcademyYear_Increment:
+                    return await formatStudentCoudeService.FacultyId_NaID_AcademyYear_Increment(FacultyId, nId);
+                case FormatStudentCodeEnum.AcademyYear_FacultyId:
+                    return await formatStudentCoudeService.AcademyYear_FacultyId(FacultyId);
+                case FormatStudentCodeEnum.FacultyId_AcademyYear:
+                    return await formatStudentCoudeService.FacultyId_AcademyYear(FacultyId);
+                case FormatStudentCodeEnum.FacultyId_AcademyYear_NaID:
+                    return await formatStudentCoudeService.FacultyId_AcademyYear_NaID(FacultyId, nId);
+                case FormatStudentCodeEnum.AcademyYear_FacultyId_NaID:
+                    return await formatStudentCoudeService.AcademyYear_FacultyId_NaID(FacultyId, nId);
+                case FormatStudentCodeEnum.AcademyYear_NaID_FacultyId:
+                    return await formatStudentCoudeService.AcademyYear_NaID_FacultyId(FacultyId, nId);
+                case FormatStudentCodeEnum.NaID_AcademyYear_FacultyId:
+                    return await formatStudentCoudeService.NaID_AcademyYear_FacultyId(FacultyId, nId);
+                case FormatStudentCodeEnum.NaID_FacultyId_AcademyYear:
+                    return await formatStudentCoudeService.NaID_FacultyId_AcademyYear(FacultyId, nId);
+                case FormatStudentCodeEnum.FacultyId_NaID_AcademyYear:
+                    return await formatStudentCoudeService.FacultyId_NaID_AcademyYear(FacultyId, nId);
+                case FormatStudentCodeEnum.NaID:
+                    return await formatStudentCoudeService.NaID(nId);
+                default:
+                    return null;
+            }
+        }
         public async Task<Response<int>> AddStudentSemesterAsync(AddStudentSemesterDto addStudentSemesterDto)
         {
 
@@ -762,7 +817,6 @@ namespace GraduationProject.Service.Service
                 existingStudent.CityId = updateStudentDto.CityId;
                 existingStudent.Street = updateStudentDto.Street;
                 existingStudent.PostalCode = updateStudentDto.PostalCode;
-                existingStudent.Code = updateStudentDto.StudentCode;
                 _unitOfWork.Students.Update(existingStudent);
                 var qualicationData = await _unitOfWork.QualificationDatas.GetEntityByPropertyAsync(s => s.StudentId == existingStudent.Id);
                 if (qualicationData != null || qualicationData.Any())
