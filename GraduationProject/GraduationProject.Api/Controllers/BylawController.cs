@@ -68,5 +68,19 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        [HttpDelete("Estimates/{Id:int}")]
+        public async Task<IActionResult> DeleteEstimates([FromRoute] int Id)
+        {
+            var response = await _bylawService.DeleteEstimatesAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
+        }
+        [HttpDelete("EstimatesCourse/{Id:int}")]
+        public async Task<IActionResult> DeleteEstimatesCourse([FromRoute] int Id)
+        {
+            var response = await _bylawService.DeleteEstimatesCourseAsync(Id);
+
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

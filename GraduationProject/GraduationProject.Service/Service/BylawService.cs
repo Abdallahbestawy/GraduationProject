@@ -343,5 +343,69 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while retrieving bylaws. Please try again later.");
             }
         }
+
+        public async Task<Response<int>> DeleteEstimatesAsync(int estimatesId)
+        {
+            try
+            {
+                var existingEstimates = await _unitOfWork.Estimates.GetByIdAsync(estimatesId);
+                if (existingEstimates == null)
+                    return Response<int>.BadRequest("This Estimates doesn't exist");
+
+                await _unitOfWork.Estimates.Delete(existingEstimates);
+                var result = await _unitOfWork.SaveAsync();
+
+                if (result > 0)
+                    return Response<int>.Deleted("Estimates deleted successfully");
+
+                return Response<int>.ServerError("Error occured while deleting Estimates",
+                        "An unexpected error occurred while deleting Estimates. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "BylawService",
+                    MethodName = "DeleteEstimatesAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while deleting Estimates",
+                        "An unexpected error occurred while deleting Estimates. Please try again later.");
+            }
+        }
+
+        public async Task<Response<int>> DeleteEstimatesCourseAsync(int estimatesCourseId)
+        {
+            try
+            {
+                var existingEstimatesCourse = await _unitOfWork.EstimatesCourses.GetByIdAsync(estimatesCourseId);
+                if (existingEstimatesCourse == null)
+                    return Response<int>.BadRequest("This EstimatesCourse doesn't exist");
+
+                await _unitOfWork.EstimatesCourses.Delete(existingEstimatesCourse);
+                var result = await _unitOfWork.SaveAsync();
+
+                if (result > 0)
+                    return Response<int>.Deleted("EstimatesCourse deleted successfully");
+
+                return Response<int>.ServerError("Error occured while deleting EstimatesCourse",
+                        "An unexpected error occurred while deleting EstimatesCourse. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "BylawService",
+                    MethodName = "DeleteEstimatesCourseAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while deleting EstimatesCourse",
+                        "An unexpected error occurred while deleting EstimatesCourse. Please try again later.");
+            }
+        }
     }
 }

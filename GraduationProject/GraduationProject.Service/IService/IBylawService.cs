@@ -8,6 +8,8 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> AddBylawAsync(BylawDto addBylawDto);
         Task<Response<int>> UpdateBylawAsync(BylawDto updateBylawDto);
         Task<Response<int>> DeleteBylawAsync(int BylawId);
+        Task<Response<int>> DeleteEstimatesAsync(int estimatesId);
+        Task<Response<int>> DeleteEstimatesCourseAsync(int estimatesCourseId);
         Task<Response<BylawDto>> GetBylawByIdAsync(int BylawId);
         Task<Response<IQueryable<BylawDto>>> GetBylawAsync();
         Task<Response<IQueryable<GetBylawDto>>> GetBylawByFacultyIdAsync(int facultyId);
