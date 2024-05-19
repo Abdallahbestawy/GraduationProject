@@ -231,13 +231,14 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<GetDetailsByParentIdDto>> GetDetailsByParentIdAsync(int ParentId)
+        public async Task<Response<GetDetailsByParentIdDto>> GetDetailsByParentIdAsync(int ParentId, int type)
         {
             try
             {
-                var results = await _unitOfWork.ScientificDegrees.GetEntityByPropertyAsync(p => p.ParentId == ParentId);
 
-                if (results == null || !results.Any())
+                var results = await _unitOfWork.ScientificDegrees.GetEntityByPropertyAsync(p => p.ParentId == ParentId && (int)p.Type == type);
+
+                if (!results.Any())
                     return Response<GetDetailsByParentIdDto>.BadRequest("This Scientific Degree doesn't exist");
 
                 var scientificDegree = results.Select(sc => new GetDetailsDtos
@@ -273,12 +274,12 @@ namespace GraduationProject.Service.Service
             try
             {
                 IEnumerable<ScientificDegree>? scientificDegreeEntities = Enumerable.Empty<ScientificDegree>();
-                if (!((ScientificDegreeType)type == ScientificDegreeType.Bylaw))
+                if (!((ScientificDegreeType)type == ScientificDegreeType.ScientificDegree))
                 {
                     if (!((ScientificDegreeType)type == ScientificDegreeType.Band))
                     {
                         if ((ScientificDegreeType)type == ScientificDegreeType.Phase)
-                            type = (int)ScientificDegreeType.Bylaw;
+                            type = (int)ScientificDegreeType.ScientificDegree;
                         else if ((ScientificDegreeType)type == ScientificDegreeType.Semester)
                             type = (int)ScientificDegreeType.Band;
                         else if ((ScientificDegreeType)type == ScientificDegreeType.ExamRole)
@@ -292,7 +293,7 @@ namespace GraduationProject.Service.Service
                     {
                         scientificDegreeEntities = await _unitOfWork.ScientificDegrees
                             .GetEntityByPropertyAsync(scien => scien.BylawId == bylawId
-                            && (scien.Type == ScientificDegreeType.Phase || scien.Type == ScientificDegreeType.Bylaw));
+                            && (scien.Type == ScientificDegreeType.Phase || scien.Type == ScientificDegreeType.ScientificDegree));
                     }
                 }
 
@@ -407,6 +408,43 @@ namespace GraduationProject.Service.Service
                 });
                 return Response<List<GetSemesterNameDto>>.ServerError("Error occured while retrieving Semesters",
                     "An unexpected error occurred while retrieving Semesters. Please try again later.");
+            }
+        }
+
+        public async Task<Response<GetDetailsByParentIdDto>> GetScientificDegreesByBylawIdAsync(int BylawId)
+        {
+            try
+            {
+                var results = await _unitOfWork.ScientificDegrees.GetEntityByPropertyAsync(p => p.BylawId == BylawId && p.Type == ScientificDegreeType.ScientificDegree);
+
+                if (!results.Any())
+                    return Response<GetDetailsByParentIdDto>.BadRequest("This Scientific Degree doesn't exist");
+
+                var scientificDegree = results.Select(sc => new GetDetailsDtos
+                {
+                    Id = sc.Id,
+                    Name = sc.Name,
+                }).ToList();
+                var getDetailsByParentIdDto = new GetDetailsByParentIdDto
+                {
+                    GetDetailsDtos = scientificDegree
+                };
+
+                return Response<GetDetailsByParentIdDto>.Success(getDetailsByParentIdDto, "Scientific Degree retrieved successfully")
+                    .WithCount(getDetailsByParentIdDto.GetDetailsDtos.Count);
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "ScientificDegreeService",
+                    MethodName = "GetScientificDegreesByBylawIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetDetailsByParentIdDto>.ServerError("Error occured while retrieving Scientific Degree",
+                    "An unexpected error occurred while retrieving Scientific Degree. Please try again later.");
             }
         }
     }

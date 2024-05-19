@@ -88,10 +88,17 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("GetDetails/{Id:int}")]
-        public async Task<IActionResult> GetDetails(int Id)
+        [HttpGet("GetDetails")]
+        public async Task<IActionResult> GetDetails([FromQuery] int Id, [FromQuery] int type)
         {
-            var response = await _scientificDegreeService.GetDetailsByParentIdAsync(Id);
+            var response = await _scientificDegreeService.GetDetailsByParentIdAsync(Id, type);
+
+            return StatusCode(response.StatusCode, response);
+        }
+        [HttpGet("ScientificDegrees")]
+        public async Task<IActionResult> GetScientificDegreesByBylawId([FromQuery] int Id)
+        {
+            var response = await _scientificDegreeService.GetScientificDegreesByBylawIdAsync(Id);
 
             return StatusCode(response.StatusCode, response);
         }

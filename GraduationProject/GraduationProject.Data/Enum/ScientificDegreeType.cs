@@ -2,7 +2,7 @@
 {
     public enum ScientificDegreeType : short
     {
-        Bylaw = 1,
+        ScientificDegree = 1,
         Band,
         Phase,
         Semester,
