@@ -841,7 +841,7 @@ namespace GraduationProject.Service.Service
                     _unitOfWork.FamilyDatas.Update(existingFamilyData);
                 }
                 var existingPhones = await _unitOfWork.Phones.GetEntityByPropertyAsync(s => s.StudentId == existingStudent.Id);
-                if (existingPhones != null || existingPhones.Any())
+                if (existingPhones.Any())
                 {
                     foreach (var existingPhone in existingPhones)
                     {
@@ -852,7 +852,7 @@ namespace GraduationProject.Service.Service
                             existingPhone.Type = updateDtoPhone.Type;
                         }
                     }
-                    _unitOfWork.Phones.UpdateRangeAsync(existingPhones);
+                    await _unitOfWork.Phones.UpdateRangeAsync(existingPhones);
                 }
                 else
                 {

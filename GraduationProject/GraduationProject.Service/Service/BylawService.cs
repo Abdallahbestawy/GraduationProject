@@ -250,6 +250,77 @@ namespace GraduationProject.Service.Service
                 existingBylaw.FacultyId = updateBylawDto.FacultyId;
 
                 await _unitOfWork.Bylaws.Update(existingBylaw);
+                var existingEstimates = await _unitOfWork.Estimates.GetEntityByPropertyAsync(s => s.BylawId == existingBylaw.Id);
+                if (existingEstimates.Any())
+                {
+                    foreach (var existingEstimate in existingEstimates)
+                    {
+                        var updateDtoEstimate = updateBylawDto.Estimates.FirstOrDefault(es => es.Id == existingEstimate.Id);
+                        if (updateDtoEstimate != null)
+                        {
+                            existingEstimate.Name = updateDtoEstimate.NameEstimates;
+                            existingEstimate.Char = updateDtoEstimate.CharEstimates;
+                            existingEstimate.MaxPercentage = updateDtoEstimate.MaxPercentageEstimates;
+                            existingEstimate.MinPercentage = updateDtoEstimate.MinPercentageEstimates;
+                            existingEstimate.MaxGpa = updateDtoEstimate.MaxGpaEstimates;
+                            existingEstimate.MinGpa = updateDtoEstimate.MinGpaEstimates;
+                        }
+                    }
+                    await _unitOfWork.Estimates.UpdateRangeAsync(existingEstimates);
+                }
+                else
+                {
+                    if (updateBylawDto.Estimates != null)
+                    {
+                        List<Estimates> estimates = updateBylawDto.Estimates.Select(es =>
+                            new Estimates
+                            {
+                                BylawId = existingBylaw.Id,
+                                Name = es.NameEstimates,
+                                Char = es.CharEstimates,
+                                MaxPercentage = es.MaxPercentageEstimates,
+                                MinPercentage = es.MinPercentageEstimates,
+                                MaxGpa = es.MaxGpaEstimates,
+                                MinGpa = es.MinGpaEstimates
+                            }).ToList();
+
+                        await _unitOfWork.Estimates.AddRangeAsync(estimates);
+                    }
+                }
+                var existingEstimatesCourses = await _unitOfWork.EstimatesCourses.GetEntityByPropertyAsync(s => s.BylawId == existingBylaw.Id);
+                if (existingEstimatesCourses.Any())
+                {
+                    foreach (var existingEstimatesCourse in existingEstimatesCourses)
+                    {
+                        var updateDtoEstimateCourse = updateBylawDto.EstimatesCourses.FirstOrDefault(esc => esc.Id == existingEstimatesCourse.Id);
+                        if (updateDtoEstimateCourse != null)
+                        {
+                            existingEstimatesCourse.Name = updateDtoEstimateCourse.NameEstimatesCourse;
+                            existingEstimatesCourse.Char = updateDtoEstimateCourse.CharEstimatesCourse;
+                            existingEstimatesCourse.MaxPercentage = updateDtoEstimateCourse.MaxPercentageEstimatesCourse;
+                            existingEstimatesCourse.MinPercentage = updateDtoEstimateCourse.MinPercentageEstimatesCourse;
+
+                        }
+                    }
+                    await _unitOfWork.EstimatesCourses.UpdateRangeAsync(existingEstimatesCourses);
+                }
+                else
+                {
+                    if (updateBylawDto.EstimatesCourses != null)
+                    {
+                        List<EstimatesCourse> estimatesCourse = updateBylawDto.EstimatesCourses.Select(esc =>
+                            new EstimatesCourse
+                            {
+                                BylawId = existingBylaw.Id,
+                                Name = esc.NameEstimatesCourse,
+                                Char = esc.CharEstimatesCourse,
+                                MaxPercentage = esc.MaxPercentageEstimatesCourse,
+                                MinPercentage = esc.MinPercentageEstimatesCourse,
+                            }).ToList();
+
+                        await _unitOfWork.EstimatesCourses.AddRangeAsync(estimatesCourse);
+                    }
+                }
                 var result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
