@@ -113,7 +113,8 @@ namespace GraduationProject.Service.Service
                     Name = department.Name,
                     Code = department.Code,
                     Description = department.Description,
-                    FacultyName = department.Faculty.Name,
+                    FacultyId = department.FacultyId,
+                    FacultyName = department.Faculty.Name
                 };
 
                 return Response<GetDeDepartmentByIdDto>.Success(departmentDto, "Department retrieved successfully").WithCount();

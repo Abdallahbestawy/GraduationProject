@@ -235,11 +235,14 @@ namespace GraduationProject.Service.Service
         {
             try
             {
+                var isExist = await _unitOfWork.ScientificDegrees.GetByIdAsync(ParentId);
+                if (isExist == null)
+                    return Response<GetDetailsByParentIdDto>.BadRequest("This Scientific Degree doesn't exist");
 
                 var results = await _unitOfWork.ScientificDegrees.GetEntityByPropertyAsync(p => p.ParentId == ParentId && (int)p.Type == type);
 
                 if (!results.Any())
-                    return Response<GetDetailsByParentIdDto>.BadRequest("This Scientific Degree doesn't exist");
+                    return Response<GetDetailsByParentIdDto>.NoContent("There is no childs for this Scientific Degree");
 
                 var scientificDegree = results.Select(sc => new GetDetailsDtos
                 {
