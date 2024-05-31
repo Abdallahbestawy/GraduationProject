@@ -151,5 +151,26 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        [Authorize]
+        [HttpGet("F")]
+        public async Task<IActionResult> GetDetailsByUserId()
+        {
+            var currentUser = await _accountService.GetUser(User);
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+            var response = await _StaffService.GetDetailsByUserIdAsync(currentUser.Id);
+
+            return StatusCode(response.StatusCode, response);
+        }
+        [Authorize(Roles = nameof(UserType.Administration))]
+        [HttpGet("FA/{facultyId:int}")]
+        public async Task<IActionResult> GetAllByFacultyId(int facultyId)
+        {
+            var response = await _StaffService.GetAllByFacultyIdAsync(facultyId);
+
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

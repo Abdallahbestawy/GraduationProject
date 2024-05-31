@@ -37,6 +37,7 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels { get; }
         IGeneralRepository<GetAllModel> GetAllModels { get; }
         IGeneralRepository<GetStudentsSemesterResultModel> GetStudentsSemesterResultModels { get; }
+        IGeneralRepository<GetAllByFacultyIdModel> GetAllByFacultyIdModels { get; }
         IGeneralRepository<GetAllStudentsInSemesterModel> GetAllStudentsInSemesterModels { get; }
         IGeneralRepository<GetStudentInSemesterResultModel> GetStudentInSemesterResultModels { get; }
         IGeneralRepository<GetAllStudentInCourseResultModel> GetAllStudentInCourseResultModels { get; }

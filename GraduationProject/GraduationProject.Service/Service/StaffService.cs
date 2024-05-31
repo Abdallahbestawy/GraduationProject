@@ -615,7 +615,7 @@ namespace GraduationProject.Service.Service
             try
             {
                 var staff = await _unitOfWork.Staffs.GetEntityByPropertyAsync(u => u.Id == staffId);
-                if (staff == null || !staff.Any())
+                if (!staff.Any())
                 {
                     return Response<GetCourseStaffSemesterDto>.BadRequest("This staff doesn't exist");
                 }
@@ -659,6 +659,72 @@ namespace GraduationProject.Service.Service
                      "An unexpected error occurred while retrieving staff's courses. Please try again later.");
             }
         }
+
+        public async Task<Response<GetDetailsByUserIdDto>> GetDetailsByUserIdAsync(string userId)
+        {
+            try
+            {
+                var staff = await _unitOfWork.Staffs.GetEntityByPropertyAsync(u => u.UserId == userId);
+                if (!staff.Any())
+                {
+                    return Response<GetDetailsByUserIdDto>.BadRequest("This staff doesn't exist");
+                }
+                GetDetailsByUserIdDto getDetailsByUserIdDto = new GetDetailsByUserIdDto
+                {
+                    factulyId = staff.FirstOrDefault().FacultyId
+                };
+                return Response<GetDetailsByUserIdDto>.Success(getDetailsByUserIdDto, "Staff info retrieved successfully").WithCount();
+
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StaffService",
+                    MethodName = "GetDetailsByUserIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetDetailsByUserIdDto>.ServerError("Error occured while retrieving Get Details staff",
+                     "An unexpected error occurred while retrieving Get Details staff. Please try again later.");
+            }
+        }
+
+        public async Task<Response<List<GetAllByFacultyIdDto>>> GetAllByFacultyIdAsync(int facultyId)
+        {
+            try
+            {
+                SqlParameter pFacultyId = new SqlParameter("@FacultyId", facultyId);
+                var staffs = await _unitOfWork.GetAllByFacultyIdModels.CallStoredProcedureAsync("EXECUTE SpGetAllByFacultyId", pFacultyId);
+
+                if (!staffs.Any())
+                    return Response<List<GetAllByFacultyIdDto>>.NoContent("No staffs are exist");
+
+                List<GetAllByFacultyIdDto> result = staffs.Select(staff => new GetAllByFacultyIdDto
+                {
+                    UserId = staff.UserId,
+                    Name = staff.NameEnglish
+                }).ToList();
+
+                return Response<List<GetAllByFacultyIdDto>>.Success(result, "Staffs retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StaffService",
+                    MethodName = "GetAllByFacultyIdModelAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+
+                return Response<List<GetAllByFacultyIdDto>>.ServerError("Error occurred while retrieving Staffs",
+                    "An unexpected error occurred while retrieving Staffs. Please try again later.");
+            }
+        }
+
     }
 }
 
