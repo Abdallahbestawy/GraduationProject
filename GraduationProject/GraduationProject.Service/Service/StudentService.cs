@@ -817,7 +817,8 @@ namespace GraduationProject.Service.Service
                 existingStudent.CityId = updateStudentDto.CityId;
                 existingStudent.Street = updateStudentDto.Street;
                 existingStudent.PostalCode = updateStudentDto.PostalCode;
-                _unitOfWork.Students.Update(existingStudent);
+                existingStudent.ReleasePlace = updateStudentDto.ReleasePlace;
+                await _unitOfWork.Students.Update(existingStudent);
                 var qualicationData = await _unitOfWork.QualificationDatas.GetEntityByPropertyAsync(s => s.StudentId == existingStudent.Id);
                 if (qualicationData != null || qualicationData.Any())
                 {
@@ -826,10 +827,10 @@ namespace GraduationProject.Service.Service
                     existingQualicationData.SeatNumber = updateStudentDto.SeatNumber;
                     existingQualicationData.QualificationYear = updateStudentDto.QualificationYear;
                     existingQualicationData.Degree = updateStudentDto.Degree;
-                    _unitOfWork.QualificationDatas.Update(existingQualicationData);
+                    await _unitOfWork.QualificationDatas.Update(existingQualicationData);
                 }
                 var familyData = await _unitOfWork.FamilyDatas.GetEntityByPropertyAsync(s => s.StudentId == existingStudent.Id);
-                if (familyData != null || familyData.Any())
+                if (familyData.Any())
                 {
                     var existingFamilyData = familyData.FirstOrDefault();
                     existingFamilyData.ParentName = updateStudentDto.ParentName;
@@ -838,7 +839,7 @@ namespace GraduationProject.Service.Service
                     existingFamilyData.GovernorateId = updateStudentDto.ParentGovernorateId;
                     existingFamilyData.CityId = updateStudentDto.ParentCityId;
                     existingFamilyData.Street = updateStudentDto.ParentStreet;
-                    _unitOfWork.FamilyDatas.Update(existingFamilyData);
+                    await _unitOfWork.FamilyDatas.Update(existingFamilyData);
                 }
                 var existingPhones = await _unitOfWork.Phones.GetEntityByPropertyAsync(s => s.StudentId == existingStudent.Id);
                 if (existingPhones.Any())

@@ -122,7 +122,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
-        [Authorize(Roles = nameof(UserType.Administration))]
+        [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.ControlMembers))]
         [HttpGet("as/{semesterId:int}")]
         public async Task<IActionResult> GetAllStudentsInSemester(int semesterId)
         {
