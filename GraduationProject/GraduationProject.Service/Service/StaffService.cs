@@ -441,7 +441,8 @@ namespace GraduationProject.Service.Service
                 existingStaff.CityId = updateStaffDto.CityId;
                 existingStaff.Street = updateStaffDto.Street;
                 existingStaff.PostalCode = updateStaffDto.PostalCode;
-                _unitOfWork.Staffs.Update(existingStaff);
+                existingStaff.ReleasePlace = updateStaffDto.ReleasePlace;
+                await _unitOfWork.Staffs.Update(existingStaff);
                 var qualicationData = await _unitOfWork.QualificationDatas.GetEntityByPropertyAsync(s => s.StaffId == existingStaff.Id);
                 if (qualicationData != null || qualicationData.Any())
                 {
@@ -450,7 +451,7 @@ namespace GraduationProject.Service.Service
                     existingQualicationData.SeatNumber = updateStaffDto.SeatNumber;
                     existingQualicationData.QualificationYear = updateStaffDto.QualificationYear;
                     existingQualicationData.Degree = updateStaffDto.Degree;
-                    _unitOfWork.QualificationDatas.Update(existingQualicationData);
+                    await _unitOfWork.QualificationDatas.Update(existingQualicationData);
                 }
                 var existingPhones = await _unitOfWork.Phones.GetEntityByPropertyAsync(s => s.StaffId == existingStaff.Id);
                 if (existingPhones != null || existingPhones.Any())
@@ -464,7 +465,7 @@ namespace GraduationProject.Service.Service
                             existingPhone.Type = updateDtoPhone.Type;
                         }
                     }
-                    _unitOfWork.Phones.UpdateRangeAsync(existingPhones);
+                    await _unitOfWork.Phones.UpdateRangeAsync(existingPhones);
                 }
                 else
                 {
