@@ -31,7 +31,7 @@ namespace GraduationProject.Identity.Migrations
                             ELSE 'Waiting'
                         END AS CourseChar,
                         COALESCE(cs.NumberOfPoints, cs.NumberOfCreditHours) AS NumberOfPoints,
-                        AssessMethods.Name AS AssessmentMethodName,
+                        AssessMethods.Name,
                         CASE
                             WHEN StudentSemesterAssessMethods.Degree IS NOT NULL THEN CAST(StudentSemesterAssessMethods.Degree AS VARCHAR(50))
                             ELSE 'Waiting'
