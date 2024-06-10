@@ -87,7 +87,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [Authorize(Roles = nameof(UserType.Teacher) + "," + nameof(UserType.TeacherAssistant))]
+        [Authorize(Roles = nameof(UserType.Teacher) + "," + nameof(UserType.ControlMembers))]
         [HttpPut("EditDegree")]
         public async Task<IActionResult> UpdateCourseStudentsAssessMethod(List<UpdateCourseStudentsAssessMethodDto> updateCourseStudentsAssessMethodDto)
         {
