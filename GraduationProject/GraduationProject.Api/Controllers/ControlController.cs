@@ -137,7 +137,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        //[Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.ControlMembers))]
+        [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.ControlMembers))]
         [HttpGet("AG/{facultyId:int}")]
         public async Task<IActionResult> GetAllAcdemyYearGraduates(int facultyId)
         {

@@ -8,5 +8,6 @@
     {
         public int FacultId { get; set; }
         public string FacultName { get; set; }
+        public string? FacultDescription { get; set; }
     }
 }
