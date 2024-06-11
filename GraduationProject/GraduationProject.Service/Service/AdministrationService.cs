@@ -2,6 +2,7 @@
 using GraduationProject.Data.Enum;
 using GraduationProject.Identity.Enum;
 using GraduationProject.Identity.IService;
+using GraduationProject.LogHandler.IService;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.Repository;
@@ -9,6 +10,7 @@ using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.StaffDto;
 using GraduationProject.Service.IService;
 using Microsoft.Data.SqlClient;
+using System.Security.Claims;
 
 namespace GraduationProject.Service.Service
 {
@@ -17,20 +19,25 @@ namespace GraduationProject.Service.Service
         private readonly UnitOfWork _unitOfWork;
         private readonly IAccountService _accountService;
         private readonly IMailService _mailService;
+        private readonly ILoggerHandler _loggerHandler;
 
-        public AdministrationService(UnitOfWork unitOfWork, IAccountService accountService, IMailService mailService)
+        public AdministrationService(UnitOfWork unitOfWork, IAccountService accountService, IMailService mailService, ILoggerHandler loggerHandler)
         {
             _unitOfWork = unitOfWork;
             _accountService = accountService;
             _mailService = mailService;
+            _loggerHandler = loggerHandler;
         }
 
-        public async Task<Response<int>> AddAdministrationAsync(AddStaffDto addSaffDto)
+        public async Task<Response<int>> AddAdministrationAsync(AddStaffDto addSaffDto, ClaimsPrincipal user)
         {
+            var userData = await _accountService.GetUser(user);
+
             string userId = "";
 
             try
             {
+                ///////////////////////////////////////---log---///////////////////////////////////////
                 userId = await _accountService.AddAdministrationAccount(addSaffDto.NameArabic, addSaffDto.NameEnglish,
                        addSaffDto.NationalID, addSaffDto.Email, addSaffDto.Password);
             }
@@ -72,6 +79,8 @@ namespace GraduationProject.Service.Service
             {
                 await _unitOfWork.Staffs.AddAsync(newAdministration);
                 await _unitOfWork.SaveAsync();
+                await _loggerHandler.InsertLog(userData.Id, "Staffs", newAdministration.Id.ToString(), null, newAdministration,
+                    typeof(Staff));
             }
             catch (Exception ex)
             {
@@ -102,6 +111,8 @@ namespace GraduationProject.Service.Service
             {
                 await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStaff);
                 await _unitOfWork.SaveAsync();
+                await _loggerHandler.InsertLog(userData.Id, "QualificationDatas", newQualificationDataStaff.Id.ToString(),
+                    null, newQualificationDataStaff, typeof(QualificationData));
             }
             catch (Exception ex)
             {
@@ -132,6 +143,11 @@ namespace GraduationProject.Service.Service
 
                     await _unitOfWork.Phones.AddRangeAsync(phones);
                     await _unitOfWork.SaveAsync();
+
+                    foreach (var phone in phones)
+                    {
+                        await _loggerHandler.InsertLog(userData.Id, "Phones", phone.Id.ToString(), null, phone, typeof(Phone));  
+                    }
                 }
             }
             catch (Exception ex)
@@ -196,8 +212,5 @@ namespace GraduationProject.Service.Service
                      "An unexpected error occurred while retrieving AddAdministrations. Please try again later.");
             }
         }
-
-        //need to handle errors ocuuered during the updating process
-
     }
 }

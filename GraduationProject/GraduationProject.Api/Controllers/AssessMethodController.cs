@@ -40,7 +40,7 @@ namespace GraduationProject.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAssessMethods(AssessMethodDto addAssessMethodDto)
         {
-            var response = await _assessMethodService.AddAssessMethodAsync(addAssessMethodDto);
+            var response = await _assessMethodService.AddAssessMethodAsync(addAssessMethodDto, User);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -52,7 +52,7 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("Please Enter Valid Model");
             }
-            var response = await _assessMethodService.UpdateAssessMethodAsync(updateAssessMethodDto);
+            var response = await _assessMethodService.UpdateAssessMethodAsync(updateAssessMethodDto, User);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -60,7 +60,7 @@ namespace GraduationProject.Api.Controllers
         [HttpDelete("{Id:int}")]
         public async Task<IActionResult> DeleteAssessMethod([FromRoute] int Id)
         {
-            var response = await _assessMethodService.DeleteAssessMethodAsync(Id);
+            var response = await _assessMethodService.DeleteAssessMethodAsync(Id, User);
 
             return StatusCode(response.StatusCode, response);
         }

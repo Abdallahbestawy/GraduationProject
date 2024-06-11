@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GraduationProject.LogHandler.Models
+﻿namespace GraduationProject.LogHandler.Models
 {
-    internal class ActivityLogModel<T>
+    internal class ActivityLogModel
     {
         public string? UserId { get; set; }
 
@@ -18,8 +12,10 @@ namespace GraduationProject.LogHandler.Models
 
         public string? Event { get; set; }
 
-        public T? OldData { get; set; }
+        public object? OldData { get; set; }
 
-        public T? NewData { get; set; }
+        public object? NewData { get; set; }
+
+        public Type DataType { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
 {
-    [Authorize(Roles = nameof(UserType.Administration))]
+    //[Authorize(Roles = nameof(UserType.Administration))]
     [Route("api/[controller]")]
     [ApiController]
     public class BandController : ControllerBase
@@ -36,6 +36,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddBand(BandDto addBandDto)
         {
@@ -51,7 +52,7 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("please emter valid model");
             }
-            var response = await _bandService.UpdateBandAsync(updateBandDto);
+            var response = await _bandService.UpdateBandAsync(updateBandDto,User);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -59,7 +60,7 @@ namespace GraduationProject.Api.Controllers
         [HttpDelete("{Id:int}")]
         public async Task<IActionResult> DeleteBand([FromRoute] int Id)
         {
-            var response = await _bandService.DeleteBandAsync(Id);
+            var response = await _bandService.DeleteBandAsync(Id, User);
 
             return StatusCode(response.StatusCode, response);
         }

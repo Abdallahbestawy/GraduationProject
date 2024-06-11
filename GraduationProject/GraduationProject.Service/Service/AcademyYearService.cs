@@ -1,5 +1,6 @@
 ﻿using GraduationProject.Data.Entity;
 using GraduationProject.Identity.IService;
+using GraduationProject.LogHandler.IService;
 using GraduationProject.LogHandler.Service;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
@@ -16,10 +17,10 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
-        private readonly LoggerHandler<AcademyYear> _logger;
+        private readonly ILoggerHandler _logger;
         private readonly IAccountService _accountService;
 
-        public AcademyYearService(UnitOfWork unitOfWork, IMailService mailService, LoggerHandler<AcademyYear> logger, IAccountService accountService)
+        public AcademyYearService(UnitOfWork unitOfWork, IMailService mailService, ILoggerHandler logger, IAccountService accountService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
@@ -57,8 +58,8 @@ namespace GraduationProject.Service.Service
                 var result = await _unitOfWork.SaveAsync();
                 if (result > 0)
                 {
-                    var userId = await _accountService.GetUserIdByUser(user);
-                    await _logger.InsertLog(userId, "AcademyYear", newAcademyYear.Id.ToString(), null, newAcademyYear);
+                    var userData = await _accountService.GetUser(user);
+                    await _logger.InsertLog(userData.Id, "AcademyYears", newAcademyYear.Id.ToString(), null, newAcademyYear, typeof(AcademyYear));
                     return Response<int>.Created("Academic year added successfully");
                 }
 
@@ -174,14 +175,8 @@ namespace GraduationProject.Service.Service
                         await _unitOfWork.AcademyYears.Update(academyYear);
                     }
                 }
-                var oldAcademyYear = new AcademyYear
-                {
-                    Start = existingAcademyYear.Start,
-                    End = existingAcademyYear.End,
-                    Description = existingAcademyYear.Description,
-                    FacultyId = existingAcademyYear.FacultyId,
-                    IsCurrent = existingAcademyYear.IsCurrent
-                };
+
+                var oldAcademyYear = ObjectDuplicater.Duplicate(existingAcademyYear);
 
                 existingAcademyYear.Start = updateAcademyYearDto.Start;
                 existingAcademyYear.End = updateAcademyYearDto.End;
@@ -194,8 +189,8 @@ namespace GraduationProject.Service.Service
 
                 if (result > 0)
                 {
-                    var userId = await _accountService.GetUserIdByUser(user);
-                    await _logger.UpdateLog(userId, "AcademyYear", existingAcademyYear.Id.ToString(), oldAcademyYear, existingAcademyYear);
+                    var userData = await _accountService.GetUser(user);
+                    await _logger.UpdateLog(userData.Id, "AcademyYears", existingAcademyYear.Id.ToString(), oldAcademyYear, existingAcademyYear, typeof(AcademyYear));
                     return Response<int>.Updated("Academic year updated successfully");
                 }
                 return Response<int>.ServerError("Error occured while updating Academic year",
@@ -227,20 +222,12 @@ namespace GraduationProject.Service.Service
                 await _unitOfWork.AcademyYears.Delete(existingAcademyYear);
                 var result = await _unitOfWork.SaveAsync();
 
-                var oldAcademyYear = new AcademyYear
-                {
-                    Start = existingAcademyYear.Start,
-                    End = existingAcademyYear.End,
-                    Description = existingAcademyYear.Description,
-                    AcademyYearOrder = existingAcademyYear.AcademyYearOrder,
-                    FacultyId = existingAcademyYear.FacultyId,
-                    IsCurrent = existingAcademyYear.IsCurrent
-                };
+                var oldAcademyYear = ObjectDuplicater.Duplicate(existingAcademyYear);
 
                 if (result > 0)
                 {
-                    var userId = await _accountService.GetUserIdByUser(user);
-                    await _logger.DeleteLog(userId, "AcademyYear", existingAcademyYear.Id.ToString(), oldAcademyYear, null);
+                    var userData = await _accountService.GetUser(user);
+                    await _logger.DeleteLog(userData.Id, "AcademyYears", existingAcademyYear.Id.ToString(), oldAcademyYear, null, typeof(AcademyYear));
                     return Response<int>.Deleted("Academic year deleted successfully");
                 }
 

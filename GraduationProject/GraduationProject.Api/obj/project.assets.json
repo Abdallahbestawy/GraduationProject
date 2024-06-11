@@ -945,6 +945,19 @@
           }
         }
       },
+      "Newtonsoft.Json/13.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "NPOI/2.7.0": {
         "type": "package",
         "dependencies": {
@@ -1586,7 +1599,8 @@
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
           "GraduationProject.Repository": "1.0.0",
-          "GraduationProject.Shared": "1.0.0"
+          "GraduationProject.Shared": "1.0.0",
+          "Newtonsoft.Json": "13.0.3"
         },
         "compile": {
           "bin/placeholder/GraduationProject.LogHandler.dll": {}
@@ -3137,6 +3151,36 @@
         "mimekit.nuspec"
       ]
     },
+    "Newtonsoft.Json/13.0.3": {
+      "sha512": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
+      "type": "package",
+      "path": "newtonsoft.json/13.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "README.md",
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/net6.0/Newtonsoft.Json.dll",
+        "lib/net6.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.0/Newtonsoft.Json.dll",
+        "lib/netstandard1.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.3/Newtonsoft.Json.dll",
+        "lib/netstandard1.3/Newtonsoft.Json.xml",
+        "lib/netstandard2.0/Newtonsoft.Json.dll",
+        "lib/netstandard2.0/Newtonsoft.Json.xml",
+        "newtonsoft.json.13.0.3.nupkg.sha512",
+        "newtonsoft.json.nuspec",
+        "packageIcon.png"
+      ]
+    },
     "NPOI/2.7.0": {
       "sha512": "yexXTxBKJT845yOSRDkgrgc3ciEWRnp8vMIRoZLOmUs7QJoCp5ZSi4wTPXtwYdhRg2v5Up9nC1TVKxrtkDcsYg==",
       "type": "package",
@@ -4321,23 +4365,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ABDAL\\.nuget\\packages\\": {},
+    "C:\\Users\\Mohamed\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Api\\GraduationProject.Api.csproj",
+      "projectUniqueName": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Api\\GraduationProject.Api.csproj",
       "projectName": "GraduationProject.Api",
-      "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Api\\GraduationProject.Api.csproj",
-      "packagesPath": "C:\\Users\\ABDAL\\.nuget\\packages\\",
-      "outputPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Api\\obj\\",
+      "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Api\\GraduationProject.Api.csproj",
+      "packagesPath": "C:\\Users\\Mohamed\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\ABDAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Mohamed\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4346,23 +4390,24 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj": {
-              "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj"
+            "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj": {
+              "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.EntityFramework\\GraduationProject.EntityFramework.csproj"
             },
-            "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj": {
-              "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj"
+            "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj": {
+              "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Identity\\GraduationProject.Identity.csproj"
             },
-            "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Mails\\GraduationProject.Mails.csproj": {
-              "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Mails\\GraduationProject.Mails.csproj"
+            "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Mails\\GraduationProject.Mails.csproj": {
+              "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Mails\\GraduationProject.Mails.csproj"
             },
-            "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj": {
-              "projectPath": "E:\\GraduationProjectImplement\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj"
+            "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj": {
+              "projectPath": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Service\\GraduationProject.Service.csproj"
             }
           }
         }
@@ -4407,7 +4452,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }

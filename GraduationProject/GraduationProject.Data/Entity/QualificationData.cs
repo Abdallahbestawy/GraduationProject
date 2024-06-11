@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GraduationProject.Shared.Attributes;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GraduationProject.Data.Entity
@@ -7,14 +8,17 @@ namespace GraduationProject.Data.Entity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [IgnoreLogging]
         public int Id { get; set; }
 
         [ForeignKey("Student")]
         public int? StudentId { get; set; }
+        [IgnoreLogging]
         public Student? Student { get; set; }
 
         [ForeignKey("Staff")]
         public int? StaffId { get; set; }
+        [IgnoreLogging]
         public Staff? Staff { get; set; }
 
         public string? PreQualification { get; set; }

@@ -1,5 +1,6 @@
 ﻿using GraduationProject.Data.Entity;
 using GraduationProject.Identity.IService;
+using GraduationProject.LogHandler.IService;
 using GraduationProject.LogHandler.Service;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
@@ -16,10 +17,10 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
-        private readonly LoggerHandler<Band> _logger;
+        private readonly ILoggerHandler _logger;
         private readonly IAccountService _accountService;
 
-        public BandService(UnitOfWork unitOfWork, IMailService mailService, LoggerHandler<Band> logger, IAccountService accountService)
+        public BandService(UnitOfWork unitOfWork, IMailService mailService, ILoggerHandler logger, IAccountService accountService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
@@ -43,8 +44,8 @@ namespace GraduationProject.Service.Service
 
                 if (result > 0)
                 {
-                    var userId = await _accountService.GetUserIdByUser(user);
-                    await _logger.InsertLog(userId, "Bands", newBand.Id.ToString(), null, newBand);
+                    var userData = await _accountService.GetUser(user);
+                    await _logger.InsertLog(userData.Id, "Bands", newBand.Id.ToString(), null, newBand, typeof(Band));
                     return Response<int>.Created("Band added successfully");
                 }
 
@@ -136,7 +137,7 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<int>> UpdateBandAsync(BandDto updateBandDto)
+        public async Task<Response<int>> UpdateBandAsync(BandDto updateBandDto, ClaimsPrincipal user)
         {
             try
             {
@@ -144,14 +145,7 @@ namespace GraduationProject.Service.Service
                 if (existingBand == null)
                     return Response<int>.BadRequest("This band doesn't exist");
 
-                Band oldBand = new Band
-                {
-                    Id = existingBand.Id,
-                    Name = existingBand.Name,
-                    Code = existingBand.Code,
-                    Order = existingBand.Order,
-                    FacultyId = existingBand.FacultyId
-                };
+                var oldBand = ObjectDuplicater.Duplicate(existingBand);
 
                 existingBand.Name = updateBandDto.Name;
                 existingBand.Code = updateBandDto.Code;
@@ -163,7 +157,8 @@ namespace GraduationProject.Service.Service
 
                 if (result > 0)
                 {
-                    await _logger.UpdateLog("123", "Bands", existingBand.Id.ToString(), oldBand, existingBand);
+                    var userData = await _accountService.GetUser(user);
+                    await _logger.UpdateLog(userData.Id, "Bands", existingBand.Id.ToString(), oldBand, existingBand, typeof(Band));
                     return Response<int>.Updated("Band updated successfully");
                 }
 
@@ -185,7 +180,7 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<int>> DeleteBandAsync(int bandId)
+        public async Task<Response<int>> DeleteBandAsync(int bandId, ClaimsPrincipal user)
         {
             try
             {
@@ -194,21 +189,15 @@ namespace GraduationProject.Service.Service
                 if (existingBand == null)
                     return Response<int>.BadRequest("This band doesn't exist");
 
-                Band oldBand = new Band
-                {
-                    Id = existingBand.Id,
-                    Name = existingBand.Name,
-                    Code = existingBand.Code,
-                    Order = existingBand.Order,
-                    FacultyId = existingBand.FacultyId
-                };
+                var oldBand = ObjectDuplicater.Duplicate(existingBand);
 
                 await _unitOfWork.Bands.Delete(existingBand);
                 var result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
                 {
-                    await _logger.DeleteLog("123", "Bands", oldBand.Id.ToString(), oldBand, null);
+                    var userData = await _accountService.GetUser(user);
+                    await _logger.DeleteLog(userData.Id, "Bands", oldBand.Id.ToString(), oldBand, null, typeof(Band));
                     return Response<int>.Deleted("Band deleted successfully");
                 }
 
