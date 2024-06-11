@@ -542,11 +542,11 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<List<GetAllAcdemyYearGraduatesDto>>> GetAllAcdemyYearGraduatesAsync()
+        public async Task<Response<List<GetAllAcdemyYearGraduatesDto>>> GetAllAcdemyYearGraduatesAsync(int facultyId)
         {
             try
             {
-                var distinctSemesters = await _unitOfWork.StudentSemesters.GetAllAcdemyYearGraduatesAsync();
+                var distinctSemesters = await _unitOfWork.StudentSemesters.GetAllAcdemyYearGraduatesAsync(facultyId);
                 if (distinctSemesters == null)
                     return Response<List<GetAllAcdemyYearGraduatesDto>>.NoContent("No AcdemyYear Graduates are exist");
                 int number = 0;

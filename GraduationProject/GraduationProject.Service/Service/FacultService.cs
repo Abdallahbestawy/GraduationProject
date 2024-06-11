@@ -65,7 +65,8 @@ namespace GraduationProject.Service.Service
                 var facultys = results.Select(faculty => new GetFacultyDtos
                 {
                     FacultId = faculty.Id,
-                    FacultName = faculty.Name
+                    FacultName = faculty.Name,
+                    FacultDescription = faculty.Description,
                 }).ToList();
 
                 var getFacultyByUserIdDto = new GetFacultyByUserIdDto

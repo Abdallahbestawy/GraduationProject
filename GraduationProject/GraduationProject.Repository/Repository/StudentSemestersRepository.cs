@@ -586,13 +586,13 @@ namespace GraduationProject.Repository.Repository
                 return null;
             }
         }
-        public async Task<List<StudentSemester>> GetAllAcdemyYearGraduatesAsync()
+        public async Task<List<StudentSemester>> GetAllAcdemyYearGraduatesAsync(int facultyId)
         {
             try
             {
                 var semester = await _context.StudentSemesters
                  .Include(a => a.AcademyYear)
-               .Where(a => a.IsGraduate)
+               .Where(a => a.IsGraduate && a.Student.FacultyId == facultyId)
                 .GroupBy(d => d.AcademyYearId)
                 .Select(g => g.First())
                 .ToListAsync();
