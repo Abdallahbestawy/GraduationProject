@@ -5,10 +5,11 @@ using GraduationProject.Service.IService;
 using GraduationProject.Shared.Attributes;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using NPOI.SS.Formula.Functions;
+using OfficeOpenXml;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System.ComponentModel.DataAnnotations;
+using OfficeOpenXml.Style;
 
 namespace GraduationProject.Service.Service
 {
@@ -350,5 +351,92 @@ namespace GraduationProject.Service.Service
 
             return errors;
         }
+
+        public async Task<MemoryStream> GenerateExcelFileForAssessMethodsAsync(string courseName, string courseCode,
+            string lecturerName, string extractorName, List<Dictionary<string, object>> students, List<string> assessMethods)
+        {
+            using (var excelPackage = new ExcelPackage())
+            {
+                var headers = new List<string> { "N.", "Student Code", "Student Name" };
+                headers.AddRange(assessMethods);
+                string lastColumn = GetExcelColumnName(headers.Count);
+
+                var sheet = excelPackage.Workbook.Worksheets.Add("Sheet1");
+
+                sheet.Cells[$"A1:{lastColumn}2"].Merge = true;
+                sheet.Cells[$"A3:{lastColumn}3"].Merge = true;
+                sheet.Cells[$"A4:{lastColumn}4"].Merge = true;
+
+                sheet.Cells["A1"].Value = $"{courseName} - {courseCode}";
+                sheet.Cells["A3"].Value = $"Lecturer: {lecturerName}";
+                sheet.Cells["A4"].Value = $"EduWay Extracted at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} by {extractorName}";
+
+                for (int i = 1; i <= 4; i++)
+                {
+                    sheet.Cells[$"A{i}:F{i}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    sheet.Cells[$"A{i}:F{i}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    sheet.Cells[$"A{i}:F{i}"].Style.Font.Bold = true;
+                }
+
+                for (int i = 0; i < headers.Count; i++)
+                {
+                    var cell = sheet.Cells[5, i + 1];
+                    cell.Value = headers[i];
+                    cell.Style.Font.Bold = true;
+
+                    cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    cell.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    var border = cell.Style.Border;
+                    border.Bottom.Style = border.Top.Style = border.Left.Style = border.Right.Style = ExcelBorderStyle.Thin;
+                }
+
+                int row = 6;
+                foreach (var student in students)
+                {
+                    for (int i = 0; i < headers.Count; i++)
+                    {
+                        var header = headers[i];
+                        var cell = sheet.Cells[row, i + 1];
+                        cell.Value = student.ContainsKey(header) ? student[header] : string.Empty;
+                        cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        cell.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                        var border = cell.Style.Border;
+                        border.Bottom.Style = border.Top.Style = border.Left.Style = border.Right.Style = ExcelBorderStyle.Thin;
+                    }
+                    row++;
+                }
+
+                sheet.Cells.AutoFitColumns();
+
+                excelPackage.Workbook.Properties.Title = "Sample Excel Report";
+                excelPackage.Workbook.Properties.Author = "Fahem";
+                excelPackage.Workbook.Properties.Subject = "Student Performance Report";
+                excelPackage.Workbook.Properties.Keywords = "Excel, Report, Students";
+                excelPackage.Workbook.Properties.Comments = "This is a sample Excel report generated using EPPlus.";
+
+                var memoryStream = new MemoryStream();
+                await excelPackage.SaveAsAsync(memoryStream);
+                memoryStream.Position = 0;
+                return memoryStream;
+            }
+        }
+        private string GetExcelColumnName(int columnNumber)
+        {
+            int dividend = columnNumber;
+            string columnName = String.Empty;
+            int modulo;
+
+            while (dividend > 0)
+            {
+                modulo = (dividend - 1) % 26;
+                columnName = Convert.ToChar(65 + modulo).ToString() + columnName;
+                dividend = (int)((dividend - modulo) / 26);
+            }
+
+            return columnName;
+        }
+
     }
 }

@@ -1,0 +1,12 @@
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.ExcelFilesGenerator\bin\Debug\net6.0\GraduationProject.ExcelFilesGenerator.deps.json
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.ExcelFilesGenerator\bin\Debug\net6.0\GraduationProject.ExcelFilesGenerator.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.ExcelFilesGenerator\bin\Debug\net6.0\GraduationProject.ExcelFilesGenerator.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.ExcelFilesGenerator\obj\Debug\net6.0\GraduationProject.ExcelFilesGenerator.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.ExcelFilesGenerator\obj\Debug\net6.0\GraduationProject.ExcelFilesGenerator.AssemblyInfoInputs.cache
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.ExcelFilesGenerator\obj\Debug\net6.0\GraduationProject.ExcelFilesGenerator.AssemblyInfo.cs
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.ExcelFilesGenerator\obj\Debug\net6.0\GraduationProject.ExcelFilesGenerator.csproj.CoreCompileInputs.cache
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.ExcelFilesGenerator\obj\Debug\net6.0\GraduationProject.ExcelFilesGenerator.sourcelink.json
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.ExcelFilesGenerator\obj\Debug\net6.0\GraduationProject.ExcelFilesGenerator.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.ExcelFilesGenerator\obj\Debug\net6.0\refint\GraduationProject.ExcelFilesGenerator.dll
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.ExcelFilesGenerator\obj\Debug\net6.0\GraduationProject.ExcelFilesGenerator.pdb
+C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.ExcelFilesGenerator\obj\Debug\net6.0\ref\GraduationProject.ExcelFilesGenerator.dll

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
 JwtTokenLifetimeManager jwtTokenLifetimeManager = new JwtTokenLifetimeManager();
@@ -82,6 +83,8 @@ builder.Services.AddTransient<IExcelHelper, ExcelHelper>();
 builder.Services.AddTransient<IJwtTokenLifetimeManager, JwtTokenLifetimeManager>();
 
 builder.Services.AddSingleton<IJwtTokenLifetimeManager>(jwtTokenLifetimeManager);
+
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));

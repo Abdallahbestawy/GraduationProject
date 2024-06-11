@@ -35,13 +35,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GraduationProject.Mails", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProject.Mails", "GraduationProject.Mails\GraduationProject.Mails.csproj", "{36E388C7-8D5C-481B-9CEB-689FE652DEA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraduationProject.LogHandler", "GraduationProject.Logger\GraduationProject.LogHandler.csproj", "{80F52AA8-A905-453C-A6AB-C78A35016A08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProject.LogHandler", "GraduationProject.Logger\GraduationProject.LogHandler.csproj", "{80F52AA8-A905-453C-A6AB-C78A35016A08}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GraduationProject.LogHandler", "GraduationProject.LogHandler", "{F34E90DE-7B0C-4561-A868-B373AF42638E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GraduationProject.Shared", "GraduationProject.Shared", "{FA9431A9-FB66-4FAB-9645-67CA4322ACDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraduationProject.Shared", "GraduationProject.Shared\GraduationProject.Shared.csproj", "{A7FFE256-F4AE-40DD-BA31-25653ACCC47F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProject.Shared", "GraduationProject.Shared\GraduationProject.Shared.csproj", "{A7FFE256-F4AE-40DD-BA31-25653ACCC47F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GraduationProject.ExcelFilesGenerator", "GraduationProject.ExcelFilesGenerator", "{EC2FB264-1F83-48C9-A49D-6A406AC93CA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraduationProject.ExcelFilesGenerator", "GraduationProject.ExcelFilesGenerator\GraduationProject.ExcelFilesGenerator.csproj", "{4019118C-7353-4359-8523-9227CA63EED1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +93,10 @@ Global
 		{A7FFE256-F4AE-40DD-BA31-25653ACCC47F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7FFE256-F4AE-40DD-BA31-25653ACCC47F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7FFE256-F4AE-40DD-BA31-25653ACCC47F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4019118C-7353-4359-8523-9227CA63EED1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4019118C-7353-4359-8523-9227CA63EED1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4019118C-7353-4359-8523-9227CA63EED1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4019118C-7353-4359-8523-9227CA63EED1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,6 +117,8 @@ Global
 		{F34E90DE-7B0C-4561-A868-B373AF42638E} = {996AA549-DC27-4438-8F2C-75795F9002AE}
 		{FA9431A9-FB66-4FAB-9645-67CA4322ACDE} = {996AA549-DC27-4438-8F2C-75795F9002AE}
 		{A7FFE256-F4AE-40DD-BA31-25653ACCC47F} = {FA9431A9-FB66-4FAB-9645-67CA4322ACDE}
+		{EC2FB264-1F83-48C9-A49D-6A406AC93CA3} = {996AA549-DC27-4438-8F2C-75795F9002AE}
+		{4019118C-7353-4359-8523-9227CA63EED1} = {EC2FB264-1F83-48C9-A49D-6A406AC93CA3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5C178144-DC46-4CF4-86F8-9AD923E24B80}
