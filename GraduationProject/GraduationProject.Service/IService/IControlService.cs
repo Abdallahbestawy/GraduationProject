@@ -2,6 +2,7 @@
 using GraduationProject.Service.DataTransferObject.AcademyYearDto;
 using GraduationProject.Service.DataTransferObject.SemesterDto;
 using GraduationProject.Service.DataTransferObject.StaffDto;
+using System.Security.Claims;
 
 namespace GraduationProject.Service.IService
 {
@@ -11,7 +12,7 @@ namespace GraduationProject.Service.IService
         Task<Response<bool>> RaisingGradesCourseAsync(int courseId);
         Task<Response<GetAllSemesterCurrentDto>> GetAllSemesterCurrentAsync();
         Task<Response<bool>> EndSemesterAsync(int semesterId);
-        Task<Response<int>> AddControlMembersAsync(AddStaffDto addControlMembersDto);
+        Task<Response<int>> AddControlMembersAsync(AddStaffDto addControlMembersDto, ClaimsPrincipal user);
         Task<Response<List<GetAllStaffsDto>>> GetAllControlMembersAsync(int FacultyId);
         Task<Response<List<GetAllSemesterActiveDto>>> GetAllSemesterActiveAsync(int academyYearId);
         Task<Response<GetStudentsSemesterResultDto>> GetStudentsSemesterResultAsync(int semesterId, int acedemyYearId);

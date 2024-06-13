@@ -1,5 +1,9 @@
 ﻿using GraduationProject.Data.Entity;
 using GraduationProject.Data.Enum;
+using GraduationProject.Identity.IService;
+using GraduationProject.Identity.Models;
+using GraduationProject.LogHandler.IService;
+using GraduationProject.LogHandler.Service;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.IRepository;
@@ -7,6 +11,7 @@ using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.BylawDto;
 using GraduationProject.Service.IService;
+using System.Security.Claims;
 
 namespace GraduationProject.Service.Service
 {
@@ -14,15 +19,38 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+        private readonly ILoggerHandler _loggerHandler; //not finshed
+        private readonly IAccountService _accountService;
 
-        public BylawService(UnitOfWork unitOfWork, IMailService mailService)
+        public BylawService(UnitOfWork unitOfWork, IMailService mailService, ILoggerHandler loggerHandler, IAccountService accountService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
+            _loggerHandler = loggerHandler;
+            _accountService = accountService;
         }
 
-        public async Task<Response<int>> AddBylawAsync(BylawDto addBylawDto)
+        public async Task<Response<int>> AddBylawAsync(BylawDto addBylawDto, ClaimsPrincipal user)
         {
+            ApplicationUser? userData = null;
+            try
+            {
+                userData = await _accountService.GetUser(user);
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "BylawService",
+                    MethodName = "AddBylawAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while adding Bylaw",
+                     "An unexpected error occurred while adding Bylaw. Please try again later.");
+            }
+
             Bylaw newBylaw = new Bylaw
             {
                 Name = addBylawDto.Name,
@@ -38,6 +66,7 @@ namespace GraduationProject.Service.Service
             {
                 await _unitOfWork.Bylaws.AddAsync(newBylaw);
                 await _unitOfWork.SaveAsync();
+                await _loggerHandler.InsertLog(userData.Id, "Bylaws", newBylaw.Id.ToString(), null, newBylaw, typeof(Bylaw));
             }
             catch (Exception ex)
             {
@@ -71,6 +100,11 @@ namespace GraduationProject.Service.Service
             {
                 await _unitOfWork.Estimates.AddRangeAsync(estimates);
                 await _unitOfWork.SaveAsync();
+                foreach (var estimate in estimates)
+                {
+                    await _loggerHandler.InsertLog(userData.Id, "Estimates", estimate.Id.ToString(), null, estimate, 
+                        typeof(Estimates));
+                }
             }
             catch (Exception ex)
             {
@@ -102,7 +136,14 @@ namespace GraduationProject.Service.Service
                 await _unitOfWork.EstimatesCourses.AddRangeAsync(estimatesCourses);
                 var result = await _unitOfWork.SaveAsync();
                 if (result > 0)
+                {
+                    foreach (var estimate in estimatesCourses)
+                    {
+                        await _loggerHandler.InsertLog(userData.Id, "EstimatesCourses", estimate.Id.ToString(), null, estimate,
+                            typeof(EstimatesCourse));
+                    }
                     return Response<int>.Created("Bylaw added successfully");
+                }
 
                 return Response<int>.ServerError("Error occured while adding Bylaw",
                      "An unexpected error occurred while adding Bylaw. Please try again later.");
@@ -232,14 +273,21 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<int>> UpdateBylawAsync(BylawDto updateBylawDto)
+        public async Task<Response<int>> UpdateBylawAsync(BylawDto updateBylawDto, ClaimsPrincipal user)
         {
             try
             {
+                bool estimatesIsUpdated = false;
+                bool estimatesCoursesIsUpdated = false;
+
+                var userData = await _accountService.GetUser(user);
+
                 Bylaw existingBylaw = await _unitOfWork.Bylaws.GetByIdAsync(updateBylawDto.Id);
 
                 if (existingBylaw == null)
                     return Response<int>.BadRequest("This bylaw doesn't exist");
+
+                var oldBylaw = ObjectDuplicater.Duplicate(existingBylaw);
 
                 existingBylaw.Name = updateBylawDto.Name;
                 existingBylaw.Description = updateBylawDto.Description;
@@ -324,7 +372,11 @@ namespace GraduationProject.Service.Service
                 var result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
+                {
+                    await _loggerHandler.UpdateLog(userData.Id, "Bylaws", existingBylaw.Id.ToString(), oldBylaw, existingBylaw,
+                        typeof(Bylaw));
                     return Response<int>.Updated("Bylaw updated successfully");
+                }
 
                 return Response<int>.ServerError("Error occured while updating bylaw",
                         "An unexpected error occurred while updating bylaw. Please try again later.");
@@ -344,11 +396,15 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<int>> DeleteBylawAsync(int BylawId)
+        public async Task<Response<int>> DeleteBylawAsync(int BylawId, ClaimsPrincipal user)
         {
             try
             {
+                var userData = await _accountService.GetUser(user);
+
                 var existingBlaw = await _unitOfWork.Bylaws.GetByIdAsync(BylawId);
+
+                var oldBylaw = ObjectDuplicater.Duplicate(existingBlaw);
 
                 if (existingBlaw == null)
                     return Response<int>.BadRequest("This bylaw doesn't exist");
@@ -357,7 +413,10 @@ namespace GraduationProject.Service.Service
                 var result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
+                {
+                    await _loggerHandler.DeleteLog(userData.Id, "Bylaws", oldBylaw.Id.ToString(), oldBylaw, null, typeof(Bylaw));
                     return Response<int>.Deleted("Bylaw deleted successfully");
+                }
 
                 return Response<int>.ServerError("Error occured while deleting bylaw",
                         "An unexpected error occurred while deleting bylaw. Please try again later.");
@@ -415,19 +474,26 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<int>> DeleteEstimatesAsync(int estimatesId)
+        public async Task<Response<int>> DeleteEstimatesAsync(int estimatesId, ClaimsPrincipal user)
         {
             try
             {
+                var userData = await _accountService.GetUser(user);
+
                 var existingEstimates = await _unitOfWork.Estimates.GetByIdAsync(estimatesId);
                 if (existingEstimates == null)
                     return Response<int>.BadRequest("This Estimates doesn't exist");
+                var oldEstimate = ObjectDuplicater.Duplicate(existingEstimates);
 
                 await _unitOfWork.Estimates.Delete(existingEstimates);
                 var result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
+                {
+                    await _loggerHandler.DeleteLog(userData.Id, "Estimates", oldEstimate.Id.ToString(), oldEstimate, null,
+                        typeof(Estimates));
                     return Response<int>.Deleted("Estimates deleted successfully");
+                }
 
                 return Response<int>.ServerError("Error occured while deleting Estimates",
                         "An unexpected error occurred while deleting Estimates. Please try again later.");
@@ -447,19 +513,27 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<int>> DeleteEstimatesCourseAsync(int estimatesCourseId)
+        public async Task<Response<int>> DeleteEstimatesCourseAsync(int estimatesCourseId, ClaimsPrincipal user)
         {
             try
             {
+                var userData = await _accountService.GetUser(user);
+
                 var existingEstimatesCourse = await _unitOfWork.EstimatesCourses.GetByIdAsync(estimatesCourseId);
                 if (existingEstimatesCourse == null)
                     return Response<int>.BadRequest("This EstimatesCourse doesn't exist");
+
+                var oldEstimateCourse = ObjectDuplicater.Duplicate(existingEstimatesCourse);
 
                 await _unitOfWork.EstimatesCourses.Delete(existingEstimatesCourse);
                 var result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
+                {
+                    await _loggerHandler.DeleteLog(userData.Id, "EstimatesCourses", oldEstimateCourse.Id.ToString(),
+                        oldEstimateCourse, null, typeof(EstimatesCourse));
                     return Response<int>.Deleted("EstimatesCourse deleted successfully");
+                }
 
                 return Response<int>.ServerError("Error occured while deleting EstimatesCourse",
                         "An unexpected error occurred while deleting EstimatesCourse. Please try again later.");

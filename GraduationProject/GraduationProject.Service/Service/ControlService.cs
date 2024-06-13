@@ -2,6 +2,7 @@
 using GraduationProject.Data.Enum;
 using GraduationProject.Identity.Enum;
 using GraduationProject.Identity.IService;
+using GraduationProject.LogHandler.IService;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.Repository;
@@ -11,6 +12,8 @@ using GraduationProject.Service.DataTransferObject.SemesterDto;
 using GraduationProject.Service.DataTransferObject.StaffDto;
 using GraduationProject.Service.IService;
 using Microsoft.Data.SqlClient;
+using System.Collections.Immutable;
+using System.Security.Claims;
 
 namespace GraduationProject.Service.Service
 {
@@ -20,16 +23,17 @@ namespace GraduationProject.Service.Service
         private readonly UnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
         private readonly IAccountService _accountService;
+        private readonly ILoggerHandler _loggerHandler;
 
-
-        public ControlService(UnitOfWork unitOfWork, IMailService mailService, IAccountService accountService)
+        public ControlService(UnitOfWork unitOfWork, IMailService mailService, IAccountService accountService, ILoggerHandler loggerHandler)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
             _accountService = accountService;
-
+            _loggerHandler = loggerHandler;
         }
 
+        ////////////////////////////////////---LOG---////////////////////////////////////
         public async Task<Response<bool>> RaisingGradesSemesterAsync(int semesterId)
         {
             try
@@ -58,6 +62,7 @@ namespace GraduationProject.Service.Service
             }
         }
 
+        ////////////////////////////////////---LOG---////////////////////////////////////
         public async Task<Response<bool>> RaisingGradesCourseAsync(int courseId)
         {
             try
@@ -126,6 +131,7 @@ namespace GraduationProject.Service.Service
             }
         }
 
+        ////////////////////////////////////---LOG---////////////////////////////////////
         // the message value in the badRequest need to be specified
         public async Task<Response<bool>> EndSemesterAsync(int semesterId)
         {
@@ -176,8 +182,10 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<int>> AddControlMembersAsync(AddStaffDto addControlMembersDto)
+        public async Task<Response<int>> AddControlMembersAsync(AddStaffDto addControlMembersDto, ClaimsPrincipal user)
         {
+            var userData = await _accountService.GetUser(user);
+
             string userId = "";
 
             try
@@ -222,6 +230,8 @@ namespace GraduationProject.Service.Service
             {
                 await _unitOfWork.Staffs.AddAsync(newaddControlMembersDto);
                 await _unitOfWork.SaveAsync();
+                await _loggerHandler.InsertLog(userData.Id, "Staffs", newaddControlMembersDto.Id.ToString(), null,
+                    newaddControlMembersDto, typeof(Staff));
             }
             catch (Exception ex)
             {
@@ -252,6 +262,8 @@ namespace GraduationProject.Service.Service
             {
                 await _unitOfWork.QualificationDatas.AddAsync(newQualificationDataStudent);
                 await _unitOfWork.SaveAsync();
+                await _loggerHandler.InsertLog(userData.Id, "QualificationDatas", newQualificationDataStudent.Id.ToString(),
+                    null, newQualificationDataStudent, typeof(QualificationData));
             }
             catch (Exception ex)
             {
@@ -268,6 +280,7 @@ namespace GraduationProject.Service.Service
                 return Response<int>.ServerError("Error occured while adding ControlMembers",
                      "An unexpected error occurred while adding ControlMembers. Please try again later.");
             }
+
             try
             {
                 if (addControlMembersDto.PhoneNumbers != null)
@@ -282,6 +295,10 @@ namespace GraduationProject.Service.Service
 
                     await _unitOfWork.Phones.AddRangeAsync(phones);
                     await _unitOfWork.SaveAsync();
+                    foreach (var phone in phones)
+                    {
+                        await _loggerHandler.InsertLog(userData.Id, "Phones", phone.Id.ToString(), null, phone, typeof(Phone));
+                    }
                 }
             }
             catch (Exception ex)

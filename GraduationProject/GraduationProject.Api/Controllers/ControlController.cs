@@ -25,7 +25,7 @@ namespace GraduationProject.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await _controlService.AddControlMembersAsync(addControlMembersDto);
+                var response = await _controlService.AddControlMembersAsync(addControlMembersDto, User);
 
                 return StatusCode(response.StatusCode, response);
             }
