@@ -222,6 +222,16 @@ namespace GraduationProject.Identity.Service
             return currentUser;
         }
 
+        public async Task<ApplicationUser> GetUserByUserId(string userId)
+        {
+            var currentUser = await _userManager.FindByIdAsync(userId);
 
+            if (currentUser == null)
+            {
+                return null;
+            }
+
+            return currentUser;
+        }
     }
 }

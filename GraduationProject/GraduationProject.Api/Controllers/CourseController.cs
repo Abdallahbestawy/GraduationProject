@@ -143,5 +143,19 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpGet("GetExcelFileForSpecificCourse/{courseId:int}/{inculdeOldData:bool}")]
+        public async Task<IActionResult> GenerateExcelFileForSpecificCourseByCourseId(int courseId, bool inculdeOldData)
+        {
+            var response = await _courseService.GenerateExcelFileForStudentSemesterAssessMethodsBySpecificCourse(courseId, User, inculdeOldData);
+
+            if(!response.Succeeded)
+                return StatusCode(response.StatusCode, response);
+
+            var fileName = "EduWay-AssessMethods.xlsx";
+            var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            return File(response.Data.ToArray(), contentType, fileName);
+        }
     }
 }

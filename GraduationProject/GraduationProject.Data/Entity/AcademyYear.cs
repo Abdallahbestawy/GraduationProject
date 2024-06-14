@@ -21,9 +21,9 @@ namespace GraduationProject.Data.Entity
         public bool IsCurrent { get; set; }
         [ForeignKey("Facultys")]
         public int FacultyId { get; set; }
-
         [IgnoreLogging]
         public virtual Faculty Facultys { get; set; }
+
         [IgnoreLogging]
         public virtual ICollection<StudentSemester> StudentSemesters { get; set; } = new List<StudentSemester>();
         [IgnoreLogging]

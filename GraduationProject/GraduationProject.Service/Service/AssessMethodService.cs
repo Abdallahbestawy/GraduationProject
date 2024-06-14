@@ -1,4 +1,7 @@
 ﻿using GraduationProject.Data.Entity;
+using GraduationProject.Identity.IService;
+using GraduationProject.LogHandler.IService;
+using GraduationProject.LogHandler.Service;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.IRepository;
@@ -6,6 +9,7 @@ using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.AssessMethodDto;
 using GraduationProject.Service.IService;
+using System.Security.Claims;
 
 namespace GraduationProject.Service.Service
 {
@@ -13,14 +17,18 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+        private readonly ILoggerHandler _logger;
+        private readonly IAccountService _accountService;
 
-        public AssessMethodService(UnitOfWork unitOfWork, IMailService mailService)
+        public AssessMethodService(UnitOfWork unitOfWork, IMailService mailService, ILoggerHandler logger, IAccountService accountService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
+            _logger = logger;
+            _accountService = accountService;
         }
 
-        public async Task<Response<int>> AddAssessMethodAsync(AssessMethodDto addAssessMethodDto)
+        public async Task<Response<int>> AddAssessMethodAsync(AssessMethodDto addAssessMethodDto, ClaimsPrincipal user)
         {
             try
             {
@@ -37,7 +45,11 @@ namespace GraduationProject.Service.Service
                 var result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
+                {
+                    var userData = await _accountService.GetUser(user);
+                    await _logger.InsertLog(userData.Id, "AssessMethods", newAssessMethod.Id.ToString(), null, newAssessMethod, typeof(AssessMethod));
                     return Response<int>.Created("Assess Method added successfully");
+                }
 
                 return Response<int>.ServerError("Error occured while adding Assess Method",
                     "An unexpected error occurred while adding Assess Method. Please try again later.");
@@ -132,7 +144,7 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<int>> UpdateAssessMethodAsync(AssessMethodDto updateAssessMethodDto)
+        public async Task<Response<int>> UpdateAssessMethodAsync(AssessMethodDto updateAssessMethodDto, ClaimsPrincipal user)
         {
             try
             {
@@ -140,6 +152,8 @@ namespace GraduationProject.Service.Service
 
                 if (existingAssessMethod == null)
                     return Response<int>.BadRequest("This Assess Method doesn't exist");
+
+                var oldAssessMethod = ObjectDuplicater.Duplicate(existingAssessMethod);
 
                 existingAssessMethod.Name = updateAssessMethodDto.Name;
                 existingAssessMethod.Description = updateAssessMethodDto.Description;
@@ -152,7 +166,12 @@ namespace GraduationProject.Service.Service
                 var result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
+                {
+                    var userData = await _accountService.GetUser(user);
+                    await _logger.UpdateLog(userData.Id, "AssessMethods", existingAssessMethod.Id.ToString(), oldAssessMethod, 
+                        existingAssessMethod, typeof(AssessMethod));
                     return Response<int>.Updated("Assess Method updated successfully");
+                }
 
                 return Response<int>.ServerError("Error occured while updating Assess Method",
                     "An unexpected error occurred while updating Assess Method. Please try again later.");
@@ -171,7 +190,7 @@ namespace GraduationProject.Service.Service
                     "An unexpected error occurred while updating Assess Method. Please try again later.");
             }
         }
-        public async Task<Response<int>> DeleteAssessMethodAsync(int assessMethodId)
+        public async Task<Response<int>> DeleteAssessMethodAsync(int assessMethodId, ClaimsPrincipal user)
         {
             try
             {
@@ -180,11 +199,17 @@ namespace GraduationProject.Service.Service
                 if (existingAssessMethod == null)
                     return Response<int>.BadRequest("This Assess Method doesn't exist");
 
+                var oldAssessMethod = ObjectDuplicater.Duplicate(existingAssessMethod);
+
                 await _unitOfWork.AssessMethods.Delete(existingAssessMethod);
                 var result = await _unitOfWork.SaveAsync();
 
                 if (result > 0)
+                {
+                    var userData = await _accountService.GetUser(user);
+                    await _logger.DeleteLog(userData.Id, "AssessMethods", oldAssessMethod.Id.ToString(), oldAssessMethod, null, typeof(AssessMethod));
                     return Response<int>.Deleted("Assess Method deleted successfully");
+                }
 
                 return Response<int>.ServerError("Error occured while deleting Assess Method",
                     "An unexpected error occurred while deleting Assess Method. Please try again later.");

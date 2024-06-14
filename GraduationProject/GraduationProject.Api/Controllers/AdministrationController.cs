@@ -22,7 +22,7 @@ namespace GraduationProject.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await _administrationService.AddAdministrationAsync(addAdministrationDto);
+                var response = await _administrationService.AddAdministrationAsync(addAdministrationDto, User);
 
                 return StatusCode(response.StatusCode, response);
             }

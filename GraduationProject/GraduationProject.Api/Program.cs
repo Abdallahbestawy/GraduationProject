@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using OfficeOpenXml;
+using GraduationProject.LogHandler.IService;
 
 var builder = WebApplication.CreateBuilder(args);
 JwtTokenLifetimeManager jwtTokenLifetimeManager = new JwtTokenLifetimeManager();
@@ -79,11 +81,13 @@ builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<IControlService, ControlService>();
 builder.Services.AddTransient<ILocationsService, LocationsService>();
-builder.Services.AddTransient(typeof(LoggerHandler<>));
+builder.Services.AddTransient<ILoggerHandler, LoggerHandler>();
 builder.Services.AddTransient<IExcelHelper, ExcelHelper>();
 builder.Services.AddTransient<IJwtTokenLifetimeManager, JwtTokenLifetimeManager>();
 
 builder.Services.AddSingleton<IJwtTokenLifetimeManager>(jwtTokenLifetimeManager);
+
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));

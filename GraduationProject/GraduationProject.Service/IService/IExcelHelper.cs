@@ -1,11 +1,6 @@
 ﻿using GraduationProject.Service.DataTransferObject.FilesDto;
 using GraduationProject.Service.DataTransferObject.PhoneDto;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GraduationProject.Service.IService
 {
@@ -14,5 +9,7 @@ namespace GraduationProject.Service.IService
         ImportedData<T> Import<T>(string filePath) where T : new();
         string SaveFile(IFormFile file);
         ImportedData<List<PhoneNumberDto>> ImportFromSpecificColumn(string filePath, string colName);
+        Task<MemoryStream> GenerateExcelFileForAssessMethodsAsync(string courseName, string courseCode,
+            string lecturerName, string extractorName, List<Dictionary<string, object>> students, List<string> assessMethods);
     }
 }

@@ -44,7 +44,7 @@ namespace GraduationProject.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBylaw(BylawDto addBylawDto)
         {
-            var response = await _bylawService.AddBylawAsync(addBylawDto);
+            var response = await _bylawService.AddBylawAsync(addBylawDto, User);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -56,7 +56,7 @@ namespace GraduationProject.Api.Controllers
             {
                 return BadRequest("Please Enter Valid Model");
             }
-            var response = await _bylawService.UpdateBylawAsync(updateBylawDto);
+            var response = await _bylawService.UpdateBylawAsync(updateBylawDto, User);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -64,21 +64,21 @@ namespace GraduationProject.Api.Controllers
         [HttpDelete("{Id:int}")]
         public async Task<IActionResult> DeleteBylaw([FromRoute] int Id)
         {
-            var response = await _bylawService.DeleteBylawAsync(Id);
+            var response = await _bylawService.DeleteBylawAsync(Id, User);
 
             return StatusCode(response.StatusCode, response);
         }
         [HttpDelete("Estimates/{Id:int}")]
         public async Task<IActionResult> DeleteEstimates([FromRoute] int Id)
         {
-            var response = await _bylawService.DeleteEstimatesAsync(Id);
+            var response = await _bylawService.DeleteEstimatesAsync(Id, User);
 
             return StatusCode(response.StatusCode, response);
         }
         [HttpDelete("EstimatesCourse/{Id:int}")]
         public async Task<IActionResult> DeleteEstimatesCourse([FromRoute] int Id)
         {
-            var response = await _bylawService.DeleteEstimatesCourseAsync(Id);
+            var response = await _bylawService.DeleteEstimatesCourseAsync(Id, User);
 
             return StatusCode(response.StatusCode, response);
         }
