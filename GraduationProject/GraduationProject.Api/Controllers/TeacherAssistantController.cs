@@ -12,9 +12,11 @@ namespace GraduationProject.Api.Controllers
     public class TeacherAssistantController : ControllerBase
     {
         private readonly ITeacherAssistantService _teacherAssistantService;
-        public TeacherAssistantController(ITeacherAssistantService TeacherAssistantService)
+        private readonly ITeacherService _teacherService;
+        public TeacherAssistantController(ITeacherAssistantService TeacherAssistantService, ITeacherService teacherService)
         {
             _teacherAssistantService = TeacherAssistantService;
+            _teacherService = teacherService;
         }
         [HttpPost]
         public async Task<IActionResult> AddTeacherAssistant(AddStaffDto addTeacherAssistantDto)
@@ -40,6 +42,14 @@ namespace GraduationProject.Api.Controllers
             }
 
             var response = await _teacherAssistantService.GetAllTeacherAssistantsAsync(FacultyId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+        [HttpGet("GetAllL/{courseId:int}")]
+        public async Task<IActionResult> GetAllTeacherAssistants(int courseId)
+        {
+
+            var response = await _teacherService.GetCurrentStaffByCourseIdAsync(courseId, 2);
 
             return StatusCode(response.StatusCode, response);
         }

@@ -44,5 +44,6 @@ namespace GraduationProject.Data.Entity
         public virtual ICollection<CoursePrerequisite> DependentCourses { get; set; } = new List<CoursePrerequisite>();
         public virtual ICollection<CourseAssessMethod> CourseAssessMethods { get; set; } = new List<CourseAssessMethod>();
         public virtual ICollection<StudentSemesterCourse> StudentSemesterCourse { get; set; } = new List<StudentSemesterCourse>();
+        public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
     }
 }

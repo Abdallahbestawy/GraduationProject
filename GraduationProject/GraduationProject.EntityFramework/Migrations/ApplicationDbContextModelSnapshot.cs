@@ -725,6 +725,93 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.ToTable("Results");
                 });
 
+            modelBuilder.Entity("GraduationProject.Data.Entity.Schedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AcademyYearId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CurrentCapacity")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("EndStart")
+                        .HasColumnType("time");
+
+                    b.Property<int>("FacultyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScheduleDay")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SchedulePlaceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScheduleType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScientificDegreeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StaffId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("TimeStart")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcademyYearId");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("FacultyId");
+
+                    b.HasIndex("SchedulePlaceId");
+
+                    b.HasIndex("ScientificDegreeId");
+
+                    b.HasIndex("StaffId");
+
+                    b.ToTable("Schedules");
+                });
+
+            modelBuilder.Entity("GraduationProject.Data.Entity.SchedulePlace", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("FacultyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(550)
+                        .HasColumnType("nvarchar(550)");
+
+                    b.Property<int>("PlaceCapacity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacultyId");
+
+                    b.ToTable("SchedulePlaces");
+                });
+
             modelBuilder.Entity("GraduationProject.Data.Entity.ScientificDegree", b =>
                 {
                     b.Property<int>("Id")
@@ -903,6 +990,9 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Property<int>("StaffId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AcademyYearId");
@@ -981,6 +1071,29 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("GraduationProject.Data.Entity.StudentSchedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ScheduleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScheduleId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentSchedules");
                 });
 
             modelBuilder.Entity("GraduationProject.Data.Entity.StudentSemester", b =>
@@ -1089,6 +1202,19 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.ToTable("StudentSemesterCourses");
                 });
 
+            modelBuilder.Entity("GraduationProject.Data.Models.GetAllByFacultyIdModel", b =>
+                {
+                    b.Property<string>("NameEnglish")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("GetAllByFacultyId");
+                });
+
             modelBuilder.Entity("GraduationProject.Data.Models.GetAllModel", b =>
                 {
                     b.Property<string>("Email")
@@ -1182,6 +1308,18 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.ToTable("GetAllStudentsInSemester");
                 });
 
+            modelBuilder.Entity("GraduationProject.Data.Models.GetCurrentStaffByCourseIdModel", b =>
+                {
+                    b.Property<string>("NameEnglish")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StaffsId")
+                        .HasColumnType("int");
+
+                    b.ToTable("GetCurrentStaffByCourseId");
+                });
+
             modelBuilder.Entity("GraduationProject.Data.Models.GetGraduateStudentsByAcademyYearIdModel", b =>
                 {
                     b.Property<string>("AcademyYear")
@@ -1204,6 +1342,52 @@ namespace GraduationProject.EntityFramework.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.ToTable("GetGraduateStudentsByAcademyYearId");
+                });
+
+            modelBuilder.Entity("GraduationProject.Data.Models.GetSchedulesForStaffByUserIdModel", b =>
+                {
+                    b.Property<string>("AcademyYear")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CoursesCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CoursesName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FacultysName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameEnglish")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ScheduleDay")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SchedulePlacesName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ScheduleType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SchedulesId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ScientificDegreesName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Timing")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("GetSchedulesForStaffByUserId");
                 });
 
             modelBuilder.Entity("GraduationProject.Data.Models.GetStaffDetailsByUserIdModel", b =>
@@ -2175,6 +2359,68 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Navigation("studentSemester");
                 });
 
+            modelBuilder.Entity("GraduationProject.Data.Entity.Schedule", b =>
+                {
+                    b.HasOne("GraduationProject.Data.Entity.AcademyYear", "AcademyYear")
+                        .WithMany("Schedules")
+                        .HasForeignKey("AcademyYearId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GraduationProject.Data.Entity.Course", "Course")
+                        .WithMany("Schedules")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GraduationProject.Data.Entity.Faculty", "Faculty")
+                        .WithMany("Schedules")
+                        .HasForeignKey("FacultyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GraduationProject.Data.Entity.SchedulePlace", "SchedulePlace")
+                        .WithMany("Schedules")
+                        .HasForeignKey("SchedulePlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GraduationProject.Data.Entity.ScientificDegree", "ScientificDegree")
+                        .WithMany("Schedules")
+                        .HasForeignKey("ScientificDegreeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GraduationProject.Data.Entity.Staff", "Staff")
+                        .WithMany("Schedules")
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AcademyYear");
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Faculty");
+
+                    b.Navigation("SchedulePlace");
+
+                    b.Navigation("ScientificDegree");
+
+                    b.Navigation("Staff");
+                });
+
+            modelBuilder.Entity("GraduationProject.Data.Entity.SchedulePlace", b =>
+                {
+                    b.HasOne("GraduationProject.Data.Entity.Faculty", "Faculty")
+                        .WithMany("SchedulePlaces")
+                        .HasForeignKey("FacultyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Faculty");
+                });
+
             modelBuilder.Entity("GraduationProject.Data.Entity.ScientificDegree", b =>
                 {
                     b.HasOne("GraduationProject.Data.Entity.Band", "Band")
@@ -2340,6 +2586,25 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("GraduationProject.Data.Entity.StudentSchedule", b =>
+                {
+                    b.HasOne("GraduationProject.Data.Entity.Schedule", "Schedule")
+                        .WithMany("ScheduleStudents")
+                        .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GraduationProject.Data.Entity.Student", "Student")
+                        .WithMany("ScheduleStudents")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Schedule");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("GraduationProject.Data.Entity.StudentSemester", b =>
                 {
                     b.HasOne("GraduationProject.Data.Entity.AcademyYear", "AcademyYear")
@@ -2452,6 +2717,8 @@ namespace GraduationProject.EntityFramework.Migrations
 
             modelBuilder.Entity("GraduationProject.Data.Entity.AcademyYear", b =>
                 {
+                    b.Navigation("Schedules");
+
                     b.Navigation("StaffSemesters");
 
                     b.Navigation("StudentSemesters");
@@ -2502,6 +2769,8 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     b.Navigation("DependentCourses");
 
+                    b.Navigation("Schedules");
+
                     b.Navigation("StudentSemesterCourse");
                 });
 
@@ -2542,6 +2811,10 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     b.Navigation("Phases");
 
+                    b.Navigation("SchedulePlaces");
+
+                    b.Navigation("Schedules");
+
                     b.Navigation("Semesters");
 
                     b.Navigation("Staffs");
@@ -2565,11 +2838,23 @@ namespace GraduationProject.EntityFramework.Migrations
                     b.Navigation("scientificDegrees");
                 });
 
+            modelBuilder.Entity("GraduationProject.Data.Entity.Schedule", b =>
+                {
+                    b.Navigation("ScheduleStudents");
+                });
+
+            modelBuilder.Entity("GraduationProject.Data.Entity.SchedulePlace", b =>
+                {
+                    b.Navigation("Schedules");
+                });
+
             modelBuilder.Entity("GraduationProject.Data.Entity.ScientificDegree", b =>
                 {
                     b.Navigation("Courses");
 
                     b.Navigation("ParentScientificDegree");
+
+                    b.Navigation("Schedules");
 
                     b.Navigation("StudentSemesters");
                 });
@@ -2581,6 +2866,8 @@ namespace GraduationProject.EntityFramework.Migrations
 
             modelBuilder.Entity("GraduationProject.Data.Entity.Staff", b =>
                 {
+                    b.Navigation("Schedules");
+
                     b.Navigation("StaffSemesters");
 
                     b.Navigation("phones");
@@ -2597,6 +2884,8 @@ namespace GraduationProject.EntityFramework.Migrations
 
                     b.Navigation("QualificationDatas")
                         .IsRequired();
+
+                    b.Navigation("ScheduleStudents");
 
                     b.Navigation("StudentSemesters");
                 });

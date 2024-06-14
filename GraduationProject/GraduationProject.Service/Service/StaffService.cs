@@ -156,12 +156,12 @@ namespace GraduationProject.Service.Service
 
         }
 
-        public async Task<Response<int>> AddStaffSemesterAsync(List<AddStaffSemesterDto> addStaffSemesterDto)
+        public async Task<Response<int>> AddStaffSemesterAsync(List<AddStaffSemesterDto> addStaffSemesterDto, int type)
         {
             try
             {
                 var academyYear = await _unitOfWork.AcademyYears.GetEntityByPropertyAsync(s => s.IsCurrent);
-                if (academyYear == null || !academyYear.Any())
+                if (!academyYear.Any())
                 {
                     return Response<int>.ServerError("Error Academy Years",
                      "There Is No Active Academic Year.");
@@ -182,8 +182,12 @@ namespace GraduationProject.Service.Service
                     {
                         StaffId = addStaffSemester.StaffId,
                         CourseId = addStaffSemester.CourseId,
-                        AcademyYearId = acedemyYearAssignt
+                        AcademyYearId = acedemyYearAssignt,
                     };
+                    if (type == 1)
+                        newStaffSemester.Type = ScheduleType.Lecture;
+                    else
+                        newStaffSemester.Type = ScheduleType.Section;
                     newStaffSemesterList.Add(newStaffSemester);
                 }
                 if (count == addStaffSemesterDto.Count() && !newStaffSemesterList.Any())

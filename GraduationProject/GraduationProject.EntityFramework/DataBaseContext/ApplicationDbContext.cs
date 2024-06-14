@@ -36,11 +36,15 @@ namespace GraduationProject.EntityFramework.DataBaseContext
             modelBuilder.Entity<GetStaffInfoByStaffIdModel>()
      .HasNoKey();
             modelBuilder.Entity<GetStudentCourseInfoModel>()
-    .HasNoKey();
+               .HasNoKey();
             modelBuilder.Entity<GetGraduateStudentsByAcademyYearIdModel>()
    .HasNoKey();
             modelBuilder.Entity<GetAllByFacultyIdModel>()
-  .HasNoKey();
+             .HasNoKey();
+            modelBuilder.Entity<GetSchedulesForStaffByUserIdModel>()
+            .HasNoKey();
+            modelBuilder.Entity<GetCurrentStaffByCourseIdModel>()
+            .HasNoKey();
         }
 
         public DbSet<AcademyYear> AcademyYears { get; set; }
@@ -72,6 +76,9 @@ namespace GraduationProject.EntityFramework.DataBaseContext
         public DbSet<StudentSemesterAssessMethod> StudentSemesterAssessMethods { get; set; }
         public DbSet<StudentSemesterCourse> StudentSemesterCourses { get; set; }
         public DbSet<FormatStudentCode> FormatStudentCodes { get; set; }
+        public DbSet<SchedulePlace> SchedulePlaces { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<StudentSchedule> StudentSchedules { get; set; }
         public DbSet<ActivityLog> ActivityLogs { get; set; }
         // Name Sp
         public DbSet<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel> SpGetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus { get; set; }
@@ -90,6 +97,8 @@ namespace GraduationProject.EntityFramework.DataBaseContext
         public DbSet<GetStudentCourseInfoModel> GetStudentCourseInfo { get; set; }
         public DbSet<GetGraduateStudentsByAcademyYearIdModel> GetGraduateStudentsByAcademyYearId { get; set; }
         public DbSet<GetAllByFacultyIdModel> GetAllByFacultyId { get; set; }
+        public DbSet<GetSchedulesForStaffByUserIdModel> GetSchedulesForStaffByUserId { get; set; }
+        public DbSet<GetCurrentStaffByCourseIdModel> GetCurrentStaffByCourseId { get; set; }
 
 
 

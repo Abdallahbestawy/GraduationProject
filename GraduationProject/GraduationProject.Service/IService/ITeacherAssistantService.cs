@@ -7,5 +7,6 @@ namespace GraduationProject.Service.IService
     {
         Task<Response<int>> AddTeacherAssistantAsync(AddStaffDto addTeacherAssistantDto);
         Task<Response<List<GetAllStaffsDto>>> GetAllTeacherAssistantsAsync(int FacultyId);
+
     }
 }

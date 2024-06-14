@@ -50,5 +50,6 @@ namespace GraduationProject.Data.Entity
         public virtual ICollection<Phone> phones { get; set; } = new List<Phone>();
         public virtual ICollection<StaffSemester> StaffSemesters { get; set; } = new List<StaffSemester>();
         public virtual ICollection<QualificationData> qualificationDatas { get; set; } = new List<QualificationData>();
+        public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
     }
 }

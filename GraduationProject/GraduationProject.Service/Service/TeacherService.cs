@@ -196,5 +196,43 @@ namespace GraduationProject.Service.Service
                          "An unexpected error occurred while adding Teacher. Please try again later.");
             }
         }
+
+        public async Task<Response<List<GetCurrentStaffByCourseIdDto>>> GetCurrentStaffByCourseIdAsync(int courseId, int type)
+        {
+            try
+            {
+                var cType = type == 1 ? ScheduleType.Lecture : ScheduleType.Section;
+
+                SqlParameter pCourseId = new SqlParameter("@CourseId", courseId);
+                SqlParameter pType = new SqlParameter("@Type", cType);
+                var teacher = await _unitOfWork.GetCurrentStaffByCourseIdModels.CallStoredProcedureAsync("EXECUTE SpGetCurrentStaffByCourseId", pCourseId, pType);
+
+                if (!teacher.Any())
+                    return Response<List<GetCurrentStaffByCourseIdDto>>.NoContent("No staffs are exist");
+
+                List<GetCurrentStaffByCourseIdDto> result = teacher.Select(t => new GetCurrentStaffByCourseIdDto
+                {
+                    Id = t.StaffsId,
+                    Name = t.NameEnglish
+                }).ToList();
+
+                return Response<List<GetCurrentStaffByCourseIdDto>>.Success(result, "Staffs retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "TeacherService",
+                    MethodName = "GetCurrentStaffByCourseIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetCurrentStaffByCourseIdDto>>.ServerError("Error occured while retrieving staffs",
+                        "An unexpected error occurred while retrieving staffs. Please try again later.");
+            }
+        }
+
     }
+
 }

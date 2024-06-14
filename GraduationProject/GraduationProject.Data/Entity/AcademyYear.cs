@@ -28,5 +28,6 @@ namespace GraduationProject.Data.Entity
         public virtual ICollection<StudentSemester> StudentSemesters { get; set; } = new List<StudentSemester>();
         [IgnoreLogging]
         public virtual ICollection<StaffSemester> StaffSemesters { get; set; } = new List<StaffSemester>();
+        public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
     }
 }

@@ -49,6 +49,7 @@ namespace GraduationProject.Data.Entity
         public ScientificDegree? Parent { get; set; }
 
         public virtual ICollection<ScientificDegree> ParentScientificDegree { get; set; } = new List<ScientificDegree>();
+        public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
         public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
         public virtual ICollection<StudentSemester> StudentSemesters { get; set; } = new List<StudentSemester>();
     }

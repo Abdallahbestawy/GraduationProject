@@ -39,5 +39,14 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        [HttpGet("GetAllL/{courseId:int}")]
+        public async Task<IActionResult> GetAllTeacherAssistants(int courseId)
+        {
+
+            var response = await _teacherService.GetCurrentStaffByCourseIdAsync(courseId, 1);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
     }
 }

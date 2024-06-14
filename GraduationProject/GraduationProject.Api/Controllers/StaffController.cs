@@ -43,7 +43,26 @@ namespace GraduationProject.Api.Controllers
             }
             if (ModelState.IsValid)
             {
-                var response = await _StaffService.AddStaffSemesterAsync(addStaffSemesterDto);
+                var response = await _StaffService.AddStaffSemesterAsync(addStaffSemesterDto, 1);
+
+                return StatusCode(response.StatusCode, response);
+            }
+            else
+            {
+                return BadRequest("please enter Vaild Model");
+            }
+        }
+        //[Authorize(Roles = nameof(UserType.Administration))]
+        [HttpPost("AssignCourseSe")]
+        public async Task<IActionResult> AddTeacherAssistantSemester([FromBody] List<AddStaffSemesterDto> addStaffSemesterDto)
+        {
+            if (!addStaffSemesterDto.Any())
+            {
+                return BadRequest("please enter Vaild Model");
+            }
+            if (ModelState.IsValid)
+            {
+                var response = await _StaffService.AddStaffSemesterAsync(addStaffSemesterDto, 2);
 
                 return StatusCode(response.StatusCode, response);
             }

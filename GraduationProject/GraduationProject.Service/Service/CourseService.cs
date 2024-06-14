@@ -1,4 +1,5 @@
 ﻿using GraduationProject.Data.Entity;
+using GraduationProject.Data.Enum;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.IRepository;
@@ -151,11 +152,11 @@ namespace GraduationProject.Service.Service
         {
             try
             {
-                var bandEntities = await _unitOfWork.Courses.GetEntityByPropertyAsync(f => f.FacultyId == facultId);
-                if (!bandEntities.Any())
+                var courseEntities = await _unitOfWork.Courses.GetEntityByPropertyAsync(f => f.FacultyId == facultId);
+                if (!courseEntities.Any())
                     return Response<IQueryable<CourseDto>>.NoContent("No courses are exist");
 
-                var courseDto = bandEntities.Select(entity => new CourseDto
+                var courseDto = courseEntities.Select(entity => new CourseDto
                 {
                     Id = entity.Id,
                     Name = entity.Name,
@@ -749,6 +750,39 @@ namespace GraduationProject.Service.Service
                 });
                 return Response<bool>.ServerError("Error occured while deleting Course CourseAssessMethod",
                         "An unexpected error occurred while deleting Course CourseAssessMethod. Please try again later.");
+            }
+        }
+
+        public async Task<Response<List<GetCourseDto>>> GetCourseMandatoryByfacultIdAsync(int facultId)
+        {
+            try
+            {
+                var courseEntities = await _unitOfWork.Courses.GetEntityByPropertyAsync(f => f.FacultyId == facultId && f.Type == CourseType.Mandatory);
+                if (!courseEntities.Any())
+                    return Response<List<GetCourseDto>>.NoContent("No courses Mandatory are exist");
+
+                var courseDto = courseEntities.Select(entity => new GetCourseDto
+                {
+                    CourseId = entity.Id,
+                    CourseName = entity.Name,
+                    CourseCode = entity.Code,
+
+                }).ToList();
+
+                return Response<List<GetCourseDto>>.Success(courseDto, "Courses Mandatory retrieved successfully").WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "CourseService",
+                    MethodName = "GetCourseMandatoryByfacultIdAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetCourseDto>>.ServerError("Error occured while retrieving courses Mandatory",
+                    "An unexpected error occurred while retrieving courses Mandatory. Please try again later.");
             }
         }
     }

@@ -30,6 +30,7 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<StudentSemesterCourse> StudentSemesterCourses { get; }
         IGeneralRepository<CourseAssessMethod> CourseAssessMethods { get; }
         IGeneralRepository<StaffSemester> StaffSemesters { get; }
+        IGeneralRepository<Schedule> Schedules { get; }
         IGeneralRepository<GetStudentDetailsByUserIdModel> GetStudentDetailsByUserIdModels { get; }
         IGeneralRepository<GetStudentResultModel> GetStudentResultModels { get; }
         IGeneralRepository<GetStaffDetailsByUserIdModel> GetStaffDetailsByUserIdModels { get; }
@@ -45,10 +46,13 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<GetStaffInfoByStaffIdModel> GetStaffInfoByStaffIdModels { get; }
         IGeneralRepository<GetStudentCourseInfoModel> GetStudentCourseInfoModels { get; }
         IGeneralRepository<GetGraduateStudentsByAcademyYearIdModel> GetGraduateStudentsByAcademyYearIdModels { get; }
+        IGeneralRepository<GetSchedulesForStaffByUserIdModel> GetSchedulesForStaffByUserIdModels { get; }
+        IGeneralRepository<GetCurrentStaffByCourseIdModel> GetCurrentStaffByCourseIdModels { get; }
         IGeneralRepository<City> Cities { get; }
         IGeneralRepository<Country> Countries { get; }
         IGeneralRepository<Governorate> Governorates { get; }
         IGeneralRepository<ActivityLog> ActivityLogs { get; }
+        IGeneralRepository<SchedulePlace> SchedulePlaces { get; }
 
 
 

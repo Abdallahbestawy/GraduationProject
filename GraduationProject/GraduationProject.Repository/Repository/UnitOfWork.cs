@@ -27,7 +27,9 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<Phone> Phones { get; private set; }
         public IGeneralRepository<CoursePrerequisite> CoursePrerequisites { get; private set; }
         public IGeneralRepository<AssessMethod> AssessMethods { get; private set; }
+        public IGeneralRepository<Schedule> Schedules { get; private set; }
         public IGeneralRepository<AcademyYear> AcademyYears { get; private set; }
+        public IGeneralRepository<SchedulePlace> SchedulePlaces { get; private set; }
         public IStudentSemestersRepository StudentSemesters { get; private set; }
         public IGeneralRepository<StudentSemesterCourse> StudentSemesterCourses { get; private set; }
         public IGeneralRepository<CourseAssessMethod> CourseAssessMethods { get; private set; }
@@ -42,12 +44,14 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<GetAllStudentsInSemesterModel> GetAllStudentsInSemesterModels { get; private set; }
         public IGeneralRepository<GetStudentsSemesterResultModel> GetStudentsSemesterResultModels { get; private set; }
         public IGeneralRepository<GetStudentInSemesterResultModel> GetStudentInSemesterResultModels { get; private set; }
+        public IGeneralRepository<GetSchedulesForStaffByUserIdModel> GetSchedulesForStaffByUserIdModels { get; private set; }
         public IGeneralRepository<GetAllStudentInCourseResultModel> GetAllStudentInCourseResultModels { get; private set; }
         public IGeneralRepository<GetAllByFacultyIdModel> GetAllByFacultyIdModels { get; private set; }
         public IGeneralRepository<GetStudentInfoByStudentIdModel> GetStudentInfoByStudentIdModels { get; private set; }
         public IGeneralRepository<GetStudentCourseInfoModel> GetStudentCourseInfoModels { get; private set; }
         public IGeneralRepository<GetStaffInfoByStaffIdModel> GetStaffInfoByStaffIdModels { get; private set; }
         public IGeneralRepository<GetGraduateStudentsByAcademyYearIdModel> GetGraduateStudentsByAcademyYearIdModels { get; private set; }
+        public IGeneralRepository<GetCurrentStaffByCourseIdModel> GetCurrentStaffByCourseIdModels { get; private set; }
 
         public IGeneralRepository<City> Cities { get; private set; }
         public IGeneralRepository<Country> Countries { get; private set; }
@@ -74,6 +78,8 @@ namespace GraduationProject.Repository.Repository
             Estimates = new GeneralRepository<Estimates>(_context);
             EstimatesCourses = new GeneralRepository<EstimatesCourse>(_context);
             Courses = new GeneralRepository<Course>(_context);
+            Schedules = new GeneralRepository<Schedule>(_context);
+            SchedulePlaces = new GeneralRepository<SchedulePlace>(_context);
             Phones = new GeneralRepository<Phone>(_context);
             CoursePrerequisites = new GeneralRepository<CoursePrerequisite>(_context);
             AssessMethods = new GeneralRepository<AssessMethod>(_context);
@@ -93,11 +99,13 @@ namespace GraduationProject.Repository.Repository
             GetAllByFacultyIdModels = new GeneralRepository<GetAllByFacultyIdModel>(_context);
             GetStudentsSemesterResultModels = new GeneralRepository<GetStudentsSemesterResultModel>(_context);
             GetStudentInSemesterResultModels = new GeneralRepository<GetStudentInSemesterResultModel>(_context);
+            GetCurrentStaffByCourseIdModels = new GeneralRepository<GetCurrentStaffByCourseIdModel>(_context);
             GetAllStudentInCourseResultModels = new GeneralRepository<GetAllStudentInCourseResultModel>(_context);
             GetStudentInfoByStudentIdModels = new GeneralRepository<GetStudentInfoByStudentIdModel>(_context);
             GetStaffInfoByStaffIdModels = new GeneralRepository<GetStaffInfoByStaffIdModel>(_context);
             GetStudentCourseInfoModels = new GeneralRepository<GetStudentCourseInfoModel>(_context);
             GetGraduateStudentsByAcademyYearIdModels = new GeneralRepository<GetGraduateStudentsByAcademyYearIdModel>(_context);
+            GetSchedulesForStaffByUserIdModels = new GeneralRepository<GetSchedulesForStaffByUserIdModel>(_context);
             Cities = new GeneralRepository<City>(_context);
             Countries = new GeneralRepository<Country>(_context);
             Governorates = new GeneralRepository<Governorate>(_context);
