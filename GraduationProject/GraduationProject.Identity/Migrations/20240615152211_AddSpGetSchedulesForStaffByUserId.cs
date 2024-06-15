@@ -17,12 +17,13 @@ namespace GraduationProject.Identity.Migrations
                         Schedules.Id as SchedulesId,
                         ScheduleDay,
                         ScheduleType,
-                        TimeStart,
-                        EndStart,
                         Facultys.Name AS FacultysName,
                         AspNetUsers.NameEnglish AS NameEnglish,
                         CONCAT(YEAR(AcademyYears.Start), '-', YEAR(AcademyYears.[End])) AS AcademyYear,
                         SchedulePlaces.Name AS SchedulePlacesName,
+                        CAST(TimeStart AS VARCHAR(5)) + ' - ' + CAST(EndStart AS VARCHAR(5)) AS Timing,
+                        Courses.Name as CoursesName,
+                        Courses.Code as CoursesCode,
                         ScientificDegrees.Name AS ScientificDegreesName
                     FROM
                         Schedules
@@ -34,6 +35,8 @@ namespace GraduationProject.Identity.Migrations
                         ON AspNetUsers.Id = Staffs.UserId
                     JOIN SchedulePlaces
                         ON SchedulePlaces.Id = Schedules.SchedulePlaceId
+                    JOIN Courses 
+                        ON Courses.Id = Schedules.CourseId
                     JOIN ScientificDegrees
                         ON ScientificDegrees.Id = Schedules.ScientificDegreeId
                     JOIN AcademyYears
@@ -49,6 +52,5 @@ namespace GraduationProject.Identity.Migrations
         {
             migrationBuilder.Sql("DROP PROCEDURE [dbo].[SpGetSchedulesForStaffByUserId]");
         }
-
     }
 }
