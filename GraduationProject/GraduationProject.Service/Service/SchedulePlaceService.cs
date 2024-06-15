@@ -44,8 +44,8 @@ namespace GraduationProject.Service.Service
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "SchedulePlaceService",
-                    MethodName = "AddSchedulePlaceAsync",
+                    ClassName = nameof(SchedulePlaceService),
+                    MethodName = nameof(AddSchedulePlaceAsync),
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
@@ -61,7 +61,9 @@ namespace GraduationProject.Service.Service
                 var schedulePlaceEntities = await _unitOfWork.SchedulePlaces.GetEntityByPropertyWithIncludeAsync(f => f.FacultyId == facultyId, d => d.Faculty);
 
                 if (!schedulePlaceEntities.Any())
+                {
                     return Response<IQueryable<GetSchedulePlaceDto>>.NoContent("No Schedule Place are exist");
+                }
 
                 var schedulePlaceDto = schedulePlaceEntities.Select(entity => new GetSchedulePlaceDto
                 {
@@ -77,8 +79,8 @@ namespace GraduationProject.Service.Service
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "SchedulePlaceService",
-                    MethodName = "GetSchedulePlaceByFacultyIdAsync",
+                    ClassName = nameof(SchedulePlaceService),
+                    MethodName = nameof(GetSchedulePlaceByFacultyIdAsync),
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
@@ -95,7 +97,9 @@ namespace GraduationProject.Service.Service
                 var schedulePlaceEntity = await _unitOfWork.SchedulePlaces.GetByIdAsync(schedulePlaceId);
 
                 if (schedulePlaceEntity == null)
+                {
                     return Response<SchedulePlaceDto>.BadRequest("This Schedule Place doesn't exist");
+                }
 
                 SchedulePlaceDto schedulePlaceDto = new SchedulePlaceDto
                 {
@@ -111,8 +115,8 @@ namespace GraduationProject.Service.Service
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "SchedulePlaceService",
-                    MethodName = "GetSchedulePlaceByIdAsync",
+                    ClassName = nameof(SchedulePlaceService),
+                    MethodName = nameof(GetSchedulePlaceByIdAsync),
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
@@ -128,7 +132,9 @@ namespace GraduationProject.Service.Service
             {
                 SchedulePlace existingSchedulePlace = await _unitOfWork.SchedulePlaces.GetByIdAsync(updateSchedulePlaceDto.Id);
                 if (existingSchedulePlace == null)
+                {
                     return Response<int>.BadRequest("This Schedule Place doesn't exist");
+                }
                 existingSchedulePlace.Name = updateSchedulePlaceDto.Name;
                 existingSchedulePlace.PlaceCapacity = updateSchedulePlaceDto.PlaceCapacity;
                 existingSchedulePlace.FacultyId = updateSchedulePlaceDto.FacultyId;
@@ -141,15 +147,15 @@ namespace GraduationProject.Service.Service
                     return Response<int>.Updated("Schedule Place updated successfully");
                 }
 
-                return Response<int>.ServerError("Error occured while updating  Schedule Place",
-                    "An unexpected error occurred while updating  Schedule Place. Please try again later.");
+                return Response<int>.ServerError("Error occured while updating Schedule Place",
+                    "An unexpected error occurred while updating Schedule Place. Please try again later.");
             }
             catch (Exception ex)
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "SchedulePlaceService",
-                    MethodName = "UpdateSchedulePlaceAsync",
+                    ClassName = nameof(SchedulePlaceService),
+                    MethodName = nameof(UpdateSchedulePlaceAsync),
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow
@@ -165,7 +171,9 @@ namespace GraduationProject.Service.Service
                 var existingSchedulePlace = await _unitOfWork.SchedulePlaces.GetByIdAsync(schedulePlaceId);
 
                 if (existingSchedulePlace == null)
+                {
                     return Response<int>.BadRequest("This Schedule Place doesn't exist");
+                }
 
                 await _unitOfWork.SchedulePlaces.Delete(existingSchedulePlace);
                 var result = await _unitOfWork.SaveAsync();
@@ -182,8 +190,8 @@ namespace GraduationProject.Service.Service
             {
                 await _mailService.SendExceptionEmail(new ExceptionEmailModel
                 {
-                    ClassName = "SchedulePlaceService",
-                    MethodName = "DeleteSchedulePlaceAsync",
+                    ClassName = nameof(SchedulePlaceService),
+                    MethodName = nameof(DeleteSchedulePlaceAsync),
                     ErrorMessage = ex.Message,
                     StackTrace = ex.StackTrace,
                     Time = DateTime.UtcNow

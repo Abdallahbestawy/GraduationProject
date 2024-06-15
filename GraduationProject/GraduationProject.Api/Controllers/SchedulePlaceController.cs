@@ -13,6 +13,7 @@ namespace GraduationProject.Api.Controllers
         {
             _schedulePlaceService = schedulePlaceService;
         }
+
         [HttpGet("{Id:int}")]
         public async Task<IActionResult> GetSchedulePlaceById([FromRoute] int Id)
         {
@@ -32,6 +33,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddSchedulePlace(SchedulePlaceDto addSchedulePlaceDto)
         {

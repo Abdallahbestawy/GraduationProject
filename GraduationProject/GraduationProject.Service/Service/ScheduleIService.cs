@@ -1,7 +1,9 @@
 ﻿using GraduationProject.Data.Entity;
 using GraduationProject.Mails.IService;
+using GraduationProject.Mails.Models;
 using GraduationProject.Repository.IRepository;
 using GraduationProject.Repository.Repository;
+using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.ScheduleDto;
 using GraduationProject.Service.IService;
 using Microsoft.Data.SqlClient;
@@ -18,165 +20,265 @@ namespace GraduationProject.Service.Service
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
         }
-        public async Task<int> AddScheduleAsync(ScheduleDto addScheduleDto)
+        public async Task<Response<int>> AddScheduleAsync(ScheduleDto addScheduleDto)
         {
-            List<Schedule> schedules = new List<Schedule>();
-            var place = await _unitOfWork.SchedulePlaces.GetEntityByPropertyAsync(d => d.FacultyId == addScheduleDto.ScheduleDetails.FirstOrDefault().FacultyId);
-            if (!place.Any())
+            try
             {
-                return 0;
-            }
-            var academyYear = await _unitOfWork.AcademyYears.GetEntityByPropertyAsync(f => f.FacultyId == addScheduleDto.ScheduleDetails.FirstOrDefault().FacultyId && f.IsCurrent);
-            if (!academyYear.Any())
-            {
-                return 0;
-            }
-            var academyYearId = academyYear.FirstOrDefault().Id;
-            var oldschedules = await _unitOfWork.Schedules.GetEntityByPropertyAsync(f => f.FacultyId == addScheduleDto.ScheduleDetails.FirstOrDefault().FacultyId && f.AcademyYearId == academyYearId);
-            foreach (var schedule in addScheduleDto.ScheduleDetails)
-            {
-                bool rejected = await IsScheduleRejected(oldschedules.ToList(), schedule, schedules);
-                if (rejected) { return 0; }
-                bool rejectedPlace = await IsSchedulePlaceRejected(place.FirstOrDefault(p => p.Id == schedule.SchedulePlaceId).PlaceCapacity, schedule.Capacity);
-                if (rejectedPlace) { return 0; }
-                Schedule newschedule = new Schedule
+                List<Schedule> schedules = new List<Schedule>();
+                var place = await _unitOfWork.SchedulePlaces.GetEntityByPropertyAsync(d => d.FacultyId == addScheduleDto.ScheduleDetails.FirstOrDefault().FacultyId);
+                if (!place.Any())
                 {
-                    ScientificDegreeId = addScheduleDto.SemesterDegreeId,
-                    ScheduleDay = schedule.ScheduleDay,
-                    SchedulePlaceId = schedule.SchedulePlaceId,
-                    CourseId = schedule.CourseId,
-                    StaffId = schedule.StaffId,
-                    AcademyYearId = academyYearId,
-                    ScheduleType = schedule.ScheduleType,
-                    TimeStart = new TimeSpan(schedule.StartHour, schedule.StartMinute, 0),
-                    EndStart = new TimeSpan(schedule.EndHour, schedule.EndMinute, 0),
-                    Capacity = schedule.Capacity,
-                    FacultyId = schedule.FacultyId,
-                };
-                schedules.Add(newschedule);
-            }
-            await _unitOfWork.Schedules.AddRangeAsync(schedules);
-            int result = await _unitOfWork.SaveAsync();
-            if (result > 0)
-            {
-                return 1;
-            }
-            return 0;
-        }
-        public async Task<ScheduleDto> GetScheduleBySemesterIdAsync(int semesterId, int factlyId)
-        {
-            var schedul = await _unitOfWork.Schedules.GetEntityByPropertyWithIncludeAsync(
-                 d => d.ScientificDegreeId == semesterId && d.AcademyYear.IsCurrent && d.FacultyId == factlyId,
-                 a => a.AcademyYear
-            );
-            if (!schedul.Any())
-            {
-                return null;
-            }
-            ScheduleDto getScheduleDto = new ScheduleDto
-            {
-                SemesterDegreeId = schedul.FirstOrDefault().ScientificDegreeId,
-                AcademyYearId = schedul.FirstOrDefault().AcademyYearId,
-                ScheduleDetails = schedul.Select(s => new ScheduleDetailsDto
+                    return Response<int>.BadRequest("There are no places");
+                }
+                var academyYear = await _unitOfWork.AcademyYears.GetEntityByPropertyAsync(f => f.FacultyId == addScheduleDto.ScheduleDetails.FirstOrDefault().FacultyId && f.IsCurrent);
+                if (!academyYear.Any())
                 {
-                    Id = s.Id,
-                    ScheduleType = s.ScheduleType,
-                    ScheduleDay = s.ScheduleDay,
-                    StartHour = s.TimeStart.Hours,
-                    StartMinute = s.TimeStart.Minutes,
-                    EndHour = s.EndStart.Hours,
-                    EndMinute = s.EndStart.Minutes,
-                    Capacity = s.Capacity,
-                    FacultyId = s.FacultyId,
-                    StaffId = s.StaffId,
-                    SchedulePlaceId = s.SchedulePlaceId,
-                    CourseId = s.CourseId
-                }).ToList()
-            };
-
-            return getScheduleDto;
-
-        }
-        public async Task<GetSchedulesForStaffByUserIdDto> GetSchedulesForStaffByUserIdAsync(string userId)
-        {
-            SqlParameter pUserId = new SqlParameter("@UserId", userId);
-
-            var getSchedulesForStaff = await _unitOfWork.GetSchedulesForStaffByUserIdModels.CallStoredProcedureAsync(
-                "EXECUTE SpGetSchedulesForStaffByUserId", pUserId);
-            if (!getSchedulesForStaff.Any())
-            {
-                return null;
-            }
-            GetSchedulesForStaffByUserIdDto getSchedulesForStaffByUserIdDto = new GetSchedulesForStaffByUserIdDto
-            {
-                AcademyYearName = getSchedulesForStaff.FirstOrDefault().AcademyYear,
-                FacultysName = getSchedulesForStaff.FirstOrDefault().FacultysName,
-                NameEnglish = getSchedulesForStaff.FirstOrDefault().NameEnglish,
-                getSchedulesForStaffByUserIdDetails = getSchedulesForStaff.Select(s => new GetSchedulesForStaffByUserIdDetailsDto
+                    return Response<int>.BadRequest("There is no current Academic year");
+                }
+                var academyYearId = academyYear.FirstOrDefault().Id;
+                var oldschedules = await _unitOfWork.Schedules.GetEntityByPropertyAsync(f => f.FacultyId == addScheduleDto.ScheduleDetails.FirstOrDefault().FacultyId && f.AcademyYearId == academyYearId);
+                foreach (var schedule in addScheduleDto.ScheduleDetails)
                 {
-                    SchedulesId = s.SchedulesId,
-                    CoursesCode = s.CoursesCode,
-                    CoursesName = s.CoursesName,
-                    ScheduleDay = s.ScheduleDay,
-                    SchedulePlacesName = s.SchedulePlacesName,
-                    ScientificDegreesName = s.ScientificDegreesName,
-                    ScheduleType = s.ScheduleType,
-                    Timing = s.Timing,
-                }).ToList()
-            };
-            return getSchedulesForStaffByUserIdDto;
+                    bool rejected = await IsScheduleRejected(oldschedules.ToList(), schedule, schedules);
+                    if (rejected)
+                    {
+                        return Response<int>.BadRequest("The schedule is unavailable at the selected time. Please choose a different time slot.");
+                    }
+                    bool rejectedPlace = await IsSchedulePlaceRejected(place.FirstOrDefault(p => p.Id == schedule.SchedulePlaceId).PlaceCapacity, schedule.Capacity);
+                    if (rejectedPlace)
+                    {
+                        return Response<int>.BadRequest("The entered capacity exceeds the maximum limit for this place. Please enter a value within the allowed capacity.");
+                    }
+                    Schedule newschedule = new Schedule
+                    {
+                        ScientificDegreeId = addScheduleDto.SemesterDegreeId,
+                        ScheduleDay = schedule.ScheduleDay,
+                        SchedulePlaceId = schedule.SchedulePlaceId,
+                        CourseId = schedule.CourseId,
+                        StaffId = schedule.StaffId,
+                        AcademyYearId = academyYearId,
+                        ScheduleType = schedule.ScheduleType,
+                        TimeStart = new TimeSpan(schedule.StartHour, schedule.StartMinute, 0),
+                        EndStart = new TimeSpan(schedule.EndHour, schedule.EndMinute, 0),
+                        Capacity = schedule.Capacity,
+                        FacultyId = schedule.FacultyId,
+                    };
+                    schedules.Add(newschedule);
+                }
+                await _unitOfWork.Schedules.AddRangeAsync(schedules);
+                int result = await _unitOfWork.SaveAsync();
+                if (result > 0)
+                {
+                    return Response<int>.Created("The schedule added successfully");
+                }
+                return Response<int>.ServerError("Error occured while adding the schedule",
+                         "An unexpected error occurred while adding the schedule. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = nameof(ScheduleIService),
+                    MethodName = nameof(AddScheduleAsync),
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while adding the schedule",
+                         "An unexpected error occurred while adding the schedule. Please try again later.");
+            }
         }
-        public async Task<int> UpdateScheduleAsync(ScheduleDto updateScheduleDto)
+        public async Task<Response<ScheduleDto>> GetScheduleBySemesterIdAsync(int semesterId, int factlyId)
         {
-            List<Schedule> schedules = new List<Schedule>();
-            var oldschedules = await _unitOfWork.Schedules.GetEntityByPropertyWithIncludeAsync(
-                f => f.FacultyId == updateScheduleDto.ScheduleDetails.FirstOrDefault().FacultyId && f.AcademyYearId == updateScheduleDto.AcademyYearId,
-                p => p.SchedulePlace
+            try
+            {
+                var schedul = await _unitOfWork.Schedules.GetEntityByPropertyWithIncludeAsync(
+                     d => d.ScientificDegreeId == semesterId && d.AcademyYear.IsCurrent && d.FacultyId == factlyId,
+                     a => a.AcademyYear
                 );
-            foreach (var schedule in updateScheduleDto.ScheduleDetails)
-            {
-                Schedule existSchedule = await _unitOfWork.Schedules.GetByIdAsync(schedule.Id);
-                if (existSchedule == null) { return 0; }
-                bool rejected = await IsScheduleRejected(oldschedules.ToList(), schedule, schedules);
-                if (rejected) { return 0; }
-                bool rejectedPlace = await IsSchedulePlaceRejected(oldschedules.FirstOrDefault(p => p.Id == schedule.SchedulePlaceId).SchedulePlace.PlaceCapacity, schedule.Capacity);
-                if (rejectedPlace) { return 0; }
-                existSchedule.ScientificDegreeId = updateScheduleDto.SemesterDegreeId;
-                existSchedule.ScheduleDay = schedule.ScheduleDay;
-                existSchedule.SchedulePlaceId = schedule.SchedulePlaceId;
-                existSchedule.CourseId = schedule.CourseId;
-                existSchedule.StaffId = schedule.StaffId;
-                existSchedule.ScheduleType = schedule.ScheduleType;
-                existSchedule.TimeStart = new TimeSpan(schedule.StartHour, schedule.StartMinute, 0);
-                existSchedule.EndStart = new TimeSpan(schedule.EndHour, schedule.EndMinute, 0);
-                existSchedule.Capacity = schedule.Capacity;
-                existSchedule.FacultyId = schedule.FacultyId;
-                schedules.Add(existSchedule);
+                if (!schedul.Any())
+                {
+                    return Response<ScheduleDto>.NoContent();
+                }
+                ScheduleDto getScheduleDto = new ScheduleDto
+                {
+                    SemesterDegreeId = schedul.FirstOrDefault().ScientificDegreeId,
+                    AcademyYearId = schedul.FirstOrDefault().AcademyYearId,
+                    ScheduleDetails = schedul.Select(s => new ScheduleDetailsDto
+                    {
+                        Id = s.Id,
+                        ScheduleType = s.ScheduleType,
+                        ScheduleDay = s.ScheduleDay,
+                        StartHour = s.TimeStart.Hours,
+                        StartMinute = s.TimeStart.Minutes,
+                        EndHour = s.EndStart.Hours,
+                        EndMinute = s.EndStart.Minutes,
+                        Capacity = s.Capacity,
+                        FacultyId = s.FacultyId,
+                        StaffId = s.StaffId,
+                        SchedulePlaceId = s.SchedulePlaceId,
+                        CourseId = s.CourseId
+                    }).ToList()
+                };
+
+                return Response<ScheduleDto>.Success(getScheduleDto, "Schedule retrieved successfully").WithCount(getScheduleDto.ScheduleDetails.Count);
             }
-            await _unitOfWork.Schedules.UpdateRangeAsync(schedules);
-            int result = await _unitOfWork.SaveAsync();
-            if (result > 0)
+            catch (Exception ex)
             {
-                return 1;
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = nameof(ScheduleIService),
+                    MethodName = nameof(GetScheduleBySemesterIdAsync),
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<ScheduleDto>.ServerError("Error occured while retrieving the schedule",
+                         "An unexpected error occurred while retrieving the schedule. Please try again later.");
             }
-            return 0;
         }
-        public async Task<int> DeleteScheduleAsync(int scheduleId)
+
+        public async Task<Response<GetSchedulesForStaffByUserIdDto>> GetSchedulesForStaffByUserIdAsync(string userId)
         {
-            var existingSchedule = await _unitOfWork.Schedules.GetByIdAsync(scheduleId);
-
-            if (existingSchedule == null)
-                return 0;
-
-
-            await _unitOfWork.Schedules.Delete(existingSchedule);
-            var result = await _unitOfWork.SaveAsync();
-
-            if (result > 0)
+            try
             {
-                return 1;
+                SqlParameter pUserId = new SqlParameter("@UserId", userId);
+
+                var getSchedulesForStaff = await _unitOfWork.GetSchedulesForStaffByUserIdModels.CallStoredProcedureAsync(
+                    "EXECUTE SpGetSchedulesForStaffByUserId", pUserId);
+                if (!getSchedulesForStaff.Any())
+                {
+                    return Response<GetSchedulesForStaffByUserIdDto>.NoContent();
+                }
+                GetSchedulesForStaffByUserIdDto getSchedulesForStaffByUserIdDto = new GetSchedulesForStaffByUserIdDto
+                {
+                    AcademyYearName = getSchedulesForStaff.FirstOrDefault().AcademyYear,
+                    FacultysName = getSchedulesForStaff.FirstOrDefault().FacultysName,
+                    NameEnglish = getSchedulesForStaff.FirstOrDefault().NameEnglish,
+                    getSchedulesForStaffByUserIdDetails = getSchedulesForStaff.Select(s => new GetSchedulesForStaffByUserIdDetailsDto
+                    {
+                        SchedulesId = s.SchedulesId,
+                        CoursesCode = s.CoursesCode,
+                        CoursesName = s.CoursesName,
+                        ScheduleDay = s.ScheduleDay,
+                        SchedulePlacesName = s.SchedulePlacesName,
+                        ScientificDegreesName = s.ScientificDegreesName,
+                        ScheduleType = s.ScheduleType,
+                        Timing = s.Timing,
+                    }).ToList()
+                };
+                return Response<GetSchedulesForStaffByUserIdDto>.Success(getSchedulesForStaffByUserIdDto, "The schedule retrieved successfully")
+                    .WithCount(getSchedulesForStaffByUserIdDto.getSchedulesForStaffByUserIdDetails.Count);
             }
-            return 0;
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = nameof(ScheduleIService),
+                    MethodName = nameof(GetSchedulesForStaffByUserIdAsync),
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetSchedulesForStaffByUserIdDto>.ServerError("Error occured while retrieving the schedule",
+                         "An unexpected error occurred while retrieving the schedule. Please try again later.");
+            }
+        }
+        public async Task<Response<int>> UpdateScheduleAsync(ScheduleDto updateScheduleDto)
+        {
+            try
+            {
+                List<Schedule> schedules = new List<Schedule>();
+                var oldschedules = await _unitOfWork.Schedules.GetEntityByPropertyWithIncludeAsync(
+                    f => f.FacultyId == updateScheduleDto.ScheduleDetails.FirstOrDefault().FacultyId && f.AcademyYearId == updateScheduleDto.AcademyYearId,
+                    p => p.SchedulePlace
+                    );
+                foreach (var schedule in updateScheduleDto.ScheduleDetails)
+                {
+                    Schedule existSchedule = await _unitOfWork.Schedules.GetByIdAsync(schedule.Id);
+                    if (existSchedule == null)
+                    {
+                        return Response<int>.BadRequest("This Schedule doesn't exist");
+                    }
+                    bool rejected = await IsScheduleRejected(oldschedules.ToList(), schedule, schedules);
+                    if (rejected)
+                    {
+                        return Response<int>.BadRequest("The schedule is unavailable at the selected time. Please choose a different time slot.");
+                    }
+                    bool rejectedPlace = await IsSchedulePlaceRejected(oldschedules.FirstOrDefault(p => p.Id == schedule.SchedulePlaceId).SchedulePlace.PlaceCapacity, schedule.Capacity);
+                    if (rejectedPlace)
+                    {
+                        return Response<int>.BadRequest("The entered capacity exceeds the maximum limit for this place. Please enter a value within the allowed capacity.");
+                    }
+                    existSchedule.ScientificDegreeId = updateScheduleDto.SemesterDegreeId;
+                    existSchedule.ScheduleDay = schedule.ScheduleDay;
+                    existSchedule.SchedulePlaceId = schedule.SchedulePlaceId;
+                    existSchedule.CourseId = schedule.CourseId;
+                    existSchedule.StaffId = schedule.StaffId;
+                    existSchedule.ScheduleType = schedule.ScheduleType;
+                    existSchedule.TimeStart = new TimeSpan(schedule.StartHour, schedule.StartMinute, 0);
+                    existSchedule.EndStart = new TimeSpan(schedule.EndHour, schedule.EndMinute, 0);
+                    existSchedule.Capacity = schedule.Capacity;
+                    existSchedule.FacultyId = schedule.FacultyId;
+                    schedules.Add(existSchedule);
+                }
+                await _unitOfWork.Schedules.UpdateRangeAsync(schedules);
+                int result = await _unitOfWork.SaveAsync();
+                if (result > 0)
+                {
+                    return Response<int>.Updated("The schedule updated successfully");
+                }
+                return Response<int>.ServerError("Error occured while updating the schedule",
+                             "An unexpected error occurred while updating the schedule. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = nameof(ScheduleIService),
+                    MethodName = nameof(UpdateScheduleAsync),
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while updating the schedule",
+                             "An unexpected error occurred while updating the schedule. Please try again later.");
+            }
+        }
+        public async Task<Response<int>> DeleteScheduleAsync(int scheduleId)
+        {
+            try
+            {
+                var existingSchedule = await _unitOfWork.Schedules.GetByIdAsync(scheduleId);
+
+                if (existingSchedule == null)
+                {
+                    return Response<int>.BadRequest("This schedule doesn't exist");
+                }
+
+                await _unitOfWork.Schedules.Delete(existingSchedule);
+                var result = await _unitOfWork.SaveAsync();
+
+                if (result > 0)
+                {
+                    return Response<int>.Deleted("The schedule deleted successfully");
+                }
+                return Response<int>.ServerError("Error occured while deleting the schedule",
+                                 "An unexpected error occurred while deleting the schedule. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = nameof(ScheduleIService),
+                    MethodName = nameof(DeleteScheduleAsync),
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<int>.ServerError("Error occured while deleting the schedule",
+                                 "An unexpected error occurred while deleting the schedule. Please try again later.");
+            }
         }
         private async Task<bool> IsSchedulePlaceRejected(int VaildPlace, int InputPlace)
         {

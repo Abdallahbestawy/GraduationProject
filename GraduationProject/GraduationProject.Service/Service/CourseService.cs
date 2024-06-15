@@ -1,5 +1,6 @@
 ﻿using GraduationProject.Data.Entity;
 using GraduationProject.Data.Enum;
+using GraduationProject.Identity.IService;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
 using GraduationProject.Repository.IRepository;
@@ -8,6 +9,7 @@ using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.CourseDto;
 using GraduationProject.Service.IService;
 using Microsoft.Data.SqlClient;
+using System.Security.Claims;
 
 namespace GraduationProject.Service.Service
 {
@@ -15,11 +17,15 @@ namespace GraduationProject.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
+        private readonly IAccountService _accountService;
+        private readonly IExcelHelper _excelHelper;
 
-        public CourseService(UnitOfWork unitOfWork, IMailService mailService)
+        public CourseService(UnitOfWork unitOfWork, IMailService mailService, IAccountService accountService, IExcelHelper excelHelper)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mailService = mailService;
+            _accountService = accountService;
+            _excelHelper = excelHelper;
         }
 
         public async Task<Response<int>> AddCourseAsync(CourseDto addCourseDto)
@@ -784,6 +790,59 @@ namespace GraduationProject.Service.Service
                 return Response<List<GetCourseDto>>.ServerError("Error occured while retrieving courses Mandatory",
                     "An unexpected error occurred while retrieving courses Mandatory. Please try again later.");
             }
+        }
+
+        public async Task<Response<MemoryStream>> GenerateExcelFileForStudentSemesterAssessMethodsBySpecificCourse(int courseId, ClaimsPrincipal user, bool inculdeOldDegrees)
+        {
+            //var extractorUser = await _accountService.GetUser(user);
+            var staffSemester = await _unitOfWork.StaffSemesters.GetEntityByPropertyWithIncludeAsync(
+                crs => crs.CourseId == courseId, crs => crs.Staff, crs => crs.AcademyYear);
+            var record = staffSemester.FirstOrDefault();
+
+            if (record == null)
+                return Response<MemoryStream>.NoContent();
+            if (!record.AcademyYear.IsCurrent)
+                return Response<MemoryStream>.NoContent();
+
+            var lecurerData = await _accountService.GetUserByUserId(record.Staff.UserId);
+            var courseData = await GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(courseId, false);
+            if (courseData.Data == null)
+                return Response<MemoryStream>.NoContent();
+
+            List<string> assessMethods = new List<string>();
+            foreach (var assessMethod in courseData.Data.StudentDtos.FirstOrDefault().AssesstMethodDtos)
+            {
+                assessMethods.Add(assessMethod.AssessName);
+            }
+
+            var students = new List<Dictionary<string, object>>();
+            int index = 1;
+
+            foreach (var student in courseData.Data.StudentDtos)
+            {
+                var studentDict = new Dictionary<string, object>
+                {
+                    { "N.", index },
+                    { "Student Code", student.StudentCode },
+                    { "Student Name", student.StudentName }
+                };
+
+                foreach (var method in student.AssesstMethodDtos)
+                {
+                    if (inculdeOldDegrees)
+                        studentDict[method.AssessName] = method.AssessDegree;
+                    else
+                        studentDict[method.AssessName] = "";
+                }
+
+                students.Add(studentDict);
+                index++;
+            }
+
+            var memoryStream = await _excelHelper.GenerateExcelFileForAssessMethodsAsync(courseData.Data.CourseName, courseData.Data.CourseCode,
+                lecurerData.NameEnglish, "extractor", students, assessMethods);
+
+            return Response<MemoryStream>.Success(memoryStream);
         }
     }
 }
