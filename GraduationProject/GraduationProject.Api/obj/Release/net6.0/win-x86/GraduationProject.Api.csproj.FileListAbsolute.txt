@@ -217,3 +217,16 @@ C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProj
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\Newtonsoft.Json.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\System.Text.Encodings.Web.dll
 C:\Users\Mohamed\source\repos\GraduationProject\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\System.Text.Json.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\EPPlus.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\EPPlus.Interfaces.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\EPPlus.System.Drawing.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\Microsoft.Extensions.Configuration.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\Microsoft.Extensions.Configuration.Abstractions.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\Microsoft.Extensions.Configuration.FileExtensions.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\Microsoft.Extensions.Configuration.Json.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\Microsoft.Extensions.FileProviders.Abstractions.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\Microsoft.Extensions.FileProviders.Physical.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\Microsoft.Extensions.FileSystemGlobbing.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\Newtonsoft.Json.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\System.Text.Encodings.Web.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\bin\Release\net6.0\win-x86\System.Text.Json.dll

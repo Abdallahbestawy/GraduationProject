@@ -7,6 +7,9 @@ E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Releas
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\AutoMapper.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\BouncyCastle.Cryptography.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Enums.NET.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\EPPlus.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\EPPlus.Interfaces.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\EPPlus.System.Drawing.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\ExtendedNumerics.BigDecimal.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\MailKit.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\MathNet.Numerics.dll
@@ -20,8 +23,15 @@ E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Releas
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.EntityFrameworkCore.Relational.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.EntityFrameworkCore.SqlServer.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Extensions.Caching.Memory.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Extensions.Configuration.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Extensions.Configuration.Abstractions.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Extensions.Configuration.FileExtensions.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Extensions.Configuration.Json.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Extensions.DependencyInjection.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Extensions.FileProviders.Abstractions.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Extensions.FileProviders.Physical.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Extensions.FileSystemGlobbing.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Extensions.Identity.Core.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Extensions.Identity.Stores.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Extensions.Options.dll
@@ -37,6 +47,7 @@ E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Releas
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.OpenApi.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Win32.SystemEvents.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\MimeKit.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Newtonsoft.Json.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\NPOI.Core.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\NPOI.OOXML.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\NPOI.OpenXml4Net.dll
@@ -58,6 +69,8 @@ E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Releas
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\System.Security.Cryptography.Xml.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\System.Security.Permissions.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\System.Text.Encoding.CodePages.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\System.Text.Encodings.Web.dll
+E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\System.Text.Json.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\System.Windows.Extensions.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\Microsoft.Data.SqlClient.SNI.dll
 E:\GraduationProjectImplement\GraduationProject\GraduationProject.Api\obj\Release\net6.0\win-x86\PubTmp\Out\GraduationProject.Data.dll

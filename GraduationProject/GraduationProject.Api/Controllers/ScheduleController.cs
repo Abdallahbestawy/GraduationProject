@@ -1,5 +1,8 @@
-﻿using GraduationProject.Service.DataTransferObject.ScheduleDto;
+﻿using GraduationProject.Identity.Enum;
+using GraduationProject.Identity.IService;
+using GraduationProject.Service.DataTransferObject.ScheduleDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Api.Controllers
@@ -9,11 +12,13 @@ namespace GraduationProject.Api.Controllers
     public class ScheduleController : ControllerBase
     {
         private readonly IScheduleIService _scheduleIService;
-        public ScheduleController(IScheduleIService scheduleIService)
+        private readonly IAccountService _accountService;
+        public ScheduleController(IScheduleIService scheduleIService, IAccountService accountService = null)
         {
             _scheduleIService = scheduleIService;
+            _accountService = accountService;
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPost]
         public async Task<IActionResult> AddSchedule(ScheduleDto addScheduleDto)
         {
@@ -21,16 +26,20 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Teacher) + "," + nameof(UserType.TeacherAssistant))]
         [HttpGet("T")]
         public async Task<IActionResult> GetSchedulesForStaffByUserId()
         {
-            string userId = "63d3ab54-6da1-429d-b8f7-7f9e56fa75fc";
-            var response = await _scheduleIService.GetSchedulesForStaffByUserIdAsync(userId);
+            var currentUser = await _accountService.GetUser(User);
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+            var response = await _scheduleIService.GetSchedulesForStaffByUserIdAsync(currentUser.Id);
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpGet("All/{factlyId:int}/{semesterId:int}")]
         public async Task<IActionResult> GetScheduleBySemesterId(int factlyId, int semesterId)
         {
@@ -38,7 +47,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPut]
         public async Task<IActionResult> UpdateSchedule(ScheduleDto updateScheduleDto)
         {
@@ -46,7 +55,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpDelete("{Id:int}")]
         public async Task<IActionResult> DeleteSchedule([FromRoute] int Id)
         {

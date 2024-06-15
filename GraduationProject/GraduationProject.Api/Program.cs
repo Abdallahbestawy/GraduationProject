@@ -4,6 +4,7 @@ using GraduationProject.Identity.IService;
 using GraduationProject.Identity.Models;
 using GraduationProject.Identity.Service;
 using GraduationProject.Identity.Settings;
+using GraduationProject.LogHandler.IService;
 using GraduationProject.LogHandler.Service;
 using GraduationProject.Mails.IService;
 using GraduationProject.Mails.Models;
@@ -15,9 +16,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using OfficeOpenXml;
-using GraduationProject.LogHandler.IService;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 JwtTokenLifetimeManager jwtTokenLifetimeManager = new JwtTokenLifetimeManager();

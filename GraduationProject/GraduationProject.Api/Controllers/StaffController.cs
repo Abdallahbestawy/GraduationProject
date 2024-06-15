@@ -52,7 +52,7 @@ namespace GraduationProject.Api.Controllers
                 return BadRequest("please enter Vaild Model");
             }
         }
-        //[Authorize(Roles = nameof(UserType.Administration))]
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPost("AssignCourseSe")]
         public async Task<IActionResult> AddTeacherAssistantSemester([FromBody] List<AddStaffSemesterDto> addStaffSemesterDto)
         {
