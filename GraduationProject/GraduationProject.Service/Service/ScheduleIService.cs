@@ -387,6 +387,34 @@ namespace GraduationProject.Service.Service
             }
         }
 
-
+        public async Task<Response<bool>> AssignStudentsToSchedule(int ScientificDegreeId)
+        {
+            try
+            {
+                var result = await _unitOfWork.SchedulesRepo.AssignStudentsToSchedule(ScientificDegreeId);
+                if (result)
+                {
+                    if(await _unitOfWork.SaveAsync() > 0)
+                    {
+                        return Response<bool>.Created("Students assigned to schedule successfully");
+                    }
+                }
+                return Response<bool>.ServerError("Error occured while assigning students to schedule",
+                                     "An unexpected error occurred while assigning students to schedule. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = nameof(ScheduleIService),
+                    MethodName = nameof(AssignStudentsToSchedule),
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while assigning students to schedule",
+                                     "An unexpected error occurred while assigning students to schedule. Please try again later.");
+            }
+        }
     }
 }

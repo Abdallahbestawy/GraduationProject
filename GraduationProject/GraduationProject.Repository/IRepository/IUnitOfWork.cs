@@ -53,6 +53,7 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<Governorate> Governorates { get; }
         IGeneralRepository<ActivityLog> ActivityLogs { get; }
         IGeneralRepository<SchedulePlace> SchedulePlaces { get; }
+        ISchedulesRepository SchedulesRepo { get; }
 
 
 

@@ -58,7 +58,7 @@ namespace GraduationProject.Repository.Repository
         public IGeneralRepository<Governorate> Governorates { get; private set; }
         public IGeneralRepository<ActivityLog> ActivityLogs { get; set; }
         public IGeneralRepository<Result> Results { get; private set; }
-
+        public ISchedulesRepository SchedulesRepo { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -111,6 +111,7 @@ namespace GraduationProject.Repository.Repository
             Governorates = new GeneralRepository<Governorate>(_context);
             ActivityLogs = new GeneralRepository<ActivityLog>(_context);
             Results = new GeneralRepository<Result>(_context);
+            SchedulesRepo = new SchedulesRepository(_context);
         }
 
 
