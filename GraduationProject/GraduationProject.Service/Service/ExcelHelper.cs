@@ -438,5 +438,43 @@ namespace GraduationProject.Service.Service
             return columnName;
         }
 
+        public List<Dictionary<string, object>> ReadExcelFileForAssessMethods(Stream excelStream)
+        {
+            var students = new List<Dictionary<string, object>>();
+
+            using (var excelPackage = new ExcelPackage(excelStream))
+            {
+                var sheet = excelPackage.Workbook.Worksheets.FirstOrDefault();
+                if (sheet == null) return students;
+
+                var headers = new List<string>();
+                int headerRowIndex = 5;
+
+                for (int col = 1; col <= sheet.Dimension.End.Column; col++)
+                {
+                    var headerValue = sheet.Cells[headerRowIndex, col].Text;
+                    if (!string.IsNullOrEmpty(headerValue))
+                    {
+                        headers.Add(headerValue);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                for (int row = headerRowIndex + 1; row <= sheet.Dimension.End.Row; row++)
+                {
+                    var studentDict = new Dictionary<string, object>();
+                    for (int col = 1; col <= headers.Count; col++)
+                    {
+                        studentDict[headers[col - 1]] = sheet.Cells[row, col].Text;
+                    }
+                    students.Add(studentDict);
+                }
+            }
+
+            return students;
+        }
     }
 }
