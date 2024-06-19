@@ -13,12 +13,13 @@ namespace GraduationProject.Api.Controllers
     {
         private readonly IStudentService _studentService;
         private readonly IAccountService _accountService;
+        private readonly IScheduleIService _scheduleIService;
 
-
-        public StudentController(IStudentService studentService, IAccountService accountService)
+        public StudentController(IStudentService studentService, IAccountService accountService, IScheduleIService scheduleIService = null)
         {
             _studentService = studentService;
             _accountService = accountService;
+            _scheduleIService = scheduleIService;
         }
         [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.Staff))]
         [HttpPost("AddStudent")]
@@ -150,6 +151,19 @@ namespace GraduationProject.Api.Controllers
             var response = await _studentService.AddStudentsListFromExcelFileAsync(file, User);
 
             return StatusCode(response.StatusCode, response);
+        }
+        [Authorize(Roles = nameof(UserType.Student))]
+        [HttpGet("Schedule")]
+        public async Task<IActionResult> GetStudentScheduleByUserId()
+        {
+            var currentUser = await _accountService.GetUser(User);
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+            var respone = await _scheduleIService.GetStudentScheduleByUserIdAsync(currentUser.Id);
+            return StatusCode(respone.StatusCode, respone);
+
         }
     }
 }

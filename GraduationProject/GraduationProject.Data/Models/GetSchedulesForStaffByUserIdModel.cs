@@ -7,8 +7,6 @@ namespace GraduationProject.Data.Models
         public int SchedulesId { get; set; }
         public ScheduleDay ScheduleDay { get; set; }
         public ScheduleType ScheduleType { get; set; }
-        //public TimeSpan TimeStart { get; set; }
-        //public TimeSpan EndStart { get; set; }
         public string FacultysName { get; set; }
         public string NameEnglish { get; set; }
         public string AcademyYear { get; set; }

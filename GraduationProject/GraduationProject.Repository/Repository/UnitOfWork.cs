@@ -37,6 +37,7 @@ namespace GraduationProject.Repository.Repository
 
         public IGeneralRepository<StaffSemester> StaffSemesters { get; private set; }
         public IGeneralRepository<GetStudentDetailsByUserIdModel> GetStudentDetailsByUserIdModels { get; private set; }
+        public IGeneralRepository<GetStudentScheduleByUserIdModel> GetStudentScheduleByUserIdModels { get; private set; }
         public IGeneralRepository<GetStaffDetailsByUserIdModel> GetStaffDetailsByUserIdModels { get; private set; }
         public IGeneralRepository<GetStudentResultModel> GetStudentResultModels { get; private set; }
         public IGeneralRepository<GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModel> GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatusModels { get; private set; }
@@ -98,6 +99,7 @@ namespace GraduationProject.Repository.Repository
             GetAllStudentsInSemesterModels = new GeneralRepository<GetAllStudentsInSemesterModel>(_context);
             GetAllByFacultyIdModels = new GeneralRepository<GetAllByFacultyIdModel>(_context);
             GetStudentsSemesterResultModels = new GeneralRepository<GetStudentsSemesterResultModel>(_context);
+            GetStudentScheduleByUserIdModels = new GeneralRepository<GetStudentScheduleByUserIdModel>(_context);
             GetStudentInSemesterResultModels = new GeneralRepository<GetStudentInSemesterResultModel>(_context);
             GetCurrentStaffByCourseIdModels = new GeneralRepository<GetCurrentStaffByCourseIdModel>(_context);
             GetAllStudentInCourseResultModels = new GeneralRepository<GetAllStudentInCourseResultModel>(_context);

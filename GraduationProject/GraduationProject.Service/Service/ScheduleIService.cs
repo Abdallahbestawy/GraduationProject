@@ -394,7 +394,7 @@ namespace GraduationProject.Service.Service
                 var result = await _unitOfWork.SchedulesRepo.AssignStudentsToSchedule(ScientificDegreeId);
                 if (result)
                 {
-                    if(await _unitOfWork.SaveAsync() > 0)
+                    if (await _unitOfWork.SaveAsync() > 0)
                     {
                         return Response<bool>.Created("Students assigned to schedule successfully");
                     }
@@ -414,6 +414,46 @@ namespace GraduationProject.Service.Service
                 });
                 return Response<bool>.ServerError("Error occured while assigning students to schedule",
                                      "An unexpected error occurred while assigning students to schedule. Please try again later.");
+            }
+        }
+
+        public async Task<Response<List<GetStudentScheduleByUserIdDto>>> GetStudentScheduleByUserIdAsync(string userId)
+        {
+            try
+            {
+                SqlParameter pUserId = new SqlParameter("@UserId", userId);
+
+                var getStudentSchedule = await _unitOfWork.GetStudentScheduleByUserIdModels.CallStoredProcedureAsync(
+                    "EXECUTE SpGetStudentScheduleByUserId", pUserId);
+                if (!getStudentSchedule.Any())
+                {
+                    return Response<List<GetStudentScheduleByUserIdDto>>.NoContent();
+                }
+                var getStudentScheduleByUserIdDto = getStudentSchedule.Select(ss => new GetStudentScheduleByUserIdDto
+                {
+                    ScheduleDay = ss.ScheduleDay,
+                    ScheduleType = ss.ScheduleType,
+                    SchedulePlacesName = ss.SchedulePlacesName,
+                    Timing = ss.Timing,
+                    CoursesName = ss.CoursesName,
+                    CoursesCode = ss.CoursesCode,
+                    NameDoctor = ss.NameEnglish
+                }).ToList();
+                return Response<List<GetStudentScheduleByUserIdDto>>.Success(getStudentScheduleByUserIdDto, "The schedule retrieved successfully")
+                    .WithCount(getStudentScheduleByUserIdDto.Count);
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = nameof(ScheduleIService),
+                    MethodName = nameof(GetStudentScheduleByUserIdAsync),
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetStudentScheduleByUserIdDto>>.ServerError("Error occured while retrieving the schedule",
+                         "An unexpected error occurred while retrieving the schedule. Please try again later.");
             }
         }
     }
