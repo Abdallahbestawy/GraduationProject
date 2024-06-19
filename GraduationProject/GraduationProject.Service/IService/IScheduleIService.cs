@@ -10,6 +10,7 @@ namespace GraduationProject.Service.IService
         Task<Response<int>> DeleteScheduleAsync(int scheduleId);
         Task<Response<ScheduleDto>> GetScheduleBySemesterIdAsync(int semesterId, int factlyId);
         Task<Response<GetSchedulesForStaffByUserIdDto>> GetSchedulesForStaffByUserIdAsync(string userId);
+        Task<Response<List<GetStudentScheduleByUserIdDto>>> GetStudentScheduleByUserIdAsync(string userId);
         Task<Response<bool>> AssignStudentsToSchedule(int ScientificDegreeId);
     }
 }
