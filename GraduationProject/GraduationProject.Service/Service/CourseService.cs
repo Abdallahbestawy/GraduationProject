@@ -8,6 +8,7 @@ using GraduationProject.Repository.Repository;
 using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.CourseDto;
 using GraduationProject.Service.IService;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using System.Security.Claims;
 
@@ -794,55 +795,179 @@ namespace GraduationProject.Service.Service
 
         public async Task<Response<MemoryStream>> GenerateExcelFileForStudentSemesterAssessMethodsBySpecificCourse(int courseId, ClaimsPrincipal user, bool inculdeOldDegrees)
         {
-            //var extractorUser = await _accountService.GetUser(user);
-            var staffSemester = await _unitOfWork.StaffSemesters.GetEntityByPropertyWithIncludeAsync(
-                crs => crs.CourseId == courseId, crs => crs.Staff, crs => crs.AcademyYear);
-            var record = staffSemester.FirstOrDefault();
-
-            if (record == null)
-                return Response<MemoryStream>.NoContent();
-            if (!record.AcademyYear.IsCurrent)
-                return Response<MemoryStream>.NoContent();
-
-            var lecurerData = await _accountService.GetUserByUserId(record.Staff.UserId);
-            var courseData = await GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(courseId, false);
-            if (courseData.Data == null)
-                return Response<MemoryStream>.NoContent();
-
-            List<string> assessMethods = new List<string>();
-            foreach (var assessMethod in courseData.Data.StudentDtos.FirstOrDefault().AssesstMethodDtos)
+            try
             {
-                assessMethods.Add(assessMethod.AssessName);
-            }
+                var extractorUser = await _accountService.GetUser(user);
+                var staffSemester = await _unitOfWork.StaffSemesters.GetEntityByPropertyWithIncludeAsync(
+                    crs => crs.CourseId == courseId, crs => crs.Staff, crs => crs.AcademyYear);
+                var record = staffSemester.FirstOrDefault();
 
-            var students = new List<Dictionary<string, object>>();
-            int index = 1;
+                if (record == null)
+                    return Response<MemoryStream>.NoContent();
+                if (!record.AcademyYear.IsCurrent)
+                    return Response<MemoryStream>.NoContent();
 
-            foreach (var student in courseData.Data.StudentDtos)
-            {
-                var studentDict = new Dictionary<string, object>
+                var lecurerData = await _accountService.GetUserByUserId(record.Staff.UserId);
+                var courseData = await GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(courseId, false);
+                if (courseData.Data == null)
+                    return Response<MemoryStream>.NoContent();
+
+                List<string> assessMethods = new List<string>();
+                foreach (var assessMethod in courseData.Data.StudentDtos.FirstOrDefault().AssesstMethodDtos)
                 {
-                    { "N.", index },
-                    { "Student Code", student.StudentCode },
-                    { "Student Name", student.StudentName }
-                };
-
-                foreach (var method in student.AssesstMethodDtos)
-                {
-                    if (inculdeOldDegrees)
-                        studentDict[method.AssessName] = method.AssessDegree;
-                    else
-                        studentDict[method.AssessName] = "";
+                    assessMethods.Add(assessMethod.AssessName);
                 }
 
-                students.Add(studentDict);
-                index++;
+                var students = new List<Dictionary<string, object>>();
+                int index = 1;
+
+                foreach (var student in courseData.Data.StudentDtos)
+                {
+                    var studentDict = new Dictionary<string, object>
+                    {
+                        { "N.", index },
+                        { "Student Code", student.StudentCode },
+                        { "Student Name", student.StudentName }
+                    };
+
+                    foreach (var method in student.AssesstMethodDtos)
+                    {
+                        if (inculdeOldDegrees)
+                            studentDict[method.AssessName] = method.AssessDegree;
+                        else
+                            studentDict[method.AssessName] = "";
+                    }
+
+                    students.Add(studentDict);
+                    index++;
+                }
+
+                var memoryStream = await _excelHelper.GenerateExcelFileForAssessMethodsAsync(courseData.Data.CourseName, courseData.Data.CourseCode,
+                    lecurerData.NameEnglish, extractorUser.NameEnglish, students, assessMethods);
+
+                return Response<MemoryStream>.Success(memoryStream,courseData.Data.CourseName);
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = nameof(CourseService),
+                    MethodName = nameof(GenerateExcelFileForStudentSemesterAssessMethodsBySpecificCourse),
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<MemoryStream>.ServerError("Error occured while generating Excel file",
+                    "An unexpected error occurred while generating Excel file. Please try again later.");
+            }
+        }
+
+        public async Task<Response<bool>> UploadExcelFileForStudentSemesterAssessMethodsBySpecificCourse(int courseId, ClaimsPrincipal user, IFormFile file)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    return Response<bool>.BadRequest("No files are uploaded");
+                }
+
+                var newData = new List<UpdateCourseStudentsAssessMethodDto>();
+
+                var memoryStream = new MemoryStream();
+                await file.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+                var inputData = ConvertToStudentDto(memoryStream);
+
+                if (inputData.Count == 0)
+                {
+                    return Response<bool>.BadRequest("No data fetched");
+                }
+
+                var courseData = await GetStudentSemesterAssessMethodsBySpecificCourseAndControlStatus(courseId, false);
+                if (courseData.Data == null)
+                {
+                    return Response<bool>.BadRequest("This course doesn't have Assess method data");
+                }
+
+                List<string> assessMethods = new List<string>();
+                foreach (var assessMethod in courseData.Data.StudentDtos.FirstOrDefault().AssesstMethodDtos)
+                {
+                    assessMethods.Add(assessMethod.AssessName);
+                }
+
+                if (assessMethods.Count != inputData.FirstOrDefault().AssesstMethodDtos.Count)
+                {
+                    return Response<bool>.BadRequest("The actual assess methods number doesn't match the input one");
+                }
+                if (courseData.Data.StudentDtos.Count != inputData.Count)
+                {
+                    return Response<bool>.BadRequest("The actual students number doesn't match the input one");
+                }
+
+                var actualStudentsData = courseData.Data.StudentDtos;
+
+                foreach (var (input, actual) in inputData.Zip(actualStudentsData))
+                {
+                    foreach (var (inputAssessMethod, actualAssessMethod) in input.AssesstMethodDtos.Zip(actual.AssesstMethodDtos))
+                    {
+                        newData.Add(new UpdateCourseStudentsAssessMethodDto
+                        {
+                            AssessmentMethodId = actualAssessMethod.AssessmentMethodId,
+                            CourseId = courseId,
+                            StudentSemesterAssessMethodId = actualAssessMethod.StudentSemesterAssessMethodId,
+                            Degree = (decimal)inputAssessMethod.AssessDegree
+                        });
+                    }
+                }
+
+                var updateResult = await UpdateCourseStudentsAssessMethodAsync(newData);
+                if (updateResult.Succeeded)
+                {
+                    return Response<bool>.Updated(updateResult.Message);
+                }
+
+                return Response<bool>.ServerError("Error occured while updating Student Semester Assess Methods from excel file",
+                    "An unexpected error occurred while updating Student Semester Assess Methods from excel file. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = nameof(CourseService),
+                    MethodName = nameof(UploadExcelFileForStudentSemesterAssessMethodsBySpecificCourse),
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<bool>.ServerError("Error occured while updating Student Semester Assess Methods from excel file",
+                    "An unexpected error occurred while updating Student Semester Assess Methods from excel file. Please try again later.");
+            }
+        }
+
+        private List<StudentDto> ConvertToStudentDto(Stream excelStream)
+        {
+            var studentsData = _excelHelper.ReadExcelFileForAssessMethods(excelStream);
+            var students = new List<StudentDto>();
+
+            foreach (var studentDict in studentsData)
+            {
+                var studentDto = new StudentDto
+                {
+                    StudentCode = studentDict["Student Code"].ToString(),
+                    StudentName = studentDict["Student Name"].ToString(),
+                    AssesstMethodDtos = studentDict
+                        .Where(kvp => kvp.Key != "N." && kvp.Key != "Student Code" && kvp.Key != "Student Name")
+                        .Select(kvp => new AssesstMethodDto
+                        {
+                            AssessName = kvp.Key,
+                            AssessDegree = decimal.TryParse(kvp.Value.ToString(), out var degree) ? degree : (decimal?)null
+                        })
+                        .ToList()
+                };
+                students.Add(studentDto);
             }
 
-            var memoryStream = await _excelHelper.GenerateExcelFileForAssessMethodsAsync(courseData.Data.CourseName, courseData.Data.CourseCode,
-                lecurerData.NameEnglish, "extractor", students, assessMethods);
-
-            return Response<MemoryStream>.Success(memoryStream);
+            return students;
         }
     }
 }

@@ -152,10 +152,21 @@ namespace GraduationProject.Api.Controllers
             if(!response.Succeeded)
                 return StatusCode(response.StatusCode, response);
 
-            var fileName = "EduWay-AssessMethods.xlsx";
+            var fileName = $"EduWay-{response.Message}-AssessMethods.xlsx";
             var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
             return File(response.Data.ToArray(), contentType, fileName);
+        }
+
+        [HttpPut("UpdateCourseStudentsAssessMethodWithExcelFile/{courseId:int}")]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> UploadExcelFileForSpecificCourseByCourseId(int courseId, IFormFile file)
+        {
+            if (Request.Form.Files.Count == 0) return BadRequest("No files are uploaded");
+
+            var response = await _courseService.UploadExcelFileForStudentSemesterAssessMethodsBySpecificCourse(courseId,User,file);
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

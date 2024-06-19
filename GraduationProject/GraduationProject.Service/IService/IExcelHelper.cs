@@ -11,5 +11,6 @@ namespace GraduationProject.Service.IService
         ImportedData<List<PhoneNumberDto>> ImportFromSpecificColumn(string filePath, string colName);
         Task<MemoryStream> GenerateExcelFileForAssessMethodsAsync(string courseName, string courseCode,
             string lecturerName, string extractorName, List<Dictionary<string, object>> students, List<string> assessMethods);
+        List<Dictionary<string, object>> ReadExcelFileForAssessMethods(Stream excelStream);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using GraduationProject.ResponseHandler.Model;
 using GraduationProject.Service.DataTransferObject.CourseDto;
+using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
 namespace GraduationProject.Service.IService
@@ -25,5 +26,6 @@ namespace GraduationProject.Service.IService
         Task<Response<GetCourseAssessMethodDto>> GetCourseAssessMethodAsync(int courseId);
         Task<Response<bool>> DeleteCourseAssessMethodAsync(int AssessMethodId);
         Task<Response<MemoryStream>> GenerateExcelFileForStudentSemesterAssessMethodsBySpecificCourse(int courseId, ClaimsPrincipal user, bool inculdeOldDegrees);
+        Task<Response<bool>> UploadExcelFileForStudentSemesterAssessMethodsBySpecificCourse(int courseId, ClaimsPrincipal user, IFormFile file);
     }
 }
