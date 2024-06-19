@@ -232,7 +232,7 @@ namespace GraduationProject.Service.Service
             try
             {
                 var staff = await _unitOfWork.Staffs.GetEntityByPropertyAsync(u => u.UserId == userId);
-                if (staff == null || !staff.Any())
+                if (!staff.Any())
                 {
                     return Response<GetCourseStaffSemesterDto>.BadRequest("This staff doesn't exist");
                 }
@@ -730,6 +730,47 @@ namespace GraduationProject.Service.Service
             }
         }
 
+        public async Task<Response<List<GetSectionForCourseStaffSemesterDto>>> GetSectionForCourseStaffSemesterAsync(string userId, int courseId)
+        {
+            try
+            {
+                var staff = await _unitOfWork.Staffs.GetEntityByPropertyAsync(u => u.UserId == userId);
+                if (!staff.Any())
+                {
+                    return Response<List<GetSectionForCourseStaffSemesterDto>>.BadRequest("This staff doesn't exist");
+                }
+                var staffSemesters = await _unitOfWork.Schedules.GetEntityByPropertyWithIncludeAsync
+                    (
+                        s => s.ScheduleType == ScheduleType.Section && s.StaffId == staff.FirstOrDefault().Id && s.CourseId == courseId && s.AcademyYear.IsCurrent,
+                        a => a.AcademyYear
+                    );
+
+                if (!staffSemesters.Any())
+                    return Response<List<GetSectionForCourseStaffSemesterDto>>.NoContent("This staff doesn't have Section for courses");
+                var getSectionForCourseStaffSemesterDto = staffSemesters.Select(se => new GetSectionForCourseStaffSemesterDto
+                {
+                    SectionId = se.Id,
+                    ScheduleDay = se.ScheduleDay,
+                    SectionTiming = $"{se.TimeStart.Hours:D2}:{se.TimeStart.Minutes:D2} - {se.EndStart.Hours:D2}:{se.EndStart.Minutes:D2}"
+                }).ToList();
+
+                return Response<List<GetSectionForCourseStaffSemesterDto>>.Success(getSectionForCourseStaffSemesterDto, "Staff's Section for courses retrieved successfully")
+                    .WithCount(getSectionForCourseStaffSemesterDto.Count());
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = "StaffService",
+                    MethodName = "GetSectionForCourseStaffSemesterAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetSectionForCourseStaffSemesterDto>>.ServerError("Error occured while retrieving staff's Section for courses",
+                     "An unexpected error occurred while retrieving staff's Section for courses. Please try again later.");
+            }
+        }
     }
 }
 

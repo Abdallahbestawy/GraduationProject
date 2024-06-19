@@ -456,5 +456,40 @@ namespace GraduationProject.Service.Service
                          "An unexpected error occurred while retrieving the schedule. Please try again later.");
             }
         }
+
+        public async Task<Response<List<GetStudentBySectionIdDto>>> GetStudentBySectionIdAsync(int sectionId)
+        {
+            try
+            {
+                SqlParameter pSectionId = new SqlParameter("@ScheduleId", sectionId);
+
+                var getStudent = await _unitOfWork.GetStudentBySectionIdModels.CallStoredProcedureAsync(
+                    "EXECUTE SpGetStudentBySectionId", pSectionId);
+                if (!getStudent.Any())
+                {
+                    return Response<List<GetStudentBySectionIdDto>>.NoContent();
+                }
+                var getStudentBySectionIdDto = getStudent.Select(ss => new GetStudentBySectionIdDto
+                {
+                    StudentName = ss.NameEnglish,
+                    StudentCode = ss.Code
+                }).ToList();
+                return Response<List<GetStudentBySectionIdDto>>.Success(getStudentBySectionIdDto, "The student retrieved successfully")
+                    .WithCount(getStudentBySectionIdDto.Count);
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = nameof(ScheduleIService),
+                    MethodName = nameof(GetStudentBySectionIdAsync),
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<List<GetStudentBySectionIdDto>>.ServerError("Error occured while retrieving the student",
+                         "An unexpected error occurred while retrieving the student. Please try again later.");
+            }
+        }
     }
 }

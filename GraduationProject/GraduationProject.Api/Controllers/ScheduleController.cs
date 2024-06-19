@@ -64,11 +64,19 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        //[Authorize(Roles = nameof(UserType.Administration))]
+        [Authorize(Roles = nameof(UserType.Administration))]
         [HttpPost("AssignStudentsToScheduleWithScientificDegreeId{scientificDegreeId:int}")]
         public async Task<IActionResult> AssignStudentsToSchedule([FromRoute] int scientificDegreeId)
         {
             var response = await _scheduleIService.AssignStudentsToSchedule(scientificDegreeId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+        [Authorize(Roles = nameof(UserType.TeacherAssistant))]
+        [HttpGet("se/{sectionId:int}")]
+        public async Task<IActionResult> GetStudentScheduleByUserId(int sectionId)
+        {
+            var response = await _scheduleIService.GetStudentBySectionIdAsync(sectionId);
 
             return StatusCode(response.StatusCode, response);
         }

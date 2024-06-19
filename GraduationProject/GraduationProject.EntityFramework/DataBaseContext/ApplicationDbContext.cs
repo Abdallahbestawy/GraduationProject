@@ -47,6 +47,8 @@ namespace GraduationProject.EntityFramework.DataBaseContext
             .HasNoKey();
             modelBuilder.Entity<GetStudentScheduleByUserIdModel>()
             .HasNoKey();
+            modelBuilder.Entity<GetStudentBySectionIdModel>()
+            .HasNoKey();
         }
 
         public DbSet<AcademyYear> AcademyYears { get; set; }
@@ -102,6 +104,7 @@ namespace GraduationProject.EntityFramework.DataBaseContext
         public DbSet<GetSchedulesForStaffByUserIdModel> GetSchedulesForStaffByUserId { get; set; }
         public DbSet<GetStudentScheduleByUserIdModel> GetStudentScheduleByUserId { get; set; }
         public DbSet<GetCurrentStaffByCourseIdModel> GetCurrentStaffByCourseId { get; set; }
+        public DbSet<GetStudentBySectionIdModel> GetStudentBySectionId { get; set; }
 
 
 

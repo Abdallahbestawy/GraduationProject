@@ -191,5 +191,22 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        [Authorize(Roles = nameof(UserType.TeacherAssistant))]
+        [HttpGet("CSec/{courseId:int}")]
+        public async Task<IActionResult> GetSectionForCourseStaffSemester(int courseId)
+        {
+            if (courseId == 0 || courseId == null)
+            {
+                return BadRequest("Please Enter Valid StaffId");
+            }
+            var currentUser = await _accountService.GetUser(User);
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+            var response = await _StaffService.GetSectionForCourseStaffSemesterAsync(currentUser.Id, courseId);
+
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }
