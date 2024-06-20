@@ -24,7 +24,8 @@ namespace GraduationProject.Identity.Migrations
                         CAST(TimeStart AS VARCHAR(5)) + ' - ' + CAST(EndStart AS VARCHAR(5)) AS Timing,
                         Courses.Name as CoursesName,
                         Courses.Code as CoursesCode,
-                        ScientificDegrees.Name AS ScientificDegreesName
+                        ScientificDegrees.Name AS ScientificDegreesName,
+                        Parent.Name as BandName
                     FROM
                         Schedules
                     JOIN Facultys
@@ -39,6 +40,8 @@ namespace GraduationProject.Identity.Migrations
                         ON Courses.Id = Schedules.CourseId
                     JOIN ScientificDegrees
                         ON ScientificDegrees.Id = Schedules.ScientificDegreeId
+                    JOIN ScientificDegrees as Parent
+                        ON ScientificDegrees.ParentId = Parent.Id
                     JOIN AcademyYears
                         ON AcademyYears.Id = Schedules.AcademyYearId
                     WHERE 
@@ -52,5 +55,6 @@ namespace GraduationProject.Identity.Migrations
         {
             migrationBuilder.Sql("DROP PROCEDURE [dbo].[SpGetSchedulesForStaffByUserId]");
         }
+
     }
 }

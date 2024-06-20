@@ -162,7 +162,7 @@ namespace GraduationProject.Service.Service
                         CoursesName = s.CoursesName,
                         ScheduleDay = s.ScheduleDay,
                         SchedulePlacesName = s.SchedulePlacesName,
-                        ScientificDegreesName = s.ScientificDegreesName,
+                        ScientificDegreesName = $"{s.BandName} - {s.ScientificDegreesName}",
                         ScheduleType = s.ScheduleType,
                         Timing = s.Timing,
                     }).ToList()

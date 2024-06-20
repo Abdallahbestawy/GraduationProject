@@ -15,6 +15,7 @@ namespace GraduationProject.Data.Models
         public string CoursesName { get; set; }
         public string CoursesCode { get; set; }
         public string ScientificDegreesName { get; set; }
+        public string BandName { get; set; }
     }
 }
 
