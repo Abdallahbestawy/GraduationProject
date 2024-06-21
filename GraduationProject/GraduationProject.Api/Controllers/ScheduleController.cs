@@ -39,11 +39,11 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [Authorize(Roles = nameof(UserType.Administration))]
-        [HttpGet("All/{factlyId:int}/{semesterId:int}")]
-        public async Task<IActionResult> GetScheduleBySemesterId(int factlyId, int semesterId)
+        //[Authorize(Roles = nameof(UserType.Administration))]
+        [HttpGet("ById/{scheduleId:int}")]
+        public async Task<IActionResult> GetScheduleById(int scheduleId)
         {
-            var response = await _scheduleIService.GetScheduleBySemesterIdAsync(semesterId, factlyId);
+            var response = await _scheduleIService.GetScheduleByIdAsync(scheduleId);
 
             return StatusCode(response.StatusCode, response);
         }

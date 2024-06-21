@@ -540,5 +540,51 @@ namespace GraduationProject.Service.Service
                          "An unexpected error occurred while retrieving the schedule. Please try again later.");
             }
         }
+
+        public async Task<Response<GetScheduleByIdDto>> GetScheduleByIdAsync(int scheduleId)
+        {
+            try
+            {
+                var getSchedulesById = await _unitOfWork.Schedules.GetByIdAsync(scheduleId);
+                if (getSchedulesById == null)
+                {
+                    return Response<GetScheduleByIdDto>.NoContent();
+
+                }
+                GetScheduleByIdDto getScheduleDetailsDto = new GetScheduleByIdDto
+                {
+                    Id = getSchedulesById.Id,
+                    ScheduleType = getSchedulesById.ScheduleType,
+                    ScheduleDay = getSchedulesById.ScheduleDay,
+                    ScientificDegreeId = getSchedulesById.ScientificDegreeId,
+                    AcademyYearId = getSchedulesById.AcademyYearId,
+                    FacultyId = getSchedulesById.FacultyId,
+                    Capacity = getSchedulesById.Capacity,
+                    SchedulePlaceId = getSchedulesById.SchedulePlaceId,
+                    StaffId = getSchedulesById.StaffId,
+                    StartHour = getSchedulesById.TimeStart.Hours,
+                    StartMinute = getSchedulesById.TimeStart.Minutes,
+                    EndHour = getSchedulesById.EndStart.Hours,
+                    EndMinute = getSchedulesById.EndStart.Minutes,
+                    CourseId = getSchedulesById.CourseId
+
+                };
+                return Response<GetScheduleByIdDto>.Success(getScheduleDetailsDto, "The schedule retrieved successfully")
+                    .WithCount();
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = nameof(ScheduleIService),
+                    MethodName = nameof(GetScheduleByIdAsync),
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetScheduleByIdDto>.ServerError("Error occured while retrieving the schedule",
+                         "An unexpected error occurred while retrieving the schedule. Please try again later.");
+            }
+        }
     }
 }
