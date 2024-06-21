@@ -69,6 +69,10 @@
       "PackagePath": "staticwebassets\\uploads\\3aee1cef-62a5-4b05-87d4-337a0b1192b1..xlsx"
     },
     {
+      "Id": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Api\\wwwroot\\uploads\\3e2aa444-9745-4362-a4c0-6aa385502f54..xlsx",
+      "PackagePath": "staticwebassets\\uploads\\3e2aa444-9745-4362-a4c0-6aa385502f54..xlsx"
+    },
+    {
       "Id": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Api\\wwwroot\\uploads\\431304cb-c7da-4128-9962-09fbfcb63dd2..xlsx",
       "PackagePath": "staticwebassets\\uploads\\431304cb-c7da-4128-9962-09fbfcb63dd2..xlsx"
     },
@@ -239,6 +243,10 @@
     {
       "Id": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Api\\wwwroot\\uploads\\f790b89b-24f6-422d-a630-03893958c170..xlsx",
       "PackagePath": "staticwebassets\\uploads\\f790b89b-24f6-422d-a630-03893958c170..xlsx"
+    },
+    {
+      "Id": "C:\\Users\\Mohamed\\source\\repos\\GraduationProject\\GraduationProject\\GraduationProject.Api\\wwwroot\\uploads\\fe37599e-edce-40f2-b917-961ef8e9b434..xlsx",
+      "PackagePath": "staticwebassets\\uploads\\fe37599e-edce-40f2-b917-961ef8e9b434..xlsx"
     },
     {
       "Id": "obj\\Release\\net6.0\\staticwebassets\\msbuild.GraduationProject.Api.Microsoft.AspNetCore.StaticWebAssets.props",

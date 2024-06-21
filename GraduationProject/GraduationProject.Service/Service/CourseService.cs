@@ -915,7 +915,7 @@ namespace GraduationProject.Service.Service
                             AssessmentMethodId = actualAssessMethod.AssessmentMethodId,
                             CourseId = courseId,
                             StudentSemesterAssessMethodId = actualAssessMethod.StudentSemesterAssessMethodId,
-                            Degree = (decimal)inputAssessMethod.AssessDegree
+                            Degree = inputAssessMethod.AssessDegree 
                         });
                     }
                 }

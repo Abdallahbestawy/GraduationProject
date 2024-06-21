@@ -5,6 +5,6 @@
         public int StudentSemesterAssessMethodId { get; set; }
         public int CourseId { get; set; }
         public int AssessmentMethodId { get; set; }
-        public decimal Degree { get; set; }
+        public decimal? Degree { get; set; }
     }
 }

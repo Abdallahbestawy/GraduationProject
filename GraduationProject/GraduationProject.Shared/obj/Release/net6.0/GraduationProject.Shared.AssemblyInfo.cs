@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GraduationProject.Shared")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1f1db3b10d653e3d122026c7e7f4c6f68bb5a8eb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cd55861c9a88251590095ce2f5ebfbaeb7658458")]
 [assembly: System.Reflection.AssemblyProductAttribute("GraduationProject.Shared")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GraduationProject.Shared")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
