@@ -512,6 +512,7 @@ namespace GraduationProject.Service.Service
                     ScientificDegreesName = $"{getSchedulesForSemester.FirstOrDefault().BandName} - {getSchedulesForSemester.FirstOrDefault().ScientificDegreesName}",
                     GetScheduleDetailsInfo = getSchedulesForSemester.Select(s => new GetScheduleDetailsInfoDto
                     {
+                        SchedulesId = s.SchedulesId,
                         ScheduleDay = s.ScheduleDay,
                         ScheduleType = s.ScheduleType,
                         Timing = s.Timing,

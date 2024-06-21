@@ -15,6 +15,7 @@ namespace GraduationProject.Identity.Migrations
                 AS
                 BEGIN
                     SELECT 
+                        Schedules.Id As SchedulesId
                         Schedules.ScheduleType,
                         Schedules.ScheduleDay,
                         CAST(Schedules.TimeStart AS VARCHAR(5)) + ' - ' + CAST(Schedules.EndStart AS VARCHAR(5)) AS Timing,

@@ -9,6 +9,7 @@ namespace GraduationProject.Data.Models
 {
     public class GetScheduleDetailsModel
     {
+        public int SchedulesId { get; set; }
         public ScheduleType ScheduleType { get; set; }
         public ScheduleDay ScheduleDay { get; set; }
         public string Timing { get; set; }

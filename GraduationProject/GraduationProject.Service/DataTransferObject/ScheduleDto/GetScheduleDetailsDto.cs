@@ -1,4 +1,5 @@
-﻿using GraduationProject.Data.Enum;
+﻿using GraduationProject.Data.Entity;
+using GraduationProject.Data.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace GraduationProject.Service.DataTransferObject.ScheduleDto
     }
     public class GetScheduleDetailsInfoDto
     {
+        public int SchedulesId { get; set; }
         public ScheduleType ScheduleType { get; set; }
         public ScheduleDay ScheduleDay { get; set; }
         public string Timing { get; set; }
