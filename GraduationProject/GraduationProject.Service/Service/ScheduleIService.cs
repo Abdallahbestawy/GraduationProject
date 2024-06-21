@@ -491,5 +491,53 @@ namespace GraduationProject.Service.Service
                          "An unexpected error occurred while retrieving the student. Please try again later.");
             }
         }
+
+        public async Task<Response<GetScheduleDetailsDto>> GetScheduleDetailsAsync(int semesterId, int factlyId)
+        {
+            try
+            {
+                SqlParameter pSemesterId = new SqlParameter("@ScientificDegreeId", semesterId);
+                SqlParameter pFactlyId = new SqlParameter("@FacultyId", factlyId);
+
+                var getSchedulesForSemester = await _unitOfWork.GetScheduleDetailsModels.CallStoredProcedureAsync(
+                    "EXECUTE SpGetScheduleDetails", pFactlyId, pSemesterId);
+                if (!getSchedulesForSemester.Any())
+                {
+                    return Response<GetScheduleDetailsDto>.NoContent();
+                }
+                GetScheduleDetailsDto getScheduleDetailsDto = new GetScheduleDetailsDto
+                {
+                    AcademyYearName = getSchedulesForSemester.FirstOrDefault().AcademyYear,
+                    FacultyName = getSchedulesForSemester.FirstOrDefault().FacultyName,
+                    ScientificDegreesName = $"{getSchedulesForSemester.FirstOrDefault().BandName} - {getSchedulesForSemester.FirstOrDefault().ScientificDegreesName}",
+                    GetScheduleDetailsInfo = getSchedulesForSemester.Select(s => new GetScheduleDetailsInfoDto
+                    {
+                        ScheduleDay = s.ScheduleDay,
+                        ScheduleType = s.ScheduleType,
+                        Timing = s.Timing,
+                        Capacity = s.Capacity,
+                        CourseCode = s.CourseCode,
+                        CourseName = s.CourseName,
+                        SchedulePlacesName = s.SchedulePlacesName,
+                        StaffName = s.StaffName
+                    }).ToList()
+                };
+                return Response<GetScheduleDetailsDto>.Success(getScheduleDetailsDto, "The schedule retrieved successfully")
+                    .WithCount(getScheduleDetailsDto.GetScheduleDetailsInfo.Count);
+            }
+            catch (Exception ex)
+            {
+                await _mailService.SendExceptionEmail(new ExceptionEmailModel
+                {
+                    ClassName = nameof(ScheduleIService),
+                    MethodName = nameof(GetScheduleDetailsAsync),
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    Time = DateTime.UtcNow
+                });
+                return Response<GetScheduleDetailsDto>.ServerError("Error occured while retrieving the schedule",
+                         "An unexpected error occurred while retrieving the schedule. Please try again later.");
+            }
+        }
     }
 }

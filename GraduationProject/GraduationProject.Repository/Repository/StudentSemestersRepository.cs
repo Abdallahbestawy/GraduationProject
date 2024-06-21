@@ -16,7 +16,7 @@ namespace GraduationProject.Repository.Repository
             _context = context;
         }
 
-        public async Task<List<StudentSemester>> GetAllSemesterCurrentAsync()
+        public async Task<List<StudentSemester>> GetAllSemesterCurrentAsync(int facultyId)
         {
             try
             {
@@ -24,7 +24,7 @@ namespace GraduationProject.Repository.Repository
                     .Include(ac => ac.AcademyYear)
                     .Include(s => s.ScientificDegree)
                         .ThenInclude(parent => parent.Parent)
-                    .Where(sd => sd.AcademyYear.IsCurrent)
+                    .Where(sd => sd.AcademyYear.IsCurrent && sd.AcademyYear.FacultyId == facultyId)
                     .GroupBy(a => a.ScientificDegreeId)
                     .Select(g => g.FirstOrDefault())
                     .ToListAsync();

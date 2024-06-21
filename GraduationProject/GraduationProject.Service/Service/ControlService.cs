@@ -92,11 +92,11 @@ namespace GraduationProject.Service.Service
 
         }
 
-        public async Task<Response<GetAllSemesterCurrentDto>> GetAllSemesterCurrentAsync()
+        public async Task<Response<GetAllSemesterCurrentDto>> GetAllSemesterCurrentAsync(int facultyId)
         {
             try
             {
-                var semesters = await _unitOfWork.StudentSemesters.GetAllSemesterCurrentAsync();
+                var semesters = await _unitOfWork.StudentSemesters.GetAllSemesterCurrentAsync(facultyId);
 
                 if (semesters == null)
                     return Response<GetAllSemesterCurrentDto>.NoContent("No semesters are exist");

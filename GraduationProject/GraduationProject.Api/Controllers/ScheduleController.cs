@@ -65,7 +65,7 @@ namespace GraduationProject.Api.Controllers
         }
 
         [Authorize(Roles = nameof(UserType.Administration))]
-        [HttpPost("AssignStudentsToScheduleWithScientificDegreeId{scientificDegreeId:int}")]
+        [HttpPost("AssignStudentsToScheduleWithScientificDegreeId/{scientificDegreeId:int}")]
         public async Task<IActionResult> AssignStudentsToSchedule([FromRoute] int scientificDegreeId)
         {
             var response = await _scheduleIService.AssignStudentsToSchedule(scientificDegreeId);
@@ -77,6 +77,15 @@ namespace GraduationProject.Api.Controllers
         public async Task<IActionResult> GetStudentScheduleByUserId(int sectionId)
         {
             var response = await _scheduleIService.GetStudentBySectionIdAsync(sectionId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [Authorize(Roles = nameof(UserType.Administration))]
+        [HttpGet("Info/{semesterId:int}/{factlyId:int}")]
+        public async Task<IActionResult> GetScheduleDetails(int semesterId, int factlyId)
+        {
+            var response = await _scheduleIService.GetScheduleDetailsAsync(semesterId, factlyId);
 
             return StatusCode(response.StatusCode, response);
         }

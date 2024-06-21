@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GraduationProject.ExcelFilesGenerator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+82eda0c15aeeddc44479b98f8f5fd260d1d8b567")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9c3829be58cfd2e6b31be4086f4a029e75ea7ce2")]
 [assembly: System.Reflection.AssemblyProductAttribute("GraduationProject.ExcelFilesGenerator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GraduationProject.ExcelFilesGenerator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

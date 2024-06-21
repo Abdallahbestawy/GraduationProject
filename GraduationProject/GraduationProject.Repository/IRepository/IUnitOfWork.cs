@@ -56,6 +56,7 @@ namespace GraduationProject.Repository.IRepository
         IGeneralRepository<ActivityLog> ActivityLogs { get; }
         IGeneralRepository<SchedulePlace> SchedulePlaces { get; }
         ISchedulesRepository SchedulesRepo { get; }
+        IGeneralRepository<GetScheduleDetailsModel> GetScheduleDetailsModels { get; }
 
 
 

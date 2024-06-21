@@ -131,7 +131,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(respone.StatusCode, respone);
         }
-        [Authorize(Roles = nameof(UserType.Administration))]
+        [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.Staff))]
         [HttpGet("InfoData/{studentId:int}")]
         public async Task<IActionResult> GetStudentInfo(int studentId)
         {

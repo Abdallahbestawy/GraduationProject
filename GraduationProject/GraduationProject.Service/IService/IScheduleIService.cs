@@ -13,5 +13,6 @@ namespace GraduationProject.Service.IService
         Task<Response<List<GetStudentScheduleByUserIdDto>>> GetStudentScheduleByUserIdAsync(string userId);
         Task<Response<List<GetStudentBySectionIdDto>>> GetStudentBySectionIdAsync(int sectionId);
         Task<Response<bool>> AssignStudentsToSchedule(int ScientificDegreeId);
+        Task<Response<GetScheduleDetailsDto>> GetScheduleDetailsAsync(int semesterId, int factlyId);
     }
 }

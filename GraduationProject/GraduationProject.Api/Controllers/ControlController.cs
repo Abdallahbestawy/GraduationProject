@@ -67,11 +67,10 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.ControlMembers))]
-        [HttpGet("GetAllSemester")]
-        public async Task<IActionResult> GetAllSemester()
+        [HttpGet("GetAllSemester/{facultyId:int}")]
+        public async Task<IActionResult> GetAllSemester(int facultyId)
         {
-            var response = await _controlService.GetAllSemesterCurrentAsync();
+            var response = await _controlService.GetAllSemesterCurrentAsync(facultyId);
             if (response != null)
             {
                 return Ok(response);

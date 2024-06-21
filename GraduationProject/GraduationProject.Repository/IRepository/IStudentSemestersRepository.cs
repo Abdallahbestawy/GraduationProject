@@ -6,7 +6,7 @@ namespace GraduationProject.Repository.IRepository
     {
         Task<bool> RaisingGradesCourseAsync(int courseId);
         Task<bool> RaisingGradesSemesterAsync(int SemesterId);
-        Task<List<StudentSemester>> GetAllSemesterCurrentAsync();
+        Task<List<StudentSemester>> GetAllSemesterCurrentAsync(int facultyId);
         Task<List<StudentSemester>> GetAllSemesterActiveAsync(int academyYearId);
         Task<(List<StudentSemester>, List<StudentSemester>, bool)> EndSemesterAsync(int scientificDegreeId);
         Task<List<object>> GetTheCurrentSemesterWithStudents();

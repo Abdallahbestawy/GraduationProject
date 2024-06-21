@@ -144,6 +144,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [Authorize(Roles = nameof(UserType.Teacher) + ","+ nameof(UserType.ControlMembers))]
         [HttpGet("GetExcelFileForSpecificCourse/{courseId:int}/{inculdeOldData:bool}")]
         public async Task<IActionResult> GenerateExcelFileForSpecificCourseByCourseId(int courseId, bool inculdeOldData)
         {
@@ -158,6 +159,7 @@ namespace GraduationProject.Api.Controllers
             return File(response.Data.ToArray(), contentType, fileName);
         }
 
+        [Authorize(Roles = nameof(UserType.Teacher) + "," + nameof(UserType.ControlMembers))]
         [HttpPut("UpdateCourseStudentsAssessMethodWithExcelFile/{courseId:int}")]
         [DisableRequestSizeLimit]
         public async Task<IActionResult> UploadExcelFileForSpecificCourseByCourseId(int courseId, IFormFile file)
