@@ -30,6 +30,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [AllowAnonymous]
         [HttpGet("GetCountry")]
         public async Task<IActionResult> GetCountry()
         {
@@ -38,6 +39,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [AllowAnonymous]
         [HttpGet("GetCountry/{Id:int}")]
         public async Task<IActionResult> GetCountryById(int Id)
         {
@@ -70,6 +72,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [AllowAnonymous]
         [HttpGet("GetGovernorateByCountryId/{countryId:int}")]
         public async Task<IActionResult> GetGovernorate(int countryId)
         {
@@ -90,6 +93,7 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [AllowAnonymous]
         [HttpGet("GetCityByGovernorateId/{governorateId:int}")]
         public async Task<IActionResult> GetCity(int governorateId)
         {

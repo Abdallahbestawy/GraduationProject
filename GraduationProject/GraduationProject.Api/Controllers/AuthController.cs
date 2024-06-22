@@ -107,7 +107,6 @@ namespace GraduationProject.Api.Controllers
             Response.Headers.Add("Access-Control-Allow-Credentials", "true");
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
         }
-        [Authorize]
         [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
         {
@@ -117,7 +116,6 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
-        [Authorize]
         [HttpGet("ResetPassword")]
         public async Task<IActionResult> ResetPassword([FromQuery] ResetPasswordModel model)
         {
@@ -141,6 +139,7 @@ namespace GraduationProject.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+        [Authorize]
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
         {

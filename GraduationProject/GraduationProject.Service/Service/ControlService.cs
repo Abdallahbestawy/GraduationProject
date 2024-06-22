@@ -223,7 +223,8 @@ namespace GraduationProject.Service.Service
                 GovernorateId = addControlMembersDto.GovernorateId,
                 CityId = addControlMembersDto.CityId,
                 Street = addControlMembersDto.Street,
-                PostalCode = addControlMembersDto.PostalCode
+                PostalCode = addControlMembersDto.PostalCode,
+                FacultyId = addControlMembersDto.FacultyId
             };
 
             try

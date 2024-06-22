@@ -196,6 +196,7 @@ namespace GraduationProject.Service.Service
                 {
                     Id = g.Id,
                     Name = g.Name,
+                    CountryId = g.CountryId,
                 }).ToList();
 
                 return Response<List<GovernorateDto>>.Success(governoratesDto, "Governorates retrieved successfully").WithCount();

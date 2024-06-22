@@ -212,6 +212,7 @@ namespace GraduationProject.Service.Service
                 existingCourse.Description = updateCourseDto.Description;
                 existingCourse.Type = updateCourseDto.Type;
                 existingCourse.Category = updateCourseDto.Category;
+                existingCourse.MinDegree = updateCourseDto.MinDegree;
                 existingCourse.MaxDegree = updateCourseDto.MaxDegree;
                 existingCourse.FacultyId = updateCourseDto.FacultyId;
                 existingCourse.NumberOfCreditHours = updateCourseDto.NumberOfCreditHours;

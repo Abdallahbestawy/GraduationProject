@@ -140,15 +140,16 @@ namespace GraduationProject.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPost("AddListOfStudentsFromExcel")]
+        [Authorize(Roles = nameof(UserType.Administration) + "," + nameof(UserType.Staff))]
+        [HttpPost("AddListOfStudentsFromExcel/{facultyId:int}")]
         [DisableRequestSizeLimit]
-        public async Task<IActionResult> AddStudentsListFromExcel(IFormFile file)
+        public async Task<IActionResult> AddStudentsListFromExcel(IFormFile file, int facultyId)
         {
             if (Request.Form.Files.Count == 0) return BadRequest("No files are uploaded");
 
             //var file = Request.Form.Files[0];
 
-            var response = await _studentService.AddStudentsListFromExcelFileAsync(file, User);
+            var response = await _studentService.AddStudentsListFromExcelFileAsync(file, facultyId, User);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -163,7 +164,6 @@ namespace GraduationProject.Api.Controllers
             }
             var respone = await _scheduleIService.GetStudentScheduleByUserIdAsync(currentUser.Id);
             return StatusCode(respone.StatusCode, respone);
-
         }
     }
 }

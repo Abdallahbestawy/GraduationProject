@@ -19,6 +19,6 @@ namespace GraduationProject.Service.IService
         Task<Response<GetStudentResultDto>> GetStudentResultAsync(string userId);
         Task<Response<List<GetAllStudentsInSemesterDto>>> GetAllStudentsInSemesterAsync(int semesterId);
         Task<Response<GetStudentInfoByStudentIdDto>> GetStudentInfoByStudentIdAsync(int studentId);
-        Task<Response<int>> AddStudentsListFromExcelFileAsync(IFormFile file, ClaimsPrincipal user);
+        Task<Response<int>> AddStudentsListFromExcelFileAsync(IFormFile file, int facultyId, ClaimsPrincipal user);
     }
 }

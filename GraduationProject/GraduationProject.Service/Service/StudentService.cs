@@ -1056,7 +1056,7 @@ namespace GraduationProject.Service.Service
             }
         }
 
-        public async Task<Response<int>> AddStudentsListFromExcelFileAsync(IFormFile file, ClaimsPrincipal user)
+        public async Task<Response<int>> AddStudentsListFromExcelFileAsync(IFormFile file, int facultyId, ClaimsPrincipal user)
         {
             try
             {
@@ -1084,6 +1084,7 @@ namespace GraduationProject.Service.Service
                     {
                         var stdIndex = studentsList.MappedData.FindIndex(std => std.NationalID == student.NationalID);
                         student.PhoneNumbers = studentsPhonesList.MappedData[stdIndex];
+                        student.FacultyId = facultyId;
                     }
 
                     totalStudents = studentsList.MappedData.Count;
@@ -1094,17 +1095,24 @@ namespace GraduationProject.Service.Service
                         {
                             if (result.Errors != null)
                                 errors.Add(result.Errors);
+                            continue;
                         }
                         counter++;
                     }
                 }
                 else
                 {
-                    // Handle case when no file is uploaded
                     return Response<int>.BadRequest("No file is uploaded");
                 }
 
-                return Response<int>.Created($"The students list added successfully, done {counter} out of {totalStudents}");
+                if(counter > 0)
+                {
+                    return Response<int>.Created($"The students list added successfully, done {counter} out of {totalStudents}");
+                }
+                else
+                {
+                    return Response<int>.BadRequest($"The students list doesn't added, {counter} out of {totalStudents}");
+                }
             }
             catch (Exception ex)
             {
