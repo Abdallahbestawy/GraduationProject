@@ -113,13 +113,10 @@ Deploy the application to your preferred hosting platform. Make sure to update t
 ```
 project-root/
 ├── graduationProject.Domain/
-│   ├── Entities/
-│   ├── Interfaces/
-│   ├── Models/
-├── graduationProject.Data/
-│   ├── Contexts/
-│   ├── Migrations/
-│   ├── Seed/
+│   ├── graduationProject.Data/
+│   |   ├── Contexts/
+│   |   ├── Migrations/
+│   |   ├── Seed/
 ├── graduationProject.Infrastructure/
 │   ├── EntityFramework/
 │   │   ├── Configurations/
