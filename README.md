@@ -111,55 +111,63 @@ Deploy the application to your preferred hosting platform. Make sure to update t
 - **Method:** Various (GET, POST, PUT, DELETE)
 - **Description:** Manage student admissions and other administrative tasks.
 
-## 🗂️ Project Structure
-
-```
 project-root/
-├── src/
-│   ├── Controllers/
-│   │   ├── AdminController.cs
-│   │   ├── StudentsController.cs
-│   │   ├── TeachersController.cs
-│   │   ├── TeacherAssistantsController.cs
-│   │   ├── ControlMembersController.cs
-│   │   ├── StaffController.cs
+├── graduationProject.Domain/
+│   ├── Entities/
+│   ├── Interfaces/
 │   ├── Models/
-│   │   ├── Admin.cs
-│   │   ├── Student.cs
-│   │   ├── Teacher.cs
-│   │   ├── TeacherAssistant.cs
-│   │   ├── ControlMember.cs
-│   │   ├── Staff.cs
-│   ├── Data/
-│   │   ├── AppDbContext.cs
+├── graduationProject.Data/
+│   ├── Contexts/
+│   ├── Migrations/
+│   ├── Seed/
+├── graduationProject.Infrastructure/
+│   ├── EntityFramework/
+│   │   ├── Configurations/
+│   │   ├── Repositories/
+│   ├── graduationProject.Repository/
+│   │   ├── IRepository.cs
+│   │   ├── Repository.cs
+│   │   ├── UnitOfWork.cs
+├── graduationProject.Service/
 │   ├── Services/
-│   │   ├── AdminService.cs
-│   │   ├── StudentService.cs
-│   │   ├── TeacherService.cs
-│   │   ├── TeacherAssistantService.cs
-│   │   ├── ControlMemberService.cs
-│   │   ├── StaffService.cs
+│   ├── Interfaces/
 │   ├── DTOs/
-│   │   ├── AdminDTO.cs
-│   │   ├── StudentDTO.cs
-│   │   ├── TeacherDTO.cs
-│   │   ├── TeacherAssistantDTO.cs
-│   │   ├── ControlMemberDTO.cs
-│   │   ├── StaffDTO.cs
-│   ├── Program.cs
+├── graduationProject.Web/
+│   ├── Controllers/
+│   ├── Middlewares/
+│   ├── Filters/
+├── graduationProject.Api/
+│   ├── Controllers/
 │   ├── Startup.cs
+│   ├── Program.cs
+├── graduationProject.Settings/
+│   ├── Identity/
+│   │   ├── IdentityService.cs
+│   │   ├── IdentityConfig.cs
+│   ├── ResponseHandler/
+│   │   ├── ResponseMiddleware.cs
+│   │   ├── ApiResponse.cs
+│   ├── LogHandler/
+│   │   ├── LogService.cs
+│   │   ├── LogConfig.cs
+│   ├── ExcelFileGenerator/
+│   │   ├── ExcelService.cs
+│   │   ├── ExcelConfig.cs
+│   ├── Mails/
+│   │   ├── MailService.cs
+│   │   ├── MailConfig.cs
+│   ├── Shared/
+│   │   ├── Helpers/
+│   │   ├── Extensions/
 ├── tests/
-│   ├── Services/
-│   │   ├── AdminServiceTests.cs
-│   │   ├── StudentServiceTests.cs
-│   │   ├── TeacherServiceTests.cs
-│   │   ├── TeacherAssistantServiceTests.cs
-│   │   ├── ControlMemberServiceTests.cs
-│   │   ├── StaffServiceTests.cs
+│   ├── DomainTests/
+│   ├── InfrastructureTests/
+│   ├── ServiceTests/
+│   ├── ApiTests/
 ├── appsettings.json
 ├── appsettings.Development.json
 ├── README.md
-```
+
 
 ## 🤝 Contributing
 
