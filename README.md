@@ -1,7 +1,5 @@
 # 🌟 EduWay API
 
-Welcome to the Student Management System API repository. This API is designed to streamline and automate various aspects of student and staff management within South Valley University. Our system provides a comprehensive solution to manage faculty, students, courses, and administrative tasks, ensuring efficient and effective operations.
-
 ## 📋 Table of Contents
 
 - [🌟 EduWay API](#-eduway-api)
@@ -111,7 +109,9 @@ Deploy the application to your preferred hosting platform. Make sure to update t
 - **Method:** Various (GET, POST, PUT, DELETE)
 - **Description:** Manage student admissions and other administrative tasks.
 
-🗂️ Project Structure
+## 🗂️ Project Structure
+
+```
 project-root/
 ├── graduationProject.Domain/
 │   ├── Entities/
@@ -168,8 +168,7 @@ project-root/
 ├── appsettings.json
 ├── appsettings.Development.json
 ├── README.md
-
-
+```
 
 ## 🤝 Contributing
 
