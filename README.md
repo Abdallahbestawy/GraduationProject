@@ -111,6 +111,7 @@ Deploy the application to your preferred hosting platform. Make sure to update t
 - **Method:** Various (GET, POST, PUT, DELETE)
 - **Description:** Manage student admissions and other administrative tasks.
 
+🗂️ Project Structure
 project-root/
 ├── graduationProject.Domain/
 │   ├── Entities/
@@ -167,6 +168,7 @@ project-root/
 ├── appsettings.json
 ├── appsettings.Development.json
 ├── README.md
+
 
 
 ## 🤝 Contributing
