@@ -1,157 +1,177 @@
-# 🌟 EduWay Frontend
+# 🌟 EduWay API
 
-Welcome to the frontend repository for egytech.fyi, a dynamic dashboard and reporting tool that provides insights into the Egyptian Tech Scene. This application visualizes salary data and industry trends, akin to the Stack Overflow Developer Survey, enabling users to filter and analyze compensation within the tech sector in Egypt.
+Welcome to the Student Management System API repository. This API is designed to streamline and automate various aspects of student and staff management within South Valley University. Our system provides a comprehensive solution to manage faculty, students, courses, and administrative tasks, ensuring efficient and effective operations.
 
 ## 📋 Table of Contents
 
-- [🌟 EGYTECH.FYI Frontend](#-egytechfyi-frontend)
+- [🌟 EduWay API](#-eduway-api)
   - [📋 Table of Contents](#-table-of-contents)
   - [🚀 Getting Started](#-getting-started)
     - [🔧 Prerequisites](#-prerequisites)
     - [📦 Installation](#-installation)
-    - [🖥️ Running the Application](#️-running-the-application)
-    - [🔍 Running Lint](#-running-lint)
-    - [👀 Previewing Build](#-previewing-build)
-  - [🎨 Features](#-features)
-  - [📚 Folder Structure](#-folder-structure)
+    - [🖥️ Running the Server](#️-running-the-server)
+    - [🧪 Running Tests](#-running-tests)
+    - [☁️ Deployment](#️-deployment)
+  - [📚 API Documentation](#-api-documentation)
+    - [👥 Administration Endpoints](#-administration-endpoints)
+    - [🎓 Students Endpoints](#-students-endpoints)
+    - [👩‍🏫 Teachers Endpoints](#-teachers-endpoints)
+    - [👨‍🏫 Teacher Assistants Endpoints](#-teacher-assistants-endpoints)
+    - [📊 Control Members Endpoints](#-control-members-endpoints)
+    - [👥 Staff Endpoints](#-staff-endpoints)
+  - [🗂️ Project Structure](#-project-structure)
   - [🤝 Contributing](#-contributing)
-    - [Contributors](#contributors)
+  - [📜 License](#-license)
 
 ## 🚀 Getting Started
 
 ### 🔧 Prerequisites
 
-Before you begin, ensure you have the following installed:
+Ensure you have the following installed:
 
-- [Node.js](https://nodejs.org/)
-- [Yarn](https://yarnpkg.com/)
+- .NET 6
+- MSSQL Server
 
 ### 📦 Installation
 
-To set up the project locally, follow these steps:
-
 1. Clone the repository:
-
    ```bash
-   git clone https://github.com/your-username/egytech-fyi.git
-   cd egytech-fyi
+   git clone https://github.com/your-username/eduway-api.git
+   cd eduway-api
    ```
 
-2. Install dependencies:
+2. Set up the database connection in `appsettings.json`.
 
+3. Restore .NET dependencies:
    ```bash
-   yarn install
+   dotnet restore
    ```
 
-### 🖥️ Running the Application
+### 🖥️ Running the Server
 
-Start the development server:
+1. Apply the database migrations:
+   ```bash
+   dotnet ef database update
+   ```
 
-```bash
-yarn dev
-```
+2. Run the server:
+   ```bash
+   dotnet run
+   ```
 
-This will launch the Vite development server, making the application accessible at `http://localhost:3000`.
+3. The server should now be running at `http://localhost:5000`.
 
-### 🔍 Running Lint
+### 🧪 Running Tests
 
-To ensure code quality and consistency, run ESLint with:
-
-```bash
-yarn lint
-```
-
-For best development, use these VS Code extensions:
-
-- EditorConfig
-- ESLint
-- Prettier - Code formatter
-
-
-### 👀 Previewing Build
-
-To build the project and preview it locally:
+To run the test suite:
 
 ```bash
-yarn run build
-yarn preview
+dotnet test
 ```
 
-## 🎨 Features
+### ☁️ Deployment
 
-This dashboard includes:
+Deploy the application to your preferred hosting platform. Make sure to update the connection strings and environment variables as needed.
 
-- Interactive filters to view data based on job titles, experience levels, and technology stacks.
-- Visual representations of salary ranges and distributions.
-- Comparisons and analytical reports similar to industry surveys.
+## 📚 API Documentation
 
-## 📚 Folder Structure
+### 👥 Administration Endpoints
 
-```javascript
-└── 📁egytech-fyi
-    └── 📁.github
-        └── PULL_REQUEST_TEMPLATE.md
-    └── 📁.husky
-        └── pre-commit
-        └── pre-push
-    └── .prettierrc
-    └── 📁.vscode
-        └── settings.json
-    └── 📁public
-    └── 📁src
-        └── 📁assets
-        └── 📁components // for all the components used
-            └── 📁Shared // for shared agnostic components
-        └── 📁constants // for constants used across the repo
-        └── 📁context // for state contexts
-        └── 📁functions // for general functions
-        └── 📁mock //for mock data
-        └── 📁pages // for pages
-        └── 📁services // for api services
-        └── 📁styles // for style files (should follow the convention of <FileName>.styles.scss)
-        └── 📁types // type script types
-        └── 📁utils // for utility functions
-            └── 📁Transformers // for data transformation functions
-        └── App.tsx
-        └── index.css
-        └── main.tsx
-        └── vite-env.d.ts
-    └── README.md
-    └── index.html
-    └── package.json
-    └── tsconfig.json
-    └── tsconfig.node.json
-    └── vite.config.ts
+- **Endpoint:** `/admin`
+- **Method:** Various (GET, POST, PUT, DELETE)
+- **Description:** Manage faculties, students, courses, and staff.
+
+### 🎓 Students Endpoints
+
+- **Endpoint:** `/students`
+- **Method:** Various (GET, POST, PUT, DELETE)
+- **Description:** Manage student data, view timetables, tuition fees, exam schedules, grades, portfolios, and progress.
+
+### 👩‍🏫 Teachers Endpoints
+
+- **Endpoint:** `/teachers`
+- **Method:** Various (GET, POST, PUT, DELETE)
+- **Description:** Manage courses, submit grades, and add daily notes about faculty and students.
+
+### 👨‍🏫 Teacher Assistants Endpoints
+
+- **Endpoint:** `/teacher-assistants`
+- **Method:** Various (GET, POST, PUT, DELETE)
+- **Description:** Manage courses, submit grades, and add daily notes about faculty and students.
+
+### 📊 Control Members Endpoints
+
+- **Endpoint:** `/control-members`
+- **Method:** Various (GET, POST, PUT, DELETE)
+- **Description:** Manage courses, submit final grades, and extract reports.
+
+### 👥 Staff Endpoints
+
+- **Endpoint:** `/staff`
+- **Method:** Various (GET, POST, PUT, DELETE)
+- **Description:** Manage student admissions and other administrative tasks.
+
+## 🗂️ Project Structure
+
+```
+project-root/
+├── src/
+│   ├── Controllers/
+│   │   ├── AdminController.cs
+│   │   ├── StudentsController.cs
+│   │   ├── TeachersController.cs
+│   │   ├── TeacherAssistantsController.cs
+│   │   ├── ControlMembersController.cs
+│   │   ├── StaffController.cs
+│   ├── Models/
+│   │   ├── Admin.cs
+│   │   ├── Student.cs
+│   │   ├── Teacher.cs
+│   │   ├── TeacherAssistant.cs
+│   │   ├── ControlMember.cs
+│   │   ├── Staff.cs
+│   ├── Data/
+│   │   ├── AppDbContext.cs
+│   ├── Services/
+│   │   ├── AdminService.cs
+│   │   ├── StudentService.cs
+│   │   ├── TeacherService.cs
+│   │   ├── TeacherAssistantService.cs
+│   │   ├── ControlMemberService.cs
+│   │   ├── StaffService.cs
+│   ├── DTOs/
+│   │   ├── AdminDTO.cs
+│   │   ├── StudentDTO.cs
+│   │   ├── TeacherDTO.cs
+│   │   ├── TeacherAssistantDTO.cs
+│   │   ├── ControlMemberDTO.cs
+│   │   ├── StaffDTO.cs
+│   ├── Program.cs
+│   ├── Startup.cs
+├── tests/
+│   ├── Services/
+│   │   ├── AdminServiceTests.cs
+│   │   ├── StudentServiceTests.cs
+│   │   ├── TeacherServiceTests.cs
+│   │   ├── TeacherAssistantServiceTests.cs
+│   │   ├── ControlMemberServiceTests.cs
+│   │   ├── StaffServiceTests.cs
+├── appsettings.json
+├── appsettings.Development.json
+├── README.md
 ```
 
 ## 🤝 Contributing
 
-Contributions are welcome! To help make this project better, please follow these steps:
+Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
 
-1. Fork the repository.
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your changes (`git commit -am 'Add some AmazingFeature'`).
-4. Push to the branch (`git push origin feature/AmazingFeature`).
-5. Open a pull request to staging branch.
-6. Once merged test your changes on [staging](https://staging.egytech-fyi-3s7.pages.dev)
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature-branch`)
+3. Make your changes
+4. Commit your changes (`git commit -m 'Add some feature'`)
+5. Push to the branch (`git push origin feature-branch`)
+6. Open a pull request
 
-### Contributors
+## 📜 License
 
-This project exists thanks to all the people who contribute. A special thanks to our key contributors:
-
-- **Abdelrahman Eladawy**
-
-  - **GitHub:** [MrViometal](https://github.com/MrViometal)
-  - **LinkedIn:** [Abdelrahman Eladawy](https://www.linkedin.com/in/abdelrahman-el-adawy/)
-
-- **Ahmed Eladawy**
-
-  - **LinkedIn:** [Ahmed Eladawy](https://www.linkedin.com/in/ahmed-eladawy-00b4a3115/)
-
-- **Mahmoud Salem**
-  - **GitHub:** [mahsayedsalem](https://github.com/mahsayedsalem)
-  - **LinkedIn:** [mahsayedsalem](https://www.linkedin.com/in/mahsayedsalem/)
-
----
-
-Visit the live application: [egytech.fyi](https://egytech.fyi)
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
