@@ -142,14 +142,15 @@ project-root/
 │   ├── ExcelFileGenerator/
 │   ├── Mails/
 │   ├── Shared/
-├── tests/
-│   ├── DomainTests/
-│   ├── InfrastructureTests/
-│   ├── ServiceTests/
-│   ├── ApiTests/
-├── appsettings.json
-├── appsettings.Development.json
-├── README.md
+
+🌟 Explanation of the Structure
+📜 graduationProject.Domain: Contains graduationProject.Data
+📜 graduationProject.Data: Manages database contexts, migrations, and seeding data.
+📜 graduationProject.Infrastructure: Includes the repository pattern implementation, configurations for EntityFramework, and other data access logic.
+📜 graduationProject.Service: Contains business logic and service layer implementations, including DTOs and service interfaces.
+📜 graduationProject.Web: Contain graduationProject.Api , Manages web-specific components like controllers, middleware, and filters.
+📜 graduationProject.Api: Focused on API endpoints, including controllers, and the main application setup (Startup.cs and Program.cs).
+📜 graduationProject.Settings: Includes various configurations and additional services like identity management, response handling, logging, Excel file generation, email handling, and shared utilities.
 ```
 
 ## 🤝 Contributing
