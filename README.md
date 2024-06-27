@@ -127,11 +127,8 @@ project-root/
 │   ├── Interfaces/
 │   ├── DTOs/
 ├── graduationProject.Web/
-│   ├── Controllers/
-│   ├── Middlewares/
-│   ├── Filters/
-├── graduationProject.Api/
-│   ├── Controllers/
+│   ├── graduationProject.Api/
+│   │   ├── Controllers/
 ├── graduationProject.Settings/
 │   ├── Identity/
 │   ├── ResponseHandler/
