@@ -125,9 +125,6 @@ project-root/
 │   │   ├── Configurations/
 │   │   ├── Repositories/
 │   ├── graduationProject.Repository/
-│   │   ├── IRepository.cs
-│   │   ├── Repository.cs
-│   │   ├── UnitOfWork.cs
 ├── graduationProject.Service/
 │   ├── Services/
 │   ├── Interfaces/
@@ -138,27 +135,13 @@ project-root/
 │   ├── Filters/
 ├── graduationProject.Api/
 │   ├── Controllers/
-│   ├── Startup.cs
-│   ├── Program.cs
 ├── graduationProject.Settings/
 │   ├── Identity/
-│   │   ├── IdentityService.cs
-│   │   ├── IdentityConfig.cs
 │   ├── ResponseHandler/
-│   │   ├── ResponseMiddleware.cs
-│   │   ├── ApiResponse.cs
 │   ├── LogHandler/
-│   │   ├── LogService.cs
-│   │   ├── LogConfig.cs
 │   ├── ExcelFileGenerator/
-│   │   ├── ExcelService.cs
-│   │   ├── ExcelConfig.cs
 │   ├── Mails/
-│   │   ├── MailService.cs
-│   │   ├── MailConfig.cs
 │   ├── Shared/
-│   │   ├── Helpers/
-│   │   ├── Extensions/
 ├── tests/
 │   ├── DomainTests/
 │   ├── InfrastructureTests/
